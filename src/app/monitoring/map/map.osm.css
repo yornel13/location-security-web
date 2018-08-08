@@ -1,0 +1,5 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css";
+.map {
+    height: 40vh;
+    width: 100%;
+}
