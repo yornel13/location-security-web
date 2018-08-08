@@ -1,4 +1,4 @@
-import { Guard } from './guard';
+import { Guard } from '../guard/guard';
 
 export interface Watch {
     id: number;

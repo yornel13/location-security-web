@@ -21,7 +21,7 @@ export class MapGoogleComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         // only run when property "data" changed
         if (changes['vehicles']) {
-            /*this.vehicles = this.getVehicles(this.vehicles);*/
+            this.vehicles = this.getVehicles(this.vehicles);
         }
     }
     getVehicles(vehicles: Vehicle[]) {
