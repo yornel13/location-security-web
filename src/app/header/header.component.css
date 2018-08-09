@@ -1,0 +1,30 @@
+.list-items{
+    background-color: var(--primary-color);
+    margin: 0;
+    display: flex;
+    justify-content: flex-end;
+    list-style: none;
+}
+
+.list-item{
+    padding: var(--gutter);
+    cursor: pointer;
+    color: whitesmoke;
+}
+
+.link{
+    color: #fff;
+    text-decoration: none;
+}
+
+.list-item:hover{
+    background-color: brown;
+}
+
+.filter{
+    width: 313px;
+}
+
+.active{
+    background-color: #a51c18;
+}

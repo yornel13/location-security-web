@@ -1,5 +1,9 @@
 @import "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css";
-.map {
-    height: 40vh;
+.map{
+    height: 100%;
     width: 100%;
+}
+
+.online-marker{
+    color: limegreen;
 }

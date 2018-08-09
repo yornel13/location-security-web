@@ -1,1 +1,49 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+*{
+    /*Fonts*/
+    --main-font: 'Roboto', sans-serif;
+    font-family: var(--main-font);
+
+    /*sizes*/
+    --t1: 1.4em;
+    --t2: 1em;
+    --p: 0.8em;
+
+    /*Colors*/
+    --primary-color: maroon;
+    --secondary-color: #666;
+
+    /*Layout props*/
+    /*display: block;*/
+    /*width: 100%;*/
+    /*height: 100%;*/
+    margin: 0;
+    --gutter: 1em;
+    /*min-width: 100vw;*/
+    /*min-height: 100vh;*/
+    /*overflow: hidden;*/
+}
+
+/*app-main{*/
+    /*display: flex;*/
+    /*flex-direction: column;*/
+/*}*/
+
+/*body{*/
+
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*align-content: stretch;*/
+    /*align-items: stretch;*/
+    /*height: 100vh;*/
+/*}*/
+
+/*app-main{*/
+    /*order: 0;*/
+    /*flex: 1 1 auto;*/
+    /*align-self: auto;*/
+    /*display: grid;*/
+/*}*/

@@ -5,15 +5,19 @@ import {UtilsVehicles} from '../model/vehicle/vehicle.utils';
 import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-monitoring',
   template: `
-      <app-map-google [vehicles]="vehicles" [lat]="lat" [lng]="lng" [zoom]="zoom"></app-map-google>
-      <app-map-osm [vehicles]="vehicles" [lat]="lat" [lng]="lng" [zoom]="zoom"></app-map-osm>
-  `,
-  styleUrls: ['./dash.component.css']
+      <main class="monitoring-container">
+          <app-aside [vehicles]="vehicles" class="app-aside" ></app-aside>
+          <div class="maps-container">
+              <app-map-google  [vehicles]="vehicles" [lat]="lat" [lng]="lng" [zoom]="zoom"></app-map-google>
+              <!--<app-map-osm hidden class="app-map" [vehicles]="vehicles" [lat]="lat" [lng]="lng" [zoom]="zoom"></app-map-osm>-->
+          </div>
+      </main>
+      `,
+    styleUrls: ['./monitoring.component.css']
 })
-export class DashComponent implements OnInit {
-
+export class MonitoringComponent implements OnInit {
   lat = -2.071522;
   lng = -79.607105;
   zoom = 12;
