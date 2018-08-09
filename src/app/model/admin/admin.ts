@@ -1,4 +1,4 @@
-export interface Guard {
+export interface Admin {
   id?: number;
   dni?: string;
   name?: string;

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import {Vehicle} from '../model/vehicle/vehicle';
 import {VehiclesService} from '../model/vehicle/vehicle.service';
-import {Watch} from '../model/watch/watch';
 
 @Component({
   selector: 'app-dashboard',
