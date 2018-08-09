@@ -1,2 +1,10 @@
 <h3>{{ vehicle.imei }}</h3>
 <p>{{ vehicle.alias }}</p>
+<p>{{ vehicle.generated_time }}</p>
+<p class="online-marker" [ngClass]="{'inactive':vehicle.device_status=='OFFOROUTOFCOVERAGE'}" *ngIf="vehicle.device_status == 'OFFOROUTOFCOVERAGE'; else online">{{ device_status}}</p>
+
+<ng-template #online>
+    <p class="online-marker">
+        ONLINE
+    </p>
+</ng-template>

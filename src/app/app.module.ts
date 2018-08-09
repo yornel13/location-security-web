@@ -14,9 +14,11 @@ import { WatchesService } from './model/watch/watch.service';
 import { HttpClientModule } from '@angular/common/http';
 
 // My Modulus
-import { DashComponent } from './monitoring/dash.component';
+import { MonitoringComponent } from './monitoring/monitoring.component';
 import { MapGoogleComponent } from './monitoring/map/map.google';
 import { MapOsmComponent } from './monitoring/map/map.osm';
+import { HeaderComponent } from './header/header.component';
+import { AsideComponent } from './monitoring/aside/aside.component';
 
 @NgModule({
   imports: [
@@ -30,7 +32,8 @@ import { MapOsmComponent } from './monitoring/map/map.osm';
   ],
   providers: [ VehiclesService, WatchesService ],
   entryComponents: [HTMLMarkerComponent],
-  declarations: [ AppComponent, DashComponent, MapGoogleComponent, MapOsmComponent, HTMLMarkerComponent ],
+  declarations: [ AppComponent, MonitoringComponent, MapGoogleComponent, MapOsmComponent, HTMLMarkerComponent,
+      HeaderComponent, AsideComponent ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule {}

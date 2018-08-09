@@ -1,0 +1,32 @@
+.monitoring-container{
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    display: flex;
+}
+
+
+app-monitoring{
+    height: 100%;
+    width: 100%;
+}
+
+.app-aside{
+    list-style: none;
+    height: 100%;
+    width: 25%;
+}
+
+.maps-container {
+    height: 100%;
+    width: 75%;
+}
+
+app-map-google, app-map-osm {
+    height: 100%;
+    width: 100%;
+}
+

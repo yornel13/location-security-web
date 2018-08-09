@@ -1,0 +1,34 @@
+<!--Sidebar-->
+<aside class="aside">
+  <!--header aside-->
+  <div class="header-aside" id="header-aside">
+    <ul class="menu-items" id="menu-items">
+      <li class="menu-item active-side dropdown">Dispositivos
+        <ul class="drop-content">
+          <li>Hola1</li>
+          <li>Hola2</li>
+        </ul>
+      </li>
+      <li class="menu-item">Alertas</li>
+    </ul>
+    <input class="filter" type="text" placeholder="Filtrar">
+  </div>
+  
+  <div id="guard-cards-container" class="guard-cards-container">
+    <!--Guard Card-->
+    <div *ngFor="let vehicle of vehicles"  class="guard-card">
+      <p class="imei">IMEI {{vehicle.imei}}</p>
+      
+      <p class="alias">{{vehicle.alias}}</p>
+      
+      <p class="date">Fecha {{vehicle.generated_time}}</p>
+      <p class="status-container">Status:<span class=""  *ngIf="vehicle.device_status == 'OFFOROUTOFCOVERAGE'; else online" [ngClass]="{'inactive':vehicle.device_status=='OFFOROUTOFCOVERAGE'}">{{devices_status}}</span></p>
+    </div>
+    
+    <ng-template #online>
+      <p class="online">
+       ONLINE
+      </p>
+    </ng-template>
+  </div>
+</aside>

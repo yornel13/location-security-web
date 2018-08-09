@@ -1,4 +1,4 @@
-<agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+<agm-map class="google-map" [latitude]="lat" [longitude]="lng" [zoom]="zoom">
     <agm-marker *ngFor="let vehicle of vehicles;" [latitude]="vehicle.latitude" [longitude]="vehicle.longitude" [iconUrl]="vehicle.iconUrl">
         <agm-info-window>
             <app-html-marker [vehicle]="vehicle"></app-html-marker>
