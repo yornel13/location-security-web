@@ -18,7 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { DashComponent } from './monitoring/dash.component';
 import { MapGoogleComponent } from './monitoring/map/map.google';
 import { MapOsmComponent } from './monitoring/map/map.osm';
-import { ApiTestComponent } from './api.test/api.test.component';
+import { ApiTestComponent } from './apitest/api.test.component';
 
 @NgModule({
   imports: [
