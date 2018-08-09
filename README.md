@@ -31,3 +31,6 @@ http://tombatossals.github.io/angular-leaflet-directive/examples/0000-viewer.htm
  
  #otro demo
  https://stackblitz.com/edit/angular-google-maps-demo?file=app%2Fapp.component.html"# location-security-web" 
+ 
+ #chat
+ https://medium.com/dailyjs/real-time-apps-with-typescript-integrating-web-sockets-node-angular-e2b57cbd1ec1
