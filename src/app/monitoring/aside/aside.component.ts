@@ -1,5 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {Vehicle} from '../../model/vehicle/vehicle';
+import {Guard} from '../../model/guard/guard';
 
 @Component({
   selector: 'app-aside',
@@ -9,6 +10,7 @@ import {Vehicle} from '../../model/vehicle/vehicle';
 export class AsideComponent implements OnInit, OnChanges {
   @Input()
   vehicles: Vehicle[] = [];
+  guards: Guard[] = [];
   devices_status = 'DESCONECTADO';
 
   constructor() { }
@@ -21,10 +23,19 @@ export class AsideComponent implements OnInit, OnChanges {
         if (changes['vehicles']) {
             this.vehicles = this.getVehicles(this.vehicles);
         }
+        if (changes['guards']) {
+            this.guards = this.getGuards(this.guards);
+        }
     }
     getVehicles(vehicles: Vehicle[]) {
-        if (!vehicles) { return; }
+        if (!vehicles) {
+            return;
+        }
         return vehicles;
+    }
+    getGuards(guards: Guard[]) {
+        if (!guards) { return; }
+        return guards;
     }
 
 

@@ -23,20 +23,19 @@ export class MonitoringComponent implements OnInit {
   zoom = 12;
   vehicles: Vehicle[];
   error: string;
-
+  show = true;
   constructor(private vehiclesService: VehiclesService) {}
 
   getVehicles() {
-    this.vehiclesService.getVehicles().subscribe(data => {
-      this.vehicles = new UtilsVehicles().process(data.data);
-    }, (error: HttpErrorResponse) => {
-      console.log(error.message);
-      this.error = 'Error connecting with server';
-    });
+      this.vehiclesService.getVehicles().subscribe(data => {
+          this.vehicles = new UtilsVehicles().process(data.data);
+      }, (error: HttpErrorResponse) => {
+          console.log(error.message);
+          this.error = 'Error connecting with server';
+      });
   }
 
   ngOnInit() {
-    this.getVehicles();
   }
 }
 

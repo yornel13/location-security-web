@@ -1,6 +1,6 @@
 .aside{
     min-height: 100vh;
-    max-width: 350px;
+    width: 350px;
     background-color: var(--secondary-color);
     padding: 0 0 0 5px;
 }
@@ -19,21 +19,10 @@
 
 }
 
-.menu-items{
-    position: relative;
-    display: inline-block;
 
-}
 
-.drop-content{
-    display: none;
-    position: absolute;
-    z-index: 1;
-}
 
-.menu-items:hover, .drop-content{
-    display: inline-block;
-}
+
 
 
 .active-side{
