@@ -11,4 +11,5 @@ export interface Watch {
     observation: string;
     status: string;
     guard: Guard;
+    iconUrl: string;
 }

@@ -2,7 +2,7 @@ import {Vehicle} from './vehicle';
 
 export class UtilsVehicles {
 
-    process(vehicles: Vehicle[]) {
+    processVehicles(vehicles: Vehicle[]) {
         vehicles.forEach(vehicle => {
             switch (vehicle.model_name) {
                 case 'Queclink GV300W_Ins': {

@@ -6,6 +6,7 @@ import { Component, Input } from '@angular/core';
 })
 export class HTMLMarkerComponent {
     @Input() vehicle;
+    @Input() watch;
 
     device_status = 'DESCONECTADO';
 }

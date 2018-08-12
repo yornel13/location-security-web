@@ -1,16 +1,22 @@
+///<reference path="../model/admin/admin.service.ts"/>
 import {Component, OnInit} from '@angular/core';
 import {Vehicle} from '../model/vehicle/vehicle';
 import {VehiclesService} from '../model/vehicle/vehicle.service';
 import {UtilsVehicles} from '../model/vehicle/vehicle.utils';
 import {HttpErrorResponse} from '@angular/common/http';
+import {WatchesService} from '../model/watch/watch.service';
+import {Watch} from '../model/watch/watch';
+import {WatchUtils} from '../model/watch/watch.utils';
+
+
 
 @Component({
   selector: 'app-monitoring',
   template: `
       <main class="monitoring-container">
-          <app-aside [vehicles]="vehicles" class="app-aside" ></app-aside>
+          <app-aside [vehicles]="vehicles"  class="app-aside" ></app-aside>
           <div class="maps-container">
-              <app-map-google  [vehicles]="vehicles" [lat]="lat" [lng]="lng" [zoom]="zoom"></app-map-google>
+              <app-map-google [vehicles]="vehicles" [watchesMap]="watches" [lat]="lat" [lng]="lng" [zoom]="zoom"></app-map-google>
               <!--<app-map-osm hidden class="app-map" [vehicles]="vehicles" [lat]="lat" [lng]="lng" [zoom]="zoom"></app-map-osm>-->
           </div>
       </main>
@@ -22,20 +28,37 @@ export class MonitoringComponent implements OnInit {
   lng = -79.607105;
   zoom = 12;
   vehicles: Vehicle[];
+  watches: Watch[];
   error: string;
   show = true;
-  constructor(private vehiclesService: VehiclesService) {}
+  constructor(private vehiclesService: VehiclesService, private watchesService: WatchesService) {}
 
   getVehicles() {
       this.vehiclesService.getVehicles().subscribe(data => {
-          this.vehicles = new UtilsVehicles().process(data.data);
+          this.vehicles = new UtilsVehicles().processVehicles(data.data);
       }, (error: HttpErrorResponse) => {
           console.log(error.message);
           this.error = 'Error connecting with server';
       });
   }
+  getWatches() {
+       this.watchesService.getWatchesActive().subscribe(data => {
+           this.watches = data.data;
+           console.log(this.watches.length);
+           // this.watches = new WatchUtils().processWatches(data.data);
+           // this.watches.forEach(watch => {
+           //     console.log(watch);
+           // });
+       }, (error: HttpErrorResponse) => {
+           console.log(error.message);
+           this.error = 'Error connecting with server';
+       });
+  }
+
 
   ngOnInit() {
+      this.getWatches();
+      // this.getVehicles();
   }
 }
 

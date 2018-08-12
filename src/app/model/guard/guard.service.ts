@@ -4,6 +4,9 @@ import { environment } from '../../../environments/environment';
 
 import { Observable, of } from 'rxjs';
 import {Guard} from './guard';
+import {VehicleList} from '../vehicle/vehicle.list';
+import {GuardList} from './guard.list';
+
 
 const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
 

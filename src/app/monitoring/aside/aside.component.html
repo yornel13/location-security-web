@@ -8,28 +8,35 @@
       <li class="menu-item active-side" >Dispositivos</li>
       <li class="menu-item">Alertas</li>
     </ul>
-      <li (click)="show = !show" class="menu-item">Guardias</li>
-      <li (click)="getVehicles()" class="menu-item">Vehiculos</li>
+      <li  class="menu-item">Guardias</li>
+      <li  class="menu-item">Vehiculos</li>
       
     <input class="filter" type="text" placeholder="Filtrar">
   </div>
   
-  <div id="guard-cards-container" class="guard-cards-container">
+  <div  id="guard-cards-container" class="guard-cards-container">
     <!--Guard Card-->
-    <div *ngFor="let vehicle of vehicles"  class="guard-card">
-      <p class="imei">IMEI {{vehicle.imei}}</p>
-      <p class="alias">{{vehicle.alias}}</p>
-      <p class="date">Fecha {{vehicle.generated_time}}</p>
-      <p class="status-container">Status:<span class=""
-         *ngIf="vehicle.device_status == 'OFFOROUTOFCOVERAGE'; else online"
-         [ngClass]="{'inactive':vehicle.device_status=='OFFOROUTOFCOVERAGE'}">{{devices_status}}</span></p>
+    <!--<div hidden *ngFor="let vehicle of vehicles"  class="guard-card">-->
+      <!--<p class="imei">IMEI {{vehicle.imei}}</p>-->
+      <!--<p class="alias">{{vehicle.alias}}</p>-->
+      <!--<p class="date">Fecha {{vehicle.generated_time}}</p>-->
+      <!--<p class="status-container">Status:<span class=""-->
+                                               <!--*ngIf="vehicle.device_status == 'OFFOROUTOFCOVERAGE'; else online"-->
+                                               <!--[ngClass]="{'inactive':vehicle.device_status=='OFFOROUTOFCOVERAGE'}">{{devices_status}}</span></p>-->
+    <!--</div>-->
+    
+    <div *ngFor="let watch of watches"  class="guard-card">
+      <p class="imei">DNI {{watch.guard.dni}}</p>
+      <p class="alias">Nombre: {{watch.guard.name}}</p>
+      <p class="date">Apellido: {{watch.guard.lastname}}</p>
+      <p class="status-container">Status: <span class="">{{'ACTIVO'}}</span></p>
     </div>
+  </div>
     
     <ng-template #online>
-      <p class="online">
-       ONLINE
-      </p>
+        <p class="online">
+            ONLINE
+        </p>
     </ng-template>
-  </div>
   
 </aside>

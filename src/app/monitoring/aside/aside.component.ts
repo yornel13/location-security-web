@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {Vehicle} from '../../model/vehicle/vehicle';
-import {Guard} from '../../model/guard/guard';
+import {Watch} from '../../model/watch/watch';
 
 @Component({
   selector: 'app-aside',
@@ -8,34 +8,36 @@ import {Guard} from '../../model/guard/guard';
   styleUrls: ['./aside.component.css']
 })
 export class AsideComponent implements OnInit, OnChanges {
-  @Input()
-  vehicles: Vehicle[] = [];
-  guards: Guard[] = [];
-  devices_status = 'DESCONECTADO';
+    @Input()
+    vehicles: Vehicle[] = [];
+    // @Input()
+    // watches2: Watch[] = [];
+    devices_status = 'DESCONECTADO';
 
-  constructor() { }
+    constructor() { }
 
-  ngOnInit() {
-  }
-
+    ngOnInit() {
+    }
     ngOnChanges(changes: SimpleChanges) {
         // only run when property "data" changed
         if (changes['vehicles']) {
             this.vehicles = this.getVehicles(this.vehicles);
         }
-        if (changes['guards']) {
-            this.guards = this.getGuards(this.guards);
+        if (changes['watches2']) {
+            console.log('hubo un cambio-');
+            // this.watches2 = this.getWatches(this.watches2);
+            // this.watches.forEach( watch => {
+            //     console.log('long es -> '.concat(watch.longitude));
+            // });
         }
     }
     getVehicles(vehicles: Vehicle[]) {
-        if (!vehicles) {
-            return;
-        }
+        if (!vehicles) { return; }
         return vehicles;
     }
-    getGuards(guards: Guard[]) {
-        if (!guards) { return; }
-        return guards;
+    getWatches(watches: Watch[]) {
+        if (!watches) { return; }
+        return watches;
     }
 
 
