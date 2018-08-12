@@ -8,38 +8,21 @@ import {Watch} from '../../model/watch/watch';
     styleUrls: ['./map.google.css']
 })
 export class MapGoogleComponent implements OnChanges {
-    @Input()
-    vehicles: Vehicle[] = [];
-    @Input()
-    watchesMap: Watch[] = [];
-    @Input()
-    lat: number;
-    @Input()
-    lng: number;
-    @Input()
-    zoom: number;
+
+    @Input() vehicles: Vehicle[] = [];
+    @Input() watches: Watch[] = [];
+    @Input() lat: number;
+    @Input() lng: number;
+    @Input() zoom: number;
 
     constructor() { }
 
     ngOnChanges(changes: SimpleChanges) {
-        // only run when property "data" changed
         if (changes['vehicles']) {
-            this.vehicles = this.getVehicles(this.vehicles);
+            // Use if necessary
         }
-        if (changes['watchesMap']) {
-        // this.watches2.forEach(watch => {
-        //        console.log('lat '.concat(watch.latitude));
-        //     });
-            this.watchesMap = this.getWatches(this.watchesMap);
-            console.log('watchesMap size:' + this.watchesMap.length);
+        if (changes['watches']) {
+            // Use if necessary
         }
-    }
-    getVehicles(vehicles: Vehicle[]) {
-        if (!vehicles) { return; }
-        return vehicles;
-    }
-    getWatches(watches: Watch[]) {
-        if (!watches) { return; }
-        return watches;
     }
 }

@@ -10,12 +10,12 @@ import {
 } from '@angular/core';
 import { Vehicle } from '../../model/vehicle/vehicle';
 import { tileLayer, latLng, marker, Marker, icon } from 'leaflet';
-import { HTMLMarkerComponent } from './html-marker.component';
+import { PopupVehicleComponent } from './popup.vehicle.component';
 
 interface MarkerMetaData {
     name: String;
     markerInstance: Marker;
-    componentInstance: ComponentRef<HTMLMarkerComponent>;
+    componentInstance: ComponentRef<PopupVehicleComponent>;
 }
 @Component({
     selector : 'app-map-osm',
@@ -60,7 +60,7 @@ export class MapOsmComponent implements DoCheck, OnChanges {
                     })
                 }
                 const m = marker([vehicle.latitude, vehicle.longitude], imageIcon );
-                const factory = this.resolver.resolveComponentFactory(HTMLMarkerComponent);
+                const factory = this.resolver.resolveComponentFactory(PopupVehicleComponent);
                 const component = factory.create(this.injector);
                 const popupContent = component.location.nativeElement;
                 component.instance.vehicle = vehicle;

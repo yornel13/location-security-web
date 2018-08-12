@@ -1,15 +1,15 @@
 import { Guard } from '../guard/guard';
 
-export interface Watch {
+export class Watch {
     id: number;
-    guard_id: number;
-    guard_out_id: number;
+    guard_id?: number;
+    guard_out_id?: number;
     create_date: string;
     update_date: string;
-    latitude: string;
     longitude: string;
-    observation: string;
-    status: string;
-    guard: Guard;
-    iconUrl: string;
+    latitude: string;
+    observation?: string;
+    status?: string;
+    guard?: Guard;
+    iconUrl?: string;
 }

@@ -5,7 +5,8 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { CommonModule } from '@angular/common';
 
 import { AppComponent } from './app.component';
-import {HTMLMarkerComponent} from './monitoring/map/html-marker.component';
+import {PopupVehicleComponent} from './monitoring/map/popup.vehicle.component';
+import {PopupWatchComponent} from './monitoring/map/popup.watch.component';
 
 import { AgmCoreModule } from '@agm/core';
 import { VehiclesService } from './model/vehicle/vehicle.service';
@@ -32,8 +33,13 @@ import { AsideComponent } from './monitoring/aside/aside.component';
     })
   ],
   providers: [ VehiclesService, WatchesService, GuardService ],
-  entryComponents: [HTMLMarkerComponent],
-  declarations: [ AppComponent, MonitoringComponent, MapGoogleComponent, MapOsmComponent, HTMLMarkerComponent,
+  entryComponents: [ PopupVehicleComponent, PopupWatchComponent ],
+  declarations: [ AppComponent,
+      MonitoringComponent,
+      MapGoogleComponent,
+      MapOsmComponent,
+      PopupVehicleComponent,
+      PopupWatchComponent,
       HeaderComponent, AsideComponent ],
   bootstrap: [ AppComponent ]
 })

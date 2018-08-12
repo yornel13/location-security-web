@@ -13,7 +13,7 @@
       
     <input class="filter" type="text" placeholder="Filtrar">
   </div>
-  
+
   <div  id="guard-cards-container" class="guard-cards-container">
     <!--Guard Card-->
     <!--<div hidden *ngFor="let vehicle of vehicles"  class="guard-card">-->
@@ -24,7 +24,7 @@
                                                <!--*ngIf="vehicle.device_status == 'OFFOROUTOFCOVERAGE'; else online"-->
                                                <!--[ngClass]="{'inactive':vehicle.device_status=='OFFOROUTOFCOVERAGE'}">{{devices_status}}</span></p>-->
     <!--</div>-->
-    
+
     <div *ngFor="let watch of watches"  class="guard-card">
       <p class="imei">DNI {{watch.guard.dni}}</p>
       <p class="alias">Nombre: {{watch.guard.name}}</p>
@@ -32,7 +32,7 @@
       <p class="status-container">Status: <span class="">{{'ACTIVO'}}</span></p>
     </div>
   </div>
-    
+
     <ng-template #online>
         <p class="online">
             ONLINE

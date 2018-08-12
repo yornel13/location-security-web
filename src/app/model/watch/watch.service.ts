@@ -16,10 +16,7 @@ export class WatchesService {
     constructor (private http: HttpClient) {}
 
     getWatchesActive(): Observable<WatchList> {
-        return this.http.get<WatchList>(this.WATCH_URL + this.activePath).pipe(
-            tap(_ => this.log(`fetched watches`)),
-            catchError(this.handleError<WatchList>(`WatchList`))
-        );
+        return this.http.get<WatchList>(this.WATCH_URL + this.activePath);
     }
 
     private handleError<T> (operation = 'operation', result?: T) {
