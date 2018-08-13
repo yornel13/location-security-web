@@ -6,8 +6,8 @@ export class Watch {
     guard_out_id?: number;
     create_date: string;
     update_date: string;
-    longitude: string;
-    latitude: string;
+    longitude: number;
+    latitude: number;
     observation?: string;
     status?: string;
     guard?: Guard;

@@ -39,20 +39,20 @@
     background-color: #444;
 }
 
-.guard-cards-container{
+.cards-container{
     overflow: auto;
     height: 80vh;
 }
 
-.guard-cards-container::-webkit-scrollbar{
+.cards-container::-webkit-scrollbar{
     width: 6px;
 }
 
-.guard-cards-container::-webkit-scrollbar-thumb{
+.cards-container::-webkit-scrollbar-thumb{
     background-color: #fff;
 }
 
-.guard-card{
+.vehicle-card{
     background-color: whitesmoke;
     min-height: 150px;
     max-width: 320px;
@@ -65,7 +65,24 @@
     padding-top: 9px;
 }
 
-.guard-card:hover{
+.vehicle-card:hover{
+    cursor: pointer;
+}
+
+.watch-card{
+    background-color: whitesmoke;
+    min-height: 150px;
+    max-width: 320px;
+    border-radius: 3px;
+
+    margin-right: 5px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 9px;
+}
+
+.watch-card:hover{
     cursor: pointer;
 }
 

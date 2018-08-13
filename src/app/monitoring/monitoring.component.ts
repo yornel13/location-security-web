@@ -1,5 +1,5 @@
 ///<reference path="../model/admin/admin.service.ts"/>
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Vehicle} from '../model/vehicle/vehicle';
 import {VehiclesService} from '../model/vehicle/vehicle.service';
 import {UtilsVehicles} from '../model/vehicle/vehicle.utils';
@@ -11,14 +11,15 @@ import {WatchUtils} from '../model/watch/watch.utils';
 @Component({
   selector: 'app-monitoring',
   template: `
-      <main class="monitoring-container">
-          <app-aside [vehicles]="vehicles" [watches]="watches" class="app-aside" ></app-aside>
+      <main  class="monitoring-container">
+          <span>{{showMarkers}}</span>
+          <app-aside (showWVMarkers)="cargarMarcadores($event)" [vehicles]="vehicles" [watches]="watches" class="app-aside"></app-aside>
           <div class="maps-container">
-              <app-map-google [vehicles]="vehicles" [watches]="watches" [lat]="lat" [lng]="lng" [zoom]="zoom"></app-map-google>
+              <app-map-google  [vehicles]="vehicles" [watches]="watches" [lat]="lat" [lng]="lng" [zoom]="zoom"></app-map-google>
               <!--<app-map-osm hidden class="app-map" [vehicles]="vehicles" [lat]="lat" [lng]="lng" [zoom]="zoom"></app-map-osm>-->
           </div>
       </main>
-      `,
+  `,
     styleUrls: ['./monitoring.component.css']
 })
 export class MonitoringComponent implements OnInit {
@@ -28,7 +29,11 @@ export class MonitoringComponent implements OnInit {
   vehicles: Vehicle[] = [];
   watches: Watch[] = [];
   error: string;
-  show = true;
+  showWatches: boolean;
+  showVehicles: boolean;
+  @Input() showMarkers: string;
+  @Input() showOpts = {};
+
   constructor(private vehiclesService: VehiclesService, private watchesService: WatchesService) {}
 
   getVehicles() {
@@ -52,6 +57,9 @@ export class MonitoringComponent implements OnInit {
   ngOnInit() {
       this.getWatches();
       this.getVehicles();
+  }
+  cargarMarcadores(message) {
+    this.showMarkers = message;
   }
 }
 

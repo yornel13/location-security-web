@@ -1,20 +1,21 @@
-<!--<agm-map class="google-map" [latitude]="lat" [longitude]="lng" [zoom]="zoom">-->
-        <!--<agm-marker  *ngFor="let vehicle of vehicles;" [latitude]="vehicle.latitude" [longitude]="vehicle.longitude" [iconUrl]="vehicle.iconUrl">-->
-            <!--<agm-info-window>-->
-                <!--<app-html-marker [vehicle]="vehicle"></app-html-marker>-->
-            <!--</agm-info-window>-->
-        <!--</agm-marker>-->
-<!--</agm-map>-->
 
-<agm-map class="google-map" [latitude]="lat" [longitude]="lng" [zoom]="zoom">
-    <!--<agm-marker  *ngFor="let vehicle of vehicles" [latitude]="vehicle.latitude" [longitude]="vehicle.longitude" [iconUrl]="vehicle.iconUrl">-->
-        <!--<agm-info-window>-->
-            <!--<app-popup-vehicle [vehicle]="vehicle"></app-popup-vehicle>-->
-        <!--</agm-info-window>-->
-    <!--</agm-marker>-->
-    <agm-marker  *ngFor="let watch of watches" [latitude]="+watch.latitude" [longitude]="+watch.longitude" [iconUrl]="watch.iconUrl">
-        <agm-info-window>
-            <app-popup-watch [watch]="watch"></app-popup-watch>
-        </agm-info-window>
-    </agm-marker>
+
+<agm-map  class="google-map" [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+    
+    <div  *ngIf="">
+        <agm-marker  *ngFor="let vehicle of vehicles" [latitude]="vehicle.latitude" [longitude]="vehicle.longitude" [iconUrl]="vehicle.iconUrl">
+            <agm-info-window>
+                <app-popup-vehicle [vehicle]="vehicle"></app-popup-vehicle>
+            </agm-info-window>
+        </agm-marker>
+    </div>
+    
+    <div  *ngIf="false">
+        <agm-marker  *ngFor="let watch of watches" [latitude]="+watch.latitude" [longitude]="+watch.longitude" [iconUrl]="watch.iconUrl">
+            <agm-info-window>
+                <app-popup-watch [watch]="watch"></app-popup-watch>
+            </agm-info-window>
+        </agm-marker>
+    </div>
+    
 </agm-map>
