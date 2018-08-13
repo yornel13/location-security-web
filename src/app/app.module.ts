@@ -21,12 +21,14 @@ import { MapGoogleComponent } from './monitoring/map/map.google';
 import { MapOsmComponent } from './monitoring/map/map.osm';
 import { HeaderComponent } from './header/header.component';
 import { AsideComponent } from './monitoring/aside/aside.component';
+import {AgmJsMarkerClustererModule} from '@agm/js-marker-clusterer';
 
 @NgModule({
   imports: [
     HttpClientModule,
     BrowserModule,
     CommonModule,
+    AgmJsMarkerClustererModule,
     FormsModule, LeafletModule.forRoot(),
     AgmCoreModule.forRoot({
     apiKey: 'AIzaSyAnnU9xaS_i8x4_Ou9CZwVsVQX02RlxPlM'
