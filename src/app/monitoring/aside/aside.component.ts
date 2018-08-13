@@ -45,13 +45,10 @@ export class AsideComponent implements OnInit, OnChanges {
             this.showOpt = {showVehicles: false , showWatches: true , showMarkers: true};
             this.showWVMarkers.emit(this.eventMessage);
         }
-
-        // console.log('Cargar guardia');
     }
-    // mostrarVehiculos(message) {
-    //     this.showOpt = {showVehicles: true , showWatches: false , showMarkers: true};
-    //     this.eventMessage = message;
-    //     this.showWVMarkers.emit(this.eventMessage);
-    //     // console.log('Cargar vehiculos');
-    // }
+    find(newSearch) {
+
+
+        console.log(newSearch.value);
+    }
 }
