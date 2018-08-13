@@ -9,9 +9,10 @@
       <li class="menu-item">Alertas</li>
     </ul>
     <li  (click)="changeOptions('showVehiclesMarkers')" class="menu-item">Vehiculos</li>
-    <li (click)="changeOptions('showWatchesMarkers')" class="menu-item">Guardias</li>
+    <li  (click)="changeOptions('showWatchesMarkers')" class="menu-item">Guardias</li>
     
-    <input class="filter" type="text" placeholder="Filtrar">
+    <input  (keyup)="$event.keyCode == 13 ? find(newSearsh) : null" #newSearsh class="filter" type="text" placeholder="Filtrar">
+    
   </div>
 
   <div class="cards-container">
@@ -37,7 +38,6 @@
         </div>
       </div>
   </div>
-  
   
   <ng-template #online>
       <p class="online">
