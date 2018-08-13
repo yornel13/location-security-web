@@ -12,10 +12,10 @@ import {WatchUtils} from '../model/watch/watch.utils';
   selector: 'app-monitoring',
   template: `
       <main  class="monitoring-container">
-          <span>{{showMarkers}}</span>
           <app-aside (showWVMarkers)="cargarMarcadores($event)" [vehicles]="vehicles" [watches]="watches" class="app-aside"></app-aside>
           <div class="maps-container">
-              <app-map-google  [vehicles]="vehicles" [watches]="watches" [lat]="lat" [lng]="lng" [zoom]="zoom"></app-map-google>
+              <app-map-google [showMarkers]="showMarkers" [vehicles]="vehicles" [watches]="watches" [lat]="lat" [lng]="lng"
+[zoom]="zoom"></app-map-google>
               <!--<app-map-osm hidden class="app-map" [vehicles]="vehicles" [lat]="lat" [lng]="lng" [zoom]="zoom"></app-map-osm>-->
           </div>
       </main>

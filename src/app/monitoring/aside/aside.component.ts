@@ -22,12 +22,7 @@ export class AsideComponent implements OnInit, OnChanges {
     constructor() { }
 
     ngOnInit() {
-        if (this.showWatches) {
-            this.changeOptions(null);
-        }
-        // if (this.showVehicles) {
-        //     this.mostrarVehiculos(null);
-        // }
+            this.changeOptions('showVehiclesMarkers');
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -39,13 +34,15 @@ export class AsideComponent implements OnInit, OnChanges {
         }
     }
     changeOptions(message) {
-        if (message.localeCompare('showVehiclesMarkers')) {
+        if (message.match('showVehiclesMarkers')) {
+            console.log('vehicles');
             this.eventMessage = message;
-            this.showOpt = {showVehicles: true , showWatches: true , showMarkers: true};
+            this.showOpt = {showVehicles: true , showWatches: false , showMarkers: false};
             this.showWVMarkers.emit(this.eventMessage);
         } else {
+            console.log('Guardias');
             this.eventMessage = message;
-            this.showOpt = {showVehicles: false , showWatches: true , showMarkers: false};
+            this.showOpt = {showVehicles: false , showWatches: true , showMarkers: true};
             this.showWVMarkers.emit(this.eventMessage);
         }
 

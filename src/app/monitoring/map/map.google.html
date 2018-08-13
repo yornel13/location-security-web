@@ -2,7 +2,7 @@
 
 <agm-map  class="google-map" [latitude]="lat" [longitude]="lng" [zoom]="zoom">
     
-    <div  *ngIf="">
+    <div  *ngIf="showMarkers == 'showVehiclesMarkers'">
         <agm-marker  *ngFor="let vehicle of vehicles" [latitude]="vehicle.latitude" [longitude]="vehicle.longitude" [iconUrl]="vehicle.iconUrl">
             <agm-info-window>
                 <app-popup-vehicle [vehicle]="vehicle"></app-popup-vehicle>
@@ -10,7 +10,7 @@
         </agm-marker>
     </div>
     
-    <div  *ngIf="false">
+    <div  *ngIf="showMarkers == 'showWatchesMarkers' ">
         <agm-marker  *ngFor="let watch of watches" [latitude]="+watch.latitude" [longitude]="+watch.longitude" [iconUrl]="watch.iconUrl">
             <agm-info-window>
                 <app-popup-watch [watch]="watch"></app-popup-watch>

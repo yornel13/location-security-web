@@ -21,7 +21,7 @@ app-monitoring{
 
 .maps-container {
     height: 100%;
-    width: 75%;
+    width: 100%;
 }
 
 app-map-google, app-map-osm {

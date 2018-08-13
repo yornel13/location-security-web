@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import { Vehicle } from '../../model/vehicle/vehicle';
 import {Watch} from '../../model/watch/watch';
-import {AsideComponent} from '../aside/aside.component';
+
 
 @Component({
     selector : 'app-map-google',
@@ -30,7 +30,6 @@ export class MapGoogleComponent implements OnChanges {
             // Use if necessary
         }
         if (changes['showMarkers']) {
-            console.log('hoaaaa');
         }
     }
 }
