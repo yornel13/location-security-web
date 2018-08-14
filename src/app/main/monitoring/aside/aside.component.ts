@@ -16,6 +16,7 @@ export class AsideComponent implements OnInit, OnChanges {
     @Output() showWVMarkers = new EventEmitter();
     @Output() markerFocused = new EventEmitter();
     eventMessage = null;
+    clicked = 1;
     devices_status = 'DESCONECTADO';
 
     constructor() { }
@@ -34,10 +35,12 @@ export class AsideComponent implements OnInit, OnChanges {
     }
     changeOptions(message) {
         if (message.match('showVehiclesMarkers')) {
+            this.clicked = 1;
             this.eventMessage = message;
             this.showOpt = {showVehicles: true , showWatches: false , showMarkers: false};
             this.showWVMarkers.emit(this.eventMessage);
         } else {
+            this.clicked = 2;
             this.eventMessage = message;
             this.showOpt = {showVehicles: false , showWatches: true , showMarkers: true};
             this.showWVMarkers.emit(this.eventMessage);
