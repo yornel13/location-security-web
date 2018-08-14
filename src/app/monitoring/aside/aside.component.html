@@ -8,8 +8,9 @@
       <li class="menu-item active-side" >Dispositivos</li>
       <li class="menu-item">Alertas</li>
     </ul>
-    <li  (click)="changeOptions('showVehiclesMarkers')" class="menu-item">Vehiculos</li>
-    <li  (click)="changeOptions('showWatchesMarkers')" class="menu-item">Guardias</li>
+    
+    <li  (click)="changeOptions('showVehiclesMarkers')" class="menu-item opt-dispositivos">Vehiculos</li>
+    <li  (click)="changeOptions('showWatchesMarkers')" class="menu-item opt-dispositivos">Guardias</li>
     
     <input  (keyup)="$event.keyCode == 13 ? find(newSearsh) : null" #newSearsh class="filter" type="text" placeholder="Filtrar">
     
