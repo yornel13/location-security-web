@@ -5,11 +5,13 @@
   <div class="header-aside" id="header-aside">
    
     <ul class="menu-items" id="menu-items">
-      <li class="menu-item active-side" >Dispositivos</li>
+      <div class="menu-item"  >Dispositivos
+        <li ngClass="{'is-active': {{clicked}}}" (click)="changeOptions('showVehiclesMarkers')" class="menu-item opt-dispositivos">Vehiculos</li>
+        <li ngClass="{'is-active': {{!clicked}}}" (click)="changeOptions('showWatchesMarkers')" class="menu-item opt-dispositivos">Guardias</li>
+      </div>
       <li class="menu-item">Alertas</li>
     </ul>
-    <li  (click)="changeOptions('showVehiclesMarkers')" class="menu-item">Vehiculos</li>
-    <li  (click)="changeOptions('showWatchesMarkers')" class="menu-item">Guardias</li>
+    
     
     <input  (keyup)="$event.keyCode == 13 ? find(newSearsh) : null" #newSearsh class="filter" type="text" placeholder="Filtrar">
     
@@ -17,24 +19,34 @@
 
   <div class="cards-container">
     <!--Vehicles Card-->
-    <div *ngIf="showOpt.showVehicles" >
+    <div *ngIf="showOpt.showVehicles">
       <div  *ngFor="let vehicle of vehicles"  class="vehicle-card" (click)="focusMarker(vehicle.latitude, vehicle.longitude)">
-        <p class="imei">IMEI {{vehicle.imei}}</p>
-        <p class="alias">{{vehicle.alias}}</p>
-        <p class="date">Fecha {{vehicle.generated_time}}</p>
-        <p class="status-container">Status:<span class=""
-                                                 *ngIf="vehicle.device_status == 'OFFOROUTOFCOVERAGE'; else online"
-                                                 [ngClass]="{'inactive':vehicle.device_status=='OFFOROUTOFCOVERAGE'}">{{devices_status}}</span></p>
-      </div>
+        <p class="imei ps">IMEI {{vehicle.imei}}</p>
+        <p class="alias ps">{{vehicle.alias}}</p>
+        <p class="date ps">Fecha {{vehicle.generated_time}}</p>
+  
+        <div class="status-container ">
+          <img class="devices-type" src="{{vehicle.iconUrl}}" alt="">
+          <p class="bateria ps"><img src="../../../../assets/cards/battery.png" alt="">{{vehicle.battery_level}}%</p>
+       </div>
+        
+        <p class="ps">Status:</p>
+        <div class=""
+             *ngIf="vehicle.device_status == 'OFFOROUTOFCOVERAGE'; else online"
+             [ngClass]="{'inactive':vehicle.device_status=='OFFOROUTOFCOVERAGE'}">{{devices_status}}</div>
+       
+       </div>
     </div>
     
     <!--watches card-->
       <div *ngIf="showOpt.showWatches">
         <div   *ngFor="let watch of watches"  class="watch-card">
-          <p class="imei">DNI {{watch.guard.dni}}</p>
-          <p class="alias">Nombre: {{watch.guard.name}}</p>
-          <p class="date">Apellido: {{watch.guard.lastname}}</p>
-          <p class="status-container">Status: <span class="">{{'ACTIVO'}}</span></p>
+          <p class="imei ps">DNI {{watch.guard.dni}}</p>
+          <p class="alias ps">Nombre: {{watch.guard.name}}</p>
+          <p class="date ps">Apellido: {{watch.guard.lastname}}</p>
+          <img class="devices-type" src="{{watch.iconUrl}}" alt="">
+          <p class="status-container ps">Status: </p>
+          <span class="online">{{'ACTIVO'}}</span>
         </div>
       </div>
   </div>
