@@ -25,6 +25,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReportComponent } from './report/report.component';
 import {RouterModule, Routes} from '@angular/router';
 import {AsideService} from './monitoring/aside/aside.service';
+import { MessagingComponent } from './messaging/messaging.component';
 
 const mainRoutes: Routes = [
     { path: '', component: MainComponent,
@@ -35,6 +36,7 @@ const mainRoutes: Routes = [
                     { path: 'dashboard', component: DashboardComponent },
                     { path: 'monitoring', component: MonitoringComponent },
                     { path: 'control', component: ControlComponent },
+                    { path: 'messaging', component: MessagingComponent },
                     { path: 'report', component: ReportComponent },
                     { path: '', component: MonitoringComponent }
                 ]
@@ -61,7 +63,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
       MapOsmComponent,
       PopupVehicleComponent,
       PopupWatchComponent,
-      HeaderComponent, AsideComponent, MainComponent, ControlComponent, DashboardComponent, ReportComponent ],
+      HeaderComponent, AsideComponent, MainComponent, ControlComponent, DashboardComponent, ReportComponent, MessagingComponent ],
   bootstrap: [ MainComponent ]
 })
 export class MainModule {}
