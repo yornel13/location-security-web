@@ -11,14 +11,14 @@ import {WatchUtils} from '../../../model/watch/watch.utils';
 @Component({
   selector: 'app-monitoring',
   template: `
-      <main  class="monitoring-container">
-          <app-aside (markerFocused)="markersFocused($event, $event)" (showWVMarkers)="cargarMarcadores($event)"
-                     [vehicles]="vehicles" [watches]="watches" class="app-aside"></app-aside>
+      <main class="monitoring-container">
+          <app-aside (markerFocused)="markersFocused($event, $event)" (showWVMarkers)="cargarMarcadores($event)" [vehicles]="vehicles"
+                     [watches]="watches" class="app-aside"></app-aside>
           <div class="maps-container">
-              <app-map-osm class="app-map" [vehicles]="vehicles" [watches]="watches" [lat]="lat" [lng]="lng" [zoom]="zoom"></app-map-osm>
+              <app-map-osm [changeMarker]="showMarkers" class="app-map" [vehicles]="vehicles" [watches]="watches" [lat]="lat"
+                           [lng]="lng" [zoom]="zoom"></app-map-osm>
           </div>
-      </main>
-  `,
+      </main>    `,
     styleUrls: ['./monitoring.component.css']
 })
 export class MonitoringComponent implements OnInit {
@@ -62,7 +62,6 @@ export class MonitoringComponent implements OnInit {
     this.showMarkers = message;
   }
   markersFocused(lat, lng) {
-      console.log('en foc marker', lng.lng);
       this.lat = lat.lat;
       this.lng = lng.lng;
   }

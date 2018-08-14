@@ -28,6 +28,8 @@ export class MapOsmComponent implements OnChanges {
     lng = -79.607105;
     @Input()
     zoom: number;
+    @Input()
+    changeMarker;
     markerClusterGroup: L.MarkerClusterGroup;
     markerClusterData: any[] = [];
     markerClusterOptions: L.MarkerClusterGroupOptions;
@@ -93,6 +95,13 @@ export class MapOsmComponent implements OnChanges {
         if (changes['lat']) {
             this.options.center.lat = this.lat;
             this.options.center.lng = this.lng;
+        }
+        if (changes['changeMarker']) {
+            if (this.changeMarker.match('showVehiclesMarkers')) {
+                this.setupVehicles();
+            } else {
+                this.setupWatches();
+            }
         }
     }
 
