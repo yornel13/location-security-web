@@ -7,7 +7,7 @@
     <ul class="menu-items" id="menu-items">
       <div class="menu-item"  >Dispositivos
         <li ngClass="{'is-active': {{clicked}}}" (click)="changeOptions('showVehiclesMarkers')" class="menu-item opt-dispositivos">Vehiculos</li>
-        <li ngClass="{'is-active': {{!clicked}}}" (click)="changeOptions('showWatchesMarkers')" class="menu-item opt-dispositivos">Guardias</li>
+        <li ngClass="{'is-active': {{clicked}}}" (click)="changeOptions('showWatchesMarkers')" class="menu-item opt-dispositivos">Guardias</li>
       </div>
       <li class="menu-item">Alertas</li>
     </ul>
