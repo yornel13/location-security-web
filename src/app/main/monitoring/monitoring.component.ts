@@ -1,12 +1,12 @@
-///<reference path="../model/admin/admin.service.ts"/>
+///<reference path="../../../model/admin/admin.service.ts"/>
 import {Component, Input, OnInit} from '@angular/core';
-import {Vehicle} from '../model/vehicle/vehicle';
-import {VehiclesService} from '../model/vehicle/vehicle.service';
-import {UtilsVehicles} from '../model/vehicle/vehicle.utils';
+import {Vehicle} from '../../../model/vehicle/vehicle';
+import {VehiclesService} from '../../../model/vehicle/vehicle.service';
+import {UtilsVehicles} from '../../../model/vehicle/vehicle.utils';
 import {HttpErrorResponse} from '@angular/common/http';
-import {WatchesService} from '../model/watch/watch.service';
-import {Watch} from '../model/watch/watch';
-import {WatchUtils} from '../model/watch/watch.utils';
+import {WatchesService} from '../../../model/watch/watch.service';
+import {Watch} from '../../../model/watch/watch';
+import {WatchUtils} from '../../../model/watch/watch.utils';
 
 @Component({
   selector: 'app-monitoring',

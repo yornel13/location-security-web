@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import {Vehicle} from '../../model/vehicle/vehicle';
+import {Vehicle} from '../../../../model/vehicle/vehicle';
 
 @Component({
     selector: 'app-popup-vehicle',

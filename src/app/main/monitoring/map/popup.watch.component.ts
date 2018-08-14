@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import {Watch} from '../../model/watch/watch';
+import {Watch} from '../../../../model/watch/watch';
 
 @Component({
     selector: 'app-popup-watch',
