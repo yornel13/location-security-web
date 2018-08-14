@@ -3,7 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
 import { VehicleList } from './vehicle.list';
-import { Observable, of } from 'rxjs';
+import {interval, Observable, of} from 'rxjs';
+import {repeatWhen} from 'rxjs/operators';
 
 const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
 
@@ -17,7 +18,7 @@ export class VehiclesService {
   constructor (private http: HttpClient) {}
 
   getVehicles(): Observable<VehicleList> {
-    return this.http.get<VehicleList>(this.VEHICLE_URL);
+    return this.http.get<VehicleList>(this.VEHICLE_URL)/*.pipe(repeatWhen(() => interval(10000)))*/;
   }
 
   // getVehicleByIMEI(imei){

@@ -14,9 +14,7 @@ import {WatchUtils} from '../model/watch/watch.utils';
       <main  class="monitoring-container">
           <app-aside (showWVMarkers)="cargarMarcadores($event)" [vehicles]="vehicles" [watches]="watches" class="app-aside"></app-aside>
           <div class="maps-container">
-              <app-map-google [showMarkers]="showMarkers" [vehicles]="vehicles" [watches]="watches" [lat]="lat" [lng]="lng"
-[zoom]="zoom"></app-map-google>
-              <!--<app-map-osm hidden class="app-map" [vehicles]="vehicles" [lat]="lat" [lng]="lng" [zoom]="zoom"></app-map-osm>-->
+              <app-map-osm class="app-map" [vehicles]="vehicles" [watches]="watches" [lat]="lat" [lng]="lng" [zoom]="zoom"></app-map-osm>
           </div>
       </main>
   `,

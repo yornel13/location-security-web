@@ -26,8 +26,6 @@ export class UtilsVehicles {
                 }
                     break;
                 }
-
-
         });
         return vehicles;
     }

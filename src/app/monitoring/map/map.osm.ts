@@ -1,112 +1,138 @@
 import {
     Component,
     ComponentFactoryResolver,
-    ComponentRef,
     Injector,
-    DoCheck,
     Input,
     OnChanges,
-    SimpleChanges
-} from '@angular/core';
+    SimpleChanges } from '@angular/core';
 import { Vehicle } from '../../model/vehicle/vehicle';
-import { tileLayer, latLng, marker, Marker, icon } from 'leaflet';
 import { PopupVehicleComponent } from './popup.vehicle.component';
+import * as L from 'leaflet';
+import 'leaflet.markercluster';
+import {Watch} from '../../model/watch/watch';
+import {PopupWatchComponent} from './popup.watch.component';
 
-interface MarkerMetaData {
-    name: String;
-    markerInstance: Marker;
-    componentInstance: ComponentRef<PopupVehicleComponent>;
-}
 @Component({
     selector : 'app-map-osm',
     templateUrl : './map.osm.html',
     styleUrls: ['./map.osm.css']
 })
-export class MapOsmComponent implements DoCheck, OnChanges {
+export class MapOsmComponent implements OnChanges {
     @Input()
     vehicles: Vehicle[] = [];
+    @Input()
+    watches: Watch[] = [];
     @Input()
     lat: number;
     @Input()
     lng: number;
     @Input()
     zoom: number;
-    map;
-    markers: MarkerMetaData[] = [];
-    options = {
-        layers: [
-            tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
-        ],
-        zoom: 12,
-        center: latLng(-2.071522, -79.607105)
+    markerClusterGroup: L.MarkerClusterGroup;
+    markerClusterData: any[] = [];
+    markerClusterOptions: L.MarkerClusterGroupOptions;
+    LAYER_OSM = {
+        id: 'openstreetmap',
+        name: 'Open Street Map',
+        enabled: false,
+        layer: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            attribution: 'Open Street Map'
+        })
+    };
+    LAYER_GOOGLE_STREET = {
+        id: 'googlestreets',
+        name: 'Google Street Map',
+        enabled: false,
+        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: 'Google Street Map'
+        })
+    };
+    LAYER_GOOGLE_SATELLITE = {
+        id: 'googlesatellite',
+        name: 'Google Satellite Map',
+        enabled: false,
+        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: 'Google Satellite Map'
+        })
+    };
+    LAYER_GOOGLE_TERRAIN = {
+        id: 'googletarrain',
+        name: 'Google Terrain Map',
+        enabled: false,
+        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: 'Google Terrain Map'
+        })
     };
 
-    constructor(private resolver: ComponentFactoryResolver, private injector: Injector){ }
+    // Values to bind to Leaflet Directive
+    layersControlOptions = { position: 'bottomright' };
+    baseLayers = {
+        'Open Street Map': this.LAYER_GOOGLE_STREET.layer
+    };
+    options = {
+        zoom: 12,
+        center: L.latLng([ -2.071522, -79.607105 ])
+    };
 
-    onMapReady(map) {
-        // get a local reference to the map as we need it later
-        this.map = map;
-    }
-
-    addMarker() {
-        if (this.vehicles != null) {
-            this.vehicles.forEach(vehicle => {
-                const imageIcon = {
-                    icon: icon({
-                        //iconSize  : [25, 41],
-                        //iconAnchor: [13, 41],
-                        iconUrl   : vehicle.iconUrl,
-                        //shadowUrl : vehicle.shadowUrl
-                    })
-                }
-                const m = marker([vehicle.latitude, vehicle.longitude], imageIcon );
-                const factory = this.resolver.resolveComponentFactory(PopupVehicleComponent);
-                const component = factory.create(this.injector);
-                const popupContent = component.location.nativeElement;
-                component.instance.vehicle = vehicle;
-                component.changeDetectorRef.detectChanges();
-                m.bindPopup(popupContent).openPopup();
-                m.addTo(this.map);
-                this.markers.push({
-                    name: vehicle.alias,
-                    markerInstance: m,
-                    componentInstance: component
-                });
-            });
-        }
-    }
-
-    removeMarker(markerRemove) {
-        // remove it from the array meta objects
-        const idx = this.markers.indexOf(markerRemove);
-        this.markers.splice(idx, 1);
-
-        // remove the marker from the map
-        markerRemove.markerInstance.removeFrom(this.map);
-
-        // destroy the component to avoid memory leaks
-        markerRemove.componentInstance.destroy();
-    }
-
-    // This is a lifecycle method of an Angular component which gets invoked whenever for
-    // our component change detection is triggered
-    ngDoCheck() {
-        // since our components are dynamic, we need to manually iterate over them and trigger
-        // change detection on them.
-        this.markers.forEach(entry => {
-            entry.componentInstance.changeDetectorRef.detectChanges();
-        });
-    }
+    constructor(private resolver: ComponentFactoryResolver, private injector: Injector) { }
 
     ngOnChanges(changes: SimpleChanges) {
-        // only run when property "data" changed
         if (changes['vehicles']) {
-            this.vehicles = this.getVehicles(this.vehicles);
-            this.addMarker();
+            this.setupVehicles();
+        }
+        if (changes['watches']) {
+            this.setupWatches();
         }
     }
-    getVehicles(vehicles: Vehicle[]) {
-        if (!vehicles) { return; }
-        return vehicles;
+
+    markerClusterReady(group: L.MarkerClusterGroup) {
+        this.markerClusterGroup = group;
+    }
+
+    setupVehicles() {
+        const data: any[] = [];
+        this.vehicles.forEach(vehicle => {
+            const imageIcon = {
+                icon: L.icon({
+                    iconUrl   : vehicle.iconUrl,
+                })
+            };
+            const m = L.marker([vehicle.latitude, vehicle.longitude], imageIcon);
+            const factory = this.resolver.resolveComponentFactory(PopupVehicleComponent);
+            const component = factory.create(this.injector);
+            const popupContent = component.location.nativeElement;
+            component.instance.vehicle = vehicle;
+            component.changeDetectorRef.detectChanges();
+            m.bindPopup(popupContent).openPopup();
+            data.push(m);
+        });
+
+        this.markerClusterData = data;
+    }
+    setupWatches() {
+        const data: any[] = [];
+        this.watches.forEach(watch => {
+            const imageIcon = {
+                icon: L.icon({
+                    iconUrl   : watch.iconUrl,
+                })
+            };
+            const m = L.marker([watch.latitude, watch.longitude], imageIcon);
+            const factory = this.resolver.resolveComponentFactory(PopupWatchComponent);
+            const component = factory.create(this.injector);
+            const popupContent = component.location.nativeElement;
+            component.instance.watch = watch;
+            component.changeDetectorRef.detectChanges();
+            m.bindPopup(popupContent).openPopup();
+            data.push(m);
+        });
+        this.markerClusterData = data;
     }
 }

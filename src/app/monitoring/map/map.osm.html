@@ -1,5 +1,12 @@
+<link rel="stylesheet" href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.Default.css" />
+
 <div class="map"
      leaflet
      [leafletOptions]="options"
-     (leafletMapReady)="onMapReady($event)">
+     [leafletBaseLayers]="baseLayers"
+     [leafletLayersControlOptions]="layersControlOptions"
+     [leafletMarkerCluster]="markerClusterData"
+     [leafletMarkerClusterOptions]="markerClusterOptions"
+     (leafletMarkerClusterReady)="markerClusterReady($event)">
 </div>
