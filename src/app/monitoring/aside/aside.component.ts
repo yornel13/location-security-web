@@ -9,20 +9,19 @@ import {Watch} from '../../model/watch/watch';
 })
 export class AsideComponent implements OnInit, OnChanges {
 
-    showWatches: boolean;
-    showVehicles: boolean;
-    showMarkers: boolean;
+    @Output() latlng = {lat: null , lng: null};
     @Input() vehicles: Vehicle[] = [];
     @Input() watches: Watch[] = [];
     @Output() showOpt = {showVehicles: true , showWatches: false , showMarkers: true};
     @Output() showWVMarkers = new EventEmitter();
+    @Output() markerFocused = new EventEmitter();
     eventMessage = null;
     devices_status = 'DESCONECTADO';
 
     constructor() { }
 
     ngOnInit() {
-            this.changeOptions('showVehiclesMarkers');
+        this.changeOptions('showVehiclesMarkers');
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -35,20 +34,30 @@ export class AsideComponent implements OnInit, OnChanges {
     }
     changeOptions(message) {
         if (message.match('showVehiclesMarkers')) {
-            console.log('vehicles');
             this.eventMessage = message;
             this.showOpt = {showVehicles: true , showWatches: false , showMarkers: false};
             this.showWVMarkers.emit(this.eventMessage);
         } else {
-            console.log('Guardias');
             this.eventMessage = message;
             this.showOpt = {showVehicles: false , showWatches: true , showMarkers: true};
             this.showWVMarkers.emit(this.eventMessage);
         }
     }
     find(newSearch) {
-
-
         console.log(newSearch.value);
+        this.vehicles.forEach( vehicle => {
+           if (vehicle.imei.match(newSearch.value)) {
+               console.log('imei es', vehicle.imei );
+           } else {
+               console.log('no match');
+           }
+        });
     }
+    focusMarker(lat, lng) {
+        console.log('lat: ', lat, 'lng: ', lng);
+        this.latlng.lat = lat;
+        this.latlng.lng = lng;
+        this.markerFocused.emit(this.latlng);
+    }
+
 }

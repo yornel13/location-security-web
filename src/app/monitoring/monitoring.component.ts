@@ -12,7 +12,8 @@ import {WatchUtils} from '../model/watch/watch.utils';
   selector: 'app-monitoring',
   template: `
       <main  class="monitoring-container">
-          <app-aside (showWVMarkers)="cargarMarcadores($event)" [vehicles]="vehicles" [watches]="watches" class="app-aside"></app-aside>
+          <app-aside (markerFocused)="markersFocused($event, $event)" (showWVMarkers)="cargarMarcadores($event)"
+                     [vehicles]="vehicles" [watches]="watches" class="app-aside"></app-aside>
           <div class="maps-container">
               <app-map-osm class="app-map" [vehicles]="vehicles" [watches]="watches" [lat]="lat" [lng]="lng" [zoom]="zoom"></app-map-osm>
           </div>
@@ -31,6 +32,7 @@ export class MonitoringComponent implements OnInit {
   showVehicles: boolean;
   @Input() showMarkers: string;
   @Input() showOpts = {};
+  @Input() latlng = {lat: null , lng: null};
 
   constructor(private vehiclesService: VehiclesService, private watchesService: WatchesService) {}
 
@@ -58,6 +60,11 @@ export class MonitoringComponent implements OnInit {
   }
   cargarMarcadores(message) {
     this.showMarkers = message;
+  }
+  markersFocused(lat, lng) {
+      console.log('en foc marker', lng.lng);
+      this.lat = lat.lat;
+      this.lng = lng.lng;
   }
 }
 

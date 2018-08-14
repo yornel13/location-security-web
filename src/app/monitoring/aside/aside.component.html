@@ -18,7 +18,7 @@
   <div class="cards-container">
     <!--Vehicles Card-->
     <div *ngIf="showOpt.showVehicles" >
-      <div  *ngFor="let vehicle of vehicles"  class="vehicle-card">
+      <div  *ngFor="let vehicle of vehicles"  class="vehicle-card" (click)="focusMarker(vehicle.latitude, vehicle.longitude)">
         <p class="imei">IMEI {{vehicle.imei}}</p>
         <p class="alias">{{vehicle.alias}}</p>
         <p class="date">Fecha {{vehicle.generated_time}}</p>

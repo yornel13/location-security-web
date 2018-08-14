@@ -23,9 +23,9 @@ export class MapOsmComponent implements OnChanges {
     @Input()
     watches: Watch[] = [];
     @Input()
-    lat: number;
+    lat = -2.071522;
     @Input()
-    lng: number;
+    lng = -79.607105;
     @Input()
     zoom: number;
     markerClusterGroup: L.MarkerClusterGroup;
@@ -44,7 +44,7 @@ export class MapOsmComponent implements OnChanges {
         id: 'googlestreets',
         name: 'Google Street Map',
         enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
             maxZoom: 20,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
             attribution: 'Google Street Map'
@@ -54,7 +54,7 @@ export class MapOsmComponent implements OnChanges {
         id: 'googlesatellite',
         name: 'Google Satellite Map',
         enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
             maxZoom: 20,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
             attribution: 'Google Satellite Map'
@@ -64,7 +64,7 @@ export class MapOsmComponent implements OnChanges {
         id: 'googletarrain',
         name: 'Google Terrain Map',
         enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
             maxZoom: 20,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
             attribution: 'Google Terrain Map'
@@ -77,8 +77,8 @@ export class MapOsmComponent implements OnChanges {
         'Open Street Map': this.LAYER_GOOGLE_STREET.layer
     };
     options = {
-        zoom: 12,
-        center: L.latLng([ -2.071522, -79.607105 ])
+        zoom: 8,
+        center: L.latLng([ this.lat, this.lng ])
     };
 
     constructor(private resolver: ComponentFactoryResolver, private injector: Injector) { }
@@ -89,6 +89,10 @@ export class MapOsmComponent implements OnChanges {
         }
         if (changes['watches']) {
             this.setupWatches();
+        }
+        if (changes['lat']) {
+            this.options.center.lat = this.lat;
+            this.options.center.lng = this.lng;
         }
     }
 
