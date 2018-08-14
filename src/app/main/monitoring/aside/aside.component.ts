@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, OnInit, Output, SimpleChanges, EventEmitter, Injectable} from '@angular/core';
 import {Vehicle} from '../../../../model/vehicle/vehicle';
 import {Watch} from '../../../../model/watch/watch';
-import {AsideService} from "./aside.service";
+import {AsideService} from './aside.service';
 
 @Component({
   selector: 'app-aside',
@@ -18,6 +18,7 @@ export class AsideComponent implements OnInit, OnChanges {
     @Output() showWVMarkers = new EventEmitter();
     @Output() markerFocused = new EventEmitter();
     eventMessage = null;
+    clicked = 1;
     devices_status = 'DESCONECTADO';
 
     constructor(private asideService: AsideService) {}
@@ -36,10 +37,12 @@ export class AsideComponent implements OnInit, OnChanges {
     }
     changeOptions(message) {
         if (message.match('showVehiclesMarkers')) {
+            this.clicked = 1;
             this.eventMessage = message;
             this.showOpt = {showVehicles: true , showWatches: false , showMarkers: false};
             this.showWVMarkers.emit(this.eventMessage);
         } else {
+            this.clicked = 2;
             this.eventMessage = message;
             this.showOpt = {showVehicles: false , showWatches: true , showMarkers: true};
             this.showWVMarkers.emit(this.eventMessage);

@@ -11,7 +11,7 @@ import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import {Watch} from '../../../../model/watch/watch';
 import {PopupWatchComponent} from './popup.watch.component';
-import {AsideService} from "../aside/aside.service";
+import {AsideService} from '../aside/aside.service';
 
 @Component({
     selector : 'app-map-osm',

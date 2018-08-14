@@ -8,6 +8,4 @@ import {Vehicle} from '../../../../model/vehicle/vehicle';
 export class PopupVehicleComponent {
     @Input()
     vehicle: Vehicle;
-
-    device_status = 'DESCONECTADO';
 }
