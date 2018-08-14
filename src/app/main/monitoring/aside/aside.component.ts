@@ -1,12 +1,14 @@
-import {Component, Input, OnChanges, OnInit, Output, SimpleChanges, EventEmitter} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, Output, SimpleChanges, EventEmitter, Injectable} from '@angular/core';
 import {Vehicle} from '../../../../model/vehicle/vehicle';
 import {Watch} from '../../../../model/watch/watch';
+import {AsideService} from "./aside.service";
 
 @Component({
   selector: 'app-aside',
   templateUrl: './aside.component.html',
   styleUrls: ['./aside.component.css']
 })
+
 export class AsideComponent implements OnInit, OnChanges {
 
     @Output() latlng = {lat: null , lng: null};
@@ -18,7 +20,7 @@ export class AsideComponent implements OnInit, OnChanges {
     eventMessage = null;
     devices_status = 'DESCONECTADO';
 
-    constructor() { }
+    constructor(private asideService: AsideService) {}
 
     ngOnInit() {
         this.changeOptions('showVehiclesMarkers');
@@ -58,6 +60,6 @@ export class AsideComponent implements OnInit, OnChanges {
         this.latlng.lat = lat;
         this.latlng.lng = lng;
         this.markerFocused.emit(this.latlng);
+        this.asideService.marker.emit(this.latlng);
     }
-
 }
