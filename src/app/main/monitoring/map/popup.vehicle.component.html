@@ -3,5 +3,5 @@
     <p>{{ vehicle.alias }}</p>
     <p>{{ vehicle.generated_time }}</p>
     <p>{{ vehicle.model_name }}</p>
-    <p class="online-marker " [ngClass]="{'inactive':vehicle.device_status=='OFFOROUTOFCOVERAGE'}" *ngIf="vehicle.device_status == 'OFFOROUTOFCOVERAGE'; else online">{{ device_status}}</p>
+    <p class="online-marker " [ngClass]="{'inactive':vehicle.device_status=='OFFOROUTOFCOVERAGE'}" *ngIf="vehicle.device_status == 'OFFOROUTOFCOVERAGE; online';">{{ device_status}}</p>
 

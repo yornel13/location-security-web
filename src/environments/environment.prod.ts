@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  BASIC_URL: 'http://icsseseguridad.com/location-security/public'
 };
