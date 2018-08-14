@@ -1,7 +1,7 @@
 
-    <h3>{{ vehicle.imei }}</h3>
-    <p>{{ vehicle.alias }}</p>
-    <p>{{ vehicle.generated_time }}</p>
-    <p>{{ vehicle.model_name }}</p>
-    <p class="online-marker " [ngClass]="{'inactive':vehicle.device_status=='OFFOROUTOFCOVERAGE'}" *ngIf="vehicle.device_status == 'OFFOROUTOFCOVERAGE; online';">{{ device_status}}</p>
+    <h4 class="ppp">{{ vehicle.imei }}</h4>
+    <p class="p-popup"><b>{{ vehicle.alias }}</b></p>
+    <p class="p-popup"><b>Velocidad: </b>{{ vehicle.speed }} km/h</p>
+    <p class="p-popup"><b>Última transmisión: </b> {{ vehicle.generated_time }}</p>
+    <p class="p-popup"><b>Model:</b> {{ vehicle.model_name }}</p>
 

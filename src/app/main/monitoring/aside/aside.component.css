@@ -21,13 +21,13 @@
     flex-direction: column;
 }
 
- .opt-dispositivos:hover{
+.opt-dispositivos:hover{
     display: inline-block;
 }
 
 /*.opt-dispositivos{*/
-    /*display: none;*/
-    /*position: relative;*/
+/*display: none;*/
+/*position: relative;*/
 /*}*/
 
 .is-active{
@@ -46,7 +46,7 @@
 
 .cards-container{
     overflow: auto;
-    height: 64%;
+    height: 100%;
 
 }
 
@@ -125,4 +125,3 @@
 .inactive{
     color: red;
 }
-
