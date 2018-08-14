@@ -5,11 +5,11 @@ import {
     Input,
     OnChanges,
     SimpleChanges } from '@angular/core';
-import { Vehicle } from '../../model/vehicle/vehicle';
+import { Vehicle } from '../../../../model/vehicle/vehicle';
 import { PopupVehicleComponent } from './popup.vehicle.component';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
-import {Watch} from '../../model/watch/watch';
+import {Watch} from '../../../../model/watch/watch';
 import {PopupWatchComponent} from './popup.watch.component';
 
 @Component({
@@ -76,7 +76,7 @@ export class MapOsmComponent implements OnChanges {
     // Values to bind to Leaflet Directive
     layersControlOptions = { position: 'bottomright' };
     baseLayers = {
-        'Open Street Map': this.LAYER_GOOGLE_STREET.layer
+        'Open Street Map': this.LAYER_OSM.layer
     };
     options = {
         zoom: 8,
@@ -126,7 +126,6 @@ export class MapOsmComponent implements OnChanges {
             m.bindPopup(popupContent).openPopup();
             data.push(m);
         });
-
         this.markerClusterData = data;
     }
     setupWatches() {

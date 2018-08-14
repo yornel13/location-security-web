@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, OnInit, Output, SimpleChanges, EventEmitter} from '@angular/core';
-import {Vehicle} from '../../model/vehicle/vehicle';
-import {Watch} from '../../model/watch/watch';
+import {Vehicle} from '../../../../model/vehicle/vehicle';
+import {Watch} from '../../../../model/watch/watch';
 
 @Component({
   selector: 'app-aside',
