@@ -3,20 +3,30 @@
   <!--header aside-->
 
   <div class="header-aside" id="header-aside">
-   
-    <ul class="menu-items" id="menu-items">
-      <div class="menu-item"  >Dispositivos
-        <li ngClass="{'is-active': {{clicked}}}" (click)="changeOptions('showVehiclesMarkers')" class="menu-item opt-dispositivos">Vehiculos</li>
-        <li ngClass="{'is-active': {{clicked}}}" (click)="changeOptions('showWatchesMarkers')" class="menu-item opt-dispositivos">Guardias</li>
+  
+    <div class="dropdown">
+      <div class="btn btn-secondary menu-item dropdown-toggle" href="#"   id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Dispositivos
       </div>
-      <li class="menu-item">Alertas</li>
-    </ul>
     
-    
-    <input  (keyup)="$event.keyCode == 13 ? find(newSearsh) : null" #newSearsh class="filter" type="text" placeholder="Filtrar">
+      <div class="dropdown-menu menu-item" >
+        <div class=" menu-items" (click)="selectOptions('showVehiclesMarkers')" >Vehiculos<img *ngIf="vehiclesCheck" class="checked-icon" src="../../../../assets/aside-menu/checked.png" alt=""></div>
+        <div class=" menu-items" >Bombas</div>
+        <div class=" menu-items" (click)="selectOptions('showWatchesMarkers')">Guardias   <img *ngIf="watchesCheck" class="checked-icon" src="../../../../assets/aside-menu/checked.png" alt=""></div>
+      </div>
+    </div>
+    <div class="menu-item">Alertas</div>
+    <!--<ul class="menu-items" id="menu-items">-->
+      <!--<div class="menu-item"  >Dispositivos-->
+        <!--<li ngClass="{'is-active': {{clicked}}}" (click)="selectOptions('showVehiclesMarkers')" class="menu-item opt-dispositivos">Vehiculos</li>-->
+        <!--<li ngClass="{'is-active': {{clicked}}}" (click)="selectOptions('showWatchesMarkers')" class="menu-item opt-dispositivos">Guardias</li>-->
+      <!--</div>-->
+    <!--</ul>-->
     
   </div>
-
+  
+  <input  (keyup)="$event.keyCode == 13 ? find(newSearsh) : null" #newSearsh class="filter" type="text" placeholder="Filtrar">
+  
   <div class="cards-container">
     <!--Vehicles Card-->
     <div *ngIf="showOpt.showVehicles">

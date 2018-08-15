@@ -18,11 +18,13 @@ export class AsideComponent implements OnInit, OnChanges {
     eventMessage = null;
     clicked = true;
     devices_status = 'DESCONECTADO';
+    vehiclesCheck = true;
+    watchesCheck = true;
 
     constructor() { }
 
     ngOnInit() {
-        this.changeOptions('showVehiclesMarkers');
+        this.selectOptions('showVehiclesMarkers');
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -33,14 +35,12 @@ export class AsideComponent implements OnInit, OnChanges {
             // Use if necessary
         }
     }
-    changeOptions(message) {
+    selectOptions(message) {
         if (message.match('showVehiclesMarkers')) {
-            this.clicked = true;
             this.eventMessage = message;
             this.showOpt = {showVehicles: true , showWatches: false , showMarkers: false};
             this.showWVMarkers.emit(this.eventMessage);
         } else {
-            this.clicked = false;
             this.eventMessage = message;
             this.showOpt = {showVehicles: false , showWatches: true , showMarkers: true};
             this.showWVMarkers.emit(this.eventMessage);

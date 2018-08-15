@@ -6,29 +6,41 @@
 
 }
 
+.header-aside{
+    display: flex;
+}
+
 .menu-items{
     display: flex;
-    margin: 0 5px 20px 0;
+    justify-content: space-between;
+    margin: 0;
     padding: 0;
     list-style: none;
+    color: #fff;
+    background-color: #444;
 }
 
 .menu-item{
+
+    background-color: #444 ;
+    margin: 0;
     padding: 8px;
+    border: none;
     color: #fff;
     cursor: pointer;
-    display: flex;
-    flex-direction: column;
+    text-decoration: none;
+    border-radius: 0;
 }
 
- .opt-dispositivos:hover{
-    display: inline-block;
+.menu-item:hover{
+    background-color: #333333;
 }
 
-/*.opt-dispositivos{*/
-    /*display: none;*/
-    /*position: relative;*/
-/*}*/
+.checked-icon{
+    margin-top: 5px;
+    margin-right: 5px;
+    height: 12px;
+}
 
 .is-active{
     background: #333;
@@ -40,13 +52,15 @@
     margin-bottom: 20px;
 }
 
-.menu-item:hover{
-    background-color: #444;
+.menu-items:hover{
+    background-color: #333;
+
+    cursor: pointer;
 }
 
 .cards-container{
     overflow: auto;
-    height: 64%;
+    height: 100%;
 
 }
 
