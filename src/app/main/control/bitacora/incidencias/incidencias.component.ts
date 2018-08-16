@@ -1,21 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import {HttpErrorResponse} from '@angular/common/http';
 import { Router } from '@angular/router';
-import { AdminService } from '../../../model/admin/admin.service';
-import { Admin } from '../../../model/admin/admin';
+import { IncidenciasService } from '../../../../../model/incidencias/incidencia.service';
+import { Incidencia } from '../../../../../model/incidencias/incidencia';
 
 @Component({
-  selector: 'app-control',
-  templateUrl: './control.component.html',
-  styleUrls: ['./control.component.css']
+  selector: 'app-incidencias',
+  templateUrl: './incidencias.component.html',
+  styleUrls: ['./incidencias.component.css']
 })
-
-export class ControlComponent {
+export class IncidenciasComponent {
   //general
-	administradores:any = undefined;
-	data:any = undefined;
-  admin:any = [];
-	error: string;
+  incidencias:any = [];
+  data:any = undefined;
+  incid:any = [];
   //vistas admin
   lista:boolean;
   detalle:boolean;
@@ -23,19 +20,14 @@ export class ControlComponent {
   editar:boolean;
   //editar
   nombre:string;
-  apellido:string;
-  correo:string;
-  identificacion:string;
+  nivel:string;
   idEdit:number;
   errorEdit:boolean = false;
   errorEditData:boolean = false;
   errorEditMsg:string;
   //crear
   namea:string;
-  lastnamea:string;
-  emaila:string;
-  dnia:string;
-  passworda:string;
+  nivela:string;
   errorSave:boolean = false;
   errorSaveData:boolean = false;
   errorNewMsg:string;
@@ -43,19 +35,16 @@ export class ControlComponent {
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
 
-  constructor(public router:Router, private adminService:AdminService) { 
+  constructor(public router:Router, private incidenciaService:IncidenciasService) { 
   	this.getAll();
-    this.lista = true;
-    this.detalle = false;
-    this.crear = false;
-    this.editar = false;
+  	this.regresar();
   }
-
-    getAll() {
-    	this.adminService.getAll().then(
+  	getAll() {
+    	this.incidenciaService.getAll().then(
     		success => {
-    			this.administradores = success;
-    			this.data = this.administradores.data;
+    			this.incidencias = success;
+    			this.data = this.incidencias.data;
+    			console.log(this.data);
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -66,41 +55,22 @@ export class ControlComponent {
         );
     }
 
-    viewDetail(id) {
-      this.adminService.getId(id).then(
-        success => {
-          this.admin = success;
-          this.lista = false;
-          this.detalle = true;
-          this.crear = false;
-          this.editar = false;
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
-    }
+  	regresar() {
+	  this.lista = true;
+	  this.detalle = false;
+	  this.crear = false;
+	  this.editar = false;
+	  this.errorEditData = false;
+      this.errorEdit = false;
+	}
 
-    regresar() {
-      this.lista = true;
-      this.detalle = false;
-      this.crear = false;
-      this.editar = false;
-      this.errorEditData = false;
-    }
-
-    editarAdmmin(id) {
-      this.adminService.getId(id).then(
+	editarIncidencia(id) {
+      this.incidenciaService.getId(id).then(
         success => {
-          this.admin = success;
-          this.nombre = this.admin.name;
-          this.apellido = this.admin.lastname;
-          this.correo = this.admin.email;
-          this.identificacion = this.admin.dni;
-          this.idEdit = this.admin.id;
+          this.incid = success;
+          this.nombre = this.incid.name;
+          this.nivel = this.incid.level;
+          this.idEdit = this.incid.id;
           this.lista = false;
           this.detalle = false;
           this.crear = false;
@@ -116,14 +86,12 @@ export class ControlComponent {
     }
 
     saveEdit() {
-      const editadmin : Admin = {
+      const editincidencia : Incidencia = {
         id: this.idEdit,
-        dni: this.identificacion,
-        name: this.nombre,
-        lastname: this.apellido,
-        email: this.correo
+        level: this.nivel,
+        name: this.nombre
       };
-      this.adminService.set(editadmin).then(
+      this.incidenciaService.set(editincidencia).then(
         success => {
           this.getAll();
           this.regresar();
@@ -135,14 +103,8 @@ export class ControlComponent {
                     if(error.error.errors.name){
                       this.errorEditMsg = error.error.errors.name[0];
                     }
-                    if(error.error.errors.lastname){
-                      this.errorEditMsg = error.error.errors.lastname[0];
-                    }
-                    if(error.error.errors.email){
-                      this.errorEditMsg = error.error.errors.email[0];
-                    }
-                    if(error.error.errors.dni){
-                      this.errorEditMsg = error.error.errors.dni[0];
+                    if(error.error.errors.level){
+                      this.errorEditMsg = error.error.errors.level[0];
                     }
                     this.errorEditData = true;
                 } else {
@@ -153,29 +115,24 @@ export class ControlComponent {
         );
     }
 
-    crearAdmin() {
+    crearIncidencia() {
       this.lista = false;
       this.detalle = false;
       this.crear = true;
       this.editar = false;
     }
 
-    saveNewAdmin() {
-      const createadmin : Admin = {
-        dni: this.dnia,
+    saveNewIncidencia() {
+      const createadmin : Incidencia = {
         name: this.namea,
-        lastname: this.lastnamea,
-        email: this.emaila,
-        password: this.passworda
+        level: this.nivela
       };
-      this.adminService.add(createadmin).then(
+      this.incidenciaService.add(createadmin).then(
         success => {
           this.getAll();
           this.regresar();
-          this.dnia = '';
           this.namea = '';
-          this.lastnamea = '';
-          this.emaila = '';
+          this.nivela = '';
           this.errorSave = false;
           this.errorSaveData = false;
             }, error => {
@@ -187,12 +144,6 @@ export class ControlComponent {
                     if(error.error.errors.lastname){
                       this.errorNewMsg = error.error.errors.lastname[0];
                     }
-                    if(error.error.errors.email){
-                      this.errorNewMsg = error.error.errors.email[0];
-                    }
-                    if(error.error.errors.dni){
-                      this.errorNewMsg = error.error.errors.dni[0];
-                    }
                     this.errorSaveData = true;
                 } else {
                     // on general error
@@ -202,8 +153,8 @@ export class ControlComponent {
         );
     }
 
-    deleteAdmin(id) {
-      this.adminService.delete(id).then(
+    deleteIncidencia(id) {
+      this.incidenciaService.delete(id).then(
         success => {
           this.getAll();
           this.regresar();
@@ -220,5 +171,4 @@ export class ControlComponent {
             }
         );
     }
-
 }

@@ -9,18 +9,18 @@
         <i class="fas fa-edit"></i>
           Guardias
       </a>
-      <a class="btn btn-secondary" data-toggle="collapse" href="#collapseVisit" role="button" aria-expanded="false" aria-controls="collapseExample">
+      <a class="btn btn-secondary" data-toggle="collapse" href="#collapseVisit" role="button" aria-expanded="true" aria-controls="collapseExample">
         <i class="fas fa-edit"></i>
           Visitas
         <i class="fas fa-plus" style="float: right;"></i>
       </a>
-      <div class="collapse" id="collapseVisit" aria-labelledby="headingThree" data-parent="#accordion">
+      <div class="collapse show" id="collapseVisit" aria-labelledby="headingThree" data-parent="#accordion">
         <a class="btn btn-secondary collap" role="button">Visitas Activas</a>
         <a class="btn btn-secondary collap" role="button">Visitas Finalizadas</a>
         <a class="btn btn-secondary collap" role="button">Todas las Visitas</a>
         <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/vehiculos">Vehículos Visitantes</a>
         <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/visitantes">Visitantes</a>
-        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/funcionarios">Funcionarios</a>
+        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/funcionarios" style="background-color: #444;width: 100%;text-align: left;color: #FFF;">Funcionarios</a>
       </div>
       <a class="btn btn-secondary" data-toggle="collapse" href="#collapseBitacora" role="button" aria-expanded="false" aria-controls="collapseExample">
         <i class="fas fa-edit"></i>
@@ -40,11 +40,11 @@
   </aside>
   <div class="info-container panel panel-default" *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto" ><h3>Administradores</h3></div>
+      <div class="mr-auto" ><h3>Funcionarios</h3></div>
         <div class="ml-auto">
           <div class="btn-group">
-            <a class="btn btn-success" style="color: white" (click)="crearAdmin()"><i class="fas fa-plus-circle"></i>
-              Añadir Administrador
+            <a class="btn btn-success" style="color: white" (click)="crearFuncionario()"><i class="fas fa-plus-circle"></i>
+              Añadir Funcionario
             </a>
           </div>
         </div>
@@ -56,7 +56,7 @@
                <th>Cédula</th>
                <th>Nombres</th>
                <th>Apellidos</th>
-               <th>Correo</th>
+               <th>Dirección</th>
                <th>Acciones</th>
              </thead>
              <tbody>
@@ -65,12 +65,12 @@
                 <td>{{d.dni}}</td>
                 <td>{{d.name}}</td>
                 <td>{{d.lastname}}</td>
-                <td>{{d.email}}</td>
+                <td>{{d.address}}</td>
                 <td>
                   <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
-                  <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editarAdmmin(d.id)" title="Editar"><span class="fas fa-edit"></span></a>
+                  <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editarFuncionario(d.id)" title="Editar"><span class="fas fa-edit"></span></a>
                   <form method="post" style="display: inline-block;">
-                   <button class="btn btn-danger btn-xs" (click)="deleteAdmin(d.id)" title="Eliminar" type="submit"><span class="fas fa-trash-alt"></span></button>
+                   <button class="btn btn-danger btn-xs" (click)="deleteFuncionario(d.id)" title="Eliminar" type="submit"><span class="fas fa-trash-alt"></span></button>
                  </form>
                  </td>
                </tr>
@@ -81,7 +81,7 @@
   </div>
   <div class="info-container panel panel-default" *ngIf="crear">
     <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
-      <h3 class="panel-title"><i class="fas fa-plus-circle" style="margin-right: 20px;"></i> Nuevo Administrador</h3>
+      <h3 class="panel-title"><i class="fas fa-plus-circle" style="margin-right: 20px;"></i> Nuevo Funcionario</h3>
     </div>
     <div class="panel-body mt-2">          
           <div class="table-container container">
@@ -89,31 +89,25 @@
               <div class="form-group row">
                 <label for="namea" class="col-sm-2 col-form-label">Nombres <span class="text-danger">*</span></label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="namea" placeholder="Your Name" [(ngModel)]="namea" [ngModelOptions]="{standalone: true}">
+                  <input type="text" class="form-control" id="namea" placeholder="Introduzca nombre" [(ngModel)]="namea" [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
               <div class="form-group row">
                 <label for="lastnamea" class="col-sm-2 col-form-label">Apellidos <span class="text-danger">*</span></label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="lastnamea" placeholder="Your Last Name" [(ngModel)]="lastnamea" [ngModelOptions]="{standalone: true}">
+                  <input type="text" class="form-control" id="lastnamea" placeholder="Introduzca apellido" [(ngModel)]="lastnamea" [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
               <div class="form-group row">
                 <label for="dnia" class="col-sm-2 col-form-label">Cédula <span class="text-danger">*</span></label>
                 <div class="col-sm-10">
-                  <input type="number" class="form-control" id="dnia" placeholder="1111111111111111" [(ngModel)]="dnia" [ngModelOptions]="{standalone: true}">
+                  <input type="text" class="form-control" id="dnia" placeholder="Introduzca cédula" [(ngModel)]="dnia" [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
               <div class="form-group row">
-                <label for="emaila" class="col-sm-2 col-form-label">Correo <span class="text-danger">*</span></label>
+                <label for="addressa" class="col-sm-2 col-form-label">Dirección <span class="text-danger">*</span></label>
                 <div class="col-sm-10">
-                  <input type="email" class="form-control" id="emaila" placeholder="example@email.com" [(ngModel)]="emaila" [ngModelOptions]="{standalone: true}">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="passworda" class="col-sm-2 col-form-label">Password <span class="text-danger">*</span></label>
-                <div class="col-sm-10">
-                  <input type="password" class="form-control" id="passworda" placeholder="*************" [(ngModel)]="passworda" [ngModelOptions]="{standalone: true}">
+                  <input type="text" class="form-control" id="addressa" placeholder="Introduzca dirección" [(ngModel)]="addressa" [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
               <div>
@@ -122,7 +116,7 @@
               </div>
               <div class="row mt-4">
                   <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="regresar()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
-                  <button type="button" class="btn btn-success btn-block col-md-3 mr-auto" (click)="saveNewAdmin()"  style=" margin: 0px 0px 0px 20px"><i class="fas fa-plus-circle" style="margin-right: 10px;"></i>Agregar Administrador</button>
+                  <button type="button" class="btn btn-success btn-block col-md-3 mr-auto" (click)="saveNewFuncionario()"  style=" margin: 0px 0px 0px 20px"><i class="fas fa-plus-circle" style="margin-right: 10px;"></i>Agregar Administrador</button>
               </div>
             </form>
           </div>
@@ -130,7 +124,7 @@
   </div>
   <div class="info-container panel panel-default" *ngIf="editar">
     <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
-      <h3 class="panel-title"><i class="fas fa-edit" style="margin-right: 20px;"></i>Editar Administrador</h3>
+      <h3 class="panel-title"><i class="fas fa-edit" style="margin-right: 20px;"></i>Editar Funcionario</h3>
     </div>
     <div class="panel-body mt-2">          
           <div class="table-container container">
@@ -138,25 +132,25 @@
               <div class="form-group row">
                 <label for="nombre" class="col-sm-2 col-form-label">Nombres</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="nombre" placeholder="Your Name" [(ngModel)]="nombre" [ngModelOptions]="{standalone: true}">
+                  <input type="text" class="form-control" id="nombre" placeholder="Introduzca nombre" [(ngModel)]="nombre" [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
               <div class="form-group row">
                 <label for="apellido" class="col-sm-2 col-form-label">Apellidos</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="apellido" placeholder="Your Last Name" [(ngModel)]="apellido" [ngModelOptions]="{standalone: true}">
+                  <input type="text" class="form-control" id="apellido" placeholder="Introduzca apellido" [(ngModel)]="apellido" [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
               <div class="form-group row">
                 <label for="identificacion" class="col-sm-2 col-form-label">Cédula</label>
                 <div class="col-sm-10">
-                  <input type="number" class="form-control" id="identificacion" placeholder="1111111111111111" [(ngModel)]="identificacion" [ngModelOptions]="{standalone: true}">
+                  <input type="text" class="form-control" id="identificacion" placeholder="Introduzca cédula" [(ngModel)]="identificacion" [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
               <div class="form-group row">
-                <label for="correo" class="col-sm-2 col-form-label">Correo</label>
+                <label for="direccion" class="col-sm-2 col-form-label">Dirección</label>
                 <div class="col-sm-10">
-                  <input type="email" class="form-control" id="correo" placeholder="example@email.com" [(ngModel)]="correo" [ngModelOptions]="{standalone: true}">
+                  <input type="text" class="form-control" id="direccion" placeholder="Introduzca correo" [(ngModel)]="direccion" [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
               <div>
@@ -173,7 +167,7 @@
   </div>
   <div class="info-container panel panel-default" *ngIf="detalle">
     <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
-      <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle Administrador</h3>
+      <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle Funcionario</h3>
     </div>
     <div class="panel-body mt-2">          
           <div class="table-container container">
@@ -181,37 +175,37 @@
               <div class="form-group row">
                 <label for="name" class="col-sm-2 col-form-label">Nombres</label>
                 <div class="col-sm-10">
-                  <input type="text" readonly class="form-control" id="name" value="{{admin.name}}">
+                  <input type="text" readonly class="form-control" id="name" value="{{funcio.name}}">
                 </div>
               </div>
               <div class="form-group row">
                 <label for="lastname" class="col-sm-2 col-form-label">Apellidos</label>
                 <div class="col-sm-10">
-                  <input type="text" readonly class="form-control" id="lastname" value="{{admin.lastname}}">
+                  <input type="text" readonly class="form-control" id="lastname" value="{{funcio.lastname}}">
                 </div>
               </div>
               <div class="form-group row">
                 <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
                 <div class="col-sm-10">
-                  <input type="number" readonly class="form-control" id="dni" value="{{admin.dni}}">
+                  <input type="text" readonly class="form-control" id="dni" value="{{funcio.dni}}">
                 </div>
               </div>
               <div class="form-group row">
-                <label for="email" class="col-sm-2 col-form-label">Correo</label>
+                <label for="email" class="col-sm-2 col-form-label">Dirección</label>
                 <div class="col-sm-10">
-                  <input type="email" readonly class="form-control" id="email" value="{{admin.email}}">
+                  <input type="text" readonly class="form-control" id="email" value="{{funcio.address}}">
                 </div>
               </div>
               <div class="form-group row">
                 <label for="creation" class="col-sm-2 col-form-label">Fecha de creación</label>
                 <div class="col-sm-10">
-                  <input type="text" readonly class="form-control" id="creation" value="{{admin.create_date}}">
+                  <input type="text" readonly class="form-control" id="creation" value="{{funcio.create_date}}">
                 </div>
               </div>
               <div class="form-group row">
                 <label for="update" class="col-sm-2 col-form-label">Última actualización</label>
                 <div class="col-sm-10">
-                  <input type="text" readonly class="form-control" id="update" value="{{admin.update_date}}">
+                  <input type="text" readonly class="form-control" id="update" value="{{funcio.update_date}}">
                 </div>
               </div>
               <div class="row mt-4">

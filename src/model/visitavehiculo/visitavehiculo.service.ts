@@ -1,41 +1,40 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-
 import { Observable, of } from 'rxjs';
-import {Admin} from './admin';
-
+import  { Vvehiculo } from './visitavehiculo';
 
 const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
+const httpOptions2 = { headers: new HttpHeaders({ 'Content-Type': 'application/json, Origin', 'Access-Control-Allow-Origin':'*' })};
 
 @Injectable()
-export class AdminService {
+export class VisitaVehiculoService {
 
-    private ADMIN_URL = environment.BASIC_URL + '/admin';
+    private VEHICULO_URL = environment.BASIC_URL + '/visitor-vehicle';
     constructor (private http: HttpClient) {}
 
-    add(admin: Admin) {
-        return this.http.post(this.ADMIN_URL, admin, httpOptions).toPromise()
+    add(vehiculo: Vvehiculo) {
+        return this.http.post(this.VEHICULO_URL, vehiculo, httpOptions).toPromise()
             .then((response) => response);
     }
 
-    set(admin: Admin) {
-        return this.http.put(this.ADMIN_URL + '/' + admin.id, admin, httpOptions).toPromise()
+    set(vehiculo: Vvehiculo) {
+        return this.http.put(this.VEHICULO_URL + '/' + vehiculo.id, vehiculo, httpOptions).toPromise()
             .then((response) => response);
     }
 
     getAll() {
-        return this.http.get<Admin>(this.ADMIN_URL+'/active/1').toPromise()
+        return this.http.get <Vvehiculo>(this.VEHICULO_URL+'/active/1').toPromise()
             .then((response) => response);
     }
 
     getId(id: number) {
-        return this.http.get(this.ADMIN_URL + '/' + id).toPromise()
+        return this.http.get(this.VEHICULO_URL + '/' + id).toPromise()
             .then((response) => response);
     }
 
     delete(id: number) {
-        return this.http.delete(this.ADMIN_URL + '/' + id).toPromise()
+        return this.http.delete(this.VEHICULO_URL + '/' + id).toPromise()
             .then((response) => response);
     }
 
