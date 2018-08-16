@@ -1,21 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import {HttpErrorResponse} from '@angular/common/http';
 import { Router } from '@angular/router';
-import { AdminService } from '../../../model/admin/admin.service';
-import { Admin } from '../../../model/admin/admin';
+import { GuardService } from '../../../../model/guard/guard.service';
+import { Guard } from '../../../../model/guard/guard';
 
 @Component({
-  selector: 'app-control',
-  templateUrl: './control.component.html',
-  styleUrls: ['./control.component.css']
+  selector: 'app-guardia',
+  templateUrl: './guardia.component.html',
+  styleUrls: ['./guardia.component.css']
 })
-
-export class ControlComponent {
+export class GuardiaComponent {
   //general
-	administradores:any = undefined;
-	data:any = undefined;
-  admin:any = [];
-	error: string;
+  guardias:any = undefined;
+  data:any = undefined;
+  guardia:any = [];
   //vistas admin
   lista:boolean;
   detalle:boolean;
@@ -43,37 +40,16 @@ export class ControlComponent {
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
 
-  constructor(public router:Router, private adminService:AdminService) { 
+  constructor(public router:Router, private guardService:GuardService) { 
   	this.getAll();
-    this.lista = true;
-    this.detalle = false;
-    this.crear = false;
-    this.editar = false;
+  	this.regresar();
   }
 
-    getAll() {
-    	this.adminService.getAll().then(
+  getAll() {
+    	this.guardService.getAll().then(
     		success => {
-    			this.administradores = success;
-    			this.data = this.administradores.data;
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
-    }
-
-    viewDetail(id) {
-      this.adminService.getId(id).then(
-        success => {
-          this.admin = success;
-          this.lista = false;
-          this.detalle = true;
-          this.crear = false;
-          this.editar = false;
+    			this.guardias = success;
+    			this.data = this.guardias.data;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -89,18 +65,35 @@ export class ControlComponent {
       this.detalle = false;
       this.crear = false;
       this.editar = false;
-      this.errorEditData = false;
     }
 
-    editarAdmmin(id) {
-      this.adminService.getId(id).then(
+    viewDetail(id) {
+      this.guardService.getId(id).then(
         success => {
-          this.admin = success;
-          this.nombre = this.admin.name;
-          this.apellido = this.admin.lastname;
-          this.correo = this.admin.email;
-          this.identificacion = this.admin.dni;
-          this.idEdit = this.admin.id;
+          this.guardia = success;
+          this.lista = false;
+          this.detalle = true;
+          this.crear = false;
+          this.editar = false;
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
+
+    editarGuardia(id) {
+      this.guardService.getId(id).then(
+        success => {
+          this.guardia = success;
+          this.nombre = this.guardia.name;
+          this.apellido = this.guardia.lastname;
+          this.correo = this.guardia.email;
+          this.identificacion = this.guardia.dni;
+          this.idEdit = this.guardia.id;
           this.lista = false;
           this.detalle = false;
           this.crear = false;
@@ -116,14 +109,14 @@ export class ControlComponent {
     }
 
     saveEdit() {
-      const editadmin : Admin = {
+      const editadmin : Guard = {
         id: this.idEdit,
         dni: this.identificacion,
         name: this.nombre,
         lastname: this.apellido,
         email: this.correo
       };
-      this.adminService.set(editadmin).then(
+      this.guardService.set(editadmin).then(
         success => {
           this.getAll();
           this.regresar();
@@ -133,13 +126,13 @@ export class ControlComponent {
                 if (error.status === 422) {
                     // on some data incorrect
                     if(error.error.errors.name){
-                      this.errorEditMsg = error.error.errors.name[0];
+                      this.errorEditMsg = "Su nombre "+error.error.errors.name[0];
                     }
                     if(error.error.errors.lastname){
-                      this.errorEditMsg = error.error.errors.lastname[0];
+                      this.errorEditMsg = "Su apellido "+error.error.errors.lastname[0];
                     }
                     if(error.error.errors.email){
-                      this.errorEditMsg = error.error.errors.email[0];
+                      this.errorEditMsg = "Su contraseña"+error.error.errors.email[0];
                     }
                     if(error.error.errors.dni){
                       this.errorEditMsg = error.error.errors.dni[0];
@@ -153,31 +146,27 @@ export class ControlComponent {
         );
     }
 
-    crearAdmin() {
+    crearGuardia() {
       this.lista = false;
       this.detalle = false;
       this.crear = true;
       this.editar = false;
     }
 
-    saveNewAdmin() {
-      const createadmin : Admin = {
+    saveNewGuardia() {
+      const createguard : Guard = {
         dni: this.dnia,
         name: this.namea,
         lastname: this.lastnamea,
         email: this.emaila,
         password: this.passworda
       };
-      this.adminService.add(createadmin).then(
+      this.guardService.add(createguard).then(
         success => {
           this.getAll();
           this.regresar();
-          this.dnia = '';
-          this.namea = '';
-          this.lastnamea = '';
-          this.emaila = '';
-          this.errorSave = false;
-          this.errorSaveData = false;
+          this.errorEditData = false;
+          this.errorEdit = false;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -202,8 +191,8 @@ export class ControlComponent {
         );
     }
 
-    deleteAdmin(id) {
-      this.adminService.delete(id).then(
+    deleteGuardia(id) {
+      this.guardService.delete(id).then(
         success => {
           this.getAll();
           this.regresar();
@@ -220,5 +209,6 @@ export class ControlComponent {
             }
         );
     }
+
 
 }

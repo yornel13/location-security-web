@@ -27,7 +27,12 @@ export class GuardService {
     }
 
     getAll() {
-        return this.http.get<Guard>(this.GUARD_URL).toPromise()
+        return this.http.get<Guard>(this.GUARD_URL+'/active/1').toPromise()
+            .then((response) => response);
+    }
+
+    getId(id: number) {
+        return this.http.get(this.GUARD_URL + '/' + id).toPromise()
             .then((response) => response);
     }
 

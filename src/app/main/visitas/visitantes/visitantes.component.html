@@ -1,0 +1,176 @@
+<main class="control-container">
+  <aside>
+    <div id="accordion">
+      <a class="btn btn-secondary" role="button" routerLink="/u/control">
+        <i class="fas fa-edit"></i>
+        Administradores
+      </a>
+      <a class="btn btn-secondary" role="button" routerLink="/u/control/guardia">
+        <i class="fas fa-edit"></i>
+          Guardias
+      </a>
+      <a class="btn btn-secondary" data-toggle="collapse" href="#collapseVisit" role="button" aria-expanded="true" aria-controls="collapseExample">
+        <i class="fas fa-edit"></i>
+          Visitas
+        <i class="fas fa-plus" style="float: right;"></i>
+      </a>
+      <div class="collapse show" id="collapseVisit" aria-labelledby="headingThree" data-parent="#accordion">
+        <a class="btn btn-secondary collap" role="button">Visitas Activas</a>
+        <a class="btn btn-secondary collap" role="button">Visitas Finalizadas</a>
+        <a class="btn btn-secondary collap" role="button">Todas las Visitas</a>
+        <a class="btn btn-secondary collap" routerLink="/u/control/visitas/vehiculos" role="button">Vehículos Visitantes</a>
+        <a class="btn btn-secondary collap active" role="button" routerLink="/u/control/visitas/visitantes" style="background-color: #444;width: 100%;text-align: left;color: #FFF;">Visitantes</a>
+        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/funcionarios">Funcionarios</a>
+      </div>
+      <a class="btn btn-secondary" data-toggle="collapse" href="#collapseBitacora" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <i class="fas fa-edit"></i>
+          Bitácora
+        <i class="fas fa-plus" style="float: right;"></i>
+      </a>
+      <div class="collapse" id="collapseBitacora" aria-labelledby="headingThree" data-parent="#accordion">
+        <a class="btn btn-secondary collap" role="button">Urgente Pendiente</a>
+        <a class="btn btn-secondary collap" role="button">Reportes</a>
+        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/incidencias">Tipos de incidencias</a>
+      </div>
+      <a class="btn btn-secondary" role="button">
+        <i class="fas fa-edit"></i>
+        Configuración
+      </a>
+    </div>
+  </aside>
+  <div class="info-container panel panel-default" *ngIf="lista">
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto" ><h3>Visitantes</h3></div>
+    </div>
+    <div class="table mt-2">
+            <table class="table table-striped">
+             <thead>
+               <th>ID</th>
+               <th>Cédula</th>
+               <th>Nombres</th>
+               <th>Apellidos</th>
+               <th>Compañia</th>
+               <th>Foto</th>
+               <th>Acciones</th>
+             </thead>
+             <tbody>
+              <tr *ngFor="let d of data">
+                <td>{{d.id}}</td>
+                <td>{{d.dni}}</td>
+                <td>{{d.name}}</td>
+                <td>{{d.lastname}}</td>
+                <td>{{d.company}}</td>
+                <td><img src="{{d.photo}}" style="height: 80px; width: 80px"></td>
+                <td>
+                  <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
+                  <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editarAdmmin(d.id)" title="Editar"><span class="fas fa-edit"></span></a>
+                  <form method="post" style="display: inline-block;">
+                   <button class="btn btn-danger btn-xs" (click)="deleteAdmin(d.id)" title="Eliminar" type="submit"><span class="fas fa-trash-alt"></span></button>
+                 </form>
+                 </td>
+               </tr>
+            </tbody>
+ 
+          </table>
+    </div>
+  </div>
+  <div class="info-container panel panel-default detalle" *ngIf="detalle">
+    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
+      <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle Visitante</h3>
+    </div>
+    <div class="panel-body mt-2">          
+          <div class="table-container container">
+            <form  role="form">
+              <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Nombres</label>
+                <div class="col-sm-10">
+                  <input type="text" readonly class="form-control" id="name" value="{{visi.name}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="lastname" class="col-sm-2 col-form-label">Apellidos</label>
+                <div class="col-sm-10">
+                  <input type="text" readonly class="form-control" id="lastname" value="{{visi.lastname}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
+                <div class="col-sm-10">
+                  <input type="number" readonly class="form-control" id="dni" value="{{visi.dni}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="email" class="col-sm-2 col-form-label">Compañía</label>
+                <div class="col-sm-10">
+                  <input type="email" readonly class="form-control" id="email" value="{{visi.company}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="email" class="col-sm-2 col-form-label">Foto</label>
+                <div class="col-sm-10">
+                  <img src="{{visi.photo}}" style="height: 200px; width: 200px">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="creation" class="col-sm-2 col-form-label">Fecha de creación</label>
+                <div class="col-sm-10">
+                  <input type="text" readonly class="form-control" id="creation" value="{{visi.create_date}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="update" class="col-sm-2 col-form-label">Última actualización</label>
+                <div class="col-sm-10">
+                  <input type="text" readonly class="form-control" id="update" value="{{visi.update_date}}">
+                </div>
+              </div>
+              <div class="row mt-4">
+                  <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
+              </div>
+            </form>
+          </div>
+        </div>
+  </div>
+  <div class="info-container panel panel-default" *ngIf="editar">
+    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
+      <h3 class="panel-title"><i class="fas fa-edit" style="margin-right: 20px;"></i>Editar Visitante</h3>
+    </div>
+    <div class="panel-body mt-2">          
+          <div class="table-container container">
+            <form role="form">
+              <div class="form-group row">
+                <label for="nombre" class="col-sm-2 col-form-label">Nombres</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="nombre" placeholder="Introduzca Nombres" [(ngModel)]="nombre" [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="apellido" class="col-sm-2 col-form-label">Apellidos</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="apellido" placeholder="Introduzca Apellidos" [(ngModel)]="apellido" [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="identificacion" class="col-sm-2 col-form-label">Cédula</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="identificacion" placeholder="Introduzca Nombre" [(ngModel)]="identificacion" [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="compania" class="col-sm-2 col-form-label">Compañía</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="compania" placeholder="Introduzca Compañía" [(ngModel)]="compania" [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div>
+                <p *ngIf="errorEdit" class="text-danger">Error al guardar, intente nuevamente</p>
+                <p *ngIf="errorEditData" class="text-danger">{{errorEditMsg}}</p>
+              </div>
+              <div class="row mt-4">
+                  <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="regresar()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
+                  <button type="button" class="btn btn-success btn-block col-md-3 mr-auto" (click)="saveEdit()" style=" margin: 0px 0px 0px 20px"><i class="fas fa-edit" style="margin-right: 10px;"></i>Editar Administrador</button>
+              </div>
+            </form>
+          </div>
+        </div>
+  </div>
+</main>

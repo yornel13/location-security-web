@@ -1,21 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
 import { Router } from '@angular/router';
-import { AdminService } from '../../../model/admin/admin.service';
-import { Admin } from '../../../model/admin/admin';
+import { FuncionarioService } from '../../../../model/funcionarios/funcionario.service';
+import { Funcionario } from '../../../../model/funcionarios/funcionario';
 
 @Component({
-  selector: 'app-control',
-  templateUrl: './control.component.html',
-  styleUrls: ['./control.component.css']
+  selector: 'app-funcionarios',
+  templateUrl: './funcionarios.component.html',
+  styleUrls: ['./funcionarios.component.css']
 })
-
-export class ControlComponent {
+export class FuncionariosComponent {
   //general
-	administradores:any = undefined;
-	data:any = undefined;
-  admin:any = [];
-	error: string;
+  funcionarios:any = undefined;
+  data:any = undefined;
+  funcio:any = [];
+  error: string;
   //vistas admin
   lista:boolean;
   detalle:boolean;
@@ -24,7 +23,7 @@ export class ControlComponent {
   //editar
   nombre:string;
   apellido:string;
-  correo:string;
+  direccion:string;
   identificacion:string;
   idEdit:number;
   errorEdit:boolean = false;
@@ -33,7 +32,7 @@ export class ControlComponent {
   //crear
   namea:string;
   lastnamea:string;
-  emaila:string;
+  addressa:string;
   dnia:string;
   passworda:string;
   errorSave:boolean = false;
@@ -43,7 +42,7 @@ export class ControlComponent {
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
 
-  constructor(public router:Router, private adminService:AdminService) { 
+  constructor(public router:Router, private funcionarioService:FuncionarioService) { 
   	this.getAll();
     this.lista = true;
     this.detalle = false;
@@ -51,56 +50,56 @@ export class ControlComponent {
     this.editar = false;
   }
 
-    getAll() {
-    	this.adminService.getAll().then(
-    		success => {
-    			this.administradores = success;
-    			this.data = this.administradores.data;
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
-    }
+	getAll() {
+		this.funcionarioService.getAll().then(
+			success => {
+				this.funcionarios = success;
+				this.data = this.funcionarios.data;
+		    }, error => {
+		        if (error.status === 422) {
+		            // on some data incorrect
+		        } else {
+		            // on general error
+		        }
+		    }
+		);
+	}
 
     viewDetail(id) {
-      this.adminService.getId(id).then(
-        success => {
-          this.admin = success;
-          this.lista = false;
-          this.detalle = true;
-          this.crear = false;
-          this.editar = false;
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
-    }
+	  this.funcionarioService.getId(id).then(
+	    success => {
+	      this.funcio = success;
+	      this.lista = false;
+	      this.detalle = true;
+	      this.crear = false;
+	      this.editar = false;
+	        }, error => {
+	            if (error.status === 422) {
+	                // on some data incorrect
+	            } else {
+	                // on general error
+	            }
+	        }
+	    );
+	}
 
     regresar() {
-      this.lista = true;
-      this.detalle = false;
-      this.crear = false;
-      this.editar = false;
-      this.errorEditData = false;
-    }
+	  this.lista = true;
+	  this.detalle = false;
+	  this.crear = false;
+	  this.editar = false;
+	  this.errorEditData = false;
+	}
 
-    editarAdmmin(id) {
-      this.adminService.getId(id).then(
+	editarFuncionario(id) {
+      this.funcionarioService.getId(id).then(
         success => {
-          this.admin = success;
-          this.nombre = this.admin.name;
-          this.apellido = this.admin.lastname;
-          this.correo = this.admin.email;
-          this.identificacion = this.admin.dni;
-          this.idEdit = this.admin.id;
+          this.funcio = success;
+          this.nombre = this.funcio.name;
+          this.apellido = this.funcio.lastname;
+          this.direccion = this.funcio.address;
+          this.identificacion = this.funcio.dni;
+          this.idEdit = this.funcio.id;
           this.lista = false;
           this.detalle = false;
           this.crear = false;
@@ -116,14 +115,14 @@ export class ControlComponent {
     }
 
     saveEdit() {
-      const editadmin : Admin = {
+      const editfuncionario : Funcionario = {
         id: this.idEdit,
         dni: this.identificacion,
         name: this.nombre,
         lastname: this.apellido,
-        email: this.correo
+        address: this.direccion
       };
-      this.adminService.set(editadmin).then(
+      this.funcionarioService.set(editfuncionario).then(
         success => {
           this.getAll();
           this.regresar();
@@ -133,16 +132,16 @@ export class ControlComponent {
                 if (error.status === 422) {
                     // on some data incorrect
                     if(error.error.errors.name){
-                      this.errorEditMsg = error.error.errors.name[0];
+                      this.errorEditMsg = "NOMBRE "+error.error.errors.name[0];
                     }
                     if(error.error.errors.lastname){
-                      this.errorEditMsg = error.error.errors.lastname[0];
+                      this.errorEditMsg = "APELLIDO "+error.error.errors.lastname[0];
                     }
-                    if(error.error.errors.email){
-                      this.errorEditMsg = error.error.errors.email[0];
+                    if(error.error.errors.address){
+                      this.errorEditMsg = "DIRECCIÓN "+error.error.errors.address[0];
                     }
                     if(error.error.errors.dni){
-                      this.errorEditMsg = error.error.errors.dni[0];
+                      this.errorEditMsg = "DNI "+error.error.errors.dni[0];
                     }
                     this.errorEditData = true;
                 } else {
@@ -153,45 +152,47 @@ export class ControlComponent {
         );
     }
 
-    crearAdmin() {
+    crearFuncionario() {
       this.lista = false;
       this.detalle = false;
       this.crear = true;
       this.editar = false;
     }
 
-    saveNewAdmin() {
-      const createadmin : Admin = {
+
+    saveNewFuncionario() {
+      const createfuncionario : Funcionario = {
         dni: this.dnia,
         name: this.namea,
         lastname: this.lastnamea,
-        email: this.emaila,
-        password: this.passworda
+        address: this.addressa
       };
-      this.adminService.add(createadmin).then(
+      this.funcionarioService.add(createfuncionario).then(
         success => {
           this.getAll();
           this.regresar();
+          this.errorEditData = false;
+          this.errorEdit = false;
           this.dnia = '';
-          this.namea = '';
-          this.lastnamea = '';
-          this.emaila = '';
-          this.errorSave = false;
-          this.errorSaveData = false;
+	      this.namea = '';
+	      this.lastnamea = '';
+	      this.addressa = '';
+	      this.errorSave = false;
+  		  this.errorSaveData = false;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
                     if(error.error.errors.name){
-                      this.errorNewMsg = error.error.errors.name[0];
+                      this.errorNewMsg = "NOMRBE "+error.error.errors.name[0];
                     }
                     if(error.error.errors.lastname){
-                      this.errorNewMsg = error.error.errors.lastname[0];
+                      this.errorNewMsg = "APELLIDO "+error.error.errors.lastname[0];
                     }
-                    if(error.error.errors.email){
-                      this.errorNewMsg = error.error.errors.email[0];
+                    if(error.error.errors.address){
+                      this.errorNewMsg = "DIRECCION "+error.error.errors.email[0];
                     }
                     if(error.error.errors.dni){
-                      this.errorNewMsg = error.error.errors.dni[0];
+                      this.errorNewMsg = "DNI "+error.error.errors.dni[0];
                     }
                     this.errorSaveData = true;
                 } else {
@@ -202,8 +203,8 @@ export class ControlComponent {
         );
     }
 
-    deleteAdmin(id) {
-      this.adminService.delete(id).then(
+    deleteFuncionario(id) {
+      this.funcionarioService.delete(id).then(
         success => {
           this.getAll();
           this.regresar();

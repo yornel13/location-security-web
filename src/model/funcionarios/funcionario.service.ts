@@ -3,39 +3,39 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 import { Observable, of } from 'rxjs';
-import {Admin} from './admin';
+import { Funcionario } from './funcionario';
 
 
 const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
 
 @Injectable()
-export class AdminService {
+export class FuncionarioService {
 
-    private ADMIN_URL = environment.BASIC_URL + '/admin';
+    private FUN_URL = environment.BASIC_URL + '/clerk';
     constructor (private http: HttpClient) {}
 
-    add(admin: Admin) {
-        return this.http.post(this.ADMIN_URL, admin, httpOptions).toPromise()
+    add(funcionario: Funcionario) {
+        return this.http.post(this.FUN_URL, funcionario, httpOptions).toPromise()
             .then((response) => response);
     }
 
-    set(admin: Admin) {
-        return this.http.put(this.ADMIN_URL + '/' + admin.id, admin, httpOptions).toPromise()
+    set(funcionario: Funcionario) {
+        return this.http.put(this.FUN_URL + '/' + funcionario.id, funcionario, httpOptions).toPromise()
             .then((response) => response);
     }
 
     getAll() {
-        return this.http.get<Admin>(this.ADMIN_URL+'/active/1').toPromise()
+        return this.http.get<Funcionario>(this.FUN_URL+'/active/1').toPromise()
             .then((response) => response);
     }
 
     getId(id: number) {
-        return this.http.get(this.ADMIN_URL + '/' + id).toPromise()
+        return this.http.get(this.FUN_URL + '/' + id).toPromise()
             .then((response) => response);
     }
 
     delete(id: number) {
-        return this.http.delete(this.ADMIN_URL + '/' + id).toPromise()
+        return this.http.delete(this.FUN_URL + '/' + id).toPromise()
             .then((response) => response);
     }
 
