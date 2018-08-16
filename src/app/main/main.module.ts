@@ -16,6 +16,7 @@ import { VisitaVehiculoService } from '../../model/visitavehiculo/visitavehiculo
 import { VisitanteService } from '../../model/vistavisitantes/visitantes.service';
 import { FuncionarioService } from '../../model/funcionarios/funcionario.service';
 import { IncidenciasService } from '../../model/incidencias/incidencia.service';
+import { BitacoraService } from '../../model/bitacora/bitacora.service';
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -36,6 +37,8 @@ import { VehiculosComponent } from './visitas/vehiculos/vehiculos.component';
 import { VisitantesComponent } from './visitas/visitantes/visitantes.component';
 import { FuncionariosComponent } from './visitas/funcionarios/funcionarios.component';
 import { IncidenciasComponent } from './control/bitacora/incidencias/incidencias.component';
+import { ReportetsComponent } from './control/bitacora/reportets/reportets.component';
+import { FiltreportComponent } from './control/bitacora/filtreport/filtreport.component';
 
 const mainRoutes: Routes = [
     { path: '', component: MainComponent,
@@ -51,6 +54,8 @@ const mainRoutes: Routes = [
                     { path: 'control/visitas/visitantes', component: VisitantesComponent },
                     { path: 'control/visitas/funcionarios', component: FuncionariosComponent },
                     { path: 'control/bitacora/incidencias', component: IncidenciasComponent },
+                    { path: 'control/bitacora/reportes', component: ReportetsComponent },
+                    { path: 'control/bitacora/reportfilter', component: FiltreportComponent },
                     { path: 'messaging', component: MessagingComponent },
                     { path: 'report', component: ReportComponent },
                     { path: '', component: MonitoringComponent }
@@ -71,14 +76,14 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     LeafletModule.forRoot(),
     LeafletMarkerClusterModule.forRoot()
   ],
-  providers: [ VehiclesService, WatchesService, GuardService, AdminService, AsideService, VisitaVehiculoService, VisitanteService, FuncionarioService, IncidenciasService ],
+  providers: [ VehiclesService, WatchesService, GuardService, AdminService, AsideService, VisitaVehiculoService, VisitanteService, FuncionarioService, IncidenciasService, BitacoraService ],
   entryComponents: [ PopupVehicleComponent, PopupWatchComponent ],
   declarations: [
       MonitoringComponent,
       MapOsmComponent,
       PopupVehicleComponent,
       PopupWatchComponent,
-      HeaderComponent, AsideComponent, MainComponent, ControlComponent, DashboardComponent, ReportComponent, MessagingComponent, GuardiaComponent, VehiculosComponent, VisitantesComponent, FuncionariosComponent, IncidenciasComponent ],
+      HeaderComponent, AsideComponent, MainComponent, ControlComponent, DashboardComponent, ReportComponent, MessagingComponent, GuardiaComponent, VehiculosComponent, VisitantesComponent, FuncionariosComponent, IncidenciasComponent, ReportetsComponent, FiltreportComponent ],
   bootstrap: [ MainComponent ]
 })
 export class MainModule {}
