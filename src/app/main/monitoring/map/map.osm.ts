@@ -11,6 +11,7 @@ import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import {Watch} from '../../../../model/watch/watch';
 import {PopupWatchComponent} from './popup.watch.component';
+import {AsideService} from '../aside/aside.service';
 
 @Component({
     selector : 'app-map-osm',
@@ -33,12 +34,15 @@ export class MapOsmComponent implements OnChanges {
     markerClusterGroup: L.MarkerClusterGroup;
     markerClusterData: any[] = [];
     markerClusterOptions: L.MarkerClusterGroupOptions;
+    center = L.latLng(([ this.lat, this.lng ]));
+    map: any;
     LAYER_OSM = {
         id: 'openstreetmap',
         name: 'Open Street Map',
         enabled: false,
         layer: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 20,
+            detectRetina: true,
             attribution: 'Open Street Map'
         })
     };
@@ -76,6 +80,9 @@ export class MapOsmComponent implements OnChanges {
     // Values to bind to Leaflet Directive
     layersControlOptions = { position: 'bottomright' };
     baseLayers = {
+        'Google Street Map': this.LAYER_GOOGLE_STREET.layer,
+        'Google Satellite Map': this.LAYER_GOOGLE_SATELLITE.layer,
+        'Google Terrain Map': this.LAYER_GOOGLE_TERRAIN.layer,
         'Open Street Map': this.LAYER_OSM.layer
     };
     options = {
@@ -83,18 +90,31 @@ export class MapOsmComponent implements OnChanges {
         center: L.latLng([ this.lat, this.lng ])
     };
 
-    constructor(private resolver: ComponentFactoryResolver, private injector: Injector) { }
+    constructor(private resolver: ComponentFactoryResolver,
+                private asideService: AsideService,
+                private injector: Injector) {
+        asideService.marker.subscribe(
+            (data: any) => {
+                this.zoom = 18;
+                this.center = data;
+            });
+    }
+
+    onMapReady(map: L.Map) {
+        this.map = map;
+    }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes['vehicles']) {
+            console.log('updating vehicles');
             this.setupVehicles();
         }
         if (changes['watches']) {
+            console.log('updating watches');
             this.setupWatches();
         }
         if (changes['lat']) {
-            this.options.center.lat = this.lat;
-            this.options.center.lng = this.lng;
+            this.setCenter();
         }
         if (changes['changeMarker']) {
             if (this.changeMarker.match('showVehiclesMarkers')) {
@@ -146,5 +166,9 @@ export class MapOsmComponent implements OnChanges {
             data.push(m);
         });
         this.markerClusterData = data;
+    }
+
+    setCenter() {
+        this.center = L.latLng(([ this.lat, this.lng ]));
     }
 }
