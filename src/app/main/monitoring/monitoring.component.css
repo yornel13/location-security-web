@@ -4,10 +4,9 @@
     left: 0;
     right: 0;
     bottom: 0;
-
+    height: auto;
     display: flex;
 }
-
 
 app-monitoring{
     height: 100%;

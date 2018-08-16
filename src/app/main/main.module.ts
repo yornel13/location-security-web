@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
@@ -9,6 +8,7 @@ import {PopupVehicleComponent} from './monitoring/map/popup.vehicle.component';
 import {PopupWatchComponent} from './monitoring/map/popup.watch.component';
 
 import { VehiclesService } from '../../model/vehicle/vehicle.service';
+import { TabletService } from '../../model/tablet/tablet.service';
 import { WatchesService } from '../../model/watch/watch.service';
 import { GuardService } from '../../model/guard/guard.service';
 import { AdminService } from '../../model/admin/admin.service';
@@ -36,6 +36,8 @@ import { VehiculosComponent } from './visitas/vehiculos/vehiculos.component';
 import { VisitantesComponent } from './visitas/visitantes/visitantes.component';
 import { FuncionariosComponent } from './visitas/funcionarios/funcionarios.component';
 import { IncidenciasComponent } from './control/bitacora/incidencias/incidencias.component';
+import {CardVehicleComponent} from './monitoring/aside/card.vehicle.component';
+import {CardTabletComponent} from './monitoring/aside/card.tablet.component';
 
 const mainRoutes: Routes = [
     { path: '', component: MainComponent,
@@ -72,8 +74,8 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     LeafletMarkerClusterModule.forRoot()
   ],
   providers: [ VehiclesService, WatchesService, GuardService, AdminService, AsideService, VisitaVehiculoService,
-      VisitanteService, FuncionarioService, IncidenciasService ],
-  entryComponents: [ PopupVehicleComponent, PopupWatchComponent ],
+      VisitanteService, FuncionarioService, IncidenciasService, TabletService ],
+  entryComponents: [ PopupVehicleComponent, PopupWatchComponent, CardVehicleComponent, CardTabletComponent ],
   declarations: [
       MonitoringComponent,
       MapOsmComponent,
@@ -81,7 +83,8 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
       PopupWatchComponent,
       HeaderComponent, AsideComponent, MainComponent, ControlComponent, DashboardComponent, ReportComponent,
       MessagingComponent, GuardiaComponent, VehiculosComponent, VisitantesComponent, FuncionariosComponent,
-      IncidenciasComponent ],
+      IncidenciasComponent, CardVehicleComponent, CardTabletComponent, HeaderComponent,
+      AsideComponent, MainComponent, ControlComponent, DashboardComponent, ReportComponent, MessagingComponent ],
   bootstrap: [ MainComponent ]
 })
 export class MainModule {}

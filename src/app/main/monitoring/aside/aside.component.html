@@ -1,60 +1,45 @@
 <!--Sidebar-->
 <aside class="aside">
-    <!--header aside-->
 
-    <div class="header-aside" id="header-aside">
-
-        <ul class="menu-items" id="menu-items">
-            <div class="menu-item"  >Dispositivos
-                <li ngClass="{'is-active': {{clicked}}}" (click)="changeOptions('showVehiclesMarkers')" class="menu-item opt-dispositivos">Vehiculos</li>
-                <li ngClass="{'is-active': {{clicked}}}" (click)="changeOptions('showWatchesMarkers')" class="menu-item opt-dispositivos">Guardias</li>
-            </div>
-            <li class="menu-item">Alertas</li>
-        </ul>
-
-
-        <input  (keyup)="$event.keyCode == 13 ? find(newSearsh) : null" #newSearsh class="filter" type="text" placeholder="Filtrar">
-
+  <!--header aside-->
+  <div class="header-aside">
+    <div class="dropdown">
+      <div class="btn btn-secondary menu-item dropdown-toggle" href="#"   id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Dispositivos
+      </div>
+    
+      <div class="dropdown-menu menu-item" >
+        <div class=" menu-items" (click)="selectMarkersOpts('showVehicles')" >Vehiculos<img *ngIf="vehiclesCheck" class="checked-icon" src="{{CHECK_URL}}" alt=""></div>
+        <div class=" menu-items" (click)="selectMarkersOpts('showBombas')">Bombas<img *ngIf="bombasCheck" class="checked-icon" src="{{CHECK_URL}}" alt=""></div>
+        <div class=" menu-items" (click)="selectMarkersOpts('showTablets')">Tablets   <img *ngIf="watchesCheck" class="checked-icon" src="{{CHECK_URL}}" alt=""></div>
+        <div class=" menu-items" (click)="selectMarkersOpts('showNoGroups')">No agrupados<img *ngIf="noGroupCheck" class="checked-icon" src="{{CHECK_URL}}" alt=""></div>
+      </div>
     </div>
-
-    <div class="cards-container">
-        <!--Vehicles Card-->
-        <div *ngIf="showOpt.showVehicles">
-            <div  *ngFor="let vehicle of vehicles"  class="vehicle-card" (click)="focusMarker(vehicle.latitude, vehicle.longitude)">
-                <p class="imei ps">IMEI {{vehicle.imei}}</p>
-                <p class="alias ps">{{vehicle.alias}}</p>
-                <p class="date ps">Fecha {{vehicle.generated_time}}</p>
-
-                <div class="status-container ">
-                    <img class="devices-type" src="{{vehicle.iconUrl}}" alt="">
-                    <p class="bateria ps"><img src="../../../../assets/cards/battery.png" alt="">{{vehicle.battery_level}}%</p>
-                </div>
-
-                <p class="ps">Status:</p>
-                <div class=""
-                     *ngIf="vehicle.device_status == 'OFFOROUTOFCOVERAGE'; else online"
-                     [ngClass]="{'inactive':vehicle.device_status=='OFFOROUTOFCOVERAGE'}">{{devices_status}}</div>
-
-            </div>
+    <div class="menu-item">Alertas</div>
+  </div>
+  
+  <input  (keyup)="$event.keyCode == 13 ? find(newSearsh) : null" #newSearsh class="filter" type="text" placeholder="Filtrar">
+  <!--<p class="no-cards">Seleccione un dispositivo</p>-->
+  <!--Cards contaniner-->
+  <div class="cards-container" >
+    <!--Cards-->
+      <div>
+        <div *ngFor="let data of markerData">
+          <div  *ngIf="data.group_name === 'Tablet Guardia'">
+            <app-card-tablet *ngIf="watchesCheck" [tablet]="data"></app-card-tablet>
+          </div>
+          <div *ngIf="data.group_name === 'BOMBAS DE DRENAJE'">
+              <app-card-vehicle *ngIf="bombasCheck" [vehicle]="data"></app-card-vehicle>
+          </div>
+          <div *ngIf="data.group_name === 'AZUCARERA INGENIO VALDEZ'">
+              <app-card-vehicle *ngIf="vehiclesCheck" [vehicle]="data"></app-card-vehicle>
+          </div>
+          <div *ngIf="data.group_name !== 'AZUCARERA INGENIO VALDEZ' && 'BOMBAS DE DRENAJE' && 'Tablet Guardia'">
+              <!--no group-->
+          </div>
         </div>
-
-        <!--watches card-->
-        <div *ngIf="showOpt.showWatches">
-            <div   *ngFor="let watch of watches"  class="watch-card">
-                <p class="imei ps">DNI {{watch.guard.dni}}</p>
-                <p class="alias ps">Nombre: {{watch.guard.name}}</p>
-                <p class="date ps">Apellido: {{watch.guard.lastname}}</p>
-                <img class="devices-type" src="{{watch.iconUrl}}" alt="">
-                <p class="status-container ps">Status: </p>
-                <span class="online">{{'ACTIVO'}}</span>
-            </div>
-        </div>
-    </div>
-
-    <ng-template #online>
-        <p class="online">
-            ONLINE
-        </p>
-    </ng-template>
+      </div>
+  </div>
+  
 
 </aside>
