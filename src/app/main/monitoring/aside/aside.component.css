@@ -1,8 +1,17 @@
 .aside{
-    height: 100vh;
+    height: 100%;
     width: 350px;
     background-color: var(--secondary-color);
     padding: 0 0 0 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.header-aside {
+    height: 140px;
+}
+
+.cards-container {
 
 }
 

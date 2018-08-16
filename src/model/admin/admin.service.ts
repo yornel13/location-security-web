@@ -9,7 +9,7 @@ import {Admin} from './admin';
 const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
 
 @Injectable()
-export class GuardService {
+export class AdminService {
 
     private ADMIN_URL = environment.BASIC_URL + '/admin';
     constructor (private http: HttpClient) {}

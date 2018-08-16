@@ -26,6 +26,7 @@ import { ReportComponent } from './report/report.component';
 import {RouterModule, Routes} from '@angular/router';
 import {AsideService} from './monitoring/aside/aside.service';
 import { MessagingComponent } from './messaging/messaging.component';
+import {AdminService} from '../../model/admin/admin.service';
 
 const mainRoutes: Routes = [
     { path: '', component: MainComponent,
@@ -56,7 +57,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     LeafletModule.forRoot(),
     LeafletMarkerClusterModule.forRoot()
   ],
-  providers: [ VehiclesService, WatchesService, GuardService, AsideService ],
+  providers: [ VehiclesService, WatchesService, GuardService, AdminService, AsideService ],
   entryComponents: [ PopupVehicleComponent, PopupWatchComponent ],
   declarations: [
       MonitoringComponent,
