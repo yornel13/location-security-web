@@ -9,7 +9,6 @@ import {PopupVehicleComponent} from './monitoring/map/popup.vehicle.component';
 import {PopupWatchComponent} from './monitoring/map/popup.watch.component';
 
 import { VehiclesService } from '../../model/vehicle/vehicle.service';
-import { TabletService } from '../../model/tablet/tablet.service';
 import { WatchesService } from '../../model/watch/watch.service';
 import { GuardService } from '../../model/guard/guard.service';
 import { AdminService } from '../../model/admin/admin.service';
@@ -18,6 +17,9 @@ import { VisitanteService } from '../../model/vistavisitantes/visitantes.service
 import { FuncionarioService } from '../../model/funcionarios/funcionario.service';
 import { IncidenciasService } from '../../model/incidencias/incidencia.service';
 import { BitacoraService } from '../../model/bitacora/bitacora.service';
+import { VisitasService } from '../../model/visitas/visitas.service';
+import {CardVehicleComponent} from './monitoring/aside/card.vehicle.component';
+import {CardTabletComponent} from './monitoring/aside/card.tablet.component';
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -40,8 +42,11 @@ import { FuncionariosComponent } from './visitas/funcionarios/funcionarios.compo
 import { IncidenciasComponent } from './control/bitacora/incidencias/incidencias.component';
 import { ReportetsComponent } from './control/bitacora/reportets/reportets.component';
 import { FiltreportComponent } from './control/bitacora/filtreport/filtreport.component';
-import {CardVehicleComponent} from './monitoring/aside/card.vehicle.component';
-import {CardTabletComponent} from './monitoring/aside/card.tablet.component';
+import { VisitasComponent } from './visitas/visitas/visitas.component';
+import { VisitasactivasComponent } from './visitas/visitasactivas/visitasactivas.component';
+
+import { FilterPipeModule } from 'ngx-filter-pipe';
+import {TabletService} from '../../model/tablet/tablet.service';
 
 const mainRoutes: Routes = [
     { path: '', component: MainComponent,
@@ -53,6 +58,8 @@ const mainRoutes: Routes = [
                     { path: 'monitoring', component: MonitoringComponent },
                     { path: 'control', component: ControlComponent },
                     { path: 'control/guardia', component: GuardiaComponent },
+                    { path: 'control/visitas/visitas', component: VisitasComponent },
+                    { path: 'control/visitas/visitas/activas', component: VisitasactivasComponent },
                     { path: 'control/visitas/vehiculos', component: VehiculosComponent },
                     { path: 'control/visitas/visitantes', component: VisitantesComponent },
                     { path: 'control/visitas/funcionarios', component: FuncionariosComponent },
@@ -76,24 +83,22 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     CommonModule,
     FormsModule,
     mainRouting,
+    FilterPipeModule,
     LeafletModule.forRoot(),
     LeafletMarkerClusterModule.forRoot()
   ],
   providers: [
-      VehiclesService, WatchesService, GuardService,
-      AdminService, AsideService, VisitaVehiculoService,
-      VisitanteService, FuncionarioService, IncidenciasService,
-      BitacoraService, TabletService ],
-  entryComponents: [
-      PopupVehicleComponent, PopupWatchComponent, CardVehicleComponent,
+      VehiclesService, WatchesService, GuardService, AdminService,
+      AsideService, VisitaVehiculoService, VisitanteService, FuncionarioService,
+      IncidenciasService, BitacoraService, VisitasService, TabletService ],
+  entryComponents: [ PopupVehicleComponent, PopupWatchComponent, CardVehicleComponent,
       CardTabletComponent ],
   declarations: [
-      MonitoringComponent, MapOsmComponent, PopupVehicleComponent,
-      PopupWatchComponent, HeaderComponent, AsideComponent,
-      MainComponent, ControlComponent, DashboardComponent,
-      ReportComponent, MessagingComponent, GuardiaComponent,
-      VehiculosComponent, VisitantesComponent, FuncionariosComponent,
-      IncidenciasComponent, ReportetsComponent, FiltreportComponent,
+      MonitoringComponent, MapOsmComponent, PopupVehicleComponent, PopupWatchComponent,
+      HeaderComponent, AsideComponent, MainComponent, ControlComponent,
+      DashboardComponent, ReportComponent, MessagingComponent, GuardiaComponent,
+      VehiculosComponent, VisitantesComponent, FuncionariosComponent, IncidenciasComponent,
+      ReportetsComponent, FiltreportComponent, VisitasComponent, VisitasactivasComponent,
       CardVehicleComponent, CardTabletComponent ],
   bootstrap: [ MainComponent ]
 })
