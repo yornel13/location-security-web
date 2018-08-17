@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BitacoraService } from '../../../../../model/bitacora/bitacora.service';
+import { Bitacora } from '../../../../../model/bitacora/bitacora';
 import { GuardService } from '../../../../../model/guard/guard.service';
 
 @Component({
@@ -23,6 +24,9 @@ export class ReportetsComponent {
   //vistas
   lista:boolean;
   detalle:boolean;
+  //comentario
+  newcoment:string = '';
+  addcomment:boolean = false;
 
   constructor(public router:Router, private bitacoraService:BitacoraService, private guardiaService:GuardService) { 
   	this.getAll();
@@ -122,6 +126,7 @@ export class ReportetsComponent {
     regresar() {
       this.lista = true;
       this.detalle = false;
+      this.addcomment = false;
     }
 
     changeResolve(id, resolved) {
@@ -150,6 +155,36 @@ export class ReportetsComponent {
             }
         );
       }
+    }
+
+    agregarComentario(){
+        this.addcomment = true;
+    }
+
+    guardarComentario(report_id){
+      var useradmin = "Usuario Admin";
+      var idAdmin = "1";
+      var report = report_id;
+      var comentario = this.newcoment;
+      const nuevocom : Bitacora = {
+        report_id: report,
+        text: comentario,
+        admin_id: idAdmin,
+        user_name: useradmin,
+      };
+      this.bitacoraService.addCommetario(nuevocom).then(
+        success => {
+          this.viewDetail(report_id);
+          this.addcomment = false;
+          this.newcoment = '';
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
     }
 
 }

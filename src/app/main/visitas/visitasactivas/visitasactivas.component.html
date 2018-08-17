@@ -75,7 +75,7 @@
   </div>
   <div class="info-container panel panel-default" *ngIf="detalle">
     <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
-      <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle Reporte</h3>
+      <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle de la Visita</h3>
     </div>
     <div class="panel-body mt-2">          
           <div class="table-container container">
@@ -85,9 +85,12 @@
                 <div class="col-sm-4">
                   <input type="text" readonly class="form-control" id="lastname" value="{{visi.create_date}}">
                 </div>
-                <label for="lastname" class="col-sm-2 col-form-label">Observaciones</label>
+              </div>
+              <div class="form-group row">
+                <label for="lastname" class="col-sm-2 col-form-label">Materiales</label>
                 <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="lastname" value="{{visi.observation}}">
+                  <input type="text" readonly  class="form-control" id="lastname" value="" *ngIf="nomat">
+                  <input type="text" readonly  class="form-control" id="lastname" *ngFor="let d of visi.observation" value="{{d}}">
                 </div>
               </div>
               <div class="form-group row">
@@ -138,31 +141,7 @@
               </div>
               <hr>
               <div class="form-group row">
-                <label for="creation" class="col-sm-12 col-form-label"><b>Guardia</b></label>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.name}}">
-                </div>
-                <label for="dni" class="col-sm-2 col-form-label">Apellido</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.lastname}}">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.dni}}">
-                </div>
-                <label for="dni" class="col-sm-2 col-form-label">Correo</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.email}}">
-                </div>
-              </div>
-              <hr>
-              <div class="form-group row">
-                <label for="creation" class="col-sm-12 col-form-label"><b>Visitado</b></label>
+                <label for="creation" class="col-sm-12 col-form-label"><b>Funcionario</b></label>
               </div>
               <div class="form-group row">
                 <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
@@ -211,6 +190,30 @@
               <div class="form-group row">
                 <label for="email" class="col-sm-2 col-form-label">Imagen</label>
                 <img src="{{visi.vehicle.photo}}" style="height: 200px; width: 200px; margin-right: 20px;">
+              </div>
+              <hr>
+              <div class="form-group row">
+                <label for="creation" class="col-sm-12 col-form-label"><b>Registrado por</b></label>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.name}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Apellido</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.lastname}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.dni}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Correo</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.email}}">
+                </div>
               </div>
               <div class="row mt-4">
                   <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 

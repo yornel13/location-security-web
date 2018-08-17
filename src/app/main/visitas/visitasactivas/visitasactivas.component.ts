@@ -18,6 +18,7 @@ export class VisitasactivasComponent {
   //vistas vehiculos
   lista:boolean;
   detalle:boolean;
+  nomat:boolean;
 
   constructor(public router:Router, private visitasService:VisitasService) { 
   	this.lista = true;
@@ -45,9 +46,14 @@ export class VisitasactivasComponent {
     this.visitasService.getId(id).then(
       success => {
         this.visi = success;
-        console.log(this.visi);
+        this.visi.observation = JSON.parse(this.visi.observation);
+        if(this.visi.observation.length == 0){
+          this.nomat = true
+        }else{
+          this.nomat = false;
+        }
         this.lista = false;
-    	this.detalle = true;
+    	  this.detalle = true;
           }, error => {
               if (error.status === 422) {
                   // on some data incorrect
