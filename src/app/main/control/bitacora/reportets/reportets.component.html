@@ -119,6 +119,7 @@
                 <img src="{{report.image_4}}" style="height: 100px; width: 100px; margin-right: 20px;">
                 <img src="{{report.image_5}}" style="height: 100px; width: 100px; margin-right: 20px;">
               </div>
+              <hr>
               <div class="form-group row">
                 <label for="creation" class="col-sm-12 col-form-label"><b>Incidencia</b></label>
               </div>
@@ -132,6 +133,7 @@
                   <input type="number" readonly class="form-control" id="dni" value="{{report.incidence.level}}">
                 </div>
               </div>
+              <hr>
               <div class="form-group row">
                 <label for="creation" class="col-sm-12 col-form-label"><b>Guardia</b></label>
               </div>
@@ -168,11 +170,18 @@
                   <input type="number" readonly class="form-control" id="dni" value="{{report.watch.longitude}}">
                 </div>
               </div>
+              <hr>
               <div class="form-group row">
-                <label for="creation" class="col-sm-12 col-form-label" *ngIf="haycomentarios"><b>Comentarios</b></label>
+                <label for="creation" class="col-sm-9 col-form-label" *ngIf="haycomentarios"><b>Comentarios</b></label>
+                <div class="col-sm-3">
+                  <button class="btn btn-success form-control ml-auto" *ngIf="haycomentarios" (click)="agregarComentario()">Agregar comentario</button>
+                </div>
               </div>
               <div class="form-group row">
-                <label for="creation" class="col-sm-12 col-form-label" *ngIf="!haycomentarios"><b>No hay comentarios</b></label>
+                <label for="creation" class="col-sm-9 col-form-label" *ngIf="!haycomentarios"><b>No hay comentarios</b></label>
+                <div class="col-sm-3">
+                  <button class="btn btn-success form-control ml-auto" *ngIf="!haycomentarios" (click)="agregarComentario()">Agregar comentario</button>
+                </div>
               </div>
               <div *ngFor="let c of coment">
                 <hr>
@@ -190,6 +199,18 @@
                   <label for="dni" class="col-sm-2 col-form-label">Comentario</label>
                   <div class="col-sm-10">
                     <input type="text" readonly class="form-control" id="dni" value="{{c.text}}">
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <div>
+                <div class="form-group row" *ngIf="addcomment">
+                  <label class="col-sm-2 col-form-label">Nuevo Comentario</label>
+                  <div class="col-sm-8">
+                    <textarea [(ngModel)]="newcoment" [ngModelOptions]="{standalone: true}" placeholder="Ingrese nuevo comentario" style="width: 100%"></textarea>
+                  </div>
+                  <div class="col-sm-2">
+                    <button class="btn btn-danger" (click)="guardarComentario(report.id)">Guardar</button>
                   </div>
                 </div>
               </div>

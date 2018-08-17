@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 import { Observable, of } from 'rxjs';
-//import {Admin} from './admin';
+import { Bitacora } from './bitacora';
 
 
 const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
@@ -74,6 +74,10 @@ export class BitacoraService {
             .then((response) => response);
     }
 
+    addCommetario(comentario: Bitacora) {
+        return this.http.post(this.BITAC_URL+'-reply', comentario, httpOptions).toPromise()
+            .then((response) => response);
+    }
 
     setReopen(id: number) {
         return this.http.put(this.BITAC_URL + '/open/' + id, httpOptions).toPromise()

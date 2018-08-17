@@ -18,6 +18,7 @@ export class VisitasComponent {
   data:any = undefined;
   visi:any = [];
   dateSelect:any = '';
+  nomat:boolean;
   //vistas vehiculos
   lista:boolean;
   detalle:boolean;
@@ -41,6 +42,7 @@ export class VisitasComponent {
   funcio:any = [];
   funcionarioSelect:number=0;
   valueDate:any = [];
+  userFilter: any = { "plate": "" };
 
   constructor(public router:Router, private visitasService:VisitasService, private guardiaService:GuardService,
   	private vehiculoService:VisitaVehiculoService, private visitanteService:VisitanteService, private funcionarioService:FuncionarioService) { 
@@ -58,6 +60,7 @@ export class VisitasComponent {
       success => {
         this.visitas = success;
         this.data = this.visitas.data;
+        console.log(this.data);
           }, error => {
               if (error.status === 422) {
                   // on some data incorrect
@@ -496,6 +499,12 @@ export class VisitasComponent {
     this.visitasService.getId(id).then(
       success => {
         this.visi = success;
+        this.visi.observation = JSON.parse(this.visi.observation);
+        if(this.visi.observation.length == 0){
+        	this.nomat = true
+        }else{
+        	this.nomat = false;
+        }
         this.lista = false;
     	this.detalle = true;
           }, error => {
