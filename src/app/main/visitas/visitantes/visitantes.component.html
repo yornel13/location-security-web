@@ -59,7 +59,7 @@
                 <td>{{d.name}}</td>
                 <td>{{d.lastname}}</td>
                 <td>{{d.company}}</td>
-                <td><a data-toggle="modal" href="#modal{{d.id}}"><img src="{{d.photo}}" style="height: 80px; width: 80px"></a></td>
+                <td><a data-toggle="modal" href="#modal{{d.id}}"><img src="{{d.photo}}" style="height: 60px; width: 60px; object-fit: scale-down;"></a></td>
                 <td>
                   <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
                   <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editarAdmmin(d.id)" title="Editar"><span class="fas fa-edit"></span></a>
