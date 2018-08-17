@@ -117,7 +117,7 @@ export class ControlComponent {
         );
     }
 
-    saveEdit() {
+    getValueEdit(){
       if(this.contrasena == "password"){
           console.log("Entra aquí");
           const editadmin : Admin = {
@@ -127,6 +127,7 @@ export class ControlComponent {
           lastname: this.apellido,
           email: this.correo
         }
+        return editadmin;
       }else{
           const editadmin : Admin = {
           id: this.idEdit,
@@ -136,9 +137,15 @@ export class ControlComponent {
           email: this.correo,
           password: this.contrasena
         }
+        return editadmin;
       }
+    }
+
+    saveEdit() {
       
-      this.adminService.set(editadmin).then(
+      var valores = this.getValueEdit();
+      
+      this.adminService.set(valores).then(
         success => {
           this.getAll();
           this.regresar();
