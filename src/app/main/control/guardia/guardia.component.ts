@@ -23,6 +23,7 @@ export class GuardiaComponent {
   apellido:string;
   correo:string;
   identificacion:string;
+  contrasena:string = "password";
   idEdit:number;
   errorEdit:boolean = false;
   errorEditData:boolean = false;
@@ -108,15 +109,34 @@ export class GuardiaComponent {
         );
     }
 
+    getValueEdit(){
+      if(this.contrasena == "password"){
+          console.log("Entra aquí");
+          const editadmin : Guard = {
+          id: this.idEdit,
+          dni: this.identificacion,
+          name: this.nombre,
+          lastname: this.apellido,
+          email: this.correo
+        }
+        return editadmin;
+      }else{
+          const editadmin : Guard = {
+          id: this.idEdit,
+          dni: this.identificacion,
+          name: this.nombre,
+          lastname: this.apellido,
+          email: this.correo,
+          password: this.contrasena
+        }
+        return editadmin;
+      }
+    }
+
     saveEdit() {
-      const editadmin : Guard = {
-        id: this.idEdit,
-        dni: this.identificacion,
-        name: this.nombre,
-        lastname: this.apellido,
-        email: this.correo
-      };
-      this.guardService.set(editadmin).then(
+      var valores = this.getValueEdit();
+
+      this.guardService.set(valores).then(
         success => {
           this.getAll();
           this.regresar();
