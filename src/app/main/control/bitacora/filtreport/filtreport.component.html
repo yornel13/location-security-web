@@ -68,6 +68,7 @@
                <th>Observación</th>
                <th>Fecha</th>
                <th>Status</th>
+               <th>Modificar</th>
                <th>Detalle</th>
              </thead>
              <tbody>
@@ -77,6 +78,10 @@
                 <td>{{d.observation}}</td>
                 <td>{{d.create_date}}</td>
                 <td><span *ngIf="d.resolved == 0" class="text-danger">Cerrado</span><span *ngIf="d.resolved == 1" class="text-success">Abierto</span><span *ngIf="d.resolved == 2" class="text-success">Reabierto</span></td>
+                <td>
+                  <button class="btn btn-success" *ngIf="d.resolved == 0" (click)="changeResolve(d.id, d.resolved)">Reabrir</button>
+                  <button class="btn btn-danger" *ngIf="d.resolved != 0" (click)="changeResolve(d.id, d.resolved)">Cerrar</button>
+                </td>
                 <td>
                   <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)"  title="Detalle"><span class="far fa-eye"></span></a>
                  </td>

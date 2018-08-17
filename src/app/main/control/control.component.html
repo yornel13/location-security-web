@@ -68,11 +68,28 @@
                 <td>
                   <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
                   <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editarAdmmin(d.id)" title="Editar"><span class="fas fa-edit"></span></a>
-                  <form method="post" style="display: inline-block;">
-                   <button class="btn btn-danger btn-xs" (click)="deleteAdmin(d.id)" title="Eliminar" type="submit"><span class="fas fa-trash-alt"></span></button>
-                 </form>
+                   <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{d.id}}" title="Eliminar" type="submit"><span class="fas fa-trash-alt"></span></a>
                  </td>
-               </tr>
+                   <div class="modal" tabindex="-1" role="dialog" id="modal{{d.id}}">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header" style="background-color: #c82333; color: white;">
+                            <h5 class="modal-title">Eliminar Administrador</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <p>¿Está seguro que desea eliminar al adminitrador {{d.name}} {{d.lastname}}?</p>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" (click)="deleteAdmin(d.id)" data-dismiss="modal">Eliminar</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </tr>
             </tbody>
  
           </table>
@@ -137,25 +154,31 @@
               <div class="form-group row">
                 <label for="nombre" class="col-sm-2 col-form-label">Nombres</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="nombre" placeholder="Your Name" [(ngModel)]="nombre" [ngModelOptions]="{standalone: true}">
+                  <input type="text" class="form-control" id="nombre" placeholder="Introduzca nombre" [(ngModel)]="nombre" [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
               <div class="form-group row">
                 <label for="apellido" class="col-sm-2 col-form-label">Apellidos</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="apellido" placeholder="Your Last Name" [(ngModel)]="apellido" [ngModelOptions]="{standalone: true}">
+                  <input type="text" class="form-control" id="apellido" placeholder="Introduzca apellido" [(ngModel)]="apellido" [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
               <div class="form-group row">
                 <label for="identificacion" class="col-sm-2 col-form-label">Cédula</label>
                 <div class="col-sm-10">
-                  <input type="number" class="form-control" id="identificacion" placeholder="1111111111111111" [(ngModel)]="identificacion" [ngModelOptions]="{standalone: true}">
+                  <input type="number" class="form-control" id="identificacion" placeholder="Introduzca cédula" [(ngModel)]="identificacion" [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
               <div class="form-group row">
                 <label for="correo" class="col-sm-2 col-form-label">Correo</label>
                 <div class="col-sm-10">
-                  <input type="email" class="form-control" id="correo" placeholder="example@email.com" [(ngModel)]="correo" [ngModelOptions]="{standalone: true}">
+                  <input type="text" class="form-control" id="correo" placeholder="Introduzca correo" [(ngModel)]="correo" [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="contrasena" class="col-sm-2 col-form-label">Contraseña</label>
+                <div class="col-sm-10">
+                  <input type="password" class="form-control" id="contrasena" placeholder="Introduzca contraseña" [(ngModel)]="contrasena" [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
               <div>

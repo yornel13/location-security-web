@@ -28,6 +28,9 @@ export class VisitantesComponent {
   errorEdit:boolean = false;
   errorEditData:boolean = false;
   errorEditMsg:string;
+  //eliminar
+  errorDelete:boolean = false;
+  errorDeleteData:boolean = false;
 
   
   constructor(public router:Router, private visitanteService:VisitanteService) { 
@@ -135,6 +138,25 @@ export class VisitantesComponent {
                 } else {
                     // on general error
                     this.errorEdit = true;
+                }
+            }
+        );
+    }
+
+    deleteVisitante(id) {
+      this.visitanteService.delete(id).then(
+        success => {
+          this.getAll();
+          this.regresar();
+          this.errorDeleteData = false;
+          this.errorDelete = false;
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                    this.errorDeleteData = true;
+                } else {
+                    // on general error
+                    this.errorDelete = true;
                 }
             }
         );

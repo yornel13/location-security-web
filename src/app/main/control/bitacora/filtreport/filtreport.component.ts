@@ -108,6 +108,34 @@ export class FiltreportComponent {
       this.detalle = false;
     }
 
+    changeResolve(id, resolved) {
+      if(resolved == 0){
+        this.bitacoraService.setReopen(id).then(
+          succcess =>{
+            this.getAll();
+          }, error=>{
+            if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+          }
+        );
+      }else{
+        this.bitacoraService.setClose(id).then(
+        success => {
+          this.getAll();
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+      }
+    }
+
 
     getIncidencias() {
     	this.incidenciaService.getAll().then(
