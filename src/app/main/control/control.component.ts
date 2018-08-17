@@ -26,6 +26,7 @@ export class ControlComponent {
   apellido:string;
   correo:string;
   identificacion:string;
+  contrasena:string = "password";
   idEdit:number;
   errorEdit:boolean = false;
   errorEditData:boolean = false;
@@ -96,6 +97,7 @@ export class ControlComponent {
       this.adminService.getId(id).then(
         success => {
           this.admin = success;
+          console.log(this.admin);
           this.nombre = this.admin.name;
           this.apellido = this.admin.lastname;
           this.correo = this.admin.email;
@@ -115,15 +117,35 @@ export class ControlComponent {
         );
     }
 
+    getValueEdit(){
+      if(this.contrasena == "password"){
+          console.log("Entra aquí");
+          const editadmin : Admin = {
+          id: this.idEdit,
+          dni: this.identificacion,
+          name: this.nombre,
+          lastname: this.apellido,
+          email: this.correo
+        }
+        return editadmin;
+      }else{
+          const editadmin : Admin = {
+          id: this.idEdit,
+          dni: this.identificacion,
+          name: this.nombre,
+          lastname: this.apellido,
+          email: this.correo,
+          password: this.contrasena
+        }
+        return editadmin;
+      }
+    }
+
     saveEdit() {
-      const editadmin : Admin = {
-        id: this.idEdit,
-        dni: this.identificacion,
-        name: this.nombre,
-        lastname: this.apellido,
-        email: this.correo
-      };
-      this.adminService.set(editadmin).then(
+      
+      var valores = this.getValueEdit();
+      
+      this.adminService.set(valores).then(
         success => {
           this.getAll();
           this.regresar();

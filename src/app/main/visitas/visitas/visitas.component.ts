@@ -17,6 +17,7 @@ export class VisitasComponent {
   visitas:any = undefined;
   data:any = undefined;
   visi:any = [];
+  modalimg:any = [];
   dateSelect:any = '';
   nomat:boolean;
   //vistas vehiculos
@@ -60,7 +61,6 @@ export class VisitasComponent {
       success => {
         this.visitas = success;
         this.data = this.visitas.data;
-        console.log(this.data);
           }, error => {
               if (error.status === 422) {
                   // on some data incorrect
@@ -499,11 +499,20 @@ export class VisitasComponent {
     this.visitasService.getId(id).then(
       success => {
         this.visi = success;
+        console.log(this.visi);
+        this.modalimg = [];
+        this.modalimg.push(this.visi.image_1);
+        this.modalimg.push(this.visi.image_2);
+        this.modalimg.push(this.visi.image_3);
+        this.modalimg.push(this.visi.image_4);
+        this.modalimg.push(this.visi.image_5);
         this.visi.observation = JSON.parse(this.visi.observation);
-        if(this.visi.observation.length == 0){
-        	this.nomat = true
-        }else{
-        	this.nomat = false;
+        if(this.visi.observation){
+          if(this.visi.observation.length == 0){
+            this.nomat = true
+          }else{
+            this.nomat = false;
+          }
         }
         this.lista = false;
     	this.detalle = true;

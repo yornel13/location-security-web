@@ -35,7 +35,7 @@ export class ReportetsComponent {
   }
 
     getAll() {
-    	this.bitacoraService.getAll().then(
+    	this.bitacoraService.getOpenAll().then(
     		success => {
     			this.reportes = success;
     			this.data = this.reportes.data;
@@ -74,7 +74,7 @@ export class ReportetsComponent {
         );
         //Abiertos
       }else{
-        this.bitacoraService.getClose().then(
+        this.bitacoraService.getCloseAll().then(
         success => {
           this.reportes = success;
           this.data = this.reportes.data;

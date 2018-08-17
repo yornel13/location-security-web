@@ -15,12 +15,7 @@ export class BitacoraService {
     constructor (private http: HttpClient) {}
 
     getAll() {
-        return this.http.get(this.BITAC_URL).toPromise()
-            .then((response) => response);
-    }
-
-    getClose() {
-        return this.http.get(this.BITAC_URL+'/resolved/0').toPromise()
+        return this.http.get(this.BITAC_URL+'/resolved/all').toPromise()
             .then((response) => response);
     }
 
@@ -34,36 +29,97 @@ export class BitacoraService {
             .then((response) => response);
     }
 
-    getOpenAll() {
-        return this.http.get(this.BITAC_URL+'/open/all').toPromise()
-            .then((response) => response);
-    }
-
-    getByInciden(id: number) {
-        return this.http.get(this.BITAC_URL+'/incidence/'+id).toPromise()
-            .then((response) => response);
-    }
-
     getByDate(year, month, day) {
-        return this.http.get(this.BITAC_URL+'/date/'+year+'/'+month+'/'+day).toPromise()
+        return this.http.get(this.BITAC_URL+'/resolved/all/date/'+year+'/'+month+'/'+day).toPromise()
             .then((response) => response);
     }
 
-    getByGuardia(id) {
-        return this.http.get(this.BITAC_URL+'/guard/'+id).toPromise()
+//------------------------ Status en Incidencia ------------------------------------------------------
+
+    getOpenDate(year, month, day) {
+        return this.http.get(this.BITAC_URL+'/resolved/open/date/'+year+'/'+month+'/'+day).toPromise()
+            .then((response) => response);
+    }
+
+    getCloseDate(year, month, day) {
+        return this.http.get(this.BITAC_URL+'/resolved/0/date/'+year+'/'+month+'/'+day).toPromise()
+            .then((response) => response);
+    }
+
+    getOpenAll() {
+        return this.http.get(this.BITAC_URL+'/resolved/open').toPromise()
+            .then((response) => response);
+    }
+
+    getCloseAll() {
+        return this.http.get(this.BITAC_URL+'/resolved/0').toPromise()
+            .then((response) => response);
+    }
+
+    getByIncidenAll(id: number) {
+        return this.http.get(this.BITAC_URL+'/resolved/all/incidence/'+id).toPromise()
+            .then((response) => response);
+    }
+
+    getByIncidenciaOpen(id: number) {
+        return this.http.get(this.BITAC_URL+'/resolved/open/incidence/'+id).toPromise()
+            .then((response) => response);
+    }
+
+    getByIncidenciaClose(id: number) {
+        return this.http.get(this.BITAC_URL+'/resolved/0/incidence/'+id).toPromise()
             .then((response) => response);
     }
 
     getByIncidenciaDate(id, year, month, day) {
-        return this.http.get(this.BITAC_URL+'/incidence/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
+        return this.http.get(this.BITAC_URL+'/resolved/all/incidence/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
+            .then((response) => response);
+    }
+
+    getByIncidenciaOpenDate(id, year, month, day) {
+        return this.http.get(this.BITAC_URL+'/resolved/open/incidence/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
+            .then((response) => response);
+    }
+
+    getByIncidenciaCloseDate(id, year, month, day) {
+        return this.http.get(this.BITAC_URL+'/resolved/0/incidence/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
+            .then((response) => response);
+    }
+
+//----------------------- Status en Guardia
+
+    getByGuardiaAll(id) {
+        return this.http.get(this.BITAC_URL+'/resolved/all/guard/'+id).toPromise()
             .then((response) => response);
     }
 
     getByGuardiaDate(id, year, month, day) {
-        return this.http.get(this.BITAC_URL+'/guard/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
+        return this.http.get(this.BITAC_URL+'/resolved/all/guard/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
             .then((response) => response);
     }
 
+    getByGuardiaOpen(id: number) {
+        return this.http.get(this.BITAC_URL+'/resolved/open/guard/'+id).toPromise()
+            .then((response) => response);
+    }
+
+    getByGuardiaOpenDate(id, year, month, day) {
+        return this.http.get(this.BITAC_URL+'/resolved/open/guard/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
+            .then((response) => response);
+    }
+
+    getByGuardiaClose(id: number) {
+        return this.http.get(this.BITAC_URL+'/resolved/0/guard/'+id).toPromise()
+            .then((response) => response);
+    }
+
+    getByGuardiaCloseDate(id, year, month, day) {
+        return this.http.get(this.BITAC_URL+'/resolved/0/guard/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
+            .then((response) => response);
+    }
+
+
+//-------------------------------------------------------------------------------------
     getId(id: number) {
         return this.http.get(this.BITAC_URL + '/' + id).toPromise()
             .then((response) => response);

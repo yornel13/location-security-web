@@ -38,6 +38,8 @@ export class FiltreportComponent {
   //comentario
   newcoment:string = '';
   addcomment:boolean = false;
+  //status
+  status:number = 0;
 
   constructor(public router:Router, private bitacoraService:BitacoraService, private guardiaService:GuardService, private incidenciaService:IncidenciasService ) { 
   	this.getAll();
@@ -108,6 +110,34 @@ export class FiltreportComponent {
       this.detalle = false;
     }
 
+    changeResolve(id, resolved) {
+      if(resolved == 0){
+        this.bitacoraService.setReopen(id).then(
+          succcess =>{
+            this.getAll();
+          }, error=>{
+            if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+          }
+        );
+      }else{
+        this.bitacoraService.setClose(id).then(
+        success => {
+          this.getAll();
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+      }
+    }
+
 
     getIncidencias() {
     	this.incidenciaService.getAll().then(
@@ -139,95 +169,175 @@ export class FiltreportComponent {
         );
     }
     getByIncidencia(id) {
-    	if(id == 0){
-    		if(this.dateSelect == ''){
-    			this.getAll();
-    		}else{
-    			this.getByDate(this.dateSelect);
-    		}
-    	}else{
-    		if(this.dateSelect == ''){
-    			this.bitacoraService.getByInciden(id).then(
-		        success => {
-		          this.reportes = success;
-		    	  this.data = this.reportes.data;
-		            }, error => {
-		                if (error.status === 422) {
-		                    // on some data incorrect
-		                } else {
-		                    // on general error
-		                }
-		            }
-		        );
-    		}else{
-    			var fecha = String(this.dateSelect);
-		    	this.valueDate = fecha.split('-');
-		    	var year = this.valueDate[0];
-		    	var month = this.valueDate[1];
-		    	var day = this.valueDate[2];
-    			this.getByIncidenciaDate(id, year, month, day);
-    		}
-    		
-    	}
+      var fecha = String(this.dateSelect);
+      this.valueDate = fecha.split('-');
+      var year = this.valueDate[0];
+      var month = this.valueDate[1];
+      var day = this.valueDate[2];
+      //Todos
+    	if(this.status == 0){
+        if(id == 0){
+          if(this.dateSelect == ''){
+            this.getAll();
+          }else{
+            this.bitacoraService.getByDate(year, month, day).then(
+              success => {
+                this.reportes = success;
+                this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }
+        }else{
+          if(this.dateSelect == ''){
+            this.bitacoraService.getByIncidenAll(id).then(
+              success => {
+                this.reportes = success;
+              this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }else{
+            this.getByIncidenciaDate(id, year, month, day);
+          }
+        }
+        //Abiertos
+      }else if(this.status == 1){
+        if(id == 0){
+          if(this.dateSelect == ''){
+            this.bitacoraService.getOpenAll().then(
+              success => {
+                this.reportes = success;
+                this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }else{
+            this.bitacoraService.getOpenDate(year, month, day).then(
+              success => {
+                this.reportes = success;
+                this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }
+        }else{
+          if(this.dateSelect == ''){
+            this.bitacoraService.getByIncidenciaOpen(id).then(
+              success => {
+                this.reportes = success;
+              this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }else{
+            this.bitacoraService.getByIncidenciaOpenDate(id, year, month, day).then(
+              success => {
+                this.reportes = success;
+                this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }
+        }
+        //Cerrados
+      }else{
+        if(id == 0){
+          if(this.dateSelect == ''){
+            this.bitacoraService.getCloseAll().then(
+              success => {
+                this.reportes = success;
+                this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }else{
+            this.bitacoraService.getCloseDate(year, month, day).then(
+              success => {
+                this.reportes = success;
+                this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }
+        }else{
+          if(this.dateSelect == ''){
+            this.bitacoraService.getByIncidenciaClose(id).then(
+              success => {
+                this.reportes = success;
+              this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }else{
+            this.bitacoraService.getByIncidenciaCloseDate(id, year, month, day).then(
+              success => {
+                this.reportes = success;
+                this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }
+        }
+      }
     }
 
-    getByDate(date) {
-    	var fecha = String(date);
-    	this.valueDate = fecha.split('-');
-    	var year = this.valueDate[0];
-    	var month = this.valueDate[1];
-    	var day = this.valueDate[2];
-    	if(date == ''){
-    		if(this.filtro){
-    			if(this.incidenSelect == 0){
-    				this.getAll();
-    			}else{
-    				this.getByIncidencia(this.incidenSelect);
-    			}
-    		}else{
-    			if(this.guardiaSelect == 0){
-    				this.getAll();
-    			}else{
-    				this.getByGuardia(this.guardiaSelect);
-    			}
-    		}
-    	}else{
-    		if(this.filtro){
-    			if(this.incidenSelect == 0){
-    				this.bitacoraService.getByDate(year, month, day).then(
-				        success => {
-				          this.reportes = success;
-				    	  this.data = this.reportes.data;
-				            }, error => {
-				                if (error.status === 422) {
-				                    // on some data incorrect
-				                } else {
-				                    // on general error
-				                }
-				            }
-				        );
-    			}else{
-    				this.getByIncidenciaDate(this.incidenSelect, year, month, day);
-    			}
-    		}else{
-    			if(this.guardiaSelect == 0){
-    				this.bitacoraService.getByDate(year, month, day).then(
-				        success => {
-				          this.reportes = success;
-				    	  this.data = this.reportes.data;
-				            }, error => {
-				                if (error.status === 422) {
-				                    // on some data incorrect
-				                } else {
-				                    // on general error
-				                }
-				            }
-				        );
-    			}else{
-    				this.getByGuardiaDate(this.guardiaSelect, year, month, day);
-    			}
-    		}
-    	}
+    getByDate() {
+    	if(this.filtroSelect == 0){
+        this.getByIncidencia(this.incidenSelect);
+      }else{
+        this.getByGuardia(this.guardiaSelect);
+      }
     }
 
     getByIncidenciaDate(id, year, month, day) {
@@ -243,6 +353,14 @@ export class FiltreportComponent {
 	                }
 	            }
 	        );
+    }
+
+    getByStatus(status){
+      if(this.filtroSelect == 0){
+        this.getByIncidencia(this.incidenSelect);
+      }else{
+        this.getByGuardia(this.guardiaSelect);
+      }
     }
 
     selectFilert(filter) {
@@ -262,36 +380,167 @@ export class FiltreportComponent {
     }
 
     getByGuardia(id) {
-    	if(id == 0){
-    		if(this.dateSelect == ''){
-    			this.getAll();
-    		}else{
-    			this.getByDate(this.dateSelect);
-    		}
-    	}else{
-    		if(this.dateSelect == ''){
-    			this.bitacoraService.getByGuardia(id).then(
-		        success => {
-		          this.reportes = success;
-		    	  this.data = this.reportes.data;
-		            }, error => {
-		                if (error.status === 422) {
-		                    // on some data incorrect
-		                } else {
-		                    // on general error
-		                }
-		            }
-		        );
-    		}else{
-    			var fecha = String(this.dateSelect);
-		    	this.valueDate = fecha.split('-');
-		    	var year = this.valueDate[0];
-		    	var month = this.valueDate[1];
-		    	var day = this.valueDate[2];
-    			this.getByGuardiaDate(id, year, month, day);
-    		}
-    		
-    	}
+    	var fecha = String(this.dateSelect);
+      this.valueDate = fecha.split('-');
+      var year = this.valueDate[0];
+      var month = this.valueDate[1];
+      var day = this.valueDate[2];
+      //Todos
+      if(this.status == 0){
+        if(id == 0){
+          if(this.dateSelect == ''){
+            this.getAll();
+          }else{
+            this.bitacoraService.getByDate(year, month, day).then(
+              success => {
+                this.reportes = success;
+                this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }
+        }else{
+          if(this.dateSelect == ''){
+            this.bitacoraService.getByGuardiaAll(id).then(
+              success => {
+                this.reportes = success;
+              this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }else{
+            this.getByGuardiaDate(id, year, month, day);
+          }
+        }
+        //Abiertos
+      }else if(this.status == 1){
+        if(id == 0){
+          if(this.dateSelect == ''){
+            this.bitacoraService.getOpenAll().then(
+              success => {
+                this.reportes = success;
+                this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }else{
+            this.bitacoraService.getOpenDate(year, month, day).then(
+              success => {
+                this.reportes = success;
+                this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }
+        }else{
+          if(this.dateSelect == ''){
+            this.bitacoraService.getByGuardiaOpen(id).then(
+              success => {
+                this.reportes = success;
+              this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }else{
+            this.bitacoraService.getByGuardiaOpenDate(id, year, month, day).then(
+              success => {
+                this.reportes = success;
+                this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }
+        }
+        //Cerrados
+      }else{
+        if(id == 0){
+          if(this.dateSelect == ''){
+            this.bitacoraService.getCloseAll().then(
+              success => {
+                this.reportes = success;
+                this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }else{
+            this.bitacoraService.getCloseDate(year, month, day).then(
+              success => {
+                this.reportes = success;
+                this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }
+        }else{
+          if(this.dateSelect == ''){
+            this.bitacoraService.getByGuardiaClose(id).then(
+              success => {
+                this.reportes = success;
+              this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }else{
+            this.bitacoraService.getByGuardiaCloseDate(id, year, month, day).then(
+              success => {
+                this.reportes = success;
+                this.data = this.reportes.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }
+        }
+      }
     }
 
     getByGuardiaDate(id, year, month, day) {

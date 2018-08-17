@@ -32,6 +32,11 @@ aside{
 main {
     height: 100%;
     width: 100%;
+    font-size: 0.8rem;
+}
+
+.filtros {
+    font-size: 0.8rem;
 }
 
 .card-header {
