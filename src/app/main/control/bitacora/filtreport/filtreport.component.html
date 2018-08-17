@@ -1,0 +1,210 @@
+<main class="control-container">
+  <aside>
+    <div id="accordion">
+      <a class="btn btn-secondary" role="button" routerLink="/u/control">
+        <i class="fas fa-edit"></i>
+        Administradores
+      </a>
+      <a class="btn btn-secondary" role="button" routerLink="/u/control/guardia">
+        <i class="fas fa-edit"></i>
+          Guardias
+      </a>
+      <a class="btn btn-secondary" data-toggle="collapse" href="#collapseVisit" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <i class="fas fa-edit"></i>
+          Visitas
+        <i class="fas fa-plus" style="float: right;"></i>
+      </a>
+      <div class="collapse" id="collapseVisit" aria-labelledby="headingThree" data-parent="#accordion">
+        <a class="btn btn-secondary collap" role="button">Visitas Activas</a>
+        <a class="btn btn-secondary collap" role="button">Visitas Finalizadas</a>
+        <a class="btn btn-secondary collap" role="button">Todas las Visitas</a>
+        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/vehiculos">Vehículos Visitantes</a>
+        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/visitantes">Visitantes</a>
+        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/funcionarios">Funcionarios</a>
+      </div>
+      <a class="btn btn-secondary" data-toggle="collapse" href="#collapseBitacora" role="button" aria-expanded="true" aria-controls="collapseExample">
+        <i class="fas fa-edit"></i>
+          Bitácora
+        <i class="fas fa-plus" style="float: right;"></i>
+      </a>
+      <div class="collapse show" id="collapseBitacora" aria-labelledby="headingThree" data-parent="#accordion">
+        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/reportes">Urgente Pendiente</a>
+        <a class="btn btn-secondary collap" role="button"style="background-color: #444;width: 100%;text-align: left;color: #FFF;" routerLink="/u/control/bitacora/reportfilter">Reportes</a>
+        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/incidencias">Tipos de incidencias</a>
+      </div>
+      <a class="btn btn-secondary" role="button">
+        <i class="fas fa-edit"></i>
+        Configuración
+      </a>
+    </div>
+  </aside>
+  <div class="info-container panel panel-default"  *ngIf="lista">
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto" ><h3>Reportes</h3></div>
+        <div class="ml-auto form-inline">
+          <div class="form-group row">
+            <label class="mr-4"><b>Filtrar por:</b></label>
+  		      <select id="inputState" class="form-control mr-4" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
+              <option [ngValue]="0">Incidencia</option>
+              <option [ngValue]="1">Guardia</option>
+            </select>
+  		      <select id="inputState" class="form-control mr-4" [(ngModel)]="incidenSelect" (change)="getByIncidencia(incidenSelect)" [ngModelOptions]="{standalone: true}" *ngIf="filtro">
+              <option [ngValue]="0">Todas</option>
+  		        <option *ngFor="let i of inciden" [ngValue]="i.id">{{i.name}}</option>
+  		      </select>
+            <select id="inputState" class="form-control mr-4" [(ngModel)]="guardiaSelect" (change)="getByGuardia(guardiaSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="!filtro">
+              <option [ngValue]="0">Todos</option>
+              <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}}</option>
+            </select>
+            <label for="start" class="mr-4">Fecha</label>
+            <input class="form-control mr-4" type="date" name="date" [(ngModel)]="dateSelect" (change)="getByDate(dateSelect)" [ngModelOptions]="{standalone: true}">
+		      </div>
+        </div>
+    </div>
+    <div class="table mt-2">
+            <table class="table table-striped">
+             <thead>
+               <th>ID</th>
+               <th>Título</th>
+               <th>Observación</th>
+               <th>Fecha</th>
+               <th>Status</th>
+               <th>Detalle</th>
+             </thead>
+             <tbody>
+              <tr *ngFor="let d of data">
+                <td>{{d.id}}</td>
+                <td>{{d.title}}</td>
+                <td>{{d.observation}}</td>
+                <td>{{d.create_date}}</td>
+                <td><span *ngIf="d.resolved == 0" class="text-danger">Cerrado</span><span *ngIf="d.resolved == 1" class="text-success">Abierto</span><span *ngIf="d.resolved == 2" class="text-success">Reabierto</span></td>
+                <td>
+                  <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)"  title="Detalle"><span class="far fa-eye"></span></a>
+                 </td>
+               </tr>
+            </tbody>
+ 
+          </table>
+    </div>
+  </div>
+  <div class="info-container panel panel-default" *ngIf="detalle">
+    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
+      <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle Reporte</h3>
+    </div>
+    <div class="panel-body mt-2">          
+          <div class="table-container container">
+            <form  role="form">
+              <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Título</label>
+                <div class="col-sm-10">
+                  <input type="text" readonly class="form-control" id="name" value="{{report.title}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="lastname" class="col-sm-2 col-form-label">Observaciones</label>
+                <div class="col-sm-10">
+                  <input type="text" readonly class="form-control" id="lastname" value="{{report.observation}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Latitud</label>
+                <div class="col-sm-4">
+                  <input type="number" readonly class="form-control" id="dni" value="{{report.latitude}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Longitud</label>
+                <div class="col-sm-4">
+                  <input type="number" readonly class="form-control" id="dni" value="{{report.longitude}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="email" class="col-sm-2 col-form-label">Imagenes</label>
+                <img src="{{report.image_1}}" style="height: 100px; width: 100px; margin-right: 20px;">
+                <img src="{{report.image_2}}" style="height: 100px; width: 100px; margin-right: 20px;">
+                <img src="{{report.image_3}}" style="height: 100px; width: 100px; margin-right: 20px;">
+                <img src="{{report.image_4}}" style="height: 100px; width: 100px; margin-right: 20px;">
+                <img src="{{report.image_5}}" style="height: 100px; width: 100px; margin-right: 20px;">
+              </div>
+              <div class="form-group row">
+                <label for="creation" class="col-sm-12 col-form-label"><b>Incidencia</b></label>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{report.incidence.name}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Nivel</label>
+                <div class="col-sm-4">
+                  <input type="number" readonly class="form-control" id="dni" value="{{report.incidence.level}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="creation" class="col-sm-12 col-form-label"><b>Guardia</b></label>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{report.watch.guard.name}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Apellido</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{report.watch.guard.lastname}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{report.watch.guard.dni}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Correo</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{report.watch.guard.email}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="creation" class="col-sm-12 col-form-label">Coordenadas</label>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Latitud</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{report.watch.latitude}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Longitud</label>
+                <div class="col-sm-4">
+                  <input type="number" readonly class="form-control" id="dni" value="{{report.watch.longitude}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="creation" class="col-sm-12 col-form-label" *ngIf="haycomentarios"><b>Comentarios</b></label>
+              </div>
+              <div class="form-group row">
+                <label for="creation" class="col-sm-12 col-form-label" *ngIf="!haycomentarios"><b>No hay comentarios</b></label>
+              </div>
+              <div *ngFor="let c of coment">
+                <hr>
+                <div class="form-group row">
+                  <label for="dni" class="col-sm-2 col-form-label">Usuario</label>
+                  <div class="col-sm-4">
+                    <input type="text" readonly class="form-control" id="dni" value="{{c.user_name}}">
+                  </div>
+                  <label for="dni" class="col-sm-2 col-form-label">Fecha</label>
+                  <div class="col-sm-4">
+                    <input type="text" readonly class="form-control" id="dni" value="{{c.create_date}}">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="dni" class="col-sm-2 col-form-label">Comentario</label>
+                  <div class="col-sm-10">
+                    <input type="text" readonly class="form-control" id="dni" value="{{c.text}}">
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-4">
+                  <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
+              </div>
+            </form>
+          </div>
+        </div>
+  </div>
+</main>
+
+

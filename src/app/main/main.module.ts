@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
@@ -16,6 +17,7 @@ import { VisitaVehiculoService } from '../../model/visitavehiculo/visitavehiculo
 import { VisitanteService } from '../../model/vistavisitantes/visitantes.service';
 import { FuncionarioService } from '../../model/funcionarios/funcionario.service';
 import { IncidenciasService } from '../../model/incidencias/incidencia.service';
+import { BitacoraService } from '../../model/bitacora/bitacora.service';
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -36,6 +38,8 @@ import { VehiculosComponent } from './visitas/vehiculos/vehiculos.component';
 import { VisitantesComponent } from './visitas/visitantes/visitantes.component';
 import { FuncionariosComponent } from './visitas/funcionarios/funcionarios.component';
 import { IncidenciasComponent } from './control/bitacora/incidencias/incidencias.component';
+import { ReportetsComponent } from './control/bitacora/reportets/reportets.component';
+import { FiltreportComponent } from './control/bitacora/filtreport/filtreport.component';
 import {CardVehicleComponent} from './monitoring/aside/card.vehicle.component';
 import {CardTabletComponent} from './monitoring/aside/card.tablet.component';
 
@@ -53,6 +57,8 @@ const mainRoutes: Routes = [
                     { path: 'control/visitas/visitantes', component: VisitantesComponent },
                     { path: 'control/visitas/funcionarios', component: FuncionariosComponent },
                     { path: 'control/bitacora/incidencias', component: IncidenciasComponent },
+                    { path: 'control/bitacora/reportes', component: ReportetsComponent },
+                    { path: 'control/bitacora/reportfilter', component: FiltreportComponent },
                     { path: 'messaging', component: MessagingComponent },
                     { path: 'report', component: ReportComponent },
                     { path: '', component: MonitoringComponent }
@@ -73,18 +79,22 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     LeafletModule.forRoot(),
     LeafletMarkerClusterModule.forRoot()
   ],
-  providers: [ VehiclesService, WatchesService, GuardService, AdminService, AsideService, VisitaVehiculoService,
-      VisitanteService, FuncionarioService, IncidenciasService, TabletService ],
-  entryComponents: [ PopupVehicleComponent, PopupWatchComponent, CardVehicleComponent, CardTabletComponent ],
+  providers: [
+      VehiclesService, WatchesService, GuardService,
+      AdminService, AsideService, VisitaVehiculoService,
+      VisitanteService, FuncionarioService, IncidenciasService,
+      BitacoraService, TabletService ],
+  entryComponents: [
+      PopupVehicleComponent, PopupWatchComponent, CardVehicleComponent,
+      CardTabletComponent ],
   declarations: [
-      MonitoringComponent,
-      MapOsmComponent,
-      PopupVehicleComponent,
-      PopupWatchComponent,
-      HeaderComponent, AsideComponent, MainComponent, ControlComponent, DashboardComponent, ReportComponent,
-      MessagingComponent, GuardiaComponent, VehiculosComponent, VisitantesComponent, FuncionariosComponent,
-      IncidenciasComponent, CardVehicleComponent, CardTabletComponent, HeaderComponent,
-      AsideComponent, MainComponent, ControlComponent, DashboardComponent, ReportComponent, MessagingComponent ],
+      MonitoringComponent, MapOsmComponent, PopupVehicleComponent,
+      PopupWatchComponent, HeaderComponent, AsideComponent,
+      MainComponent, ControlComponent, DashboardComponent,
+      ReportComponent, MessagingComponent, GuardiaComponent,
+      VehiculosComponent, VisitantesComponent, FuncionariosComponent,
+      IncidenciasComponent, ReportetsComponent, FiltreportComponent,
+      CardVehicleComponent, CardTabletComponent ],
   bootstrap: [ MainComponent ]
 })
 export class MainModule {}

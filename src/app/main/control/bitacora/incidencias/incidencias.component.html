@@ -28,8 +28,8 @@
         <i class="fas fa-plus" style="float: right;"></i>
       </a>
       <div class="collapse show" id="collapseBitacora" aria-labelledby="headingThree" data-parent="#accordion">
-        <a class="btn btn-secondary collap" role="button">Urgente Pendiente</a>
-        <a class="btn btn-secondary collap" role="button">Reportes</a>
+        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/reportes">Urgente Pendiente</a>
+        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/reportfilter">Reportes</a>
         <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/incidencias" style="background-color: #444;width: 100%;text-align: left;color: #FFF;">Tipos de incidencias</a>
       </div>
       <a class="btn btn-secondary" role="button">
@@ -90,7 +90,7 @@
               <div class="form-group row">
                 <label for="nivela" class="col-sm-2 col-form-label">Nivel <span class="text-danger">*</span></label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="nivela" placeholder="Introduzca nivel" [(ngModel)]="nivela" [ngModelOptions]="{standalone: true}">
+                  <input type="number" min="1" max="3" class="form-control" id="nivela" placeholder="Introduzca nivel" [(ngModel)]="nivela" [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
               <div>
@@ -121,7 +121,7 @@
               <div class="form-group row">
                 <label for="nivel" class="col-sm-2 col-form-label">Nivel</label>
                 <div class="col-sm-10">
-                  <input type="number" class="form-control" id="nivel" placeholder="Introduzca Nivel" [(ngModel)]="nivel" [ngModelOptions]="{standalone: true}">
+                  <input type="number" min="1" max="3" class="form-control" id="nivel" placeholder="Introduzca Nivel" [(ngModel)]="nivel" [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
               <div>
