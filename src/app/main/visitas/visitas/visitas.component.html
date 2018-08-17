@@ -1,0 +1,246 @@
+<main class="control-container">
+  <aside>
+    <div id="accordion">
+      <a class="btn btn-secondary" role="button" routerLink="/u/control">
+        <i class="fas fa-edit"></i>
+        Administradores
+      </a>
+      <a class="btn btn-secondary" role="button" routerLink="/u/control/guardia">
+        <i class="fas fa-edit"></i>
+          Guardias
+      </a>
+      <a class="btn btn-secondary" data-toggle="collapse" href="#collapseVisit" role="button" aria-expanded="true" aria-controls="collapseExample">
+        <i class="fas fa-edit"></i>
+          Visitas
+        <i class="fas fa-plus" style="float: right;"></i>
+      </a>
+      <div class="collapse show" id="collapseVisit" aria-labelledby="headingThree" data-parent="#accordion">
+        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/visitas/activas">Visitas Activas</a>
+        <a class="btn btn-secondary collap" role="button"  style="background-color: #444;width: 100%;text-align: left;color: #FFF;" routerLink="/u/control/visitas/visitas">Todas las Visitas</a>
+        <a class="btn btn-secondary collap" routerLink="/u/control/visitas/vehiculos" role="button">Vehículos Visitantes</a>
+        <a class="btn btn-secondary collap active" role="button" routerLink="/u/control/visitas/visitantes">Visitantes</a>
+        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/funcionarios">Funcionarios</a>
+      </div>
+      <a class="btn btn-secondary" data-toggle="collapse" href="#collapseBitacora" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <i class="fas fa-edit"></i>
+          Bitácora
+        <i class="fas fa-plus" style="float: right;"></i>
+      </a>
+      <div class="collapse" id="collapseBitacora" aria-labelledby="headingThree" data-parent="#accordion">
+        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/reportes">Urgente Pendiente</a>
+        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/reportfilter">Reportes</a>
+        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/incidencias">Tipos de incidencias</a>
+      </div>
+      <a class="btn btn-secondary" role="button">
+        <i class="fas fa-edit"></i>
+        Configuración
+      </a>
+    </div>
+  </aside>
+  <div class="info-container panel panel-default" *ngIf="lista">
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto" ><h3>Visitas</h3></div>
+        <div class="ml-auto form-inline">
+          <div class="form-group row">
+            <label class="mr-4"><b>Filtrar por:</b></label>
+            <select id="inputState" class="form-control mr-4" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
+              <option [ngValue]="0">Vehículo</option>
+              <option [ngValue]="1">Guardia</option>
+              <option [ngValue]="2">Visitante</option>
+              <option [ngValue]="3">Funcionario</option>
+            </select>
+            <select id="inputState" class="form-control mr-4" [(ngModel)]="vehiculoSelect" (change)="getByVehiculo(vehiculoSelect)" [ngModelOptions]="{standalone: true}" *ngIf="filtro == 1">
+              <option [ngValue]="0">Todos</option>
+              <option *ngFor="let v of vehi" [ngValue]="v.id">{{v.plate}}</option>
+            </select>
+            <select id="inputState" class="form-control mr-4" [(ngModel)]="guardiaSelect" (change)="getByGuardia(guardiaSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="filtro == 2">
+              <option [ngValue]="0">Todos</option>
+              <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}}</option>
+            </select>
+            <select id="inputState" class="form-control mr-4" [(ngModel)]="visitanteSelect" (change)="getByVisitante(visitanteSelect)" [ngModelOptions]="{standalone: true}" *ngIf="filtro == 3">
+              <option [ngValue]="0">Visitante</option>
+              <option *ngFor="let i of visit" [ngValue]="i.id">{{i.name}}</option>
+            </select>
+            <select id="inputState" class="form-control mr-4" [(ngModel)]="funcionarioSelect" (change)="getByFuncionario(funcionarioSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="filtro == 4">
+              <option [ngValue]="0">Funcionario</option>
+              <option *ngFor="let f of funcio" [ngValue]="f.id">{{f.name}}</option>
+            </select>
+            <label for="start" class="mr-4">Fecha</label>
+            <input class="form-control mr-4" type="date" name="date" [(ngModel)]="dateSelect" (change)="getByDate(dateSelect)" [ngModelOptions]="{standalone: true}">
+          </div>
+        </div>
+      </div>
+    <div class="table mt-2">
+            <table class="table table-striped">
+             <thead>
+               <th>ID</th>
+               <th>Placa Vehículo</th>
+               <th>Visitante</th>
+               <th>Cédula visitante</th>
+               <th>Entrada</th>
+               <th>Salida</th>
+               <th>Detalle</th>
+             </thead>
+             <tbody>
+              <tr *ngFor="let d of data">
+                <td>{{d.id}}</td>
+                <td>{{d.plate}}</td>
+                <td>{{d.visitor_name}} {{d.visitor_lastname}}</td>
+                <td>{{d.visitor_dni}}</td>
+                <td>{{d.create_date}}</td>
+                <td>--</td>
+                <td>
+                  <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
+                 </td>
+               </tr>
+            </tbody>
+          </table>
+    </div>
+  </div>
+  <div class="info-container panel panel-default" *ngIf="detalle">
+    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
+      <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle Reporte</h3>
+    </div>
+    <div class="panel-body mt-2">          
+          <div class="table-container container">
+            <form  role="form">
+              <div class="form-group row">
+                <label for="lastname" class="col-sm-2 col-form-label">Entrada</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="lastname" value="{{visi.create_date}}">
+                </div>
+                <label for="lastname" class="col-sm-2 col-form-label">Observaciones</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="lastname" value="{{visi.observation}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Latitud</label>
+                <div class="col-sm-4">
+                  <input type="number" readonly class="form-control" id="dni" value="{{visi.latitude}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Longitud</label>
+                <div class="col-sm-4">
+                  <input type="number" readonly class="form-control" id="dni" value="{{visi.longitude}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="email" class="col-sm-2 col-form-label">Imagenes</label>
+                <img src="{{visi.image_1}}" style="height: 100px; width: 100px; margin-right: 20px;">
+                <img src="{{visi.image_2}}" style="height: 100px; width: 100px; margin-right: 20px;">
+                <img src="{{visi.image_3}}" style="height: 100px; width: 100px; margin-right: 20px;">
+                <img src="{{visi.image_4}}" style="height: 100px; width: 100px; margin-right: 20px;">
+                <img src="{{visi.image_5}}" style="height: 100px; width: 100px; margin-right: 20px;">
+              </div>
+              <hr>
+              <div class="form-group row">
+                <label for="creation" class="col-sm-12 col-form-label"><b>Vehiculo</b></label>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.vehicle.vehicle}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Placa</label>
+                <div class="col-sm-4">
+                  <input type="number" readonly class="form-control" id="dni" value="{{visi.vehicle.plate}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Modelo</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.vehicle.model}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Tipo</label>
+                <div class="col-sm-4">
+                  <input type="number" readonly class="form-control" id="dni" value="{{visi.vehicle.type}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="email" class="col-sm-2 col-form-label">Imagen</label>
+                <img src="{{visi.vehicle.photo}}" style="height: 200px; width: 200px; margin-right: 20px;">
+              </div>
+              <hr>
+              <div class="form-group row">
+                <label for="creation" class="col-sm-12 col-form-label"><b>Guardia</b></label>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.name}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Apellido</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.lastname}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.dni}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Correo</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.email}}">
+                </div>
+              </div>
+              <hr>
+              <div class="form-group row">
+                <label for="creation" class="col-sm-12 col-form-label"><b>Visitado</b></label>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visited.name}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Apellido</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visited.lastname}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Dirección</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visited.address}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visited.dni}}">
+                </div>
+              </div>
+              <hr>
+              <div class="form-group row">
+                <label for="creation" class="col-sm-12 col-form-label"><b>Visitante</b></label>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visitor.name}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Apellido</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visitor.lastname}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Compañía</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visitor.company}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visitor.dni}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="email" class="col-sm-2 col-form-label">Imagen</label>
+                <img src="{{visi.vehicle.photo}}" style="height: 200px; width: 200px; margin-right: 20px;">
+              </div>
+              <div class="row mt-4">
+                  <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
+              </div>
+            </form>
+          </div>
+        </div>
+  </div>
+</main>
