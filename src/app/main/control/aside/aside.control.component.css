@@ -19,14 +19,39 @@ aside{
     color: #D9D9D9;
 }
 
-.btn.btn-secondary.btn-aside_menu {
+.btn-secondary {
     width: 100%;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 20px;
     margin-bottom: 10px;
     text-align: left;
-    background-color: #585858;
+    background-color: transparent;
     border-color: var(--secondary-color);
     color: #D9D9D9;
+}
+
+.btn-aside_menu {
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    text-align: left;
+    background-color: transparent;
+    border-color: var(--secondary-color);
+    color: #D9D9D9;
+}
+
+.btn-aside_menu:hover {
+    background-color: #585858;
+}
+
+.active{
+    background-color: #585858;
+}
+
+.fas {
+    margin-top: 5px;
+    float: right;
 }

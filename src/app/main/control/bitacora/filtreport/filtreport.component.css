@@ -77,3 +77,42 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
+
+.image-detail-gallery {
+    background: #D9D9D9;
+    height: 100px;
+    width: 100px;
+    object-fit: scale-down;
+    object-position: center;
+    margin: 0 12px;
+}
+
+.image-detail-photo {
+    background: #D9D9D9;
+    height: 200px;
+    width: 200px;
+    object-fit: scale-down;
+    object-position: center;
+    margin: 0 12px;
+}
+
+.image-detail-photo-full {
+    display: block;
+    margin: auto;
+    max-height: 90%;
+    max-width: 90%;
+    height: auto;
+    min-height: 400px;
+    width: auto;
+    object-position: center;
+}
+
+.container-fluid {
+    padding-top: 4px;
+}
+
+.list-title {
+    color: var(--secondary-color);
+    margin-left: 2vw;
+    margin-top: 4px;
+}

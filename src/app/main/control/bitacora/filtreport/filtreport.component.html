@@ -1,46 +1,7 @@
-<main class="control-container">
-  <!--<aside>-->
-    <!--<div id="accordion">-->
-      <!--<a class="btn btn-secondary" role="button" routerLink="/u/control">-->
-        <!--<i class="fas fa-edit"></i>-->
-        <!--Administradores-->
-      <!--</a>-->
-      <!--<a class="btn btn-secondary" role="button" routerLink="/u/control/guardia">-->
-        <!--<i class="fas fa-edit"></i>-->
-          <!--Guardias-->
-      <!--</a>-->
-      <!--<a class="btn btn-secondary" data-toggle="collapse" href="#collapseVisit" role="button" aria-expanded="false" aria-controls="collapseExample">-->
-        <!--<i class="fas fa-edit"></i>-->
-          <!--Visitas-->
-        <!--<i class="fas fa-plus" style="float: right;"></i>-->
-      <!--</a>-->
-      <!--<div class="collapse" id="collapseVisit" aria-labelledby="headingThree" data-parent="#accordion">-->
-        <!--<a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/visitas/activas">Visitas Activas</a>-->
-        <!--<a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/visitas">Todas las Visitas</a>-->
-        <!--<a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/vehiculos">Vehículos Visitantes</a>-->
-        <!--<a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/visitantes">Visitantes</a>-->
-        <!--<a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/funcionarios">Funcionarios</a>-->
-      <!--</div>-->
-      <!--<a class="btn btn-secondary" data-toggle="collapse" href="#collapseBitacora" role="button" aria-expanded="true" aria-controls="collapseExample">-->
-        <!--<i class="fas fa-edit"></i>-->
-          <!--Bitácora-->
-        <!--<i class="fas fa-plus" style="float: right;"></i>-->
-      <!--</a>-->
-      <!--<div class="collapse show" id="collapseBitacora" aria-labelledby="headingThree" data-parent="#accordion">-->
-        <!--<a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/reportes">Urgente Pendiente</a>-->
-        <!--<a class="btn btn-secondary collap" role="button"style="background-color: #444;width: 100%;text-align: left;color: #FFF;" routerLink="/u/control/bitacora/reportfilter">Reportes</a>-->
-        <!--<a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/incidencias">Tipos de incidencias</a>-->
-      <!--</div>-->
-      <!--<a class="btn btn-secondary" role="button">-->
-        <!--<i class="fas fa-edit"></i>-->
-        <!--Configuración-->
-      <!--</a>-->
-    <!--</div>-->
-  <!--</aside>-->
-  <app-control-aside></app-control-aside>
+
   <div class="info-container panel panel-default"  *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto" ><h3>Reportes</h3></div>
+      <div class="mr-auto" ><h3 class="list-title">Todos los Reportes</h3></div>
         <div class="ml-auto form-inline">
           <div class="form-group row">
             <label class="mr-4"><b>Filtrar por:</b></label>
@@ -70,6 +31,7 @@
     <div class="table mt-2">
             <table class="table table-striped">
              <thead>
+             <th></th>
                <th>ID</th>
                <th>Título</th>
                <th>Observación</th>
@@ -80,6 +42,7 @@
              </thead>
              <tbody>
               <tr *ngFor="let d of data">
+                <td></td>
                 <td>{{d.id}}</td>
                 <td>{{d.title}}</td>
                 <td>{{d.observation}}</td>
@@ -106,15 +69,15 @@
           <div class="table-container container">
             <form  role="form">
               <div class="form-group row">
-                <label for="name" class="col-sm-2 col-form-label">Título</label>
+                <label for="name" class="col-sm-2 col-form-label">Incidencia</label>
                 <div class="col-sm-10">
                   <input type="text" readonly class="form-control" id="name" value="{{report.title}}">
                 </div>
               </div>
               <div class="form-group row">
-                <label for="lastname" class="col-sm-2 col-form-label">Observaciones</label>
+                <label class="col-sm-2 col-form-label">Observación</label>
                 <div class="col-sm-10">
-                  <input type="text" readonly class="form-control" id="lastname" value="{{report.observation}}">
+                  <textarea rows="6" cols="10" readonly class="form-control input">{{report.observation}}</textarea>
                 </div>
               </div>
               <div class="form-group row">
@@ -128,12 +91,12 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label for="email" class="col-sm-2 col-form-label">Imagenes</label>
-                <a data-toggle="modal" href="#image1"><img src="{{report.image_1}}" style="height: 100px; width: 100px; margin-right: 20px;"></a>
-                <a data-toggle="modal" href="#image2"><img src="{{report.image_2}}" style="height: 100px; width: 100px; margin-right: 20px;"></a>
-                <a data-toggle="modal" href="#image3"><img src="{{report.image_3}}" style="height: 100px; width: 100px; margin-right: 20px;"></a>
-                <a data-toggle="modal" href="#image4"><img src="{{report.image_4}}" style="height: 100px; width: 100px; margin-right: 20px;"></a>
-                <a data-toggle="modal" href="#image5"><img src="{{report.image_5}}" style="height: 100px; width: 100px; margin-right: 20px;"></a>
+                <label class="col-sm-2 col-form-label">Imagenes</label>
+                <a [hidden]="!report.image_1" data-toggle="modal" href="#image1"><img src="{{report.image_1}}" class="image-detail-gallery"></a>
+                <a [hidden]="!report.image_2" data-toggle="modal" href="#image2"><img src="{{report.image_2}}" class="image-detail-gallery"></a>
+                <a [hidden]="!report.image_3" data-toggle="modal" href="#image3"><img src="{{report.image_3}}" class="image-detail-gallery"></a>
+                <a [hidden]="!report.image_4" data-toggle="modal" href="#image4"><img src="{{report.image_4}}" class="image-detail-gallery"></a>
+                <a [hidden]="!report.image_5" data-toggle="modal" href="#image5"><img src="{{report.image_5}}" class="image-detail-gallery"></a>
               </div>
               <!--Modal: modalVM-->
               <div class="modal fade" id="image1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -142,7 +105,7 @@
                   <div class="modal-content">
                     <!--Body-->
                     <div class="modal-body mb-0 p-0">
-                      <img src="{{report.image_1}}" style="height: 450px; width: 100%;">
+                      <img src="{{report.image_1}}" class="image-detail-photo-full">
                     </div>
                   </div>
                 </div>
@@ -154,7 +117,7 @@
                   <div class="modal-content">
                     <!--Body-->
                     <div class="modal-body mb-0 p-0">
-                      <img src="{{report.image_2}}" style="height: 450px; width: 100%;">
+                      <img src="{{report.image_2}}" class="image-detail-photo-full">
                     </div>
                   </div>
                 </div>
@@ -166,7 +129,7 @@
                   <div class="modal-content">
                     <!--Body-->
                     <div class="modal-body mb-0 p-0">
-                      <img src="{{report.image_3}}" style="height: 450px; width: 100%;">
+                      <img src="{{report.image_3}}" class="image-detail-photo-full">
                     </div>
                   </div>
                 </div>
@@ -178,7 +141,7 @@
                   <div class="modal-content">
                     <!--Body-->
                     <div class="modal-body mb-0 p-0">
-                      <img src="{{report.image_4}}" style="height: 450px; width: 100%;">
+                      <img src="{{report.image_4}}" class="image-detail-photo-full">
                     </div>
                   </div>
                 </div>
@@ -190,24 +153,12 @@
                   <div class="modal-content">
                     <!--Body-->
                     <div class="modal-body mb-0 p-0">
-                      <img src="{{report.image_5}}" style="height: 450px; width: 100%;">
+                      <img src="{{report.image_5}}" class="image-detail-photo-full">
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="form-group row">
-                <label for="creation" class="col-sm-12 col-form-label"><b>Incidencia</b></label>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{report.incidence.name}}">
-                </div>
-                <label for="dni" class="col-sm-2 col-form-label">Nivel</label>
-                <div class="col-sm-4">
-                  <input type="number" readonly class="form-control" id="dni" value="{{report.incidence.level}}">
-                </div>
-              </div>
+              <hr>
               <div class="form-group row">
                 <label for="creation" class="col-sm-12 col-form-label"><b>Guardia</b></label>
               </div>
@@ -229,19 +180,6 @@
                 <label for="dni" class="col-sm-2 col-form-label">Correo</label>
                 <div class="col-sm-4">
                   <input type="text" readonly class="form-control" id="dni" value="{{report.watch.guard.email}}">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="creation" class="col-sm-12 col-form-label">Coordenadas</label>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Latitud</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{report.watch.latitude}}">
-                </div>
-                <label for="dni" class="col-sm-2 col-form-label">Longitud</label>
-                <div class="col-sm-4">
-                  <input type="number" readonly class="form-control" id="dni" value="{{report.watch.longitude}}">
                 </div>
               </div>
               <hr>
@@ -295,6 +233,6 @@
           </div>
         </div>
   </div>
-</main>
+
 
 
