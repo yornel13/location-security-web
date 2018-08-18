@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
 import { Router } from '@angular/router';
-import { VisitaVehiculoService } from '../../../../model/visitavehiculo/visitavehiculo.service';
-import { Vvehiculo } from '../../../../model/visitavehiculo/visitavehiculo';
+import { VisitaVehiculoService } from '../../../../../model/visitavehiculo/visitavehiculo.service';
+import { Vvehiculo } from '../../../../../model/visitavehiculo/visitavehiculo';
 
 @Component({
   selector: 'app-vehiculos',

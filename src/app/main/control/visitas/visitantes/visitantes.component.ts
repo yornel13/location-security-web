@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
 import { Router } from '@angular/router';
-import { VisitanteService } from '../../../../model/vistavisitantes/visitantes.service';
-import { Visitantes } from '../../../../model/vistavisitantes/visitantes';
+import { VisitanteService } from '../../../../../model/vistavisitantes/visitantes.service';
+import { Visitantes } from '../../../../../model/vistavisitantes/visitantes';
 
 @Component({
   selector: 'app-visitantes',

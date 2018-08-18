@@ -36,17 +36,18 @@ import {RouterModule, Routes} from '@angular/router';
 import {AsideService} from './monitoring/aside/aside.service';
 import { MessagingComponent } from './messaging/messaging.component';
 import { GuardiaComponent } from './control/guardia/guardia.component';
-import { VehiculosComponent } from './visitas/vehiculos/vehiculos.component';
-import { VisitantesComponent } from './visitas/visitantes/visitantes.component';
-import { FuncionariosComponent } from './visitas/funcionarios/funcionarios.component';
+import { VehiculosComponent } from './control/visitas/vehiculos/vehiculos.component';
+import { VisitantesComponent } from './control/visitas/visitantes/visitantes.component';
+import { FuncionariosComponent } from './control/visitas/funcionarios/funcionarios.component';
 import { IncidenciasComponent } from './control/bitacora/incidencias/incidencias.component';
 import { ReportetsComponent } from './control/bitacora/reportets/reportets.component';
 import { FiltreportComponent } from './control/bitacora/filtreport/filtreport.component';
-import { VisitasComponent } from './visitas/visitas/visitas.component';
-import { VisitasactivasComponent } from './visitas/visitasactivas/visitasactivas.component';
+import { VisitasComponent } from './control/visitas/visitas/visitas.component';
+import { VisitasactivasComponent } from './control/visitas/visitasactivas/visitasactivas.component';
 
 import { FilterPipeModule } from 'ngx-filter-pipe';
 import {TabletService} from '../../model/tablet/tablet.service';
+import {AsideControlComponent} from './control/aside/aside.control.component';
 
 const mainRoutes: Routes = [
     { path: '', component: MainComponent,
@@ -99,7 +100,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
       DashboardComponent, ReportComponent, MessagingComponent, GuardiaComponent,
       VehiculosComponent, VisitantesComponent, FuncionariosComponent, IncidenciasComponent,
       ReportetsComponent, FiltreportComponent, VisitasComponent, VisitasactivasComponent,
-      CardVehicleComponent, CardTabletComponent ],
+      CardVehicleComponent, CardTabletComponent, AsideControlComponent ],
   bootstrap: [ MainComponent ]
 })
 export class MainModule {}

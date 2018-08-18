@@ -1,42 +1,43 @@
 <main class="control-container">
-  <aside>
-    <div id="accordion">
-      <a class="btn btn-secondary" role="button" routerLink="/u/control">
-        <i class="fas fa-edit"></i>
-        Administradores
-      </a>
-      <a class="btn btn-secondary" role="button" routerLink="/u/control/guardia">
-        <i class="fas fa-edit"></i>
-          Guardias
-      </a>
-      <a class="btn btn-secondary" data-toggle="collapse" href="#collapseVisit" role="button" aria-expanded="true" aria-controls="collapseExample">
-        <i class="fas fa-edit"></i>
-          Visitas
-        <i class="fas fa-plus" style="float: right;"></i>
-      </a>
-      <div class="collapse show" id="collapseVisit" aria-labelledby="headingThree" data-parent="#accordion">
-        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/visitas/activas">Visitas Activas</a>
-        <a class="btn btn-secondary collap" role="button"  style="background-color: #444;width: 100%;text-align: left;color: #FFF;" routerLink="/u/control/visitas/visitas">Todas las Visitas</a>
-        <a class="btn btn-secondary collap" routerLink="/u/control/visitas/vehiculos" role="button">Vehículos Visitantes</a>
-        <a class="btn btn-secondary collap active" role="button" routerLink="/u/control/visitas/visitantes">Visitantes</a>
-        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/funcionarios">Funcionarios</a>
-      </div>
-      <a class="btn btn-secondary" data-toggle="collapse" href="#collapseBitacora" role="button" aria-expanded="false" aria-controls="collapseExample">
-        <i class="fas fa-edit"></i>
-          Bitácora
-        <i class="fas fa-plus" style="float: right;"></i>
-      </a>
-      <div class="collapse" id="collapseBitacora" aria-labelledby="headingThree" data-parent="#accordion">
-        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/reportes">Urgente Pendiente</a>
-        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/reportfilter">Reportes</a>
-        <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/incidencias">Tipos de incidencias</a>
-      </div>
-      <a class="btn btn-secondary" role="button">
-        <i class="fas fa-edit"></i>
-        Configuración
-      </a>
-    </div>
-  </aside>
+  <!--<aside>-->
+    <!--<div id="accordion">-->
+      <!--<a class="btn btn-secondary" role="button" routerLink="/u/control">-->
+        <!--<i class="fas fa-edit"></i>-->
+        <!--Administradores-->
+      <!--</a>-->
+      <!--<a class="btn btn-secondary" role="button" routerLink="/u/control/guardia">-->
+        <!--<i class="fas fa-edit"></i>-->
+          <!--Guardias-->
+      <!--</a>-->
+      <!--<a class="btn btn-secondary" data-toggle="collapse" href="#collapseVisit" role="button" aria-expanded="true" aria-controls="collapseExample">-->
+        <!--<i class="fas fa-edit"></i>-->
+          <!--Visitas-->
+        <!--<i class="fas fa-plus" style="float: right;"></i>-->
+      <!--</a>-->
+      <!--<div class="collapse show" id="collapseVisit" aria-labelledby="headingThree" data-parent="#accordion">-->
+        <!--<a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/visitas/activas">Visitas Activas</a>-->
+        <!--<a class="btn btn-secondary collap" role="button"  style="background-color: #444;width: 100%;text-align: left;color: #FFF;" routerLink="/u/control/visitas/visitas">Todas las Visitas</a>-->
+        <!--<a class="btn btn-secondary collap" routerLink="/u/control/visitas/vehiculos" role="button">Vehículos Visitantes</a>-->
+        <!--<a class="btn btn-secondary collap active" role="button" routerLink="/u/control/visitas/visitantes">Visitantes</a>-->
+        <!--<a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/funcionarios">Funcionarios</a>-->
+      <!--</div>-->
+      <!--<a class="btn btn-secondary" data-toggle="collapse" href="#collapseBitacora" role="button" aria-expanded="false" aria-controls="collapseExample">-->
+        <!--<i class="fas fa-edit"></i>-->
+          <!--Bitácora-->
+        <!--<i class="fas fa-plus" style="float: right;"></i>-->
+      <!--</a>-->
+      <!--<div class="collapse" id="collapseBitacora" aria-labelledby="headingThree" data-parent="#accordion">-->
+        <!--<a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/reportes">Urgente Pendiente</a>-->
+        <!--<a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/reportfilter">Reportes</a>-->
+        <!--<a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/incidencias">Tipos de incidencias</a>-->
+      <!--</div>-->
+      <!--<a class="btn btn-secondary" role="button">-->
+        <!--<i class="fas fa-edit"></i>-->
+        <!--Configuración-->
+      <!--</a>-->
+    <!--</div>-->
+  <!--</aside>-->
+    <app-control-aside></app-control-aside>
   <div class="info-container panel panel-default" *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
       <div class="mr-auto" ><h3>Visitas</h3></div>
@@ -130,11 +131,11 @@
               </div>
               <div class="form-group row">
                 <label for="email" class="col-sm-2 col-form-label">Imagenes</label>
-                <a data-toggle="modal" href="#image1"><img src="{{visi.image_1}}" style="height: 100px; width: 100px; margin-right: 20px;"></a>
-                <a data-toggle="modal" href="#image2"><img src="{{visi.image_2}}" style="height: 100px; width: 100px; margin-right: 20px;"></a>
-                <a data-toggle="modal" href="#image3"><img src="{{visi.image_3}}" style="height: 100px; width: 100px; margin-right: 20px;"></a>
-                <a data-toggle="modal" href="#image4"><img src="{{visi.image_4}}" style="height: 100px; width: 100px; margin-right: 20px;"></a>
-                <a data-toggle="modal" href="#image5"><img src="{{visi.image_5}}" style="height: 100px; width: 100px; margin-right: 20px;"></a>
+                <a [hidden]="!visi.image_1" data-toggle="modal" href="#image1"><img src="{{visi.image_1}}" class="image-detail-gallery"></a>
+                <a [hidden]="!visi.image_2" data-toggle="modal" href="#image2"><img src="{{visi.image_2}}" class="image-detail-gallery"></a>
+                <a [hidden]="!visi.image_3" data-toggle="modal" href="#image3"><img src="{{visi.image_3}}" class="image-detail-gallery"></a>
+                <a [hidden]="!visi.image_4" data-toggle="modal" href="#image4"><img src="{{visi.image_4}}" class="image-detail-gallery"></a>
+                <a [hidden]="!visi.image_5" data-toggle="modal" href="#image5"><img src="{{visi.image_5}}" class="image-detail-gallery"></a>
               </div>
               <!--Modal: modalVM-->
               <div class="modal fade" id="image1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -143,7 +144,7 @@
                       <div class="modal-content">
                           <!--Body-->
                           <div class="modal-body mb-0 p-0">
-                               <img src="{{visi.image_1}}" style="height: 450px; width: 100%;">
+                               <img src="{{visi.image_1}}" class="image-detail-photo-full">
                           </div>
                       </div>
                   </div>
@@ -155,7 +156,7 @@
                       <div class="modal-content">
                           <!--Body-->
                           <div class="modal-body mb-0 p-0">
-                               <img src="{{visi.image_2}}" style="height: 450px; width: 100%;">
+                               <img src="{{visi.image_2}}" class="image-detail-photo-full">
                           </div>
                       </div>
                   </div>
@@ -167,7 +168,7 @@
                       <div class="modal-content">
                           <!--Body-->
                           <div class="modal-body mb-0 p-0">
-                               <img src="{{visi.image_3}}" style="height: 450px; width: 100%;">
+                               <img src="{{visi.image_3}}" class="image-detail-photo-full">
                           </div>
                       </div>
                   </div>
@@ -179,7 +180,7 @@
                       <div class="modal-content">
                           <!--Body-->
                           <div class="modal-body mb-0 p-0">
-                               <img src="{{visi.image_4}}" style="height: 450px; width: 100%;">
+                               <img src="{{visi.image_4}}" class="image-detail-photo-full">
                           </div>
                       </div>
                   </div>
@@ -191,7 +192,7 @@
                       <div class="modal-content">
                           <!--Body-->
                           <div class="modal-body mb-0 p-0">
-                               <img src="{{visi.image_5}}" style="height: 450px; width: 100%;">
+                               <img src="{{visi.image_5}}" class="image-detail-photo-full">
                           </div>
                       </div>
                   </div>
@@ -222,7 +223,7 @@
               </div>
               <div class="form-group row">
                 <label for="email" class="col-sm-2 col-form-label">Imagen</label>
-                <a data-toggle="modal" href="#vehiphoto"><img src="{{visi.vehicle.photo}}" style="height: 200px; width: 200px; margin-right: 20px;"></a>
+                <a data-toggle="modal" href="#vehiphoto"><img src="{{visi.vehicle.photo}}" class="image-detail-photo"></a>
               </div>
               <!--Modal: modalVM-->
               <div class="modal fade" id="vehiphoto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -231,7 +232,7 @@
                       <div class="modal-content">
                           <!--Body-->
                           <div class="modal-body mb-0 p-0">
-                               <img src="{{visi.vehicle.photo}}" style="height: 450px; width: 100%;">
+                               <img src="{{visi.vehicle.photo}}" class="image-detail-photo-full">
                           </div>
                       </div>
                   </div>
@@ -286,7 +287,7 @@
               </div>
               <div class="form-group row">
                 <label for="email" class="col-sm-2 col-form-label">Imagen</label>
-                <a data-toggle="modal" href="#visitorphoto"><img src="{{visi.visitor.photo}}" style="height: 200px; width: 200px; margin-right: 20px;"></a>
+                <a data-toggle="modal" href="#visitorphoto"><img src="{{visi.visitor.photo}}" class="image-detail-photo"></a>
               </div>
               <!--Modal: modalVM-->
               <div class="modal fade" id="visitorphoto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -295,7 +296,7 @@
                       <div class="modal-content">
                           <!--Body-->
                           <div class="modal-body mb-0 p-0">
-                               <img src="{{visi.visitor.photo}}" style="height: 450px; width: 100%;">
+                               <img src="{{visi.visitor.photo}}" class="image-detail-photo-full">
                           </div>
                       </div>
                   </div>

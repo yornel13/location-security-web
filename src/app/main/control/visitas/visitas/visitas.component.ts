@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
 import { Router } from '@angular/router';
-import { VisitasService } from '../../../../model/visitas/visitas.service';
-import { GuardService } from '../../../../model/guard/guard.service';
-import { VisitaVehiculoService } from '../../../../model/visitavehiculo/visitavehiculo.service';
-import { VisitanteService } from '../../../../model/vistavisitantes/visitantes.service';
-import { FuncionarioService } from '../../../../model/funcionarios/funcionario.service';
+import { VisitasService } from '../../../../../model/visitas/visitas.service';
+import { GuardService } from '../../../../../model/guard/guard.service';
+import { VisitaVehiculoService } from '../../../../../model/visitavehiculo/visitavehiculo.service';
+import { VisitanteService } from '../../../../../model/vistavisitantes/visitantes.service';
+import { FuncionarioService } from '../../../../../model/funcionarios/funcionario.service';
 
 @Component({
   selector: 'app-visitas',
@@ -29,7 +29,7 @@ export class VisitasComponent {
   //guardias
   guardias:any = [];
   guard:any = [];
-  guardiaSelect:number=0;
+  guardiaSelect:number = 0;
   //vehiculos
   vehiculos:any = [];
   vehi:any = [];

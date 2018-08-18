@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
 import { Router } from '@angular/router';
-import { FuncionarioService } from '../../../../model/funcionarios/funcionario.service';
-import { Funcionario } from '../../../../model/funcionarios/funcionario';
+import { FuncionarioService } from '../../../../../model/funcionarios/funcionario.service';
+import { Funcionario } from '../../../../../model/funcionarios/funcionario';
 
 @Component({
   selector: 'app-funcionarios',

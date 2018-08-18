@@ -1,0 +1,38 @@
+<aside>
+    <div id="accordion">
+        <a class="btn btn-secondary btn-aside_menu" role="button" routerLink="/u/control">
+            <i class="fas"></i>
+            Administradores
+        </a>
+        <a class="btn btn-secondary btn-aside_menu" role="button" routerLink="/u/control/guardia">
+            <i class="fas"></i>
+            Guardias
+        </a>
+        <a class="btn btn-secondary btn-aside_menu" data-toggle="collapse" href="#collapseVisit" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <i class="fas"></i>
+            Visitas
+            <i class="fas fa-chevron-down" style="float: right;"></i>
+        </a>
+        <div class="collapse" id="collapseVisit" aria-labelledby="headingThree" data-parent="#accordion">
+            <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/visitas/activas">Visitas Activas</a>
+            <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/visitas">Todas las Visitas</a>
+            <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/vehiculos">Vehículos Visitantes</a>
+            <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/visitantes">Visitantes</a>
+            <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/funcionarios">Funcionarios</a>
+        </div>
+        <a class="btn btn-secondary btn-aside_menu" data-toggle="collapse" href="#collapseBitacora" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <i class="fas"></i>
+            Bitácora
+            <i class="fas fa-chevron-down" style="float: right;"></i>
+        </a>
+        <div class="collapse" id="collapseBitacora" aria-labelledby="headingThree" data-parent="#accordion">
+            <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/reportes">Urgente Pendiente</a>
+            <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/reportfilter">Reportes</a>
+            <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/incidencias">Tipos de incidencias</a>
+        </div>
+        <a class="btn btn-secondary btn-aside_menu" role="button">
+            <i class="fas"></i>
+            Configuración
+        </a>
+    </div>
+</aside>
