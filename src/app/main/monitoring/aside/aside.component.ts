@@ -14,17 +14,18 @@ export class AsideComponent implements OnInit, OnChanges {
 
     @Input() vehicles: Vehicle[] = [];
     @Input() watches: Watch[] = [];
-    @Input() markerData: any[] = [];
-    @Output() showCard = {showVehicles: true , showWatches: true , showBombas: true, showNoGroup: true, showMarkers: true};
-    @Output() showWVMarkers = new EventEmitter();
+    @Input() markersData: any[] = [];
+    @Output() showMarker = {vehicles: true , watches: true , bombas: true, noGroups: true, message: ''};
+    @Output() markerChanged = new EventEmitter();
     @Output() markerFocused = new EventEmitter();
 
-    eventMessage = null;
-    vehiclesCheck = true;
-    watchesCheck = true;
-    bombasCheck = true;
-    noGroupCheck = true;
-    CHECK_URL = '../../../../assets/aside-menu/checked.png';
+    @Output() vehiclesCheck = true;
+    @Output() watchesCheck = true;
+    @Output() bombasCheck = true;
+    @Output() noGroupCheck = true;
+    noCards = false;
+    showCardContainer = true;
+    CHECK_ICON_URL = '../../../../assets/aside-menu/checked.png';
 
     constructor(private asideService: AsideService) {}
 
@@ -43,18 +44,28 @@ export class AsideComponent implements OnInit, OnChanges {
     selectMarkersOpts(message) {
         if (message.match('showVehicles')) {
             this.vehiclesCheck = !this.vehiclesCheck;
-            this.showWVMarkers.emit(this.eventMessage);
-            this.eventMessage = message;
+            this.showMarker.vehicles =  this.vehiclesCheck;
+            this.showMarker.message =  message;
+            this.markerChanged.emit(this.showMarker);
         }
         if (message.match('showBombas')) {
             this.bombasCheck = !this.bombasCheck;
-            this.showWVMarkers.emit(this.eventMessage);
-            this.eventMessage = message;
+            this.showMarker.bombas = this.bombasCheck;
+            this.showMarker.message =  message;
+            this.markerChanged.emit(this.showMarker);
         }
         if (message.match('showTablets')) {
             this.watchesCheck = !this.watchesCheck;
-            this.showWVMarkers.emit(this.eventMessage);
-            this.eventMessage = message;
+            this.showMarker.watches = this.watchesCheck;
+            this.showMarker.message =  message;
+            this.markerChanged.emit(this.showMarker);
+        }
+        if (!this.vehiclesCheck && !this.bombasCheck && !this.watchesCheck) {
+            this.noCards = true;
+            this.showCardContainer = false;
+        } else {
+            this.noCards = false;
+            this.showCardContainer = true;
         }
     }
         find(newSearch) {

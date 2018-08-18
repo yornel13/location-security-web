@@ -1,11 +1,17 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Watch} from '../../../../model/watch/watch';
+import {forEach} from '@angular/router/src/utils/collection';
+import {Guard} from '../../../../model/guard/guard';
 
 @Component({
     selector: 'app-popup-watch',
     templateUrl: './popup.watch.component.html'
 })
 export class PopupWatchComponent {
-    @Input()
-    watch: Watch;
+
+    dni: string;
+    name: number;
+    lastname: number;
+    generated_time: string;
+    observation: string;
 }
