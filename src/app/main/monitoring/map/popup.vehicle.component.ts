@@ -6,6 +6,11 @@ import {Vehicle} from '../../../../model/vehicle/vehicle';
     templateUrl: './popup.vehicle.component.html'
 })
 export class PopupVehicleComponent {
-    @Input()
-    vehicle: Vehicle;
+
+    imei: string;
+    alias: string;
+    speed: string;
+    generated_time: string;
+    model_name: string;
+
 }

@@ -9,22 +9,24 @@
       </div>
     
       <div class="dropdown-menu menu-item" >
-        <div class=" menu-items" (click)="selectMarkersOpts('showVehicles')" >Vehiculos<img *ngIf="vehiclesCheck" class="checked-icon" src="{{CHECK_URL}}" alt=""></div>
-        <div class=" menu-items" (click)="selectMarkersOpts('showBombas')">Bombas<img *ngIf="bombasCheck" class="checked-icon" src="{{CHECK_URL}}" alt=""></div>
-        <div class=" menu-items" (click)="selectMarkersOpts('showTablets')">Tablets   <img *ngIf="watchesCheck" class="checked-icon" src="{{CHECK_URL}}" alt=""></div>
-        <div class=" menu-items" (click)="selectMarkersOpts('showNoGroups')">No agrupados<img *ngIf="noGroupCheck" class="checked-icon" src="{{CHECK_URL}}" alt=""></div>
+        <div class=" menu-items" (click)="selectMarkersOpts('showVehicles')" >Vehiculos<img *ngIf="vehiclesCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>
+        <div class=" menu-items" (click)="selectMarkersOpts('showBombas')">Bombas<img *ngIf="bombasCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>
+        <div class=" menu-items" (click)="selectMarkersOpts('showTablets')">Tablets   <img *ngIf="watchesCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>
+        <div class=" menu-items" (click)="selectMarkersOpts('showNoGroups')">No agrupados<img *ngIf="noGroupCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>
       </div>
     </div>
-    <div class="menu-item">Alertas</div>
+    <div class="menu-item alerta">Alertas</div>
   </div>
   
   <input  (keyup)="$event.keyCode == 13 ? find(newSearsh) : null" #newSearsh class="filter" type="text" placeholder="Filtrar">
-  <!--<p class="no-cards">Seleccione un dispositivo</p>-->
+  
+  <p   *ngIf="noCards" class="no-cards">Seleccione dispositivo</p>
+  
   <!--Cards contaniner-->
-  <div class="cards-container" >
+  <div class="cards-container"  *ngIf="showCardContainer">
     <!--Cards-->
       <div>
-        <div *ngFor="let data of markerData">
+        <div *ngFor="let data of markersData">
           <div  *ngIf="data.group_name === 'Tablet Guardia'">
             <app-card-tablet *ngIf="watchesCheck" [tablet]="data"></app-card-tablet>
           </div>
