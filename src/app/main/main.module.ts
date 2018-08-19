@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/Core';
 
 import {PopupVehicleComponent} from './monitoring/map/popup.vehicle.component';
 import {PopupWatchComponent} from './monitoring/map/popup.watch.component';
@@ -49,12 +50,12 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
 
 @NgModule({
   imports: [
-    HttpClientModule,
     CommonModule,
-    FormsModule,
     mainRouting,
     LeafletModule.forRoot(),
-    LeafletMarkerClusterModule.forRoot()
+    LeafletMarkerClusterModule.forRoot(),
+    HttpClientModule,
+    FormsModule,
   ],
   providers: [ VehiclesService, WatchesService, GuardService, AsideService ],
   entryComponents: [ PopupVehicleComponent, PopupWatchComponent ],
@@ -63,7 +64,14 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
       MapOsmComponent,
       PopupVehicleComponent,
       PopupWatchComponent,
-      HeaderComponent, AsideComponent, MainComponent, ControlComponent, DashboardComponent, ReportComponent, MessagingComponent ],
+      HeaderComponent,
+      AsideComponent,
+      MainComponent,
+      ControlComponent,
+      DashboardComponent,
+      ReportComponent,
+      MessagingComponent,
+     ],
   bootstrap: [ MainComponent ]
 })
 export class MainModule {}

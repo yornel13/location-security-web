@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AngularFireStorage } from 'angularfire2/storage';
 
 
 @Component({
