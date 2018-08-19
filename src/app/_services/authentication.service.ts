@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import {ActivatedRoute, Router} from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -11,7 +12,6 @@ export class AuthenticationService {
           private route: ActivatedRoute,
           private router: Router,
           ) { }
-
     login(dni: string, password: string) {
         return this.http.post<any>(`${environment.BASIC_URL}/auth/admin`, { dni, password })
             .pipe(map(user => {
@@ -24,12 +24,11 @@ export class AuthenticationService {
                         .pipe(
                             map(res => res) // or any other operator
                         )
-                        .subscribe(res => {
-                            localStorage.setItem('TokenUser', JSON.stringify(user.result));
+                        .subscribe((res: any) => {
+                            localStorage.setItem('TokenUser', user.result);
                             localStorage.setItem('User', JSON.stringify(res));
+                            localStorage.setItem('UserDni', res.dni);
                             return res;
-
-
                         });
                 }
             }));

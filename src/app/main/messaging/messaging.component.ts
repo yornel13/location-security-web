@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {Admin} from '../../../model/admin/admin';
 
 @Component({
   selector: 'app-messaging',
@@ -19,7 +18,6 @@ export class MessagingComponent implements OnInit {
   }
 
   chat(formValue) {
-    console.log(localStorage.getItem('UserDni'));
     const newMessage = Object.assign(formValue, { user: localStorage.getItem('UserDni')});
     this.currentChat.push(newMessage);
   }
