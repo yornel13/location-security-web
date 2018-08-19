@@ -25,7 +25,7 @@ export class AdminService {
     }
 
     getAll() {
-        return this.http.get<Admin>(this.ADMIN_URL+'/active/1').toPromise()
+        return this.http.get<Admin>(this.ADMIN_URL + '/active/1').toPromise()
             .then((response) => response);
     }
 
