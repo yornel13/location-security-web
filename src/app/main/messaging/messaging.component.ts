@@ -18,7 +18,6 @@ export class MessagingComponent implements OnInit {
   }
 
   chat(formValue) {
-    console.log(localStorage.UserDni);
     const newMessage = Object.assign(formValue, { user: localStorage.UserDni});
     this.currentChat.push(newMessage);
   }

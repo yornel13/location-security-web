@@ -29,18 +29,17 @@ export class AuthenticationService {
                 .pipe(
                   map(res => res) // or any other operator
                 )
-                .subscribe(res => {
-                  localStorage.setItem('TokenUser', JSON.stringify(user.result));
+                .subscribe((res:any) => {
+                  localStorage.setItem('TokenUser', user.result);
                   localStorage.setItem('User', JSON.stringify(res));
-                  localStorage.setItem('UserDni', JSON.stringify(res.dni));
+                  localStorage.setItem('UserDni', res.dni);
                   console.log(localStorage.User);
                   console.log(localStorage.TokenUser);
                   localStorage
                   return res;
-
-
               });
-            }));
+            }
+          }));
     }
 
 
