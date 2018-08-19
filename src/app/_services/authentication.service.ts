@@ -33,7 +33,7 @@ export class AuthenticationService {
                   localStorage.setItem('TokenUser', JSON.stringify(user.result));
                   localStorage.setItem('User', JSON.stringify(res));
                   localStorage.setItem('UserDni', JSON.stringify(res.dni));
-                  console.log(localStorage.User):
+                  console.log(localStorage.User);
                   console.log(localStorage.TokenUser);
                   localStorage
                   return res;
