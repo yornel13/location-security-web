@@ -27,12 +27,10 @@ import {RouterModule, Routes} from '@angular/router';
 import {AsideService} from './monitoring/aside/aside.service';
 import { MessagingComponent } from './messaging/messaging.component';
 
-
-
+import { FilterPipe } from './monitoring/aside/filter.pipe';
 import {TabletService} from '../../model/tablet/tablet.service';
 import {ControlModule} from './control/control.module';
-import { FilterPipe } from './monitoring/aside/filter.pipe';
-
+import {VirtualComponent} from './virutal/virtual.component';
 
 const mainRoutes: Routes = [
     { path: '', component: MainComponent,
@@ -43,6 +41,7 @@ const mainRoutes: Routes = [
                     { path: 'dashboard', component: DashboardComponent },
                     { path: 'monitoring', component: MonitoringComponent },
                     { path: 'control', loadChildren: () => ControlModule },
+                    { path: 'virtual', component: VirtualComponent },
                     { path: 'messaging', component: MessagingComponent },
                     { path: 'report', component: ReportComponent },
                     { path: '', redirectTo: '/u/monitoring', pathMatch: 'full' },
@@ -60,7 +59,6 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     CommonModule,
     FormsModule,
     mainRouting,
-
     LeafletModule.forRoot(),
     LeafletMarkerClusterModule.forRoot(),
     ControlModule,
@@ -73,7 +71,8 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
       MonitoringComponent, MapOsmComponent, PopupVehicleComponent, PopupWatchComponent,
       HeaderComponent, AsideComponent, MainComponent,
       DashboardComponent, ReportComponent, MessagingComponent,
-      CardVehicleComponent, CardTabletComponent, FilterPipe],
+      CardVehicleComponent, CardTabletComponent, VirtualComponent, FilterPipe
+  ],
   bootstrap: [ MainComponent ]
 })
 export class MainModule {}
