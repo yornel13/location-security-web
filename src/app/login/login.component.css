@@ -66,5 +66,32 @@
   color: white; border-radius: 6px 6px 6px 6px;
   border: 1.5px solid #96989a;
   background-color: #ffffff;
-  color: #4A4048; font-size: 20px
+  color: #4A4048;
+  font-size: 20px;
+
+}
+
+.loader {
+  border: 8px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 8px solid #3498db;
+  width: 45px;
+  height: 45px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  align-items: center;
+  margin: auto;
+  position: relative;
+  margin-top: 5%;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

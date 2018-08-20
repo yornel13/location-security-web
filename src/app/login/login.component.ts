@@ -45,6 +45,9 @@ export class LoginComponent implements OnInit {
         }
 
         this.loading = true;
+        if(this.error != ''){
+          this.error = '';
+        }
         this.authenticationService.login(this.f.dni.value, this.f.password.value)
             .pipe(first())
             .subscribe(
