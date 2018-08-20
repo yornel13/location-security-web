@@ -1,0 +1,11 @@
+<main class="virtual-container">
+    <div class="map"
+         leaflet
+         [leafletOptions]="options"
+         [(leafletZoom)]="zoom"
+         [(leafletCenter)]="center"
+         [leafletBaseLayers]="baseLayers"
+         [leafletLayersControlOptions]="layersControlOptions"
+         (leafletMapReady)="onMapReady($event)">
+    </div>
+</main>

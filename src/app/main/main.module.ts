@@ -30,6 +30,7 @@ import { MessagingComponent } from './messaging/messaging.component';
 import { FilterPipeModule } from 'ngx-filter-pipe';
 import {TabletService} from '../../model/tablet/tablet.service';
 import {ControlModule} from './control/control.module';
+import {VirtualComponent} from './virutal/virtual.component';
 
 const mainRoutes: Routes = [
     { path: '', component: MainComponent,
@@ -40,6 +41,7 @@ const mainRoutes: Routes = [
                     { path: 'dashboard', component: DashboardComponent },
                     { path: 'monitoring', component: MonitoringComponent },
                     { path: 'control', loadChildren: () => ControlModule },
+                    { path: 'virtual', component: VirtualComponent },
                     { path: 'messaging', component: MessagingComponent },
                     { path: 'report', component: ReportComponent },
                     { path: '', redirectTo: '/u/monitoring', pathMatch: 'full' },
@@ -60,7 +62,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     FilterPipeModule,
     LeafletModule.forRoot(),
     LeafletMarkerClusterModule.forRoot(),
-    ControlModule
+    ControlModule,
   ],
   providers: [
       VehiclesService, WatchesService, AsideService, TabletService ],
@@ -70,7 +72,8 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
       MonitoringComponent, MapOsmComponent, PopupVehicleComponent, PopupWatchComponent,
       HeaderComponent, AsideComponent, MainComponent,
       DashboardComponent, ReportComponent, MessagingComponent,
-      CardVehicleComponent, CardTabletComponent,  ],
+      CardVehicleComponent, CardTabletComponent, VirtualComponent
+  ],
   bootstrap: [ MainComponent ]
 })
 export class MainModule {}
