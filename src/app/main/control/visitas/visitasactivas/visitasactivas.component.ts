@@ -9,8 +9,8 @@ import { VisitasService } from '../../../../../model/visitas/visitas.service';
   styleUrls: ['./visitasactivas.component.css']
 })
 export class VisitasactivasComponent {
-  //general
-  visitas:any = undefined;
+  /*general*/
+    visitas:any = undefined;
   data:any = undefined;
   visi:any = [];
   searchString: string;
@@ -48,7 +48,7 @@ export class VisitasactivasComponent {
         this.visi = success;
         this.visi.observation = JSON.parse(this.visi.observation);
         if(this.visi.observation.length == 0){
-          this.nomat = true
+          this.nomat = true;
         }else{
           this.nomat = false;
         }

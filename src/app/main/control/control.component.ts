@@ -13,4 +13,4 @@ import { Component } from '@angular/core';
   `,
     styleUrls: ['./control.component.css']
 })
-export class ControlComponent { }
+export class ControlComponent {}

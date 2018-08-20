@@ -19,7 +19,7 @@ import {TabletUtils} from '../../../model/tablet/tablet.utils';
                      [vehicles]="vehicles" [watches]="watches" [markersData]="markersData" class="app-aside" ></app-aside>
           <div class="maps-container">
               <app-map-osm [markerChanged]="markerChanged" [showMarker]="showMarker" [markersData]="markersData"
-                           class="app-map" [vehicles]="vehicles"  [watches]="watches" [lat]="lat" [lng]="lng"
+                           [vehicles]="vehicles"  [watches]="watches" [lat]="lat" [lng]="lng"
                            [zoom]="zoom"></app-map-osm>
           </div>
       </main>    `,

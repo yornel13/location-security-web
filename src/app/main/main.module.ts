@@ -27,9 +27,12 @@ import {RouterModule, Routes} from '@angular/router';
 import {AsideService} from './monitoring/aside/aside.service';
 import { MessagingComponent } from './messaging/messaging.component';
 
-import { FilterPipeModule } from 'ngx-filter-pipe';
+
+
 import {TabletService} from '../../model/tablet/tablet.service';
 import {ControlModule} from './control/control.module';
+import { FilterPipe } from './monitoring/aside/filter.pipe';
+
 
 const mainRoutes: Routes = [
     { path: '', component: MainComponent,
@@ -57,10 +60,10 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     CommonModule,
     FormsModule,
     mainRouting,
-    FilterPipeModule,
+
     LeafletModule.forRoot(),
     LeafletMarkerClusterModule.forRoot(),
-    ControlModule
+    ControlModule,
   ],
   providers: [
       VehiclesService, WatchesService, AsideService, TabletService ],
@@ -70,7 +73,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
       MonitoringComponent, MapOsmComponent, PopupVehicleComponent, PopupWatchComponent,
       HeaderComponent, AsideComponent, MainComponent,
       DashboardComponent, ReportComponent, MessagingComponent,
-      CardVehicleComponent, CardTabletComponent,  ],
+      CardVehicleComponent, CardTabletComponent, FilterPipe],
   bootstrap: [ MainComponent ]
 })
 export class MainModule {}

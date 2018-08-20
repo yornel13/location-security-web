@@ -2,6 +2,7 @@ import {Component, Input, OnChanges, OnInit, Output, SimpleChanges, EventEmitter
 import {Vehicle} from '../../../../model/vehicle/vehicle';
 import {Watch} from '../../../../model/watch/watch';
 import {AsideService} from './aside.service';
+import { FilterPipe } from './filter.pipe';
 
 @Component({
   selector: 'app-aside',
@@ -23,10 +24,11 @@ export class AsideComponent implements OnInit, OnChanges {
     @Output() watchesCheck = true;
     @Output() bombasCheck = true;
     @Output() noGroupCheck = true;
+    // filter: any = { "vehicle": {"imei": ""} };
     noCards = false;
     showCardContainer = true;
     CHECK_ICON_URL = '../../../../assets/aside-menu/checked.png';
-
+    search;
     constructor(private asideService: AsideService) {}
 
     ngOnInit() {

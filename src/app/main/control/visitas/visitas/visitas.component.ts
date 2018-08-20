@@ -14,7 +14,7 @@ import { FuncionarioService } from '../../../../../model/funcionarios/funcionari
 })
 export class VisitasComponent {
   //general
-  visitas:any = undefined;
+  visitas: any = undefined;
   data:any = undefined;
   visi:any = [];
   modalimg:any = [];
@@ -300,7 +300,7 @@ export class VisitasComponent {
 	//Vehiculo
   	if(this.filtroSelect == 0){
   		if(date == ''){
-  			if(this.vehiculoSelect ==0 ){
+  			if(this.vehiculoSelect == 0 ){
   				this.getAll();
   			}else{
   				this.visitasService.getByVehiculo(this.vehiculoSelect).then(
@@ -317,7 +317,7 @@ export class VisitasComponent {
 			    );
   			}
   		}else{
-  			if(this.vehiculoSelect == 0){
+  			if(this.vehiculoSelect == 0) {
   				this.visitasService.getByDate(year, month, day).then(
 			      success => {
 			        this.visitas = success;
