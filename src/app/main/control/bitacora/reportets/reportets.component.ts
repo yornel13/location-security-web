@@ -80,6 +80,8 @@ export class ReportetsComponent {
       this.bitacoraService.getId(id).then(
         success => {
           this.report = success;
+          this.report.latitude = Number(this.report.latitude);
+          this.report.longitude = Number(this.report.longitude);
           this.lista = false;
           this.detalle = true;
             }, error => {
