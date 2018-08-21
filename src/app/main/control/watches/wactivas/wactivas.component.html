@@ -1,10 +1,10 @@
 <div class="info-container panel panel-default" *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto row">
+      <div class="mr-auto row ml-1">
         <a routerLink="/u/control/home/vigilancia" title="Atrás" style="color: var(--secondary-color)">
-            <i class="fas fa-reply icono" style="padding: 12px !important; font-size: 1.2rem"></i>
+            <i class="fas fa-reply icono" style="padding: 6px !important; font-size: 1.8rem"></i>
         </a>
-        <h3 class="list-title">Guardias Activas</h3>
+        <h3 class="list-title ml-2">Guardias Activas</h3>
       </div>
       <div class="ml-auto form-inline">
         <div class="form-group row">
@@ -13,8 +13,6 @@
             <option [ngValue]="0">Todos</option>
             <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}}</option>
           </select>
-          <label for="start" class="mr-4">Fecha</label>
-          <input class="form-control mr-4" type="date" name="date" [(ngModel)]="dateSelect"  [ngModelOptions]="{standalone: true}" (change)="getByDate(dateSelect)">
           <input type="text" name="searchString" class="form-control mr-4" placeholder="Buscar Cédula" [(ngModel)]="guardiaFilter.guard_dni">
         </div>
       </div>
@@ -57,10 +55,6 @@
                 <label for="fechacreate" class="col-sm-2 col-form-label">Hora de inicio</label>
                 <div class="col-sm-4">
                   <input type="text" readonly class="form-control" id="fechacreate" value="{{guardia.create_date}}">
-                </div>
-                <label for="fechafinish" class="col-sm-2 col-form-label">Hora de finalización</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="fechafinish" value="{{guardia.update_date}}">
                 </div>
               </div>
               <hr>
