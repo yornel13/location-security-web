@@ -69,3 +69,8 @@ aside{
     margin-left: 2vw;
     margin-top: 4px;
 }
+
+.icon-return {
+    padding: 6px;
+    font-size: 1.8rem
+}

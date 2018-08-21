@@ -35,3 +35,26 @@
 .link:hover {
 	text-decoration: none;
 }
+
+.list-title {
+	color: var(--secondary-color);
+	margin-left: 2vw;
+	margin-top: 4px;
+}
+
+.container-fluid {
+	padding-top: 4px;
+	padding-bottom: 8px;
+}
+
+.list-title {
+	color: var(--secondary-color);
+	margin-left: 2vw;
+	margin-top: 4px;
+}
+
+.icon-return {
+	padding: 6px !important;
+	font-size: 1.8rem;
+	color: var(--secondary-color);
+}
