@@ -112,7 +112,11 @@
               <div class="form-group row">
                 <label for="nivel" class="col-sm-2 col-form-label">Nivel</label>
                 <div class="col-sm-10">
-                  <input type="number" min="1" max="3" class="form-control" id="nivel" placeholder="Introduzca Nivel" [(ngModel)]="nivel" [ngModelOptions]="{standalone: true}">
+                  <select id="nivel" class="form-control" [(ngModel)]="nivel" [ngModelOptions]="{standalone: true}" placeholder="Seleccione nivel" required>
+                    <option [value]="0">Seleccione Nivel</option>
+                    <option [value]="1">General</option>
+                    <option [value]="2">Importante</option>
+                  </select>
                 </div>
               </div>
               <div>

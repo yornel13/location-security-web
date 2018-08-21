@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
     selector: 'app-control',
     template: `
       <div class="control-container">
-          <app-control-aside *ngIf="!(router.url === '/u/control/home' || router.url === '/u/control/home/visitas' || router.url === '/u/control/home/bitacora' || router.url === '/u/control/home/vigilancia')"></app-control-aside>
+          <app-control-aside *ngIf="!(router.url === '/u/control/home')"></app-control-aside>
           <main class="main-container">
               <router-outlet></router-outlet>
           </main>

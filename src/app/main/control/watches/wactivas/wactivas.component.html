@@ -22,21 +22,21 @@
     <div class="table mt-2">
             <table class="table table-striped">
              <thead>
+              <th></th>
                <th>ID</th>
                <th>Nombre del Guardia</th>
                <th>Cédula del Guardia</th>
-               <th>Fecha</th>
-               <th>Observaciones</th>
+               <th>Hora de Inicio</th>
                <th>Status</th>
                <th>Detalle</th>
              </thead>
              <tbody>
               <tr *ngFor="let d of data | filterBy: guardiaFilter">
+                <td></td>
                 <td *ngIf="d.status == 1">{{d.id}}</td>
                 <td *ngIf="d.status == 1">{{d.guard_name}} {{d.guard_lastname}}</td>
                 <td *ngIf="d.status == 1">{{d.guard_dni}}</td>
                 <td *ngIf="d.status == 1">{{d.create_date}}</td>
-                <td *ngIf="d.status == 1">{{d.observation}}</td>
                 <td *ngIf="d.status == 1"><span *ngIf="d.status == 1" class="text-danger">Activa</span><span *ngIf="d.status == 0" class="text-success">Finalizada</span></td>
                 <td *ngIf="d.status == 1">
                   <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
@@ -54,11 +54,11 @@
           <div class="table-container container">
             <form  role="form">
               <div class="form-group row">
-                <label for="fechacreate" class="col-sm-2 col-form-label">Fecha de creación</label>
+                <label for="fechacreate" class="col-sm-2 col-form-label">Hora de inicio</label>
                 <div class="col-sm-4">
                   <input type="text" readonly class="form-control" id="fechacreate" value="{{guardia.create_date}}">
                 </div>
-                <label for="fechafinish" class="col-sm-2 col-form-label">Fecha Actualización</label>
+                <label for="fechafinish" class="col-sm-2 col-form-label">Hora de finalización</label>
                 <div class="col-sm-4">
                   <input type="text" readonly class="form-control" id="fechafinish" value="{{guardia.update_date}}">
                 </div>
