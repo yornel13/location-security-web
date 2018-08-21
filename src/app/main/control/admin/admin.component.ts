@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AdminService } from '../../../../model/admin/admin.service';
 import { Admin } from '../../../../model/admin/admin';
+import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from 'angularfire2/storage';
+import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 @Component({
     selector: 'app-admin',
@@ -25,6 +28,7 @@ export class AdminComponent {
     apellido:string;
     correo:string;
     identificacion:string;
+    photo:string;
     contrasena:string = "password";
     idEdit:number;
     errorEdit:boolean = false;
@@ -36,6 +40,7 @@ export class AdminComponent {
     emaila:string;
     dnia:string;
     passworda:string;
+    photoa:string;
     errorSave:boolean = false;
     errorSaveData:boolean = false;
     errorNewMsg:string;
@@ -43,8 +48,12 @@ export class AdminComponent {
     errorDelete:boolean = false;
     errorDeleteData:boolean = false;
     adminFilter: any = { "dni": ""};
+    //imagen firebase
+    uploadPercent: Observable<number>;
+    downloadURL: Observable<string>;
 
-    constructor(public router:Router, private adminService:AdminService) {
+
+    constructor(public router:Router, private adminService:AdminService, private storage: AngularFireStorage) {
         this.getAll();
         this.lista = true;
         this.detalle = false;
@@ -85,6 +94,34 @@ export class AdminComponent {
         );
     }
 
+    upload(event) {
+        const file = event.target.files[0];
+        const randomId = Math.random().toString(36).substring(2);
+        var url = '/icsse/' + randomId;
+        const ref = this.storage.ref(url);
+        //const task = ref.put(file);
+        const task = this.storage.upload(url, file);
+        this.uploadPercent = task.percentageChanges();
+        task.snapshotChanges().pipe(
+        finalize(() => {this.downloadURL = ref.getDownloadURL();
+                        this.downloadURL.subscribe(url => (this.photo = url));} 
+        )).subscribe();
+        console.log(this.photo);
+   }
+
+   uploadNew(event) {
+        const file = event.target.files[0];
+        const randomId = Math.random().toString(36).substring(2);
+        var url = '/icsse/' + randomId;
+        const ref = this.storage.ref(url);
+        const task = this.storage.upload(url, file);
+        this.uploadPercent = task.percentageChanges();
+        task.snapshotChanges().pipe(
+        finalize(() => {this.downloadURL = ref.getDownloadURL();
+                        this.downloadURL.subscribe(url => (this.photoa = url));} 
+        )).subscribe();
+   }
+
     regresar() {
         this.lista = true;
         this.detalle = false;
@@ -101,6 +138,7 @@ export class AdminComponent {
                 this.nombre = this.admin.name;
                 this.apellido = this.admin.lastname;
                 this.correo = this.admin.email;
+                this.photo = this.admin.photo;
                 this.identificacion = this.admin.dni;
                 this.idEdit = this.admin.id;
                 this.lista = false;
@@ -119,13 +157,13 @@ export class AdminComponent {
 
     getValueEdit(){
         if(this.contrasena == "password"){
-            console.log("Entra aquí");
             const editadmin : Admin = {
                 id: this.idEdit,
                 dni: this.identificacion,
                 name: this.nombre,
                 lastname: this.apellido,
-                email: this.correo
+                email: this.correo,
+                photo: this.photo
             }
             return editadmin;
         }else{
@@ -135,7 +173,8 @@ export class AdminComponent {
                 name: this.nombre,
                 lastname: this.apellido,
                 email: this.correo,
-                password: this.contrasena
+                password: this.contrasena,
+                photo: this.photo
             }
             return editadmin;
         }
@@ -149,6 +188,7 @@ export class AdminComponent {
             success => {
                 this.getAll();
                 this.regresar();
+                this.photo = '';
                 this.errorEditData = false;
                 this.errorEdit = false;
             }, error => {
@@ -180,6 +220,7 @@ export class AdminComponent {
         this.detalle = false;
         this.crear = true;
         this.editar = false;
+        this.photoa = '/assets/img/adduser.png';
     }
 
     saveNewAdmin() {
@@ -188,7 +229,8 @@ export class AdminComponent {
             name: this.namea,
             lastname: this.lastnamea,
             email: this.emaila,
-            password: this.passworda
+            password: this.passworda,
+            photo: this.photoa
         };
         this.adminService.add(createadmin).then(
             success => {
@@ -198,6 +240,7 @@ export class AdminComponent {
                 this.namea = '';
                 this.lastnamea = '';
                 this.emaila = '';
+                this.photoa = '',
                 this.errorSave = false;
                 this.errorSaveData = false;
             }, error => {

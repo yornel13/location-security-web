@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GuardService } from '../../../../model/guard/guard.service';
 import { Guard } from '../../../../model/guard/guard';
+import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from 'angularfire2/storage';
+import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-guardia',
@@ -23,6 +26,7 @@ export class GuardiaComponent {
   apellido:string;
   correo:string;
   identificacion:string;
+  photo:string;
   contrasena:string = "password";
   idEdit:number;
   errorEdit:boolean = false;
@@ -33,6 +37,7 @@ export class GuardiaComponent {
   lastnamea:string;
   emaila:string;
   dnia:string;
+  photoa:string;
   passworda:string;
   errorSave:boolean = false;
   errorSaveData:boolean = false;
@@ -41,9 +46,12 @@ export class GuardiaComponent {
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
   guardFilter: any = { "dni": ""};
+  //imagen firebase
+  uploadPercent: Observable<number>;
+  downloadURL: Observable<string>;
 
 
-  constructor(public router:Router, private guardService:GuardService) { 
+  constructor(public router:Router, private guardService:GuardService,  private storage: AngularFireStorage) { 
   	this.getAll();
   	this.regresar();
   }
@@ -88,6 +96,33 @@ export class GuardiaComponent {
         );
     }
 
+    upload(event) {
+        const file = event.target.files[0];
+        const randomId = Math.random().toString(36).substring(2);
+        var url = '/icsse/' + randomId;
+        const ref = this.storage.ref(url);
+        //const task = ref.put(file);
+        const task = this.storage.upload(url, file);
+        this.uploadPercent = task.percentageChanges();
+        task.snapshotChanges().pipe(
+        finalize(() => {this.downloadURL = ref.getDownloadURL();
+                        this.downloadURL.subscribe(url => (this.photo = url));} 
+        )).subscribe();
+   }
+
+   uploadNew(event) {
+        const file = event.target.files[0];
+        const randomId = Math.random().toString(36).substring(2);
+        var url = '/icsse/' + randomId;
+        const ref = this.storage.ref(url);
+        const task = this.storage.upload(url, file);
+        this.uploadPercent = task.percentageChanges();
+        task.snapshotChanges().pipe(
+        finalize(() => {this.downloadURL = ref.getDownloadURL();
+                        this.downloadURL.subscribe(url => (this.photoa = url));} 
+        )).subscribe();
+   }
+
     editarGuardia(id) {
       this.guardService.getId(id).then(
         success => {
@@ -97,6 +132,7 @@ export class GuardiaComponent {
           this.correo = this.guardia.email;
           this.identificacion = this.guardia.dni;
           this.idEdit = this.guardia.id;
+          this.photo = this.guardia.photo;
           this.lista = false;
           this.detalle = false;
           this.crear = false;
@@ -119,7 +155,8 @@ export class GuardiaComponent {
           dni: this.identificacion,
           name: this.nombre,
           lastname: this.apellido,
-          email: this.correo
+          email: this.correo,
+          photo: this.photo
         }
         return editadmin;
       }else{
@@ -129,7 +166,8 @@ export class GuardiaComponent {
           name: this.nombre,
           lastname: this.apellido,
           email: this.correo,
-          password: this.contrasena
+          password: this.contrasena,
+          photo: this.photo
         }
         return editadmin;
       }
@@ -137,11 +175,12 @@ export class GuardiaComponent {
 
     saveEdit() {
       var valores = this.getValueEdit();
-
+      console.log(valores);
       this.guardService.set(valores).then(
         success => {
           this.getAll();
           this.regresar();
+          this.photo = '',
           this.errorEditData = false;
           this.errorEdit = false;
             }, error => {
@@ -173,6 +212,7 @@ export class GuardiaComponent {
       this.detalle = false;
       this.crear = true;
       this.editar = false;
+      this.photoa = '/assets/img/adduser.png';
     }
 
     saveNewGuardia() {
@@ -181,12 +221,14 @@ export class GuardiaComponent {
         name: this.namea,
         lastname: this.lastnamea,
         email: this.emaila,
-        password: this.passworda
+        password: this.passworda,
+        photo: this.photoa
       };
       this.guardService.add(createguard).then(
         success => {
           this.getAll();
           this.regresar();
+          this.photoa = '',
           this.errorEditData = false;
           this.errorEdit = false;
             }, error => {

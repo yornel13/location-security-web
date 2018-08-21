@@ -16,6 +16,8 @@ import { ConfiguracionService } from '../../../model/configuracion/configuracion
 
 import { HttpClientModule } from '@angular/common/http';
 import { AgmCoreModule } from '@agm/core';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireStorageModule } from 'angularfire2/storage';
 
 import { ControlComponent } from './control.component';
 import {RouterModule, Routes} from '@angular/router';
@@ -81,7 +83,16 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         FilterPipeModule,
         AgmCoreModule.forRoot({
           apiKey: 'AIzaSyA24mC9OAkD08aAkO_UADkSOSxaCKUZFBQ'
-        })
+        }),
+        AngularFireModule.initializeApp({
+            apiKey: "AIzaSyAzFM4z3GoUE3pFiwpcUBSMm-6PxMNxxaQ",
+            authDomain: "icsseseguridad-6f751.firebaseapp.com",
+            databaseURL: "https://icsseseguridad-6f751.firebaseio.com",
+            projectId: "icsseseguridad-6f751",
+            storageBucket: "icsseseguridad-6f751.appspot.com",
+            messagingSenderId: "962881875237"
+        }),
+        AngularFireStorageModule
     ],
     providers: [
         GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService,

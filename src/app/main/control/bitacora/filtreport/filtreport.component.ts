@@ -54,7 +54,6 @@ export class FiltreportComponent {
     		success => {
     			this.reportes = success;
     			this.data = this.reportes.data;
-          console.log(this.data);
           for(var i = 0; i < this.data.length; i++){
             if(this.data[i].resolved == 0){
               this.change[i] = 0;
@@ -76,6 +75,8 @@ export class FiltreportComponent {
       this.bitacoraService.getId(id).then(
         success => {
           this.report = success;
+          this.report.latitude = Number(this.report.latitude);
+          this.report.longitude = Number(this.report.longitude);
           this.lista = false;
           this.detalle = true;
             }, error => {
