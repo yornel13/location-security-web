@@ -93,8 +93,8 @@
                 <label for="dni" class="col-sm-2 col-form-label">Mapa</label>
                 <div class="col-sm-10">
                   <div id="map">
-                    <agm-map [zoom]="13" [latitude]="report.latitude" [longitude]="report.longitude">
-                      <agm-marker [latitude]="report.latitude" [longitude]="report.longitude"></agm-marker>
+                    <agm-map [zoom]="13" [latitude]="+report.latitude" [longitude]="+report.longitude">
+                      <agm-marker [latitude]="+report.latitude" [longitude]="+report.longitude"></agm-marker>
                     </agm-map>
                   </div>
                 </div>
