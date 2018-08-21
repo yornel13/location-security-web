@@ -32,7 +32,7 @@
              </thead>
              <tbody>
               <tr *ngFor="let d of data | filterBy: guardiaFilter">
-                <td></td>
+                <td *ngIf="d.status == 1"></td>
                 <td *ngIf="d.status == 1">{{d.id}}</td>
                 <td *ngIf="d.status == 1">{{d.guard_name}} {{d.guard_lastname}}</td>
                 <td *ngIf="d.status == 1">{{d.guard_dni}}</td>
