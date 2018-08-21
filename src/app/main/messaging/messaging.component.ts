@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 
 @Component({
   selector: 'app-messaging',
@@ -8,19 +9,18 @@ import { Component, OnInit } from '@angular/core';
 export class MessagingComponent implements OnInit {
   currentChat: any[];
   message: string;
+  messagesCollection: AngularFirestoreCollection<any[]>;
+  messages: Observable<any[]>;
+
+  constructor(public afs: AngularFirestore) { }
+
   ngOnInit() {
-    this.currentChat = [
-      { user: 'bob', message: 'hey, what are you doing?' },
-      { user: 'jeff', message: 'learning angular 2' },
-      { user: 'bob', message: 'cool, angular is great' },
-      { user: 'jeff', message: 'i know that\'s right' },
-    ];
+    this.getChatData();
   }
 
-  chat(formValue) {
-    const newMessage = Object.assign(formValue, { user: localStorage.getItem('UserDni')});
-    this.currentChat.push(newMessage);
-  }
-
+ getChatData() {
+   this.messagesCollection = this.afs.collection<any>('chat_messages');
+     this.messages = this.messagesCollection.valuechanges();
+ }
 
 }

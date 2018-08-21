@@ -10,8 +10,13 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { environment } from '../environments/environment';
+
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { fakeBackendProvider } from './_helpers';
+//Firebase
+import { AngularFireModule } from 'angularfire2';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
 
 @NgModule({
     imports: [
@@ -22,6 +27,8 @@ import { fakeBackendProvider } from './_helpers';
         NgbModule,
         BrowserModule,
         ReactiveFormsModule,
+        AngularFireModule.initializeApp(environment.firebase),
+    	  AngularFirestoreModule,
     ],
     declarations: [
         AppComponent,
