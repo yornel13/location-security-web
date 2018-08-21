@@ -41,6 +41,7 @@ export class FuncionariosComponent {
   //eliminar
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
+  funcionarioFilter: any = { "dni": ""};
 
   constructor(public router:Router, private funcionarioService:FuncionarioService) { 
   	this.getAll();

@@ -82,7 +82,7 @@ export class VisitasComponent {
   		if(id == 0){
   			this.getAll();
   		}else{
-  			this.visitasService.getByVehiculo(id).then(
+  			this.visitasService.getByVehiculo(id, 'all').then(
 		      success => {
 		        this.visitas = success;
 		        this.data = this.visitas.data;
@@ -97,7 +97,7 @@ export class VisitasComponent {
   		}
   	}else{
   		if(id ==0){
-  			this.visitasService.getByDate(year, month, day).then(
+  			this.visitasService.getByDate(year, month, day, 'all').then(
 		      success => {
 		        this.visitas = success;
 		        this.data = this.visitas.data;
@@ -110,7 +110,7 @@ export class VisitasComponent {
 		          }
 		    );
   		}else{
-  			this.visitasService.getByVehiculoDate(id, year, month, day).then(
+  			this.visitasService.getByVehiculoDate(id, year, month, day, 'all').then(
 		      success => {
 		        this.visitas = success;
 		        this.data = this.visitas.data;
@@ -137,7 +137,7 @@ export class VisitasComponent {
   		if(id == 0){
   			this.getAll();
   		}else{
-  			this.visitasService.getByGuard(id).then(
+  			this.visitasService.getByGuard(id, 'all').then(
 		      success => {
 		        this.visitas = success;
 		        this.data = this.visitas.data;
@@ -152,7 +152,7 @@ export class VisitasComponent {
   		}
   	}else{
   		if(id ==0){
-  			this.visitasService.getByDate(year, month, day).then(
+  			this.visitasService.getByDate(year, month, day, 'all').then(
 		      success => {
 		        this.visitas = success;
 		        this.data = this.visitas.data;
@@ -165,7 +165,7 @@ export class VisitasComponent {
 		          }
 		    );
   		}else{
-  			this.visitasService.getByGuardDate(id, year, month, day).then(
+  			this.visitasService.getByGuardDate(id, year, month, day, 'all').then(
 		      success => {
 		        this.visitas = success;
 		        this.data = this.visitas.data;
@@ -192,7 +192,7 @@ export class VisitasComponent {
   		if(id == 0){
   			this.getAll();
   		}else{
-  			this.visitasService.getByVisitante(id).then(
+  			this.visitasService.getByVisitante(id, 'all').then(
 		      success => {
 		        this.visitas = success;
 		        this.data = this.visitas.data;
@@ -207,7 +207,7 @@ export class VisitasComponent {
   		}
   	}else{
   		if(id ==0){
-  			this.visitasService.getByDate(year, month, day).then(
+  			this.visitasService.getByDate(year, month, day, 'all').then(
 		      success => {
 		        this.visitas = success;
 		        this.data = this.visitas.data;
@@ -220,7 +220,7 @@ export class VisitasComponent {
 		          }
 		    );
   		}else{
-  			this.visitasService.getByVisitanteDate(id, year, month, day).then(
+  			this.visitasService.getByVisitanteDate(id, year, month, day, 'all').then(
 		      success => {
 		        this.visitas = success;
 		        this.data = this.visitas.data;
@@ -247,7 +247,7 @@ export class VisitasComponent {
   		if(id == 0){
   			this.getAll();
   		}else{
-  			this.visitasService.getByFuncionario(id).then(
+  			this.visitasService.getByFuncionario(id, 'all').then(
 		      success => {
 		        this.visitas = success;
 		        this.data = this.visitas.data;
@@ -262,7 +262,7 @@ export class VisitasComponent {
   		}
   	}else{
   		if(id ==0){
-  			this.visitasService.getByDate(year, month, day).then(
+  			this.visitasService.getByDate(year, month, day, 'all').then(
 		      success => {
 		        this.visitas = success;
 		        this.data = this.visitas.data;
@@ -275,7 +275,7 @@ export class VisitasComponent {
 		          }
 		    );
   		}else{
-  			this.visitasService.getByFuncionarioDate(id, year, month, day).then(
+  			this.visitasService.getByFuncionarioDate(id, year, month, day, 'all').then(
 		      success => {
 		        this.visitas = success;
 		        this.data = this.visitas.data;
@@ -303,7 +303,7 @@ export class VisitasComponent {
   			if(this.vehiculoSelect ==0 ){
   				this.getAll();
   			}else{
-  				this.visitasService.getByVehiculo(this.vehiculoSelect).then(
+  				this.visitasService.getByVehiculo(this.vehiculoSelect, 'all').then(
 			      success => {
 			        this.visitas = success;
 			        this.data = this.visitas.data;
@@ -318,7 +318,7 @@ export class VisitasComponent {
   			}
   		}else{
   			if(this.vehiculoSelect == 0){
-  				this.visitasService.getByDate(year, month, day).then(
+  				this.visitasService.getByDate(year, month, day, 'all').then(
 			      success => {
 			        this.visitas = success;
 			        this.data = this.visitas.data;
@@ -331,7 +331,7 @@ export class VisitasComponent {
 			          }
 			    );
   			}else{
-  				this.visitasService.getByVehiculoDate(this.vehiculoSelect, year, month, day).then(
+  				this.visitasService.getByVehiculoDate(this.vehiculoSelect, year, month, day, 'all').then(
 			      success => {
 			        this.visitas = success;
 			        this.data = this.visitas.data;
@@ -352,7 +352,7 @@ export class VisitasComponent {
   			if(this.guardiaSelect ==0 ){
   				this.getAll();
   			}else{
-  				this.visitasService.getByGuard(this.guardiaSelect).then(
+  				this.visitasService.getByGuard(this.guardiaSelect, 'all').then(
 			      success => {
 			        this.visitas = success;
 			        this.data = this.visitas.data;
@@ -367,7 +367,7 @@ export class VisitasComponent {
   			}
   		}else{
   			if(this.guardiaSelect == 0){
-  				this.visitasService.getByDate(year, month, day).then(
+  				this.visitasService.getByDate(year, month, day, 'all').then(
 			      success => {
 			        this.visitas = success;
 			        this.data = this.visitas.data;
@@ -380,7 +380,7 @@ export class VisitasComponent {
 			          }
 			    );
   			}else{
-  				this.visitasService.getByGuardDate(this.guardiaSelect, year, month, day).then(
+  				this.visitasService.getByGuardDate(this.guardiaSelect, year, month, day, 'all').then(
 			      success => {
 			        this.visitas = success;
 			        this.data = this.visitas.data;
@@ -401,7 +401,7 @@ export class VisitasComponent {
   			if(this.visitanteSelect ==0 ){
   				this.getAll();
   			}else{
-  				this.visitasService.getByVisitante(this.visitanteSelect).then(
+  				this.visitasService.getByVisitante(this.visitanteSelect, 'all').then(
 			      success => {
 			        this.visitas = success;
 			        this.data = this.visitas.data;
@@ -416,7 +416,7 @@ export class VisitasComponent {
   			}
   		}else{
   			if(this.visitanteSelect == 0){
-  				this.visitasService.getByDate(year, month, day).then(
+  				this.visitasService.getByDate(year, month, day, 'all').then(
 			      success => {
 			        this.visitas = success;
 			        this.data = this.visitas.data;
@@ -429,7 +429,7 @@ export class VisitasComponent {
 			          }
 			    );
   			}else{
-  				this.visitasService.getByVisitanteDate(this.visitanteSelect, year, month, day).then(
+  				this.visitasService.getByVisitanteDate(this.visitanteSelect, year, month, day, 'all').then(
 			      success => {
 			        this.visitas = success;
 			        this.data = this.visitas.data;
@@ -450,7 +450,7 @@ export class VisitasComponent {
   			if(this.funcionarioSelect ==0 ){
   				this.getAll();
   			}else{
-  				this.visitasService.getByFuncionario(this.funcionarioSelect).then(
+  				this.visitasService.getByFuncionario(this.funcionarioSelect, 'all').then(
 			      success => {
 			        this.visitas = success;
 			        this.data = this.visitas.data;
@@ -465,7 +465,7 @@ export class VisitasComponent {
   			}
   		}else{
   			if(this.funcionarioSelect == 0){
-  				this.visitasService.getByDate(year, month, day).then(
+  				this.visitasService.getByDate(year, month, day, 'all').then(
 			      success => {
 			        this.visitas = success;
 			        this.data = this.visitas.data;
@@ -478,7 +478,7 @@ export class VisitasComponent {
 			          }
 			    );
   			}else{
-  				this.visitasService.getByFuncionarioDate(this.funcionarioSelect, year, month, day).then(
+  				this.visitasService.getByFuncionarioDate(this.funcionarioSelect, year, month, day, 'all').then(
 			      success => {
 			        this.visitas = success;
 			        this.data = this.visitas.data;

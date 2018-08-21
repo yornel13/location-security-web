@@ -1,0 +1,112 @@
+
+  <div class="info-container panel panel-default" *ngIf="lista">
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto row">
+        <a routerLink="/u/control/home" title="Atrás" style="color: var(--secondary-color)">
+            <i class="fas fa-reply icono" style="padding: 12px !important; font-size: 1.2rem"></i>
+        </a>
+        <h3 class="list-title">Configuraciones</h3>
+      </div>
+        <div class="ml-auto">
+          <!--
+          <div class="btn-group">
+            <a class="btn btn-success" style="color: white" (click)="crearConfiguracion()"><i class="fas fa-plus-circle"></i>
+              Añadir Configuración
+            </a>
+          </div>
+          -->
+        </div>
+    </div>
+    <div class="table mt-2">
+            <table class="table table-striped">
+             <thead>
+             <th></th>
+               <th>ID</th>
+               <th>Nombre</th>
+               <th>Valor</th>
+               <th>Editar</th>
+             </thead>
+             <tbody>
+              <tr>
+                  <td></td>
+                <td>{{data.id}}</td>
+                <td>Tiempo para actualización de GPS en tablets</td>
+                <td>{{data.value}}</td>
+                <td>
+                  <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editarConfiguracion(data.id)" title="Editar"><span class="fas fa-edit"></span></a>
+                  <form method="post" style="display: inline-block;">
+                  <!--
+                  <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{d.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
+                  -->
+                 </form>
+                 </td>
+               </tr>
+            </tbody>
+ 
+          </table>
+    </div>
+  </div>
+  <div class="info-container panel panel-default" *ngIf="crear">
+    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
+      <h3 class="panel-title"><i class="fas fa-plus-circle" style="margin-right: 20px;"></i> Nueva Configuracion</h3>
+    </div>
+    <div class="panel-body mt-2">          
+          <div class="table-container container">
+            <form method="POST"  role="form">
+              <div class="form-group row">
+                <label for="namea" class="col-sm-2 col-form-label">Nombre <span class="text-danger">*</span></label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="namea" placeholder="Introduzca nombre" [(ngModel)]="namea" [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="valora" class="col-sm-2 col-form-label">Valor <span class="text-danger">*</span></label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="valora" placeholder="Introduzca valor" [(ngModel)]="valora" [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div>
+                <p *ngIf="errorSave" class="text-danger">Error al guardar, verifique los datos</p>
+                <p *ngIf="errorSaveData" class="text-danger">{{errorNewMsg}}</p>
+              </div>
+              <div class="row mt-4">
+                  <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="regresar()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
+                  <button type="button" class="btn btn-success btn-block col-md-3 mr-auto" (click)="saveNewConfiguracion()"  style=" margin: 0px 0px 0px 20px"><i class="fas fa-plus-circle" style="margin-right: 10px;"></i>Agregar Configuracion</button>
+              </div>
+            </form>
+          </div>
+        </div>
+  </div>
+  <div class="info-container panel panel-default" *ngIf="editar">
+    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
+      <h3 class="panel-title"><i class="fas fa-edit" style="margin-right: 20px;"></i>Editar Configuracion</h3>
+    </div>
+    <div class="panel-body mt-2">          
+          <div class="table-container container">
+            <form role="form">
+              <div class="form-group row">
+                <label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="nombre" placeholder="Introduzca Nombre" [(ngModel)]="nombre" [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="nivel" class="col-sm-2 col-form-label">Nivel</label>
+                <div class="col-sm-10">
+                  <input type="text"  class="form-control" id="nivel" placeholder="Introduzca valor" [(ngModel)]="valor" [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div>
+                <p *ngIf="errorEdit" class="text-danger">Error al guardar, intente nuevamente</p>
+                <p *ngIf="errorEditData" class="text-danger">{{errorEditMsg}}</p>
+              </div>
+              <div class="row mt-4">
+                  <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="regresar()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
+                  <button type="button" class="btn btn-success btn-block col-md-3 mr-auto" (click)="saveEdit()" style=" margin: 0px 0px 0px 20px"><i class="fas fa-edit" style="margin-right: 10px;"></i>Editar Incidencia</button>
+              </div>
+            </form>
+          </div>
+        </div>
+  </div>
+
+

@@ -31,6 +31,7 @@ export class VisitantesComponent {
   //eliminar
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
+  visitantesFilter: any = { "dni": ""};
 
   
   constructor(public router:Router, private visitanteService:VisitanteService) { 

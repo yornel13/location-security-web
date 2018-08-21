@@ -40,6 +40,8 @@ export class GuardiaComponent {
   //eliminar
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
+  guardFilter: any = { "dni": ""};
+
 
   constructor(public router:Router, private guardService:GuardService) { 
   	this.getAll();
@@ -230,5 +232,32 @@ export class GuardiaComponent {
         );
     }
 
+    activarGuardia(id) {
+        this.guardService.activeGuard(id).then(
+            success => {
+                this.getAll();
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
+
+    desactivarGuardia(id) {
+        this.guardService.desactiveGuard(id).then(
+            success => {
+                this.getAll();
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
 
 }

@@ -1,7 +1,17 @@
 
   <div class="info-container panel panel-default" *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto" ><h3 class="list-title">Vehículos Visitantes</h3></div>
+      <div class="mr-auto row">
+        <a routerLink="/u/control/home/visitas" title="Atrás" style="color: var(--secondary-color)">
+            <i class="fas fa-reply icono" style="padding: 12px !important; font-size: 1.2rem"></i>
+        </a>
+        <h3 class="list-title">Vehículos Visitantes</h3>
+      </div>
+      <div class="ml-auto form-inline">
+        <div class="form-group row">
+          <input type="text" name="searchString" class="form-control mr-4" placeholder="Buscar Placa" [(ngModel)]="vehicleFilter.plate">
+        </div>
+      </div>
     </div>
     <div class="table mt-2">
             <table class="table table-striped">
@@ -16,7 +26,7 @@
                <th>Acciones</th>
              </thead>
              <tbody>
-              <tr *ngFor="let d of data">
+              <tr *ngFor="let d of data | filterBy: vehicleFilter">
                   <td></td>
                 <td>{{d.id}}</td>
                 <td>{{d.plate}}</td>
@@ -27,7 +37,7 @@
                 <td>
                   <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
                   <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editarVisitVehiculo(d.id)" title="Editar"><span class="fas fa-edit"></span></a>
-                  <a class="btn btn-danger btn-xs" data-toggle="modal" href="#eliminar{{d.id}}" title="Eliminar" type="submit"><span class="fas fa-trash-alt"></span></a>
+                  <a class="btn btn-danger btn-xs" data-toggle="modal" href="#eliminar{{d.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
                  </td>
                  <div class="modal" tabindex="-1" role="dialog" id="eliminar{{d.id}}">
                     <div class="modal-dialog" role="document">

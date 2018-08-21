@@ -1,40 +1,19 @@
 aside{
     list-style: none;
     height: 100%;
-    min-height: 100vh;
-    width: 350px;
+    width: 60px;
     background-color: var(--secondary-color);
-    padding: 20px 10px 10px;
+    padding: 20px 10px 10px 20px;
 }
 
-.card-header {
-    height: 50px;
-}
-
-.btn.btn-secondary {
-    width: 100%;
-    text-align: left;
-    background-color: var(--secondary-color);
-    border-color: var(--secondary-color);
-    color: #D9D9D9;
-}
-
-.btn-secondary {
-    width: 100%;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 20px;
-    margin-bottom: 10px;
-    text-align: left;
-    background-color: transparent;
-    border-color: var(--secondary-color);
-    color: #D9D9D9;
+#accordion a i {
+    font-size: 1.4rem !important;
 }
 
 .btn-aside_menu {
     width: 100%;
     padding-top: 10px;
-    padding-bottom: 10px;
+    padding-bottom: 20px;
     padding-left: 20px;
     margin-bottom: 10px;
     text-align: left;
@@ -43,12 +22,20 @@ aside{
     color: #D9D9D9;
 }
 
+.btn-aside_menu:active {
+    border-color: var(--secondary-color);
+}
+
+.btn-aside_menu:focus {
+    border-color: var(--secondary-color);
+}
+
 .btn-aside_menu:hover {
-    background-color: #585858;
+    background-color: var(--secondary-color);
 }
 
 .active{
-    background-color: #585858;
+    background-color: var(--secondary-color);
 }
 
 .fas {

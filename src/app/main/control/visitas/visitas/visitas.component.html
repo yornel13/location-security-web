@@ -1,7 +1,12 @@
 
   <div class="info-container panel panel-default" *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto" ><h3 class="list-title">Visitas</h3></div>
+      <div class="mr-auto row" >
+        <a routerLink="/u/control/home/visitas" title="Atrás" style="color: var(--secondary-color)">
+            <i class="fas fa-reply icono" style="padding: 12px !important; font-size: 1.2rem"></i>
+        </a>
+        <h3 class="list-title">Visitas</h3>
+      </div>
         <div class="ml-auto form-inline">
           <div class="form-group row">
             <label class="mr-4"><b>Filtrar por:</b></label>
@@ -47,7 +52,7 @@
              </thead>
              <tbody>
               <tr *ngFor="let d of data | filterBy: userFilter">
-                  <td></td>
+                <td></td>
                 <td>{{d.id}}</td>
                 <td>{{d.plate}}</td>
                 <td>{{d.visitor_name}} {{d.visitor_lastname}}</td>

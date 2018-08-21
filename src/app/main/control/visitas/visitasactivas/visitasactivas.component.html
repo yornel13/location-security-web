@@ -1,11 +1,39 @@
 
   <div class="info-container panel panel-default" *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto" ><h3 class="list-title">Visitas Activas</h3></div>
+      <div class="mr-auto row">
+        <a routerLink="/u/control/home/visitas" title="Atrás" style="color: var(--secondary-color)">
+            <i class="fas fa-reply icono" style="padding: 12px !important; font-size: 1.2rem"></i>
+        </a>
+        <h3 class="list-title">Visitas Activas</h3>
+      </div>
       <div class="ml-auto form-inline">
         <div class="form-group row">
-          <input type="text" name="searchString" class="form-control mr-4" placeholder="Buscar Placa" [(ngModel)]="userFilter.vehicle.plate">
-        </div>
+            <label class="mr-4"><b>Filtrar por:</b></label>
+            <select id="inputState" class="form-control mr-4" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
+              <option [ngValue]="0">Vehículo</option>
+              <option [ngValue]="1">Guardia</option>
+              <option [ngValue]="2">Visitante</option>
+              <option [ngValue]="3">Funcionario</option>
+            </select>
+            <select id="inputState" class="form-control mr-4" [(ngModel)]="vehiculoSelect" (change)="getByVehiculo(vehiculoSelect)" [ngModelOptions]="{standalone: true}" *ngIf="filtro == 1">
+              <option [ngValue]="0">Todos</option>
+              <option *ngFor="let v of vehi" [ngValue]="v.id">{{v.plate}}</option>
+            </select>
+            <select id="inputState" class="form-control mr-4" [(ngModel)]="guardiaSelect" (change)="getByGuardia(guardiaSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="filtro == 2">
+              <option [ngValue]="0">Todos</option>
+              <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}}</option>
+            </select>
+            <select id="inputState" class="form-control mr-4" [(ngModel)]="visitanteSelect" (change)="getByVisitante(visitanteSelect)" [ngModelOptions]="{standalone: true}" *ngIf="filtro == 3">
+              <option [ngValue]="0">Visitante</option>
+              <option *ngFor="let i of visit" [ngValue]="i.id">{{i.name}}</option>
+            </select>
+            <select id="inputState" class="form-control mr-4" [(ngModel)]="funcionarioSelect" (change)="getByFuncionario(funcionarioSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="filtro == 4">
+              <option [ngValue]="0">Funcionario</option>
+              <option *ngFor="let f of funcio" [ngValue]="f.id">{{f.name}}</option>
+            </select>
+            <input type="text" name="searchString" class="form-control mr-4" placeholder="Buscar Placa" [(ngModel)]="userFilter.plate">
+          </div>
       </div>
     </div>
     <div class="table mt-2">
@@ -15,20 +43,20 @@
                <th>ID</th>
                <th>Placa Vehículo</th>
                <th>Visitante</th>
+               <th>Cédula visitante</th>
                <th>Entrada</th>
                <th>Salida</th>
-               <th>Funcionario Visitado</th>
                <th>Detalle</th>
              </thead>
              <tbody>
               <tr *ngFor="let d of data | filterBy: userFilter">
-                  <td></td>
+                <td></td>
                 <td>{{d.id}}</td>
-                <td>{{d.vehicle.plate}}</td>
-                <td>{{d.visitor.name}} {{d.visitor.lastname}}</td>
+                <td>{{d.plate}}</td>
+                <td>{{d.visitor_name}} {{d.visitor_lastname}}</td>
+                <td>{{d.visitor_dni}}</td>
                 <td>{{d.create_date}}</td>
                 <td>--</td>
-                <td>{{d.visited.name}} {{d.visited.lastname}}</td>
                 <td>
                   <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
                  </td>
