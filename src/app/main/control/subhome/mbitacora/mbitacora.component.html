@@ -1,0 +1,27 @@
+<div class="home">
+	<div class="row mx-auto">
+		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/bitacora/reportes" [routerLinkActive]="['active']">
+			<div class="mx-auto content-control pb-2 pt-3">
+				<i class="fas fa-list-ol icono" style="background-color: #ffc107; padding: 12px !important"></i>
+				<p class="enlace">Reportes Abiertos</p>
+			</div>
+		</a>
+		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/bitacora/reportfilter" [routerLinkActive]="['active']">
+			<div class="mx-auto content-control pb-2 pt-3">
+				<i class="fas fa-list icono" style="background-color: #007bff; padding: 12px !important"></i>
+				<p class="enlace">Todos los reportes</p>
+			</div>
+		</a>
+		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/bitacora/incidencias" [routerLinkActive]="['active']">
+			<div class="mx-auto content-control pb-2 pt-3">
+				<i class="fas fa-exclamation-triangle icono" style="background-color: #dc3545; padding: 12px 9px !important"></i>
+				<p class="enlace">Tipos de incidencia</p>
+			</div>
+		</a>
+	</div>
+	<div class="row mx-auto mt-5">
+		<a class="mx-auto" routerLink="/u/control/home" [routerLinkActive]="['active']" title="Atrás">
+			<i class="fas fa-reply icono" style="background-color: #28a745; padding: 12px !important"></i>
+		</a>
+	</div>
+</div>

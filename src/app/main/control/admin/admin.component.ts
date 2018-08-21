@@ -42,6 +42,7 @@ export class AdminComponent {
     //eliminar
     errorDelete:boolean = false;
     errorDeleteData:boolean = false;
+    adminFilter: any = { "dni": ""};
 
     constructor(public router:Router, private adminService:AdminService) {
         this.getAll();
@@ -237,6 +238,34 @@ export class AdminComponent {
                 } else {
                     // on general error
                     this.errorDelete = true;
+                }
+            }
+        );
+    }
+
+    activarAdmin(id) {
+        this.adminService.activeAdmin(id).then(
+            success => {
+                this.getAll();
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
+
+    desactivarAdmin(id) {
+        this.adminService.desactiveAdmin(id).then(
+            success => {
+                this.getAll();
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
                 }
             }
         );

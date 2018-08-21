@@ -8,6 +8,10 @@
     display: flex;
 }
 
+agm-map {
+    height: 350px;
+}
+
 app-control {
     height: 100%;
     width: 100%;

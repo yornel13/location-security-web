@@ -54,6 +54,7 @@ export class FiltreportComponent {
     		success => {
     			this.reportes = success;
     			this.data = this.reportes.data;
+          console.log(this.data);
           for(var i = 0; i < this.data.length; i++){
             if(this.data[i].resolved == 0){
               this.change[i] = 0;

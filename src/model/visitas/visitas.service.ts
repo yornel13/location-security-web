@@ -15,57 +15,57 @@ export class VisitasService {
     constructor (private http: HttpClient) {}
 
     getAll() {
-        return this.http.get(this.VISIT_URL).toPromise()
+        return this.http.get(this.VISIT_URL+'/status/all').toPromise()
             .then((response) => response);
     }
 
-    getByDate(year, month, day) {
-        return this.http.get(this.VISIT_URL+'/date/'+year+'/'+month+'/'+day).toPromise()
+    getByDate(year, month, day, status) {
+        return this.http.get(this.VISIT_URL+'/status/'+status+'/date/'+year+'/'+month+'/'+day).toPromise()
             .then((response) => response);
     }
 
-    getByGuard(id) {
-        return this.http.get(this.VISIT_URL + '/guard/' + id).toPromise()
+    getByGuard(id, status) {
+        return this.http.get(this.VISIT_URL+'/status/'+status + '/guard/' + id).toPromise()
             .then((response) => response);
     }
 
-    getByGuardDate(id, year, month, day) {
-        return this.http.get(this.VISIT_URL+'/guard/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
+    getByGuardDate(id, year, month, day, status) {
+        return this.http.get(this.VISIT_URL+'/status/'+status+'/guard/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
             .then((response) => response);
     }
 
-    getByVehiculo(id) {
-        return this.http.get(this.VISIT_URL + '/vehicle/' + id).toPromise()
+    getByVehiculo(id, status) {
+        return this.http.get(this.VISIT_URL+'/status/'+status + '/vehicle/' + id).toPromise()
             .then((response) => response);
     }
 
-    getByVehiculoDate(id, year, month, day) {
-        return this.http.get(this.VISIT_URL+'/vehicle/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
+    getByVehiculoDate(id, year, month, day, status) {
+        return this.http.get(this.VISIT_URL+'/status/'+status+'/vehicle/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
             .then((response) => response);
     }
 
-    getByVisitante(id) {
-        return this.http.get(this.VISIT_URL + '/visitor/' + id).toPromise()
+    getByVisitante(id, status) {
+        return this.http.get(this.VISIT_URL+'/status/'+status + '/visitor/' + id).toPromise()
             .then((response) => response);
     }
 
-    getByVisitanteDate(id, year, month, day) {
-        return this.http.get(this.VISIT_URL+'/visitor/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
+    getByVisitanteDate(id, year, month, day, status) {
+        return this.http.get(this.VISIT_URL+'/status/'+status+'/visitor/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
             .then((response) => response);
     }
 
-    getByFuncionario(id) {
-        return this.http.get(this.VISIT_URL + '/clerk/' + id).toPromise()
+    getByFuncionario(id, status) {
+        return this.http.get(this.VISIT_URL+'/status/'+status + '/clerk/' + id).toPromise()
             .then((response) => response);
     }
 
-    getByFuncionarioDate(id, year, month, day) {
-        return this.http.get(this.VISIT_URL+'/clerk/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
+    getByFuncionarioDate(id, year, month, day, status) {
+        return this.http.get(this.VISIT_URL+'/status/'+status+'/clerk/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
             .then((response) => response);
     }
 
     getActive() {
-        return this.http.get(this.VISIT_URL+'/active/1').toPromise()
+        return this.http.get(this.VISIT_URL+'/status/1').toPromise()
             .then((response) => response);
     }
 

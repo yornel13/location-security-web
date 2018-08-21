@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-control',
     template: `
       <div class="control-container">
-          <app-control-aside></app-control-aside>
+          <app-control-aside *ngIf="!(router.url === '/u/control/home' || router.url === '/u/control/home/visitas' || router.url === '/u/control/home/bitacora' || router.url === '/u/control/home/vigilancia')"></app-control-aside>
           <main class="main-container">
               <router-outlet></router-outlet>
           </main>
@@ -13,4 +13,6 @@ import { Component } from '@angular/core';
   `,
     styleUrls: ['./control.component.css']
 })
-export class ControlComponent { }
+export class ControlComponent {
+  constructor(private router: Router) { }
+}

@@ -1,7 +1,12 @@
 
   <div class="info-container panel panel-default" *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto" ><h3 class="list-title">Incidencias</h3></div>
+      <div class="mr-auto row">
+        <a routerLink="/u/control/home/bitacora" title="Atrás" style="color: var(--secondary-color)">
+            <i class="fas fa-reply icono" style="padding: 12px !important; font-size: 1.2rem"></i>
+        </a>
+        <h3 class="list-title">Incidencias</h3>
+      </div>
         <div class="ml-auto">
           <div class="btn-group">
             <a class="btn btn-success" style="color: white" (click)="crearIncidencia()"><i class="fas fa-plus-circle"></i>
@@ -24,13 +29,32 @@
                   <td></td>
                 <td>{{d.id}}</td>
                 <td>{{d.name}}</td>
-                <td>{{d.level}}</td>
+                <td><span *ngIf="d.level == 1">General</span><span *ngIf="d.level == 2">Importante</span></td>
                 <td>
                   <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editarIncidencia(d.id)" title="Editar"><span class="fas fa-edit"></span></a>
                   <form method="post" style="display: inline-block;">
-                   <button class="btn btn-danger btn-xs" (click)="deleteIncidencia(d.id)" title="Eliminar" type="submit"><span class="fas fa-trash-alt"></span></button>
+                   <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{d.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
                  </form>
                  </td>
+                 <div class="modal" tabindex="-1" role="dialog" id="modal{{d.id}}">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #c82333; color: white;">
+                                <h5 class="modal-title">Eliminar Incidencia</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>¿Está seguro que desea eliminar la incidencia {{d.name}}?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" (click)="deleteIncidencia(d.id)" data-dismiss="modal">Eliminar</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                </tr>
             </tbody>
  
@@ -53,11 +77,15 @@
               <div class="form-group row">
                 <label for="nivela" class="col-sm-2 col-form-label">Nivel <span class="text-danger">*</span></label>
                 <div class="col-sm-10">
-                  <input type="number" min="1" max="3" class="form-control" id="nivela" placeholder="Introduzca nivel" [(ngModel)]="nivela" [ngModelOptions]="{standalone: true}">
+                  <select id="inputState" class="form-control" [(ngModel)]="nivela" [ngModelOptions]="{standalone: true}" placeholder="Seleccione nivel" required>
+                    <option [value]="0">Seleccione Nivel</option>
+                    <option [value]="1">General</option>
+                    <option [value]="2">Importante</option>
+                  </select>
                 </div>
               </div>
               <div>
-                <p *ngIf="errorSave" class="text-danger">Error al guardar, intente nuevamente</p>
+                <p *ngIf="errorSave" class="text-danger">Error al guardar, verifique los datos</p>
                 <p *ngIf="errorSaveData" class="text-danger">{{errorNewMsg}}</p>
               </div>
               <div class="row mt-4">

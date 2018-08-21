@@ -1,38 +1,22 @@
 <aside>
     <div id="accordion">
-        <a class="btn btn-secondary btn-aside_menu" role="button" routerLink="/u/control/admin" [routerLinkActive]="['active']">
-            <i class="fas"></i>
-            Administradores
+        <a class="btn btn-aside_menu" role="button" routerLink="/u/control/admin" title="Administradores">
+            <i class="fas fa-user"></i>
         </a>
-        <a class="btn btn-secondary btn-aside_menu" role="button" routerLink="/u/control/guardia" [routerLinkActive]="['active']">
-            <i class="fas"></i>
-            Guardias
+        <a class="btn btn-secondary btn-aside_menu" role="button" routerLink="/u/control/guardia" title="Guardias">
+            <i class="fas fa-user-shield"></i>
         </a>
-        <a class="btn btn-secondary btn-aside_menu" data-toggle="collapse" href="#collapseVisit" role="button" aria-expanded="false" aria-controls="collapseExample">
-            <i class="fas"></i>
-            Visitas
-            <i class="fas fa-chevron-down"></i>
+        <a class="btn btn-aside_menu" role="button" routerLink="/u/control/home/visitas" title="Visitas">
+            <i class="fas fa-users"></i>
         </a>
-        <div class="collapse" id="collapseVisit" aria-labelledby="headingThree" data-parent="#accordion">
-            <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/visitas/activas" [routerLinkActive]="['active']">Visitas Activas</a>
-            <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/visitas/todas" [routerLinkActive]="['active']">Todas las Visitas</a>
-            <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/vehiculos" [routerLinkActive]="['active']">Vehículos Visitantes</a>
-            <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/visitantes" [routerLinkActive]="['active']">Visitantes</a>
-            <a class="btn btn-secondary collap" role="button" routerLink="/u/control/visitas/funcionarios" [routerLinkActive]="['active']">Funcionarios</a>
-        </div>
-        <a class="btn btn-secondary btn-aside_menu" data-toggle="collapse" href="#collapseBitacora" role="button" aria-expanded="false" aria-controls="collapseExample">
-            <i class="fas"></i>
-            Bitácora
-            <i class="fas fa-chevron-down"></i>
+        <a class="btn btn-aside_menu" role="button" routerLink="/u/control/home/bitacora" title="Bitacora">
+            <i class="fas fa-list-ol"></i>
         </a>
-        <div class="collapse" id="collapseBitacora" aria-labelledby="headingThree" data-parent="#accordion">
-            <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/reportes" [routerLinkActive]="['active']">Reportes Abiertos</a>
-            <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/reportfilter" [routerLinkActive]="['active']">Todos los Reportes</a>
-            <a class="btn btn-secondary collap" role="button" routerLink="/u/control/bitacora/incidencias" [routerLinkActive]="['active']">Tipos de incidencias</a>
-        </div>
-        <a class="btn btn-secondary btn-aside_menu" role="button">
-            <i class="fas"></i>
-            Configuración
+        <a class="btn btn-aside_menu" role="button" routerLink="/u/control/home/vigilancia" title="Vigilancia">
+            <i class="fas fa-search"></i>
+        </a>
+        <a class="btn btn-aside_menu" role="button" routerLink="/u/control/configuracion" title="Configuracion">
+            <i class="fas fa-cog"></i>
         </a>
     </div>
 </aside>

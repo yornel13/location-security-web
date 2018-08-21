@@ -1,24 +1,29 @@
 
   <div class="info-container panel panel-default"  *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto" ><h3 class="list-title">Todos los Reportes</h3></div>
+      <div class="mr-auto row">
+        <a routerLink="/u/control/home/bitacora" title="Atrás" style="color: var(--secondary-color)">
+            <i class="fas fa-reply icono" style="padding: 12px !important; font-size: 1.2rem"></i>
+        </a>
+        <h3 class="list-title">Todos los Reportes</h3>
+      </div>
         <div class="ml-auto form-inline">
           <div class="form-group row">
             <label class="mr-4"><b>Filtrar por:</b></label>
-  		      <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
+  		      <select id="inputState" class="form-control form-control-sm mr-4 filtros" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
               <option [ngValue]="0">Incidencia</option>
               <option [ngValue]="1">Guardia</option>
             </select>
-  		      <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="incidenSelect" (change)="getByIncidencia(incidenSelect)" [ngModelOptions]="{standalone: true}" *ngIf="filtro">
+  		      <select id="inputState" class="form-control form-control-sm mr-4 filtros" [(ngModel)]="incidenSelect" (change)="getByIncidencia(incidenSelect)" [ngModelOptions]="{standalone: true}" *ngIf="filtro">
               <option [ngValue]="0">Todas</option>
   		        <option *ngFor="let i of inciden" [ngValue]="i.id">{{i.name}}</option>
   		      </select>
-            <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="guardiaSelect" (change)="getByGuardia(guardiaSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="!filtro">
+            <select id="inputState" class="form-control form-control-sm mr-4 filtros" [(ngModel)]="guardiaSelect" (change)="getByGuardia(guardiaSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="!filtro">
               <option [ngValue]="0">Todos</option>
               <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}}</option>
             </select>
             <label for="start" class="mr-4">Fecha</label>
-            <input class="form-control mr-4" type="date" name="date" [(ngModel)]="dateSelect" (change)="getByDate()" [ngModelOptions]="{standalone: true}">
+            <input class="form-control form-control-sm mr-4" type="date" name="date" [(ngModel)]="dateSelect" (change)="getByDate()" [ngModelOptions]="{standalone: true}">
 		      </div>
           <label for="inputState" class="mr-4">Status</label>
           <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="status" (change)="getByStatus()" [ngModelOptions]="{standalone: true}">

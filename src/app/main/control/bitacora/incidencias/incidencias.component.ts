@@ -27,7 +27,7 @@ export class IncidenciasComponent {
   errorEditMsg:string;
   //crear
   namea:string;
-  nivela:string;
+  nivela:number = 0;
   errorSave:boolean = false;
   errorSaveData:boolean = false;
   errorNewMsg:string;
@@ -125,32 +125,29 @@ export class IncidenciasComponent {
     saveNewIncidencia() {
       const createadmin : Incidencia = {
         name: this.namea,
-        level: this.nivela
+        level: this.nivela.toString()
       };
-      this.incidenciaService.add(createadmin).then(
+      if(this.nivela == 0){
+        this.errorSave = true;
+      }else{
+        this.incidenciaService.add(createadmin).then(
         success => {
           this.getAll();
           this.regresar();
           this.namea = '';
-          this.nivela = '';
+          this.nivela = 0;
           this.errorSave = false;
           this.errorSaveData = false;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
-                    if(error.error.errors.name){
-                      this.errorNewMsg = error.error.errors.name[0];
-                    }
-                    if(error.error.errors.lastname){
-                      this.errorNewMsg = error.error.errors.lastname[0];
-                    }
-                    this.errorSaveData = true;
                 } else {
                     // on general error
                     this.errorSave = true;
                 }
             }
         );
+      }
     }
 
     deleteIncidencia(id) {

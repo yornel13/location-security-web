@@ -24,8 +24,18 @@ export class AdminService {
             .then((response) => response);
     }
 
+    activeAdmin(id: number) {
+        return this.http.put(this.ADMIN_URL + '/' + id + '/active/1', httpOptions).toPromise()
+            .then((response) => response);
+    }
+
+    desactiveAdmin(id: number) {
+        return this.http.put(this.ADMIN_URL + '/' + id + '/active/0', httpOptions).toPromise()
+            .then((response) => response);
+    }
+
     getAll() {
-        return this.http.get<Admin>(this.ADMIN_URL + '/active/1').toPromise()
+        return this.http.get<Admin>(this.ADMIN_URL).toPromise()
             .then((response) => response);
     }
 

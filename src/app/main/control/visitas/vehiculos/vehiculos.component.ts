@@ -31,6 +31,7 @@ export class VehiculosComponent {
   //eliminar
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
+  vehicleFilter: any = { "plate": ""};
 
   constructor(public router:Router, private vehiculoService:VisitaVehiculoService) {
   	this.getAll();
@@ -45,6 +46,7 @@ export class VehiculosComponent {
     		success => {
     			this.vehiculos = success;
     			this.data = this.vehiculos.data;
+          console.log(this.data);
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect

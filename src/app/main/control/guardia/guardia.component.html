@@ -2,12 +2,20 @@
 
   <div class="info-container panel panel-default" *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto" ><h3 class="list-title">Guardias</h3></div>
-        <div class="ml-auto">
-          <div class="btn-group">
+      <div class="mr-auto row">
+        <a routerLink="/u/control/home" title="Atrás" style="color: var(--secondary-color)">
+            <i class="fas fa-reply icono" style="padding: 12px !important; font-size: 1.2rem"></i>
+        </a>
+        <h3 class="list-title">Guardias</h3>
+      </div>
+        <div class="ml-auto  form-inline">
+          <div class="btn-group" style="margin-right: 20px;">
             <a class="btn btn-success" style="color: white" (click)="crearGuardia()"><i class="fas fa-plus-circle"></i>
               Añadir Guardia
             </a>
+          </div>
+          <div class="form-group row">
+            <input type="text" name="searchString" class="form-control mr-4" placeholder="Buscar Cédula" [(ngModel)]="guardFilter.dni">
           </div>
         </div>
     </div>
@@ -24,7 +32,7 @@
            <th>Acciones</th>
          </thead>
          <tbody>
-          <tr *ngFor="let d of data">
+          <tr *ngFor="let d of data | filterBy: guardFilter">
             <td></td>
             <td>{{d.id}}</td>
             <td>{{d.dni}}</td>
@@ -33,9 +41,11 @@
             <td>{{d.email}}</td>
             <td>{{d.active}}</td>
             <td>
+              <a class="btn btn-info" *ngIf="d.active == 0" (click)="activarGuardia(d.id)" style="display: inline-block; margin-right: 10px; width: 100px">Activar</a>
+                        <a class="btn btn-secondary" *ngIf="d.active == 1" (click)="desactivarGuardia(d.id)" style="display: inline-block; margin-right: 10px;  width: 100px">Desactivar</a>
               <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
               <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editarGuardia(d.id)" title="Editar"><span class="fas fa-edit"></span></a>
-              <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{d.id}}" title="Eliminar" type="submit"><span class="fas fa-trash-alt"></span></a>
+              <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{d.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
              </td>
              <div class="modal" tabindex="-1" role="dialog" id="modal{{d.id}}">
                 <div class="modal-dialog" role="document">
