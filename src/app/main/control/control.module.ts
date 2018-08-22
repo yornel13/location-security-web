@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
-import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
 import { CommonModule } from '@angular/common';
 
 import { GuardService } from '../../../model/guard/guard.service';
@@ -17,8 +15,6 @@ import { BannerService } from '../../../model/banner/banner.service';
 
 import { HttpClientModule } from '@angular/common/http';
 import { AgmCoreModule } from '@agm/core';
-import { AngularFireModule } from 'angularfire2';
-import { AngularFireStorageModule } from 'angularfire2/storage';
 
 import { ControlComponent } from './control.component';
 import {RouterModule, Routes} from '@angular/router';
@@ -42,6 +38,7 @@ import { WtodasComponent } from './watches/wtodas/wtodas.component';
 import { MvisitasComponent } from './subhome/mvisitas/mvisitas.component';
 import { MbitacoraComponent } from './subhome/mbitacora/mbitacora.component';
 import { MvigilanciaComponent } from './subhome/mvigilancia/mvigilancia.component';
+import {environment} from '../../../environments/environment';
 
 const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
@@ -82,18 +79,7 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         FormsModule,
         controlRouting,
         FilterPipeModule,
-        AgmCoreModule.forRoot({
-          apiKey: 'AIzaSyA24mC9OAkD08aAkO_UADkSOSxaCKUZFBQ'
-        }),
-        AngularFireModule.initializeApp({
-            apiKey: "AIzaSyAzFM4z3GoUE3pFiwpcUBSMm-6PxMNxxaQ",
-            authDomain: "icsseseguridad-6f751.firebaseapp.com",
-            databaseURL: "https://icsseseguridad-6f751.firebaseio.com",
-            projectId: "icsseseguridad-6f751",
-            storageBucket: "icsseseguridad-6f751.appspot.com",
-            messagingSenderId: "962881875237"
-        }),
-        AngularFireStorageModule
+        AgmCoreModule.forRoot(environment.google_map_api_key),
     ],
     providers: [
         GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService,
