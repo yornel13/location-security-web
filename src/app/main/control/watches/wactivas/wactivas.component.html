@@ -11,7 +11,7 @@
           <label class="mr-4"><b>Guardia:</b></label>
           <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="guardiaSelect"  [ngModelOptions]="{standalone: true}" (change)="guardFilert(guardiaSelect)">
             <option [ngValue]="0">Todos</option>
-            <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}}</option>
+            <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
           </select>
           <input type="text" name="searchString" class="form-control mr-4" placeholder="Buscar Cédula" [(ngModel)]="guardiaFilter.guard_dni">
         </div>
@@ -39,6 +39,9 @@
                 <td *ngIf="d.status == 1">
                   <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
                 </td>
+               </tr>
+               <tr *ngIf="!hay">
+                  <th colspan="7"><h3>No hay guardias activas</h3></th>
                </tr>
             </tbody>
           </table>

@@ -106,7 +106,6 @@ export class AdminComponent {
         finalize(() => {this.downloadURL = ref.getDownloadURL();
                         this.downloadURL.subscribe(url => (this.photo = url));} 
         )).subscribe();
-        console.log(this.photo);
    }
 
    uploadNew(event) {

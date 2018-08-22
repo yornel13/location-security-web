@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfiguracionService } from '../../../../model/configuracion/configuracion.service';
 import { Configuracion } from '../../../../model/configuracion/configuracion';
+import { BannerService } from '../../../../model/banner/banner.service';
+import { Banner } from '../../../../model/banner/banner';
 import { Router } from '@angular/router';
+import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from 'angularfire2/storage';
+import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-configuracion',
@@ -9,14 +14,22 @@ import { Router } from '@angular/router';
   styleUrls: ['./configuracion.component.css']
 })
 export class ConfiguracionComponent  {
-  //general
+  //config
   configuraciones:any = [];
   data:any = {};
   configid:any = [];
+  //banner
+  banners:any = [];
+  banner:any = {};
+  bannerid:any = [];
+  numbanner:number = 0;
+  limitbanner:boolean = false;
+  newimagen:boolean = false;
+  //genneral
   lista:boolean;
   detalle:boolean;
   editar:boolean;
-  crear:boolean;
+  editarb:boolean;
   //editar
   nombre:string;
   valor:string;
@@ -33,10 +46,24 @@ export class ConfiguracionComponent  {
   //eliminar
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
+  //imagen firebase
+  uploadPercent: Observable<number>;
+  downloadURL: Observable<string>;
+  imagen:string;
 
-  constructor(public router:Router, private configuracionService:ConfiguracionService) { 
+  constructor(public router:Router, private configuracionService:ConfiguracionService, private bannerService:BannerService, private storage: AngularFireStorage) { 
   	this.getTablet();
+    this.getBanner();
   	this.regresar();
+  }
+
+  sleep(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+      if ((new Date().getTime() - start) > milliseconds){
+        break;
+      }
+    }
   }
 
   getAll() {
@@ -70,12 +97,97 @@ export class ConfiguracionComponent  {
         );
     }
 
+    getBanner() {
+      this.bannerService.getAll().then(
+        success => {
+          this.banners = success;
+          this.banner = this.banners.data;
+          this.numbanner = this.banners.total;
+          if (this.numbanner == 5) {
+            this.limitbanner = false;
+          }else{
+            this.limitbanner = true;
+          }
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
+
+    eliminarImagen(id) {
+      this.bannerService.delete(id).then(
+            success => {
+                this.getBanner();
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                    this.errorDeleteData = true;
+                } else {
+                    // on general error
+                    this.errorDelete = true;
+                }
+            }
+        );
+    }
+
+    uploadBanner(event) {
+        const file = event.target.files[0];
+        const randomId = Math.random().toString(36).substring(2);
+        var url = '/icsse/' + randomId;
+        const ref = this.storage.ref(url);
+        //const task = ref.put(file);
+        const task = this.storage.upload(url, file);
+        this.uploadPercent = task.percentageChanges();
+        task.snapshotChanges().pipe(
+        finalize(() => {this.downloadURL = ref.getDownloadURL();
+                        this.downloadURL.subscribe(url => (this.imagen = url));} 
+        )).subscribe();
+   }
+
+   saveBanner() {
+     const createbanner : Banner = {
+            photo: this.imagen
+        };
+
+        this.bannerService.add(createbanner).then(
+          success => {
+            this.newimagen = false;
+            this.getBanner();
+            this.imagen = '/assets/img/addbanner.png';
+              }, error => {
+                  if (error.status === 422) {
+                      // on some data incorrect
+                  } else {
+                      // on general error
+                  }
+              }
+        );
+   }
+
+    agregarImagen() {
+      this.newimagen = true;
+      this.imagen = '/assets/img/addbanner.png';
+    }
+
+    editarBanner() {
+      this.lista = false;
+      this.editar = false;
+      this.editarb = true;
+      this.getBanner();
+    }
+
   	regresar() {
 	  this.lista = true;
 	  this.detalle = false;
 	  this.editar = false;
+    this.editarb = false;
 	  this.errorEditData = false;
-      this.errorEdit = false;
+    this.errorEdit = false;
+    this.newimagen = false;
 	}
 
 	editarConfiguracion(id) {
@@ -85,10 +197,10 @@ export class ConfiguracionComponent  {
           this.nombre = this.configid.name;
           this.valor = this.configid.value;
           this.idEdit = this.configid.id;
-          this.lista = false;
           this.detalle = false;
-          this.crear = false;
           this.editar = true;
+          this.lista = false;
+          this.editarb = false;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -128,13 +240,6 @@ export class ConfiguracionComponent  {
                 }
             }
         );
-    }
-
-    crearConfiguracion() {
-      this.lista = false;
-      this.detalle = false;
-      this.crear = true;
-      this.editar = false;
     }
 
     saveNewConfiguracion() {

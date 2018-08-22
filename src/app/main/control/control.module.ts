@@ -13,6 +13,7 @@ import { IncidenciasService } from '../../../model/incidencias/incidencia.servic
 import { BitacoraService } from '../../../model/bitacora/bitacora.service';
 import { VisitasService } from '../../../model/visitas/visitas.service';
 import { ConfiguracionService } from '../../../model/configuracion/configuracion.service';
+import { BannerService } from '../../../model/banner/banner.service';
 
 import { HttpClientModule } from '@angular/common/http';
 import { AgmCoreModule } from '@agm/core';
@@ -96,7 +97,7 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
     ],
     providers: [
         GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService,
-        IncidenciasService, BitacoraService, VisitasService, ConfiguracionService ],
+        IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService ],
     entryComponents: [ ],
     declarations: [
         GuardiaComponent, AdminComponent, ControlComponent,

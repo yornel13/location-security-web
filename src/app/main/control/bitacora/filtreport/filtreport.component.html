@@ -20,7 +20,7 @@
   		      </select>
             <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="guardiaSelect" (change)="getByGuardia(guardiaSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="!filtro">
               <option [ngValue]="0">Todos</option>
-              <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}}</option>
+              <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
             </select>
             <label for="start" class="mr-4">Fecha</label>
             <input class="form-control mr-4" type="date" name="date" [(ngModel)]="dateSelect" (change)="getByDate()" [ngModelOptions]="{standalone: true}">
@@ -198,16 +198,16 @@
                 </div>
               </div>
               <hr>
-              <div class="form-group row">
-                <label for="creation" class="col-sm-9 col-form-label" *ngIf="haycomentarios"><b>Comentarios</b></label>
+              <div class="form-group row"  *ngIf="haycomentarios">
+                <label for="creation" class="col-sm-9 col-form-label"><b>Comentarios</b></label>
                 <div class="col-sm-3">
-                  <button class="btn btn-success form-control ml-auto" *ngIf="haycomentarios" (click)="agregarComentario()">Agregar comentario</button>
+                  <button class="btn btn-success form-control ml-auto" *ngIf="report.resolved != 0" (click)="agregarComentario()">Agregar comentario</button>
                 </div>
               </div>
-              <div class="form-group row">
-                <label for="creation" class="col-sm-9 col-form-label" *ngIf="!haycomentarios"><b>No hay comentarios</b></label>
+              <div class="form-group row" *ngIf="!haycomentarios">
+                <label for="creation" class="col-sm-9 col-form-label"><b>No hay comentarios</b></label>
                 <div class="col-sm-3">
-                  <button class="btn btn-success form-control ml-auto" *ngIf="!haycomentarios" (click)="agregarComentario()">Agregar comentario</button>
+                  <button class="btn btn-success form-control ml-auto" *ngIf="report.resolved != 0" (click)="agregarComentario()">Agregar comentario</button>
                 </div>
               </div>
               <div *ngFor="let c of coment">

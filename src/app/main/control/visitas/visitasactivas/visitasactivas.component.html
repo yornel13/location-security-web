@@ -21,16 +21,16 @@
               <option *ngFor="let v of vehi" [ngValue]="v.id">{{v.plate}}</option>
             </select>
             <select id="inputState" class="form-control mr-4" [(ngModel)]="guardiaSelect" (change)="getByGuardia(guardiaSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="filtro == 2">
-              <option [ngValue]="0">Todos</option>
-              <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}}</option>
+              <option [ngValue]="0">Guardias</option>
+              <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
             </select>
             <select id="inputState" class="form-control mr-4" [(ngModel)]="visitanteSelect" (change)="getByVisitante(visitanteSelect)" [ngModelOptions]="{standalone: true}" *ngIf="filtro == 3">
-              <option [ngValue]="0">Visitante</option>
-              <option *ngFor="let i of visit" [ngValue]="i.id">{{i.name}}</option>
+              <option [ngValue]="0">Visitantes</option>
+              <option *ngFor="let i of visit" [ngValue]="i.id">{{i.name}} {{i.lastname}}</option>
             </select>
             <select id="inputState" class="form-control mr-4" [(ngModel)]="funcionarioSelect" (change)="getByFuncionario(funcionarioSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="filtro == 4">
-              <option [ngValue]="0">Funcionario</option>
-              <option *ngFor="let f of funcio" [ngValue]="f.id">{{f.name}}</option>
+              <option [ngValue]="0">Funcionarios</option>
+              <option *ngFor="let f of funcio" [ngValue]="f.id">{{f.name}} {{f.lastname}}</option>
             </select>
             <input type="text" name="searchString" class="form-control mr-4" placeholder="Buscar Placa" [(ngModel)]="userFilter.plate">
           </div>
@@ -60,6 +60,9 @@
                 <td>
                   <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
                  </td>
+               </tr>
+               <tr *ngIf="nohay">
+                  <th colspan="7"><h3>No hay visitas activas</h3></th>
                </tr>
             </tbody>
           </table>

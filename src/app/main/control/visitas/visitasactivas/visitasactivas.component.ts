@@ -44,6 +44,7 @@ export class VisitasactivasComponent {
   funcionarioSelect:number=0;
   valueDate:any = [];
   dateSelect:any = '';
+  nohay:boolean = false;
 
   constructor(public router:Router, private visitasService:VisitasService, private guardiaService:GuardService,
     private vehiculoService:VisitaVehiculoService, private visitanteService:VisitanteService, private funcionarioService:FuncionarioService) { 
@@ -62,6 +63,9 @@ export class VisitasactivasComponent {
       success => {
         this.visitas = success;
         this.data = this.visitas.data;
+        if(this.data.length == 0){
+          this.nohay = true;
+        }
           }, error => {
               if (error.status === 422) {
                   // on some data incorrect
