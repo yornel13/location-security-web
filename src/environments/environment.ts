@@ -8,7 +8,7 @@ export const environment = {
   firebase: {
     apiKey: 'AIzaSyAo1TwJI_rVFArz9GO4QdFsKy5NVpZDRNA',
     authDomain: 'testchat-54a32.firebaseapp.com',
-    databaseURL: 'https://testchat-54a32.firebaseio.com',
+    databaseURL: 'https://testchat-54a32.firebaseio.com/',
     projectId: 'testchat-54a32',
     storageBucket: 'testchat-54a32.appspot.com',
     messagingSenderId: '976182334043'

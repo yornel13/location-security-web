@@ -1,5 +1,21 @@
-<h1>Real Time Chat</h1>
-
-<div *ngFor="let message of messages | async">
-	{{message.$value}}
+<hr>
+<h1>Chat Component</h1>
+<hr>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <hr>
+      <ul class="list-group">
+        <li class="list-group-item" *ngFor="let chit of currentChat">{{chit.user}}: {{chit.message}}</li>
+      </ul>
+      <form #chatForm="ngForm" (ngSubmit)="newMessage(chatForm.value)" autocomplete="off">
+        <div class="form-group">
+          <label for="message">Chat Entry</label>
+          <input [(ngModel)]="message" type="text" class="form-control" id="message" name="message" placeholder="message...">
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="loading" *ngIf="!loading disable" >Submit</button>
+				<div class="loader" *ngIf="loading"></div>
+      </form>
+    </div>
+  </div>
 </div>

@@ -15,8 +15,12 @@ import { environment } from '../environments/environment';
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { fakeBackendProvider } from './_helpers';
 //Firebase
-import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { MessagingService } from './shared/messaging.service';
+import { AngularFireDatabaseModule } from '../../node_modules/angularfire2/database';
+import { AngularFireAuthModule } from '../../node_modules/angularfire2/auth';
+import { AngularFireModule } from '../../node_modules/angularfire2';
+import { AsyncPipe } from '../../node_modules/@angular/common';
 
 @NgModule({
     imports: [
@@ -29,6 +33,8 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
         ReactiveFormsModule,
         AngularFireModule.initializeApp(environment.firebase),
     	  AngularFirestoreModule,
+        AngularFireDatabaseModule,
+        AngularFireAuthModule,
     ],
     declarations: [
         AppComponent,
@@ -37,9 +43,9 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-
+        MessagingService,
         // provider used to create fake backend
-        fakeBackendProvider
+        fakeBackendProvider, AsyncPipe,
     ],
     bootstrap: [AppComponent]
 })
