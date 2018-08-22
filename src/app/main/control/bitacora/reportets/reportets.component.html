@@ -20,7 +20,7 @@
             </select>
             <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="guardiaSelect" (change)="getByGuardia(guardiaSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="!filtro">
               <option [ngValue]="0">Todos</option>
-              <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}}</option>
+              <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
             </select>
             <label for="start" class="mr-4">Fecha</label>
             <input class="form-control  mr-4" type="date" name="date" [(ngModel)]="dateSelect" (change)="getByDate()" [ngModelOptions]="{standalone: true}">
@@ -55,8 +55,10 @@
                   <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)"  title="Detalle"><span class="far fa-eye"></span></a>
                  </td>
                </tr>
+               <tr *ngIf="!hay">
+                  <th colspan="8"><h3>No hay reportes abiertos</h3></th>
+               </tr>
             </tbody>
- 
           </table>
     </div>
   </div>

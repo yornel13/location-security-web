@@ -43,6 +43,7 @@ export class ReportetsComponent {
   guard:any = [];
   //status
   status:number = 0;
+  hay: boolean;
 
 
   constructor(public router:Router, private bitacoraService:BitacoraService, private guardiaService:GuardService, private incidenciaService:IncidenciasService ) { 
@@ -58,14 +59,7 @@ export class ReportetsComponent {
         success => {
           this.reportes = success;
           this.data = this.reportes.data;
-          console.log(this.data);
-          for(var i = 0; i < this.data.length; i++){
-            if(this.data[i].resolved == 0){
-              this.change[i] = 0;
-            }else{
-              this.change[i] = 1;
-            }
-          }
+          this.hay = this.verifyActive(this.data);
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -74,6 +68,24 @@ export class ReportetsComponent {
                 }
             }
         );
+    }
+
+    verifyActive(data) {
+      var valid = 0;
+      if(data.length == 0){
+        return false;
+      }else{
+        for(var i = 0; i < data.length; i++){
+          if(data[i].resolved != 0) {
+            valid ++;
+          }
+        }
+        if(valid == 0){
+          return false;
+        }else{
+          return true;
+        }
+      }
     }
 
     viewDetail(id) {

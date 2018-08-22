@@ -23,6 +23,7 @@ export class WactivasComponent {
   dateSelect:string = '';
   valueDate:any = [];
   guardia:any = [];
+  hay:boolean;
 
   constructor(public router:Router, private watchesService:WatchesService, private guardiasService:GuardService) { 
   	this.getAll();
@@ -36,6 +37,7 @@ export class WactivasComponent {
         success => {
             this.watches = success;
             this.data = this.watches.data;
+            this.hay = this.verifyActive(this.data);
         }, error => {
             if (error.status === 422) {
                 // on some data incorrect
@@ -44,6 +46,24 @@ export class WactivasComponent {
             }
         }
     );
+  }
+
+  verifyActive(data) {
+    var valid = 0;
+    if(data.length == 0){
+      return false;
+    }else{
+      for(var i = 0; i < data.length; i++){
+        if(data[i].status == 1) {
+          valid ++;
+        }
+      }
+      if(valid == 0){
+        return false;
+      }else{
+        return true;
+      }
+    }
   }
 
   regresar() {
