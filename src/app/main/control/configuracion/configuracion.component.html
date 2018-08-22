@@ -103,7 +103,7 @@
               <div class="form-group row" *ngIf="newimagen">
                   <label for="photo" class="col-sm-2 col-form-label">Nueva Imagen</label>
                   <div class="col-sm-5">
-                      <img src="{{imagen}}" style="width: 200px; height: 200px">
+                      <img src="{{imagen}}" class="profile-image">
                   </div>
                   <div class="col-sm-5">
                       <input type="file" class="form-control" id="photo" accept="image/*" (change)="uploadBanner($event)">
@@ -116,7 +116,7 @@
               <div *ngFor="let d of banner; let i = index" class="row pt-3 pb-3" style="border-top: 2px solid #666">
                 <label for="photo" class="col-sm-2 col-form-label">Imagen {{i + 1}}</label>
                   <div class="col-sm-5">
-                      <img src="{{d.photo}}" style="width: 200px; height: 200px">
+                      <img src="{{d.photo}}" class="profile-image">
                   </div>
                   <div class="col-sm-2">
                     <a class="btn btn-danger btn-xs" title="Eliminar" (click)="eliminarImagen(d.id)"><span class="fas fa-trash-alt"></span></a>

@@ -1,5 +1,5 @@
 .background-container{
-  background-image: url("../../assets/fondologin.png");
+  background-image: url("../../assets/background-login.jpg");
   repeat: no-repeat;
   background-size: cover;
   height: 100%;
@@ -10,11 +10,11 @@
     width:400px;
     max-width:100%;
     margin: auto;
-    -webkit-border-radius: 18px 18px 18px 18px;
-    border-radius: 18px 18px 18px 18px;
+    -webkit-border-radius: 8px 8px 8px 8px;
+    border-radius: 8px 8px 8px 8px;
     -webkit-box-shadow: 0 0 7px 7px rgba(102,102,102, 0.6);
     box-shadow: 0 0 7px 7px rgba(102,102,102, 0.6);
-    background-color: #800000;
+    background-color: #bd081c;
     color: rgba(74, 64, 72, 0.6);
 
 }

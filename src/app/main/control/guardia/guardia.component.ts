@@ -212,7 +212,7 @@ export class GuardiaComponent {
       this.detalle = false;
       this.crear = true;
       this.editar = false;
-      this.photoa = '/assets/img/adduser.png';
+      this.photoa = './assets/img/user_empty.jpg';
     }
 
     saveNewGuardia() {

@@ -4,18 +4,19 @@ import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import {ActivatedRoute, Router} from '@angular/router';
 import { Observable } from 'rxjs';
+import {Admin} from '../../model/admin/admin';
 
 // 35324 56132
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
 
-  readonly tokenFire = localStorage.TokenFire;
-  readonly admin_id  = localStorage.UserDni;
-  readonly session   = 123;
-  readonly user_1_id   = localStorage.User.id;
-  readonly user_1_type = localStorage.User.idAdmin ? 'ADMIN' : 'GUARD';
-  readonly user_1_name = localStorage.User.name;
+    readonly tokenFire = localStorage.getItem('TokenFire');
+    readonly session   = 123;
+    readonly admin: Admin = JSON.parse(localStorage.getItem('User'));
+    readonly user_1_id =  this.admin.id;
+    readonly user_1_type = 'ADMIN';
+    readonly user_1_name = this.admin.name;
 
     constructor(
           private http: HttpClient,
@@ -25,7 +26,7 @@ export class ChatService {
           ) { }
 
     webRegistre() {
-        return this.http.post<any>(`${environment.BASIC_URL}/public/messenger/register/web`,{registration_id: this.tokenFire, admin_id: this.admin_id, session: this.session})
+        return this.http.post<any>(`${environment.BASIC_URL}/public/messenger/register/web`, { registration_id: this.tokenFire, admin_id: this.user_1_id, session: this.session})
             .pipe(map(res => {
               if(res.result != null) {
                   console.log(res.registration_id);
@@ -49,7 +50,7 @@ export class ChatService {
     conversation(user_2_id: string, user_2_type: string, user_2_name: string) {
       let httpHeaders = new HttpHeaders()
           .set('Content-Type', 'application/json')
-          .set('user_1_id', this.user_1_id)
+          .set('user_1_id', String(this.user_1_id))
           .set('user_1_type', this.user_1_type)
           .set('user_1_name', this.user_1_name)
           .set('user_2_id', user_2_id)

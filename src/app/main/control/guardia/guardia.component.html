@@ -90,10 +90,10 @@
               <input type="text" readonly class="form-control" id="lastname" value="{{guardia.lastname}}">
             </div>
           </div>
-          <div class="form-group row">
+          <div *ngIf="guardia.photo"  class="form-group row">
               <label for="photo" class="col-sm-2 col-form-label">Foto</label>
               <div class="col-sm-5">
-                  <img src="{{guardia.photo}}" style="width: 200px; height: 200px">
+                  <img src="{{guardia.photo}}" class="profile-image">
               </div>
           </div>
           <div class="form-group row">
@@ -149,7 +149,8 @@
               <div class="form-group row">
                   <label for="photo" class="col-sm-2 col-form-label">Foto</label>
                   <div class="col-sm-5">
-                      <img src="{{photo}}" style="width: 200px; height: 200px">
+                    <img *ngIf="photo" src="{{photo}}" class="profile-image">
+                    <img *ngIf="!photo" src="{{photoa}}" class="profile-image">
                   </div>
                   <div class="col-sm-5">
                       <input type="file" class="form-control" id="photo" accept="image/*" (change)="upload($event)">
@@ -210,7 +211,7 @@
               <div class="form-group row">
                   <label for="photo" class="col-sm-2 col-form-label">Foto</label>
                   <div class="col-sm-5">
-                      <img src="{{photoa}}" style="width: 200px; height: 200px">
+                      <img src="{{photoa}}" class="profile-image">
                   </div>
                   <div class="col-sm-5">
                       <input type="file" class="form-control" id="photo" accept="image/*" (change)="uploadNew($event)">

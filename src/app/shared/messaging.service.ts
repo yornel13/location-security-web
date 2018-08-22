@@ -28,7 +28,8 @@ export class MessagingService {
   updateToken(userId, token) {
     this.afAuth.authState.pipe(take(1)).subscribe(() => {
       const data = new Object;
-      data[userId] = token
+      data[userId] = token;
+      console.log(token);
       this.afDB.object('fcmTokens/').update(data);
     });
   }
