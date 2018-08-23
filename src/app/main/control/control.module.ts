@@ -39,6 +39,7 @@ import { MvisitasComponent } from './subhome/mvisitas/mvisitas.component';
 import { MbitacoraComponent } from './subhome/mbitacora/mbitacora.component';
 import { MvigilanciaComponent } from './subhome/mvigilancia/mvigilancia.component';
 import {environment} from '../../../environments/environment';
+import {CercoComponent} from './cerco/cerco.component';
 
 const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
@@ -63,6 +64,7 @@ const controlRoutes: Routes = [
                     { path: 'home/visitas', component: MvisitasComponent },
                     { path: 'home/bitacora', component: MbitacoraComponent },
                     { path: 'home/vigilancia', component: MvigilanciaComponent },
+                    { path: 'cerco', component: CercoComponent },
                     { path: '', redirectTo: '/u/control/home', pathMatch: 'full' },
                 ]
             }
@@ -96,7 +98,8 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         WtodasComponent,
         MvisitasComponent,
         MbitacoraComponent,
-        MvigilanciaComponent ],
+        MvigilanciaComponent,
+        CercoComponent ],
     bootstrap: [ ControlComponent ]
 })
 export class ControlModule {}
