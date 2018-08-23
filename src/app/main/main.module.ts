@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
+import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
 import { CommonModule } from '@angular/common';
 
 import {PopupVehicleComponent} from './monitoring/map/popup.vehicle.component';
@@ -61,6 +62,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     mainRouting,
     LeafletModule.forRoot(),
     LeafletMarkerClusterModule.forRoot(),
+      LeafletDrawModule.forRoot(),
     ControlModule,
   ],
   providers: [
