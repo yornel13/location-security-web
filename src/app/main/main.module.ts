@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
+import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
 import { CommonModule } from '@angular/common';
 
 import {PopupVehicleComponent} from './monitoring/map/popup.vehicle.component';
@@ -27,7 +28,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {AsideService} from './monitoring/aside/aside.service';
 import { MessagingComponent } from './messaging/messaging.component';
 
-import { FilterPipeModule } from 'ngx-filter-pipe';
+import { FilterPipe } from './monitoring/aside/filter.pipe';
 import {TabletService} from '../../model/tablet/tablet.service';
 import {ControlModule} from './control/control.module';
 import {VirtualComponent} from './virutal/virtual.component';
@@ -59,9 +60,9 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     CommonModule,
     FormsModule,
     mainRouting,
-    FilterPipeModule,
     LeafletModule.forRoot(),
     LeafletMarkerClusterModule.forRoot(),
+    LeafletDrawModule.forRoot(),
     ControlModule,
   ],
   providers: [
@@ -72,7 +73,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
       MonitoringComponent, MapOsmComponent, PopupVehicleComponent, PopupWatchComponent,
       HeaderComponent, AsideComponent, MainComponent,
       DashboardComponent, ReportComponent, MessagingComponent,
-      CardVehicleComponent, CardTabletComponent, VirtualComponent
+      CardVehicleComponent, CardTabletComponent, VirtualComponent, FilterPipe
   ],
   bootstrap: [ MainComponent ]
 })

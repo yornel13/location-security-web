@@ -53,7 +53,7 @@ export class MapOsmComponent implements OnChanges {
         id: 'googlestreets',
         name: 'Google Street Map',
         enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=marker&x={x}&y={y}&z={z}', {
             maxZoom: 20,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
             attribution: 'Google Street Map'
@@ -112,7 +112,7 @@ export class MapOsmComponent implements OnChanges {
 
         this.setupMarkers(this.showMarker);
 
-        if (changes['markerChanged']) {
+        if (changes[this.lat]) {
             this.setupMarkers(this.showMarker);
         }
         if (changes['lat']) {

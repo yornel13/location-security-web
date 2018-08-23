@@ -18,7 +18,7 @@
     <div class="menu-item alerta">Alertas</div>
   </div>
   
-  <input  (keyup)="$event.keyCode == 13 ? find(newSearsh) : null" #newSearsh class="filter" type="text" placeholder="Filtrar">
+  <input [(ngModel)]="search" name="search"  #newSearsh class="filter" type="text" placeholder="Filtrar">
   
   <p   *ngIf="noCards" class="no-cards">Seleccione dispositivo</p>
   
@@ -26,7 +26,7 @@
   <div class="cards-container"  *ngIf="showCardContainer">
     <!--Cards-->
       <div>
-        <div *ngFor="let data of markersData">
+        <div *ngFor="let data of markersData | filter: search">
           <div  *ngIf="data.group_name === 'Tablet Guardia'">
             <app-card-tablet *ngIf="watchesCheck" [tablet]="data"></app-card-tablet>
           </div>
