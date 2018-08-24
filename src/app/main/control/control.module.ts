@@ -12,10 +12,9 @@ import { BitacoraService } from '../../../model/bitacora/bitacora.service';
 import { VisitasService } from '../../../model/visitas/visitas.service';
 import { ConfiguracionService } from '../../../model/configuracion/configuracion.service';
 import { BannerService } from '../../../model/banner/banner.service';
-
 import { HttpClientModule } from '@angular/common/http';
 import { AgmCoreModule } from '@agm/core';
-
+import { IgxSnackbarModule } from 'igniteui-angular';
 import { ControlComponent } from './control.component';
 import {RouterModule, Routes} from '@angular/router';
 import { GuardiaComponent } from './guardia/guardia.component';
@@ -29,6 +28,8 @@ import { VisitasComponent } from './visitas/visitas/visitas.component';
 import { VisitasactivasComponent } from './visitas/visitasactivas/visitasactivas.component';
 
 import { FilterPipeModule } from 'ngx-filter-pipe';
+import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
+import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
 import {AsideControlComponent} from './aside/aside.control.component';
 import {AdminComponent} from './admin/admin.component';
 import { HomeComponent } from './home/home.component';
@@ -39,9 +40,9 @@ import { MvisitasComponent } from './subhome/mvisitas/mvisitas.component';
 import { MbitacoraComponent } from './subhome/mbitacora/mbitacora.component';
 import { MvigilanciaComponent } from './subhome/mvigilancia/mvigilancia.component';
 import {environment} from '../../../environments/environment';
-import {LeafletModule} from "@asymmetrik/ngx-leaflet";
-import {LeafletMarkerClusterModule} from "@asymmetrik/ngx-leaflet-markercluster";
-import {LeafletDrawModule} from "@asymmetrik/ngx-leaflet-draw";
+import {LeafletModule} from '@asymmetrik/ngx-leaflet';
+import {CercoComponent} from './cerco/cerco.component';
+import {CercoService} from '../../../model/cerco/cerco.service';
 
 const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
@@ -66,6 +67,7 @@ const controlRoutes: Routes = [
                     { path: 'home/visitas', component: MvisitasComponent },
                     { path: 'home/bitacora', component: MbitacoraComponent },
                     { path: 'home/vigilancia', component: MvigilanciaComponent },
+                    { path: 'cerco', component: CercoComponent },
                     { path: '', redirectTo: '/u/control/home', pathMatch: 'full' },
                 ]
             }
@@ -82,14 +84,15 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         FormsModule,
         controlRouting,
         FilterPipeModule,
-        AgmCoreModule.forRoot(environment.google_map_api_key),
         LeafletModule.forRoot(),
+        LeafletDrawModule.forRoot(),
         LeafletMarkerClusterModule.forRoot(),
-        LeafletDrawModule.forRoot()
+        IgxSnackbarModule,
+        AgmCoreModule.forRoot(environment.google_map_api_key),
     ],
     providers: [
         GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService,
-        IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService ],
+        IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService, CercoService ],
     entryComponents: [ ],
     declarations: [
         GuardiaComponent, AdminComponent, ControlComponent,
@@ -102,7 +105,8 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         WtodasComponent,
         MvisitasComponent,
         MbitacoraComponent,
-        MvigilanciaComponent],
+        MvigilanciaComponent,
+        CercoComponent],
     bootstrap: [ ControlComponent ]
 })
 export class ControlModule {}

@@ -25,7 +25,7 @@ export class IncidenciasComponent {
   errorEdit:boolean = false;
   errorEditData:boolean = false;
   errorEditMsg:string;
-  //crear
+  //createBoundView
   namea:string;
   nivela:number = 0;
   errorSave:boolean = false;
