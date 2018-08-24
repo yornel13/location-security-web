@@ -24,7 +24,7 @@ export class MessagingComponent implements OnInit {
     listContactGuard: any[];
     listContactAdmin: any[];
     message: string;
-    idChat: 0;
+    idChat: number;
     private guards: Guard[];
     private guardsData;
     private admins: Admin[];
@@ -45,9 +45,8 @@ export class MessagingComponent implements OnInit {
         this.listContactAdmin = [];
         this.loadContactGuard();
         this.loadContactAdmin();
-        this.messagingService.getPermission();
+        this.messagingService.requestPermission();
         this.messagingService.receiveMessage();
-        this.message = this.MessagingService.currentMessage;
     }
 
     loadContactGuard() {
