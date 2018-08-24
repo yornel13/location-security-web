@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MessagingService } from "./shared/messaging.service";
 
 
 @Component({
@@ -11,6 +12,8 @@ import { Component } from '@angular/core';
   `
 })
 export class MainComponent {
+
+  message;
 
   constructor(private messagingService: MessagingService) { }
 
