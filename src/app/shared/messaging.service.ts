@@ -9,15 +9,20 @@ import * as firebase from 'firebase';
 import { take } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
+import { ChatService } from '../_services';
+
 @Injectable()
 export class MessagingService {
 
-  messaging = firebase.messaging()
-  currentMessage = new BehaviorSubject(null)
+  messaging = firebase.messaging();
+  currentMessage = new BehaviorSubject(null);
+    private error: any;
+    private loading: boolean;
 
   constructor(
     private afDB: AngularFireDatabase,
-    private afAuth: AngularFireAuth) { }
+    private afAuth: AngularFireAuth,
+    private chatService: ChatService) { }
 
   /**
    * update token in firebase database
@@ -29,7 +34,6 @@ export class MessagingService {
     this.afAuth.authState.pipe(take(1)).subscribe(() => {
       const data = new Object;
       data[userId] = token;
-      console.log(token);
       this.afDB.object('fcmTokens/').update(data);
     });
   }
@@ -43,11 +47,21 @@ export class MessagingService {
     this.messaging.requestPermission()
       .then(() => {
         console.log('notification permission granted.');
+        console.log(firebase.messaging().getToken());
         return firebase.messaging().getToken();
       })
       .then(token => {
         console.log(token)
-        localStorage.setItem("TokenFire", token);
+        localStorage.setItem('TokenFire', token);
+        this.chatService.webRegistre()
+          .subscribe(
+             data => {
+                console.log(data);
+              },
+              error => {
+                  this.error = error;
+                  this.loading = false;
+              });
         this.updateToken(userId, token);
       })
       .catch((err) => {
@@ -60,7 +74,7 @@ export class MessagingService {
    */
   receiveMessage() {
     this.messaging.onMessage((payload) => {
-      console.log("new message received. ", payload);
+      console.log('new message received: ', payload);
       this.currentMessage.next(payload);
     });
   }

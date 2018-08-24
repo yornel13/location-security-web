@@ -21,4 +21,20 @@ li {
   margin-top: 5%;
 }
 
+.dropdown{
+  height: 100%;
+  overflow: scroll;
+}
+
+.buttonContact{
+  border-color: transparent;
+  background-color: transparent;
+  width: auto;
+}
+
+.list{
+  border-bottom: 1;
+  border-bottom-color: black;
+}
+
 /* Styles go here */

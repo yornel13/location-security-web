@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 
 import { Observable, of } from 'rxjs';
 import {Admin} from './admin';
+import {Guard} from "../guard/guard";
 
 
 const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
@@ -36,6 +37,11 @@ export class AdminService {
 
     getAll() {
         return this.http.get<Admin>(this.ADMIN_URL).toPromise()
+            .then((response) => response);
+    }
+
+    getAllActive() {
+        return this.http.get<Guard>(this.ADMIN_URL + '/active/1').toPromise()
             .then((response) => response);
     }
 
