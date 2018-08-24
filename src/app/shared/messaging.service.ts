@@ -7,7 +7,9 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase';
 import { take } from 'rxjs/operators';
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject } from 'rxjs';
+
+import { ChatService } from '../_services';
 
 @Injectable()
 export class MessagingService {
@@ -17,7 +19,8 @@ export class MessagingService {
 
   constructor(
     private afDB: AngularFireDatabase,
-    private afAuth: AngularFireAuth) { }
+    private afAuth: AngularFireAuth,
+    private chatService: ChatService) { }
 
   /**
    * update token in firebase database
@@ -42,12 +45,22 @@ export class MessagingService {
     this.messaging.requestPermission()
       .then(() => {
         console.log('notification permission granted.');
-        return firebase.messaging().getToken()
+        console.log(firebase.messaging().getToken());
+        return firebase.messaging().getToken();
       })
       .then(token => {
         console.log(token)
         localStorage.setItem("TokenFire", token);
-        this.updateToken(userId, token)
+        this.chatService.webRegistre()
+          .subscribe(
+             data => {
+                console.log(data);
+              },
+              error => {
+                  this.error = error;
+                  this.loading = false;
+              });
+        this.updateToken(userId, token);
       })
       .catch((err) => {
         console.log('Unable to get permission to notify.', err);
@@ -63,4 +76,5 @@ export class MessagingService {
       this.currentMessage.next(payload)
     });
   }
+  
 }

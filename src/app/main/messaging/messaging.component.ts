@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
+import { MessagingService } from '../../shared/messaging.service';
 
 import { ChatService } from '../../_services';
 
@@ -17,43 +18,138 @@ export class MessagingComponent implements OnInit {
   returnUrl: string;
   error = '';
   currentChat: any[];
+  listContactGuard: any[];
+  listContactAdmin: any[];
   message: string;
+  idChat: 0;
 
   constructor(
       private formBuilder: FormBuilder,
       private route: ActivatedRoute,
       private router: Router,
+      private messagingService: MessagingService,
       private chatService: ChatService) {}
 
   ngOnInit() {
-    this.currentChat = [
-      { user: 'bob', message: 'hey, what are you doing?' },
-      { user: 'jeff', message: 'learning angular 2' },
-      { user: 'bob', message: 'cool, angular is great' },
-      { user: 'jeff', message: 'i know that\'s right' },
-    ];
+    this.currentChat = [];
+    this.listContactGuard = [];
+    this.listContactAdmin = [];
+    this.loadContactGuard();
+    this.loadContactAdmin();
+    this.messagingService.getPermission();
+    this.messagingService.receiveMessage();
+    this.message = this.MessagingService.currentMessage;
+  }
+
+  loadContactGuard(){
+    this.chatService.listContactGuard()
+      .subscribe(
+         data => {
+            var data = data;
+            for (var i=0; i< data.data.length; i++) {
+              const contact = Object.assign({id: data.data[i].id}, {name: data.data[i].name}, { lastname: data.data[i].lastname}, {type: 'GUARD'});
+              var list = this.listContactGuard.push(contact);
+              }
+              return list;
+          },
+          error => {
+              this.error = error;
+              this.loading = false;
+          });
+
+  }
+
+  loadContactAdmin(){
+    this.chatService.listContactAdmin()
+      .subscribe(
+         data => {
+            for (var i=0; i< data.data.length; i++) {
+              const contact = Object.assign({id: data.data[i].id}, {name: data.data[i].name}, { lastname: data.data[i].lastname}, {type: 'ADMIN'});
+              var list = this.listContactAdmin.push(contact);
+              }
+              return list;
+          },
+          error => {
+              this.error = error;
+              this.loading = false;
+          });
+
   }
 
   newMessage(formValue) {
+      console.log(this.idChat);
       this.submitted = true;
       this.loading = true;
       var obj = JSON.parse(localStorage.User);
-      console.log(localStorage.User);
       const newMessage = Object.assign(formValue, { user: obj['name']});
-      var sender_type = obj['isAdmin'] ? 'ADMIN' : 'GUARD'
-      console.log("aquivamos",formValue.message,sender_type,obj['name'], obj['id'], 8);
+      var sender_type = obj['isAdmin'] ? 'ADMIN' : 'GUARD';
       this.loading = true;
-      this.chatService.sendMessage(formValue.message, obj['id'], 8, sender_type, obj['name'])
+      this.chatService.sendMessage(formValue.message, obj['id'], this.idChat, sender_type, obj['name'])
           .pipe(first())
           .subscribe(
               data => {
-                  this.currentChat.push(newMessage); // text, sender_type, sender_name, sender_id, chatID
+                  this.currentChat.push(newMessage);
                   this.loading = false;
               },
               error => {
                   this.error = error;
                   this.loading = false;
               });
+  }
+
+  openChat(id,name,type){
+    this.chatService.chat(id,name,type)
+      .subscribe(
+          data => {
+              this.currentChat = [];
+              console.log(data.result);
+              this.idChat = data.result.id;
+          },
+          error => {
+              this.openOldMessage(8);
+          });
+  }
+
+  openOldMessage(chat_id){
+    this.chatService.listOldMessage(chat_id)
+        .subscribe(
+            data => {
+              this.currentChat = [];
+              console.log(data.data.reverse());
+              for (var i=0; i< data.data.length; i++) {
+                const messageOld = Object.assign({message: data.data[i].text}, {user: data.data[i].sender_name});
+                var list = this.currentChat.push(messageOld);
+                }
+                return list;
+            },
+            error => {
+                this.error = error;
+                this.loading = false;
+            });
+  }
+
+  listAllChat(id,name,type){
+    this.chatService.listAllChatId()
+        .subscribe(
+            data => {
+              for (var i=0; i< data.data.length; i++) {
+                if(data.data[i].user_2_id == id && data.data[i].user_2_type == type){
+                  var userSelect = data.data[i];
+                  break;
+                }
+              }
+              if(userSelect){
+                console.log(userSelect);
+                this.openOldMessage(userSelect.id);
+                this.idChat = userSelect.id;
+              }else{
+                this.openChat(id,name,type);
+              }
+            },
+            error => {
+                this.error = error;
+                this.loading = false;
+            });
   }
 
 }

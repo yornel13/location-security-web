@@ -11,6 +11,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { environment } from '../environments/environment';
+import {MatTabsModule} from '@angular/material/tabs';
+
 
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { fakeBackendProvider } from './_helpers';
@@ -35,6 +37,7 @@ import { AsyncPipe } from '../../node_modules/@angular/common';
     	  AngularFirestoreModule,
         AngularFireDatabaseModule,
         AngularFireAuthModule,
+        MatTabsModule, 
     ],
     declarations: [
         AppComponent,
