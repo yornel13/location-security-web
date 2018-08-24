@@ -32,6 +32,7 @@ import { FilterPipe } from './monitoring/aside/filter.pipe';
 import {TabletService} from '../../model/tablet/tablet.service';
 import {ControlModule} from './control/control.module';
 import {VirtualComponent} from './virutal/virtual.component';
+import {CardAlertComponent} from './monitoring/aside/card.alert.component';
 
 const mainRoutes: Routes = [
     { path: '', component: MainComponent,
@@ -73,7 +74,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
       MonitoringComponent, MapOsmComponent, PopupVehicleComponent, PopupWatchComponent,
       HeaderComponent, AsideComponent, MainComponent,
       DashboardComponent, ReportComponent, MessagingComponent,
-      CardVehicleComponent, CardTabletComponent, VirtualComponent, FilterPipe
+      CardVehicleComponent, CardTabletComponent, VirtualComponent, FilterPipe, CardAlertComponent
   ],
   bootstrap: [ MainComponent ]
 })

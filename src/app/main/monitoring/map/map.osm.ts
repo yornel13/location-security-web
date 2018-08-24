@@ -83,10 +83,10 @@ export class MapOsmComponent implements OnChanges {
     // Values to bind to Leaflet Directive
     layersControlOptions = { position: 'bottomright' };
     baseLayers = {
+        'Open Street Map': this.LAYER_OSM.layer,
         'Google Street Map': this.LAYER_GOOGLE_STREET.layer,
         'Google Satellite Map': this.LAYER_GOOGLE_SATELLITE.layer,
-        'Google Terrain Map': this.LAYER_GOOGLE_TERRAIN.layer,
-        'Open Street Map': this.LAYER_OSM.layer
+        'Google Terrain Map': this.LAYER_GOOGLE_TERRAIN.layer
     };
     options = {
         zoom: 8,
