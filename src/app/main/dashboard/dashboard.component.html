@@ -1,3 +1,85 @@
-<p>
-  Dashboard en construcción
-</p>
+<div class="dashboard">
+  <div class="container-fluid row mx-auto">
+    <div class="col-sm-3">
+      <div class="statistic-box red">
+        <div>
+          <div class="number pt-3">{{watchactive}}</div>
+          <div class="title">Guardias Activas</div>
+        </div>
+      </div> 
+    </div>
+    <div class="col-sm-3">
+      <div class="statistic-box yellow">
+        <div>
+          <div class="number pt-3">{{reportoday}}</div>
+          <div class="title">Incidencias de hoy</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="statistic-box purple">
+        <div>
+          <div class="number pt-3">{{numconnect}}</div>
+          <div class="title">Vehículos conectados</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="statistic-box green">
+        <div>
+          <div class="number pt-3">{{numdesconnect}}</div>
+          <div class="title">Vehículos desconectados</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid row mx-auto line2">
+    <div class="col-sm-5">
+      <div class="reportes" style="padding-bottom: 40px;">
+        <div class="panel-heading">
+          <div class="tools"><span class="fas fa-sync btn" (click)="getReportes()"></span></div>
+          <div class="titulo">Reportes</div>
+        </div>
+        <div style="display: block; width: 450px; height: 225px; margin-top: 20px">
+          <canvas baseChart
+                    [data]=[reportOpen,reportReopen,reportClose]
+                    [labels]="doughnutChartLabels"
+                    [chartType]="doughnutChartType"
+                    [colors]="doughnutColors"
+                    (chartHover)="chartHovered($event)"
+                    (chartClick)="chartClicked($event)">
+          </canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-7 lastvisitas">
+      <div class="panel panel-default panel-table">
+        <div class="panel-heading">
+          <div class="tools"><span class="fas fa-download"></span><span class="fas fa-sync btn" (click)="getVisitasActivas()"></span></div>
+          <div class="titulo">Visitas activas</div>
+        </div>
+        <div class="panel-body table-responsive tablavisitas">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th style="width:37%;">Visitante</th>
+                <th style="width:36%;">Cédula</th>
+                <th>Entrada</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let v of visit">
+                <td class="user-avatar"> <img src="{{v.visitor.photo}}" alt="Avatar" *ngIf="!(v.visitor.photo == null)"><img src="/assets/img/avatar.png" alt="Avatar" *ngIf="(v.visitor.photo == null)">{{v.visitor.name}} {{v.visitor.lastname}}</td>
+                <td>{{v.visitor.dni}}</td>
+                <td>{{v.create_date}}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>

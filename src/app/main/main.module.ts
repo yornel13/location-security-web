@@ -14,6 +14,7 @@ import {CardVehicleComponent} from './monitoring/aside/card.vehicle.component';
 import {CardTabletComponent} from './monitoring/aside/card.tablet.component';
 
 import { HttpClientModule } from '@angular/common/http';
+import { ChartsModule } from 'ng2-charts';
 
 // My Modulus
 import { MonitoringComponent } from './monitoring/monitoring.component';
@@ -29,6 +30,7 @@ import {AsideService} from './monitoring/aside/aside.service';
 import { MessagingComponent } from './messaging/messaging.component';
 
 import { FilterPipe } from './monitoring/aside/filter.pipe';
+import { FilterPipeModule } from 'ngx-filter-pipe';
 import {TabletService} from '../../model/tablet/tablet.service';
 import {ControlModule} from './control/control.module';
 import {VirtualComponent} from './virutal/virtual.component';
@@ -46,7 +48,7 @@ const mainRoutes: Routes = [
                     { path: 'virtual', component: VirtualComponent },
                     { path: 'messaging', component: MessagingComponent },
                     { path: 'report', component: ReportComponent },
-                    { path: '', redirectTo: '/u/monitoring', pathMatch: 'full' },
+                    { path: '', redirectTo: '/u/dashboard', pathMatch: 'full' },
                 ]
             }
         ]
@@ -61,6 +63,8 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     CommonModule,
     FormsModule,
     mainRouting,
+    ChartsModule,
+    FilterPipeModule,
     LeafletModule.forRoot(),
     LeafletMarkerClusterModule.forRoot(),
     LeafletDrawModule.forRoot(),
