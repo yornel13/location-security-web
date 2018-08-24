@@ -33,6 +33,7 @@ export class ChatService {
               if(res.result != null) {
                   console.log(res);
                   console.log(localStorage.TokenFire);
+                  //
                   return res.result;
               }
             }
