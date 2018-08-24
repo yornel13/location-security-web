@@ -25,6 +25,7 @@ export class MessagingComponent implements OnInit {
     listContactAdmin: any[];
     message: string;
     idChat: number;
+    data: any[];
     private guards: Guard[];
     private guardsData;
     private admins: Admin[];
