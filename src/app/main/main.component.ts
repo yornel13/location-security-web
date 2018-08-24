@@ -10,4 +10,15 @@ import { Component } from '@angular/core';
       </div>
   `
 })
-export class MainComponent { }
+export class MainComponent {
+
+  constructor(private messagingService: MessagingService) { }
+
+  ngOnInit() {
+    const userId = JSON.parse(localStorage.User)['id'];
+    this.messagingService.requestPermission(userId);
+    this.messagingService.receiveMessage();
+    this.message = this.messagingService.currentMessage;
+  }
+
+  }
