@@ -24,7 +24,9 @@ export class MessagingComponent implements OnInit {
     listContactGuard: any[];
     listContactAdmin: any[];
     message: string;
-    idChat: 0;
+    idChat: number;
+    private oldMessage:any = undefined;
+    private allChat:any = undefined;
     private guards: Guard[];
     private guardsData;
     private admins: Admin[];
@@ -45,9 +47,7 @@ export class MessagingComponent implements OnInit {
         this.listContactAdmin = [];
         this.loadContactGuard();
         this.loadContactAdmin();
-        this.messagingService.getPermission();
         this.messagingService.receiveMessage();
-        this.message = this.MessagingService.currentMessage;
     }
 
     loadContactGuard() {
@@ -129,9 +129,11 @@ export class MessagingComponent implements OnInit {
             .subscribe(
                 data => {
                     this.currentChat = [];
-                    console.log(data.data.reverse());
-                    for (var i=0; i< data.data.length; i++) {
-                        const messageOld = Object.assign({message: data.data[i].text}, {user: data.data[i].sender_name});
+                    this.oldMessage = data;
+                    this.oldMessage = this.oldMessage.data;
+                    console.log(this.oldMessage.reverse());
+                    for (var i=0; i< this.oldMessage.length; i++) {
+                        const messageOld = Object.assign({message: this.oldMessage[i].text}, {user: this.oldMessage[i].sender_name});
                         var list = this.currentChat.push(messageOld);
                     }
                     return list;
@@ -146,9 +148,11 @@ export class MessagingComponent implements OnInit {
         this.chatService.listAllChatId()
             .subscribe(
                 data => {
-                    for (var i=0; i< data.data.length; i++) {
-                        if(data.data[i].user_2_id == id && data.data[i].user_2_type == type){
-                            var userSelect = data.data[i];
+                    this.allChat = data;
+                    this.allChat = this.allChat.data;
+                    for (var i=0; i< this.allChat.length; i++) {
+                        if(this.allChat[i].user_2_id == id && this.allChat[i].user_2_type == type){
+                            var userSelect = this.allChat[i];
                             break;
                         }
                     }

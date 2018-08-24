@@ -27,13 +27,11 @@ export class ChatService {
 
           ) { }
 
-    webRegistre() {
-        return this.http.post<any>(`${environment.BASIC_URL}/messenger/register/web`,{registration_id: this.tokenFire, admin_id: this.user_1_id, session: this.admin_id})
+    webRegistre(token) {
+        return this.http.post<any>(`${environment.BASIC_URL}/messenger/register/web`,{registration_id: token, admin_id: this.user_1_id, session: this.admin_id})
             .pipe(map(res => {
               if(res.result != null) {
                   console.log(res);
-                  console.log(localStorage.TokenFire);
-                  //
                   return res.result;
               }
             }

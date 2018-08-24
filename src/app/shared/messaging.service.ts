@@ -46,6 +46,7 @@ export class MessagingService {
   requestPermission(userId) {
     this.messaging.requestPermission()
       .then(() => {
+        localStorage.removeItem('TokenFire');
         console.log('notification permission granted.');
         console.log(firebase.messaging().getToken());
         return firebase.messaging().getToken();
@@ -53,7 +54,7 @@ export class MessagingService {
       .then(token => {
         console.log(token)
         localStorage.setItem('TokenFire', token);
-        this.chatService.webRegistre()
+        this.chatService.webRegistre(token)
           .subscribe(
              data => {
                 console.log(data);
