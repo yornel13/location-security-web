@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+
 
 import { GuardService } from '../../../model/guard/guard.service';
 import { AdminService } from '../../../model/admin/admin.service';
@@ -16,6 +18,9 @@ import { BannerService } from '../../../model/banner/banner.service';
 import { HttpClientModule } from '@angular/common/http';
 import { AgmCoreModule } from '@agm/core';
 
+
+import { IgxSnackbarModule } from 'igniteui-angular';
+
 import { ControlComponent } from './control.component';
 import {RouterModule, Routes} from '@angular/router';
 import { GuardiaComponent } from './guardia/guardia.component';
@@ -29,6 +34,10 @@ import { VisitasComponent } from './visitas/visitas/visitas.component';
 import { VisitasactivasComponent } from './visitas/visitasactivas/visitasactivas.component';
 
 import { FilterPipeModule } from 'ngx-filter-pipe';
+import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
+import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
+
+
 import {AsideControlComponent} from './aside/aside.control.component';
 import {AdminComponent} from './admin/admin.component';
 import { HomeComponent } from './home/home.component';
@@ -40,6 +49,8 @@ import { MbitacoraComponent } from './subhome/mbitacora/mbitacora.component';
 import { MvigilanciaComponent } from './subhome/mvigilancia/mvigilancia.component';
 import {environment} from '../../../environments/environment';
 import {CercoComponent} from './cerco/cerco.component';
+import {CercoService} from '../../../model/cerco/cerco.service';
+
 
 const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
@@ -81,11 +92,19 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         FormsModule,
         controlRouting,
         FilterPipeModule,
+        LeafletModule.forRoot(),
+        LeafletDrawModule.forRoot(),
+        LeafletMarkerClusterModule.forRoot(),
+
+        // BrowserModule,
+        // BrowserAnimationsModule,
+        IgxSnackbarModule,
+
         AgmCoreModule.forRoot(environment.google_map_api_key),
     ],
     providers: [
         GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService,
-        IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService ],
+        IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService, CercoService ],
     entryComponents: [ ],
     declarations: [
         GuardiaComponent, AdminComponent, ControlComponent,
@@ -99,7 +118,7 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         MvisitasComponent,
         MbitacoraComponent,
         MvigilanciaComponent,
-        CercoComponent ],
+        CercoComponent],
     bootstrap: [ ControlComponent ]
 })
 export class ControlModule {}

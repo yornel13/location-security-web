@@ -29,7 +29,7 @@ export class FuncionariosComponent {
   errorEdit:boolean = false;
   errorEditData:boolean = false;
   errorEditMsg:string;
-  //crear
+  //createBoundView
   namea:string;
   lastnamea:string;
   addressa:string;

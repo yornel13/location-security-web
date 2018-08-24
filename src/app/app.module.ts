@@ -10,6 +10,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { environment } from '../environments/environment';
 
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { fakeBackendProvider } from './_helpers';
 import { AsyncPipe } from '@angular/common';
@@ -26,6 +30,7 @@ import { AngularFireStorageModule } from 'angularfire2/storage';
 @NgModule({
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         AppRoutingModule,
         HttpClientModule,
         MainModule,
@@ -37,6 +42,7 @@ import { AngularFireStorageModule } from 'angularfire2/storage';
         AngularFireDatabaseModule,
         AngularFireAuthModule,
         AngularFireStorageModule,
+
     ],
     declarations: [
         AppComponent,

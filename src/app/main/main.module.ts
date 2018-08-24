@@ -31,7 +31,6 @@ import { MessagingComponent } from './messaging/messaging.component';
 import { FilterPipe } from './monitoring/aside/filter.pipe';
 import {TabletService} from '../../model/tablet/tablet.service';
 import {ControlModule} from './control/control.module';
-import {VirtualComponent} from './virutal/virtual.component';
 
 const mainRoutes: Routes = [
     { path: '', component: MainComponent,
@@ -42,7 +41,7 @@ const mainRoutes: Routes = [
                     { path: 'dashboard', component: DashboardComponent },
                     { path: 'monitoring', component: MonitoringComponent },
                     { path: 'control', loadChildren: () => ControlModule },
-                    { path: 'virtual', component: VirtualComponent },
+                    // { path: 'virtual', component: VirtualComponent },
                     { path: 'messaging', component: MessagingComponent },
                     { path: 'report', component: ReportComponent },
                     { path: '', redirectTo: '/u/monitoring', pathMatch: 'full' },
@@ -62,7 +61,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     mainRouting,
     LeafletModule.forRoot(),
     LeafletMarkerClusterModule.forRoot(),
-    LeafletDrawModule.forRoot(),
+    // LeafletDrawModule.forRoot(),
     ControlModule,
   ],
   providers: [
@@ -73,8 +72,11 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
       MonitoringComponent, MapOsmComponent, PopupVehicleComponent, PopupWatchComponent,
       HeaderComponent, AsideComponent, MainComponent,
       DashboardComponent, ReportComponent, MessagingComponent,
-      CardVehicleComponent, CardTabletComponent, VirtualComponent, FilterPipe
+      CardVehicleComponent, CardTabletComponent, FilterPipe,
   ],
+    // exports: [   LeafletModule,
+    //             LeafletMarkerClusterModule,
+    //             LeafletDrawModule],
   bootstrap: [ MainComponent ]
 })
 export class MainModule {}

@@ -1,4 +1,40 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css";
+@import "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css";
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 app-cerco {
     height: 100%;
     width: 100%;
 }
+
+.map-panel {
+    height: 100%;
+    overflow-y:scroll;
+}
+
+.map-bounds-container{
+
+    top: 120px;
+    left: 60px;
+    right: 0;
+    bottom: 10px;
+}
+
+.map-bounds{
+    height: 500px;
+    width: 100%;
+}
+
+.name-bounds-f {
+    /*position: relative;*/
+    /*z-index: 99;*/
+}
+
+
+.back-save-btn {
+    margin-bottom: 3%;
+    /*position: absolute;*/
+    /*top: 89.5%;*/
+}
+
+

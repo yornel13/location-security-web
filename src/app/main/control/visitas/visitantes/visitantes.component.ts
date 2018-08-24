@@ -34,7 +34,7 @@ export class VisitantesComponent {
   visitantesFilter: any = { "dni": ""};
 
   
-  constructor(public router:Router, private visitanteService:VisitanteService) { 
+  constructor(public router:Router, private visitanteService:VisitanteService) {
     this.getAll();
   	this.lista = true;
     this.detalle = false;
