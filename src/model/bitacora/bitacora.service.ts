@@ -19,6 +19,11 @@ export class BitacoraService {
             .then((response) => response);
     }
 
+    getAllToday() {
+        return this.http.get(this.BITAC_URL+'/resolved/all/date').toPromise()
+            .then((response) => response);
+    }
+
     getOpen() {
         return this.http.get(this.BITAC_URL+'/resolved/1').toPromise()
             .then((response) => response);

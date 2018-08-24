@@ -69,6 +69,11 @@ export class VisitasService {
             .then((response) => response);
     }
 
+    getAllActive() {
+        return this.http.get(this.VISIT_URL+'/active/1').toPromise()
+            .then((response) => response);
+    }
+
     getId(id: number) {
         return this.http.get(this.VISIT_URL + '/' + id).toPromise()
             .then((response) => response);

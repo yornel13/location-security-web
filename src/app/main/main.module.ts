@@ -13,6 +13,7 @@ import {CardVehicleComponent} from './monitoring/aside/card.vehicle.component';
 import {CardTabletComponent} from './monitoring/aside/card.tablet.component';
 
 import { HttpClientModule } from '@angular/common/http';
+import { ChartsModule } from 'ng2-charts';
 
 // My Modulus
 import { MonitoringComponent } from './monitoring/monitoring.component';
@@ -59,6 +60,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     CommonModule,
     FormsModule,
     mainRouting,
+    ChartsModule,
     FilterPipeModule,
     LeafletModule.forRoot(),
     LeafletMarkerClusterModule.forRoot(),
