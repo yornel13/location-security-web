@@ -30,44 +30,46 @@
 
     <div class="tab-content">
 
-      <div id="devices" class="tab-pane fade">
-        <input [(ngModel)]="search" name="search"  #newSearsh class="filter form-control" type="text" placeholder="Filtrar">
-        <p *ngIf="noCards" class="no-cards">Seleccione dispositivo</p>
-        <!--Cards contaniner-->
-        <div class="cards-container"  *ngIf="showCardContainer">
-          <!--Cards-->
-          <div>
-            <div *ngFor="let data of markersData | filter: search">
-              <div  *ngIf="data.group_name === 'Tablet Guardia'">
-                <app-card-tablet *ngIf="watchesCheck" [tablet]="data"></app-card-tablet>
-              </div>
-              <div *ngIf="data.group_name === 'BOMBAS DE DRENAJE'">
-                <app-card-vehicle *ngIf="bombasCheck" [vehicle]="data"></app-card-vehicle>
-              </div>
-              <div *ngIf="data.group_name === 'AZUCARERA INGENIO VALDEZ'">
-                <app-card-vehicle *ngIf="vehiclesCheck" [vehicle]="data"></app-card-vehicle>
-              </div>
-              <div *ngIf="data.group_name !== 'AZUCARERA INGENIO VALDEZ' && 'BOMBAS DE DRENAJE' && 'Tablet Guardia'">
-                <!--no group-->
-              </div>
-            </div>
-          </div>
-        </div>
+      <div id="alerts" class="tab-pane fade in active" style="background: #c82333">
+        <!--<div class="cards-container">-->
+        <!--<div>-->
+        <!--<div>-->
+        <!--<div>-->
+        <!--<app-card-alert></app-card-alert>-->
+        <!--<app-card-alert></app-card-alert>-->
+        <!--<app-card-alert></app-card-alert>-->
+        <!--<app-card-alert></app-card-alert>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <p>chao</p>
       </div>
 
-      <div id="alerts" class="tab-pane fade in active" style="background: #c82333">
-        <div class="cards-container">
-          <div>
-            <div>
-              <div>
-                <app-card-alert></app-card-alert>
-                <app-card-alert></app-card-alert>
-                <app-card-alert></app-card-alert>
-                <app-card-alert></app-card-alert>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div id="devices" class="tab-pane fade">
+        <p>hola</p>
+        <!--<input [(ngModel)]="search" name="search"  #newSearsh class="filter form-control" type="text" placeholder="Filtrar">-->
+        <!--<p *ngIf="noCards" class="no-cards">Seleccione dispositivo</p>-->
+        <!--&lt;!&ndash;Cards contaniner&ndash;&gt;-->
+        <!--<div class="cards-container"  *ngIf="showCardContainer">-->
+          <!--&lt;!&ndash;Cards&ndash;&gt;-->
+          <!--<div>-->
+            <!--<div *ngFor="let data of markersData | filter: search">-->
+              <!--<div  *ngIf="data.group_name === 'Tablet Guardia'">-->
+                <!--<app-card-tablet *ngIf="watchesCheck" [tablet]="data"></app-card-tablet>-->
+              <!--</div>-->
+              <!--<div *ngIf="data.group_name === 'BOMBAS DE DRENAJE'">-->
+                <!--<app-card-vehicle *ngIf="bombasCheck" [vehicle]="data"></app-card-vehicle>-->
+              <!--</div>-->
+              <!--<div *ngIf="data.group_name === 'AZUCARERA INGENIO VALDEZ'">-->
+                <!--<app-card-vehicle *ngIf="vehiclesCheck" [vehicle]="data"></app-card-vehicle>-->
+              <!--</div>-->
+              <!--<div *ngIf="data.group_name !== 'AZUCARERA INGENIO VALDEZ' && 'BOMBAS DE DRENAJE' && 'Tablet Guardia'">-->
+                <!--&lt;!&ndash;no group&ndash;&gt;-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
       </div>
 
     </div>
