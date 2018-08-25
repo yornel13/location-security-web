@@ -42,7 +42,7 @@
         </div>
         <div style="display: block; width: 450px; height: 225px; margin-top: 20px">
           <canvas baseChart
-                    [data]=[reportOpen,reportReopen,reportClose]
+                    [data]="doughnutChartData"
                     [labels]="doughnutChartLabels"
                     [chartType]="doughnutChartType"
                     [colors]="doughnutColors"

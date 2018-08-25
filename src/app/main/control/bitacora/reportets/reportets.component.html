@@ -7,6 +7,18 @@
         </a>
         <h3 class="list-title">Reportes Abiertos</h3>
       </div>
+    </div>
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto row ml-2 form-inline">
+          <label class="mr-1"><b>Mostrar:</b></label>
+          <select id="inputState" class="form-control mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
+            <option [ngValue]="10">10</option>
+            <option [ngValue]="25">25</option>
+            <option [ngValue]="50">50</option>
+            <option [ngValue]="100">100</option>
+          </select>
+          <label>Elementos</label>
+      </div>
         <div class="ml-auto form-inline">
           <div class="form-group row">
             <label class="mr-4"><b>Filtrar por:</b></label>
@@ -25,7 +37,7 @@
             <label for="start" class="mr-4">Fecha</label>
             <input class="form-control  mr-4" type="date" name="date" [(ngModel)]="dateSelect" (change)="getByDate()" [ngModelOptions]="{standalone: true}">
           </div>
-  		  </div>
+        </div>
     </div>
     <div class="table mt-2">
             <table class="table table-striped">
@@ -40,18 +52,18 @@
                <th>Detalle</th>
              </thead>
              <tbody>
-              <tr *ngFor="let d of data">
-                  <td *ngIf="d.resolved != 0"></td>
-                <td *ngIf="d.resolved != 0">{{d.id}}</td>
-                <td *ngIf="d.resolved != 0">{{d.title}}</td>
-                <td *ngIf="d.resolved != 0">{{d.observation}}</td>
-                <td *ngIf="d.resolved != 0">{{d.create_date}}</td>
-                <td *ngIf="d.resolved != 0"><span *ngIf="d.resolved == 0" class="text-danger">Cerrado</span><span *ngIf="d.resolved == 1" class="text-success">Abierto</span><span *ngIf="d.resolved == 2" class="text-success">Reabierto</span></td>
+              <tr *ngFor="let d of data | paginate: { itemsPerPage: numElement, currentPage: p }">
+                  <td></td>
+                <td>{{d.id}}</td>
+                <td>{{d.title}}</td>
+                <td>{{d.observation}}</td>
+                <td>{{d.create_date}}</td>
+                <td><span *ngIf="d.resolved == 0" class="text-danger">Cerrado</span><span *ngIf="d.resolved == 1" class="text-success">Abierto</span><span *ngIf="d.resolved == 2" class="text-success">Reabierto</span></td>
                 <td *ngIf="d.resolved != 0">
                   <button class="btn btn-success" *ngIf="d.resolved == 0" (click)="changeResolve(d.id, d.resolved)">Reabrir</button>
                   <button class="btn btn-danger" *ngIf="d.resolved != 0" (click)="changeResolve(d.id, d.resolved)">Cerrar</button>
                 </td>
-                <td *ngIf="d.resolved != 0">
+                <td>
                   <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)"  title="Detalle"><span class="far fa-eye"></span></a>
                  </td>
                </tr>
@@ -60,6 +72,11 @@
                </tr>
             </tbody>
           </table>
+          <div style="text-align: center; padding-right: 40px;">
+              <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
+                    nextLabel="">
+              </pagination-controls>
+          </div>
     </div>
   </div>
   <div class="info-container panel panel-default" *ngIf="detalle">

@@ -24,6 +24,16 @@ export class WatchesService {
             .then((response) => response);
     }
 
+    getActive() {
+        return this.http.get(this.WATCH_URL + '/active/1').toPromise()
+            .then((response) => response);
+    }
+
+    getActiveByGuard(id) {
+        return this.http.get(this.WATCH_URL + '/guard/' + id + '/active/1').toPromise()
+            .then((response) => response);
+    }
+
     getByGuard(id) {
         return this.http.get(this.WATCH_URL + '/guard/' + id).toPromise()
             .then((response) => response);

@@ -7,31 +7,43 @@
         </a>
         <h3 class="list-title">Todos los Reportes</h3>
       </div>
-        <div class="ml-auto form-inline">
-          <div class="form-group row">
-            <label class="mr-4"><b>Filtrar por:</b></label>
-  		      <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
-              <option [ngValue]="0">Incidencia</option>
-              <option [ngValue]="1">Guardia</option>
-            </select>
-  		      <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="incidenSelect" (change)="getByIncidencia(incidenSelect)" [ngModelOptions]="{standalone: true}" *ngIf="filtro">
-              <option [ngValue]="0">Todas</option>
-  		        <option *ngFor="let i of inciden" [ngValue]="i.id">{{i.name}}</option>
-  		      </select>
-            <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="guardiaSelect" (change)="getByGuardia(guardiaSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="!filtro">
-              <option [ngValue]="0">Todos</option>
-              <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
-            </select>
-            <label for="start" class="mr-4">Fecha</label>
-            <input class="form-control mr-4" type="date" name="date" [(ngModel)]="dateSelect" (change)="getByDate()" [ngModelOptions]="{standalone: true}">
-		      </div>
-          <label for="inputState" class="mr-4">Status</label>
-          <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="status" (change)="getByStatus()" [ngModelOptions]="{standalone: true}">
-            <option [value]="0">Todos</option>
-            <option [value]="1">Abiertos</option>
-            <option [value]="2">Cerrados</option>
+    </div>
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto row ml-2 form-inline">
+          <label class="mr-1"><b>Mostrar:</b></label>
+          <select id="inputState" class="form-control mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
+            <option [ngValue]="10">10</option>
+            <option [ngValue]="25">25</option>
+            <option [ngValue]="50">50</option>
+            <option [ngValue]="100">100</option>
           </select>
+          <label>Elementos</label>
+      </div>
+      <div class="ml-auto form-inline">
+        <div class="form-group row">
+          <label class="mr-4"><b>Filtrar por:</b></label>
+          <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
+            <option [ngValue]="0">Incidencia</option>
+            <option [ngValue]="1">Guardia</option>
+          </select>
+          <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="incidenSelect" (change)="getByIncidencia(incidenSelect)" [ngModelOptions]="{standalone: true}" *ngIf="filtro">
+            <option [ngValue]="0">Todas</option>
+            <option *ngFor="let i of inciden" [ngValue]="i.id">{{i.name}}</option>
+          </select>
+          <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="guardiaSelect" (change)="getByGuardia(guardiaSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="!filtro">
+            <option [ngValue]="0">Todos</option>
+            <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
+          </select>
+          <label for="start" class="mr-4">Fecha</label>
+          <input class="form-control mr-4" type="date" name="date" [(ngModel)]="dateSelect" (change)="getByDate()" [ngModelOptions]="{standalone: true}">
         </div>
+        <label for="inputState" class="mr-4">Status</label>
+        <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="status" (change)="getByStatus()" [ngModelOptions]="{standalone: true}">
+          <option [value]="0">Todos</option>
+          <option [value]="1">Abiertos</option>
+          <option [value]="2">Cerrados</option>
+        </select>
+      </div>
     </div>
     <div class="table mt-2">
             <table class="table table-striped">
@@ -46,7 +58,7 @@
                <th>Detalle</th>
              </thead>
              <tbody>
-              <tr *ngFor="let d of data">
+              <tr *ngFor="let d of data  | paginate: { itemsPerPage: numElement, currentPage: p }">
                 <td></td>
                 <td>{{d.id}}</td>
                 <td>{{d.title}}</td>
@@ -62,8 +74,12 @@
                  </td>
                </tr>
             </tbody>
- 
           </table>
+          <div style="text-align: center; padding-right: 40px;">
+              <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
+                    nextLabel="">
+              </pagination-controls>
+          </div>
     </div>
   </div>
   <div class="info-container panel panel-default" *ngIf="detalle">

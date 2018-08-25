@@ -44,22 +44,27 @@ export class ReportetsComponent {
   //status
   status:number = 0;
   hay: boolean;
+  numElement:number = 10;
 
 
   constructor(public router:Router, private bitacoraService:BitacoraService, private guardiaService:GuardService, private incidenciaService:IncidenciasService ) { 
-  	this.getAll();
+  	this.getOpenAll();
     this.getIncidencias();
     this.getGuardias();
     this.lista = true;
     this.detalle = false;
   }
 
-    getAll() {
-      this.bitacoraService.getAll().then(
+    getOpenAll() {
+      this.bitacoraService.getOpenAll().then(
         success => {
           this.reportes = success;
           this.data = this.reportes.data;
-          this.hay = this.verifyActive(this.data);
+          if(this.reportes.total == 0){
+            this.hay = false;
+          }else{
+            this.hay = true;
+          }
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -68,24 +73,6 @@ export class ReportetsComponent {
                 }
             }
         );
-    }
-
-    verifyActive(data) {
-      var valid = 0;
-      if(data.length == 0){
-        return false;
-      }else{
-        for(var i = 0; i < data.length; i++){
-          if(data[i].resolved != 0) {
-            valid ++;
-          }
-        }
-        if(valid == 0){
-          return false;
-        }else{
-          return true;
-        }
-      }
     }
 
     viewDetail(id) {
@@ -133,7 +120,7 @@ export class ReportetsComponent {
       if(resolved == 0){
         this.bitacoraService.setReopen(id).then(
           succcess =>{
-            this.getAll();
+            this.getOpenAll();
           }, error=>{
             if (error.status === 422) {
                     // on some data incorrect
@@ -145,7 +132,7 @@ export class ReportetsComponent {
       }else{
         this.bitacoraService.setClose(id).then(
         success => {
-          this.getAll();
+          this.getOpenAll();
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -197,9 +184,9 @@ export class ReportetsComponent {
       if(this.status == 0){
         if(id == 0){
           if(this.dateSelect == ''){
-            this.getAll();
+            this.getOpenAll();
           }else{
-            this.bitacoraService.getByDate(year, month, day).then(
+            this.bitacoraService.getOpenDate(year, month, day).then(
               success => {
                 this.reportes = success;
                 this.data = this.reportes.data;
@@ -214,7 +201,7 @@ export class ReportetsComponent {
           }
         }else{
           if(this.dateSelect == ''){
-            this.bitacoraService.getByIncidenAll(id).then(
+            this.bitacoraService.getByIncidenciaOpen(id).then(
               success => {
                 this.reportes = success;
               this.data = this.reportes.data;
@@ -360,7 +347,7 @@ export class ReportetsComponent {
     }
 
     getByIncidenciaDate(id, year, month, day) {
-      this.bitacoraService.getByIncidenciaDate(id, year, month, day).then(
+      this.bitacoraService.getByIncidenciaOpenDate(id, year, month, day).then(
           success => {
             this.reportes = success;
           this.data = this.reportes.data;
@@ -388,13 +375,13 @@ export class ReportetsComponent {
         this.incidenSelect = 0;
         this.dateSelect = '';
         this.filtro = true;
-        this.getAll();
+        this.getOpenAll();
       }else{
         this.incidenSelect = 0;
         this.guardiaSelect = 0;
         this.dateSelect = '';
         this.filtro = false;
-        this.getAll();
+        this.getOpenAll();
       }
     }
 
@@ -408,9 +395,9 @@ export class ReportetsComponent {
       if(this.status == 0){
         if(id == 0){
           if(this.dateSelect == ''){
-            this.getAll();
+            this.getOpenAll();
           }else{
-            this.bitacoraService.getByDate(year, month, day).then(
+            this.bitacoraService.getOpenDate(year, month, day).then(
               success => {
                 this.reportes = success;
                 this.data = this.reportes.data;
@@ -425,7 +412,7 @@ export class ReportetsComponent {
           }
         }else{
           if(this.dateSelect == ''){
-            this.bitacoraService.getByGuardiaAll(id).then(
+            this.bitacoraService.getByGuardiaOpen(id).then(
               success => {
                 this.reportes = success;
               this.data = this.reportes.data;
@@ -563,7 +550,7 @@ export class ReportetsComponent {
     }
 
     getByGuardiaDate(id, year, month, day) {
-      this.bitacoraService.getByGuardiaDate(id, year, month, day).then(
+      this.bitacoraService.getByGuardiaOpenDate(id, year, month, day).then(
           success => {
             this.reportes = success;
           this.data = this.reportes.data;

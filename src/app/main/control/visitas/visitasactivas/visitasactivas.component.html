@@ -7,6 +7,18 @@
         </a>
         <h3 class="list-title">Visitas Activas</h3>
       </div>
+    </div>
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto row ml-2 form-inline">
+          <label class="mr-1"><b>Mostrar:</b></label>
+          <select id="inputState" class="form-control mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
+            <option [ngValue]="10">10</option>
+            <option [ngValue]="25">25</option>
+            <option [ngValue]="50">50</option>
+            <option [ngValue]="100">100</option>
+          </select>
+          <label>Elementos</label>
+      </div>
       <div class="ml-auto form-inline">
         <div class="form-group row">
             <label class="mr-4"><b>Filtrar por:</b></label>
@@ -49,7 +61,7 @@
                <th>Detalle</th>
              </thead>
              <tbody>
-              <tr *ngFor="let d of data | filterBy: userFilter">
+              <tr *ngFor="let d of data | filterBy: userFilter | paginate: { itemsPerPage: numElement, currentPage: p }">
                 <td></td>
                 <td>{{d.id}}</td>
                 <td>{{d.plate}}</td>
@@ -66,6 +78,11 @@
                </tr>
             </tbody>
           </table>
+          <div style="text-align: center; padding-right: 40px;">
+              <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
+                    nextLabel="">
+              </pagination-controls>
+          </div>
     </div>
   </div>
   <div class="info-container panel panel-default" *ngIf="detalle">
