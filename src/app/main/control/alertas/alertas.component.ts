@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AlertaService } from '../../../../model/alerta/alerta.service';
 import { Alerta } from '../../../../model/alerta/alerta';
 import { GuardService } from '../../../../model/guard/guard.service';
+import { AgmMap } from '@agm/core';
 
 @Component({
   selector: 'app-alertas',
@@ -17,6 +18,7 @@ export class AlertasComponent  {
   numElement:number = 10;
   causes:any = undefined;
   cuase:any = [];
+  detailcause:any = [];
   //filtros
   filtroSelect:number = 0;
   causaSelect:number = 0;
@@ -25,11 +27,14 @@ export class AlertasComponent  {
   filtro:boolean = true;
   dateSelect:string = "";
   doughnutChartData:number[] = [3,3];
+  lista:boolean = true;
+  detalle:boolean = false;
 
   constructor(private alertaService:AlertaService, private guardiaService:GuardService) { 
   	this.getAll();
   	this.getGuardias();
   	this.doughnutChartData = [3, 3];
+  	this.regresar();
   }
 
   getAll() {
@@ -46,6 +51,29 @@ export class AlertasComponent  {
                 }
             }
         );
+    }
+
+    viewDetail(id){
+    	this.alertaService.getId(id).then(
+            success => {
+                this.detailcause = success;
+                this.lista = false;
+                this.detalle = true;
+                this.detailcause.latitude = Number(this.detailcause.latitude);
+          		this.detailcause.longitude = Number(this.detailcause.longitude);
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
+
+    regresar(){
+    	this.lista = true;
+    	this.detalle = false;
     }
 
     countAlert(data){
