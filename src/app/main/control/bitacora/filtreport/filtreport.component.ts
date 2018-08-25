@@ -40,6 +40,7 @@ export class FiltreportComponent {
   addcomment:boolean = false;
   //status
   status:number = 0;
+  numElement:number = 10;
 
   constructor(public router:Router, private bitacoraService:BitacoraService, private guardiaService:GuardService, private incidenciaService:IncidenciasService ) { 
   	this.getAll();

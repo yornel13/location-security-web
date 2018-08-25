@@ -6,14 +6,21 @@
         </a>
         <h3 class="list-title">Guardias Activas</h3>
       </div>
+    </div>
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto row ml-2 form-inline">
+          <label class="mr-1"><b>Mostrar:</b></label>
+          <select id="inputState" class="form-control mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
+            <option [ngValue]="10">10</option>
+            <option [ngValue]="25">25</option>
+            <option [ngValue]="50">50</option>
+            <option [ngValue]="100">100</option>
+          </select>
+          <label>Elementos</label>
+      </div>
       <div class="ml-auto form-inline">
         <div class="form-group row">
-          <label class="mr-4"><b>Guardia:</b></label>
-          <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="guardiaSelect"  [ngModelOptions]="{standalone: true}" (change)="guardFilert(guardiaSelect)">
-            <option [ngValue]="0">Todos</option>
-            <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
-          </select>
-          <input type="text" name="searchString" class="form-control mr-4" placeholder="Buscar Cédula" [(ngModel)]="guardiaFilter.guard_dni">
+          <input type="text" name="searchString" class="form-control mr-4" placeholder="Buscar Cédula" [(ngModel)]="guardiaFilter.guard.dni">
         </div>
       </div>
     </div>
@@ -29,14 +36,14 @@
                <th>Detalle</th>
              </thead>
              <tbody>
-              <tr *ngFor="let d of data | filterBy: guardiaFilter">
-                <td *ngIf="d.status == 1"></td>
-                <td *ngIf="d.status == 1">{{d.id}}</td>
-                <td *ngIf="d.status == 1">{{d.guard_name}} {{d.guard_lastname}}</td>
-                <td *ngIf="d.status == 1">{{d.guard_dni}}</td>
-                <td *ngIf="d.status == 1">{{d.create_date}}</td>
+              <tr *ngFor="let d of data | filterBy: guardiaFilter | paginate: { itemsPerPage: numElement, currentPage: p }">
+                <td></td>
+                <td>{{d.id}}</td>
+                <td>{{d.guard.name}} {{d.guard.lastname}}</td>
+                <td>{{d.guard.dni}}</td>
+                <td>{{d.create_date}}</td>
                 <td *ngIf="d.status == 1"><span *ngIf="d.status == 1" class="text-danger">Activa</span><span *ngIf="d.status == 0" class="text-success">Finalizada</span></td>
-                <td *ngIf="d.status == 1">
+                <td>
                   <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
                 </td>
                </tr>
@@ -45,6 +52,11 @@
                </tr>
             </tbody>
           </table>
+        <div style="text-align: center; padding-right: 40px;">
+            <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
+                  nextLabel="">
+            </pagination-controls>
+        </div>
     </div>
   </div>
   <div class="info-container panel panel-default" *ngIf="detalle">

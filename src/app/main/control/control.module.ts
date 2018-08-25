@@ -12,9 +12,12 @@ import { BitacoraService } from '../../../model/bitacora/bitacora.service';
 import { VisitasService } from '../../../model/visitas/visitas.service';
 import { ConfiguracionService } from '../../../model/configuracion/configuracion.service';
 import { BannerService } from '../../../model/banner/banner.service';
+import { AlertaService } from '../../../model/alerta/alerta.service';
 
 import { HttpClientModule } from '@angular/common/http';
 import { AgmCoreModule } from '@agm/core';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { ChartsModule } from 'ng2-charts';
 
 import { ControlComponent } from './control.component';
 import {RouterModule, Routes} from '@angular/router';
@@ -40,6 +43,7 @@ import { MbitacoraComponent } from './subhome/mbitacora/mbitacora.component';
 import { MvigilanciaComponent } from './subhome/mvigilancia/mvigilancia.component';
 import {environment} from '../../../environments/environment';
 import {CercoComponent} from './cerco/cerco.component';
+import { AlertasComponent } from './alertas/alertas.component';
 
 const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
@@ -49,6 +53,7 @@ const controlRoutes: Routes = [
                 children: [
                     { path: 'admin', component: AdminComponent },
                     { path: 'guardia', component: GuardiaComponent },
+                    { path: 'alertas', component: AlertasComponent },
                     { path: 'visitas/visitas/todas', component: VisitasComponent },
                     { path: 'visitas/visitas/activas', component: VisitasactivasComponent },
                     { path: 'visitas/vehiculos', component: VehiculosComponent },
@@ -80,12 +85,14 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         CommonModule,
         FormsModule,
         controlRouting,
+        ChartsModule,
         FilterPipeModule,
+        NgxPaginationModule,
         AgmCoreModule.forRoot(environment.google_map_api_key),
     ],
     providers: [
         GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService,
-        IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService ],
+        IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService, AlertaService ],
     entryComponents: [ ],
     declarations: [
         GuardiaComponent, AdminComponent, ControlComponent,
@@ -99,7 +106,8 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         MvisitasComponent,
         MbitacoraComponent,
         MvigilanciaComponent,
-        CercoComponent ],
+        CercoComponent,
+        AlertasComponent ],
     bootstrap: [ ControlComponent ]
 })
 export class ControlModule {}

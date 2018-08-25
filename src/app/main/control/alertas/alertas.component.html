@@ -1,0 +1,120 @@
+  <div class="info-container panel panel-default"  >
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto row ml-1">
+        <a routerLink="/u/control/home/bitacora" title="Atrás" style="color: var(--secondary-color)">
+            <i class="fas fa-reply icon-return"></i>
+        </a>
+        <h3 class="list-title">Alertas</h3>
+      </div>
+	  <div class="ml-auto form-inline" >
+		  <button class="btn btn-outline-secondary mr-2" style="display: inline-block;" data-toggle="modal" href="#modalStatic" title="Estadísticas de Alertas"><span class="fas fa-chart-pie"></span></button>
+      		<button class="btn btn-outline-secondary mr-2" style="display: inline-block;" data-toggle="modal" href="#modalMap" title="Map de Alertas"><span class="fas fa-map-marker-alt"></span></button>
+	  </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="modalStatic">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header" style="background-color: #17a2b8; color: white;">
+	                <h5 class="modal-title">Estadísticas de alertas</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">&times;</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	                <div style="display: block; margin-top: 20px; margin-bottom: 40px">
+			          <canvas baseChart
+			                    [data]="doughnutChartData"
+			                    [labels]="doughnutChartLabels"
+			                    [chartType]="doughnutChartType"
+			                    [colors]="doughnutColors"
+			                    (chartHover)="chartHovered($event)"
+			                    (chartClick)="chartClicked($event)">
+			          </canvas>
+			        </div>
+	            </div>
+	        </div>
+	    </div>  
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="modalMap">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header" style="background-color: #17a2b8; color: white;">
+	                <h5 class="modal-title">Mapa de las alertas</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">&times;</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	                <p>Mapas</p>
+	            </div>
+	        </div>
+	    </div>  
+    </div>
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto row ml-2 form-inline">
+          <label class="mr-1"><b>Mostrar:</b></label>
+          <select id="inputState" class="form-control mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
+            <option [ngValue]="10">10</option>
+            <option [ngValue]="25">25</option>
+            <option [ngValue]="50">50</option>
+            <option [ngValue]="100">100</option>
+          </select>
+          <label>Elementos</label>
+      </div>
+      <div class="ml-auto form-inline">
+        <div class="form-group row">
+          <label class="mr-4"><b>Causa:</b></label>
+          <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="causaSelect" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
+            <option [ngValue]="0">Todas</option>
+            <option [ngValue]="1">SOS</option>
+            <option [ngValue]="2">Caída</option>
+            <option [ngValue]="3">Salida del Cerco</option>
+            <option [ngValue]="4">GENERAL</option>
+          </select>
+          <label class="mr-4"><b>Guardia:</b></label>
+          <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="guardiaSelect" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
+            <option [ngValue]="0">Todos</option>
+            <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
+          </select>
+          <label for="start" class="mr-4">Fecha</label>
+          <input class="form-control mr-4" type="date" name="date" [(ngModel)]="dateSelect" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
+        </div>
+      </div>
+    </div>
+    <div class="table mt-2">
+            <table class="table table-striped">
+             <thead>
+             <th></th>
+               <th>ID</th>
+               <th>Causa</th>
+               <th>Descripción</th>
+               <th>Nombre del guardia</th>
+               <th>Fecha</th>
+               <th>Modificar</th>
+               <th>Detalle</th>
+             </thead>
+             <tbody>
+              <tr *ngFor="let d of data  | paginate: { itemsPerPage: numElement, currentPage: p }">
+                <td></td>
+                <td>{{d.id}}</td>
+                <td>{{d.cause}}</td>
+                <td>{{d.extra}}</td>
+                <td>{{d.guard_name}} {{d.guard_lastname}}</td>
+                <td>{{d.create_date}}</td>
+                <td>
+                  <button class="btn btn-danger" *ngIf="d.status == 1" (click)="solveAlert(d.id)">Cerrar</button>
+                  <button class="btn btn-success" *ngIf="d.status != 1"  disabled><span class="fas fa-check"></span></button>
+                </td>
+                <td>
+                  <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)"  title="Detalle"><span class="far fa-eye"></span></a>
+                 </td>
+               </tr>
+            </tbody>
+          </table>
+          <div style="text-align: center; padding-right: 40px;">
+              <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
+                    nextLabel="">
+              </pagination-controls>
+          </div>
+    </div>
+  </div>
