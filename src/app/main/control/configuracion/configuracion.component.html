@@ -31,7 +31,7 @@
                   <td></td>
                 <td>1</td>
                 <td>Tiempo para actualización de GPS en tablets</td>
-                <td>{{data.value}}</td>
+                <td>{{data.value}} segundos</td>
                 <td>
                   <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editarConfiguracion(data.id)" title="Editar"><span class="fas fa-edit"></span></a>
                  </td>
@@ -64,7 +64,7 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label for="nivel" class="col-sm-2 col-form-label">Valor</label>
+                <label for="nivel" class="col-sm-2 col-form-label">Valor (en segundos)</label>
                 <div class="col-sm-10">
                   <input type="text"  class="form-control" id="nivel" placeholder="Introduzca valor" [(ngModel)]="valor" [ngModelOptions]="{standalone: true}">
                 </div>

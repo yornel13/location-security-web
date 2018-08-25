@@ -12,8 +12,13 @@ import { BitacoraService } from '../../../model/bitacora/bitacora.service';
 import { VisitasService } from '../../../model/visitas/visitas.service';
 import { ConfiguracionService } from '../../../model/configuracion/configuracion.service';
 import { BannerService } from '../../../model/banner/banner.service';
+import { AlertaService } from '../../../model/alerta/alerta.service';
+
 import { HttpClientModule } from '@angular/common/http';
 import { AgmCoreModule } from '@agm/core';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { ChartsModule } from 'ng2-charts';
+
 import { IgxSnackbarModule } from 'igniteui-angular';
 import { ControlComponent } from './control.component';
 import {RouterModule, Routes} from '@angular/router';
@@ -42,6 +47,7 @@ import { MvigilanciaComponent } from './subhome/mvigilancia/mvigilancia.componen
 import {environment} from '../../../environments/environment';
 import {LeafletModule} from '@asymmetrik/ngx-leaflet';
 import {CercoComponent} from './cerco/cerco.component';
+import { AlertasComponent } from './alertas/alertas.component';
 import {CercoService} from '../../../model/cerco/cerco.service';
 
 const controlRoutes: Routes = [
@@ -52,6 +58,7 @@ const controlRoutes: Routes = [
                 children: [
                     { path: 'admin', component: AdminComponent },
                     { path: 'guardia', component: GuardiaComponent },
+                    { path: 'alertas', component: AlertasComponent },
                     { path: 'visitas/visitas/todas', component: VisitasComponent },
                     { path: 'visitas/visitas/activas', component: VisitasactivasComponent },
                     { path: 'visitas/vehiculos', component: VehiculosComponent },
@@ -83,16 +90,18 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         CommonModule,
         FormsModule,
         controlRouting,
+        ChartsModule,
         FilterPipeModule,
         LeafletModule.forRoot(),
         LeafletDrawModule.forRoot(),
         LeafletMarkerClusterModule.forRoot(),
         IgxSnackbarModule,
+        NgxPaginationModule,
         AgmCoreModule.forRoot(environment.google_map_api_key),
     ],
     providers: [
         GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService,
-        IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService, CercoService ],
+        IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService, AlertaService, CercoService ],
     entryComponents: [ ],
     declarations: [
         GuardiaComponent, AdminComponent, ControlComponent,
@@ -106,7 +115,8 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         MvisitasComponent,
         MbitacoraComponent,
         MvigilanciaComponent,
-        CercoComponent],
+        CercoComponent,
+        AlertasComponent ],
     bootstrap: [ ControlComponent ]
 })
 export class ControlModule {}

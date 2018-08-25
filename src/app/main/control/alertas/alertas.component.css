@@ -50,6 +50,10 @@ app-admin {
     padding: 0
 }
 
+agm-map {
+    height: 350px;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     /* display: none; <- Crashes Chrome on hover */
