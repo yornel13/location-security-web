@@ -1,3 +1,4 @@
+///<reference path="../../../../../node_modules/@angular/core/src/metadata/directives.d.ts"/>
 import {Component, ComponentFactoryResolver, DoCheck, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 
 import * as L from 'leaflet';
@@ -7,11 +8,11 @@ import 'leaflet-draw';
 
 
 @Component({
-    selector : 'app-virtual',
-    templateUrl : './virtual.component.html',
-    styleUrls: ['./virtual.component.css']
+    selector : 'app-map-bounds',
+    templateUrl : './mapView.bounds.component.html',
+    styleUrls: ['./mapView.bounds.component.css']
 })
-export class VirtualComponent implements OnChanges, DoCheck {
+export class MapBoundsComponent implements OnChanges, DoCheck {
 
     lat;
     lng;

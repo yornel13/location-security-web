@@ -34,7 +34,7 @@ export class AdminComponent {
     errorEdit:boolean = false;
     errorEditData:boolean = false;
     errorEditMsg:string;
-    //crear
+    //createBoundView
     namea:string;
     lastnamea:string;
     emaila:string;
@@ -51,7 +51,8 @@ export class AdminComponent {
     //imagen firebase
     uploadPercent: Observable<number>;
     downloadURL: Observable<string>;
-
+    p: number = 1;
+    numElement:number = 10;
 
     constructor(public router:Router, private adminService:AdminService, private storage: AngularFireStorage) {
         this.getAll();
@@ -60,6 +61,7 @@ export class AdminComponent {
         this.crear = false;
         this.editar = false;
     }
+
 
     getAll() {
         this.adminService.getAll().then(

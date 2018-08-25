@@ -37,7 +37,7 @@ export class ConfiguracionComponent  {
   errorEdit:boolean = false;
   errorEditData:boolean = false;
   errorEditMsg:string;
-  //crear
+  //createBoundView
   namea:string;
   valora:string = '';
   errorSave:boolean = false;

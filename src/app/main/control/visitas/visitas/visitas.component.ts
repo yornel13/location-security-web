@@ -44,6 +44,7 @@ export class VisitasComponent {
   funcionarioSelect:number=0;
   valueDate:any = [];
   userFilter: any = { "plate": "" };
+  numElement:number = 10;
 
   constructor(public router:Router, private visitasService:VisitasService, private guardiaService:GuardService,
   	private vehiculoService:VisitaVehiculoService, private visitanteService:VisitanteService, private funcionarioService:FuncionarioService) { 

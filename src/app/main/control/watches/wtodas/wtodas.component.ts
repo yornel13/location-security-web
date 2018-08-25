@@ -23,6 +23,7 @@ export class WtodasComponent {
   dateSelect:string = '';
   valueDate:any = [];
   guardia:any = [];
+  numElement:number = 10;
 
   constructor(public router:Router, private watchesService:WatchesService, private guardiasService:GuardService) { 
   	this.getAll();

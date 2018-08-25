@@ -45,6 +45,7 @@ export class VisitasactivasComponent {
   valueDate:any = [];
   dateSelect:any = '';
   nohay:boolean = false;
+  numElement:number = 10;
 
   constructor(public router:Router, private visitasService:VisitasService, private guardiaService:GuardService,
     private vehiculoService:VisitaVehiculoService, private visitanteService:VisitanteService, private funcionarioService:FuncionarioService) { 

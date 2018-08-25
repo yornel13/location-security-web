@@ -13,6 +13,7 @@ export class DashboardComponent  {
 
   constructor(private watchesService:WatchesService, private bitacoraService:BitacoraService, 
     private vistasService:VisitasService, private vehicleService:VehiclesService) { 
+    this.doughnutChartData = [3, 3, 3];
     this.getData();
     this.getVehicles();
   }
@@ -39,6 +40,7 @@ export class DashboardComponent  {
   vehicle:any = undefined;
   numconnect:any = undefined;
   numdesconnect:any = undefined;
+  doughnutChartData:number[] = [3,3,3];
 
   // events
   public chartClicked(e:any):void {
@@ -131,7 +133,34 @@ export class DashboardComponent  {
     this.bitacoraService.getOpen().then(
         success => {
             this.reportesOpen = success;
-            this.reportOpen = this.reportesOpen.total;
+            var uno = this.reportesOpen.total;
+            //Reabiertos
+            this.bitacoraService.getReopen().then(
+                success => {
+                    this.reportesReopen = success;
+                    var dos = this.reportesReopen.total;
+                    //Close
+                    this.bitacoraService.getCloseAll().then(
+                        success => {
+                            this.reportesClose = success;
+                            var tres = this.reportesClose.total;
+                             this.doughnutChartData = [uno, dos, tres];
+                        }, error => {
+                            if (error.status === 422) {
+                                // on some data incorrect
+                            } else {
+                                // on general error
+                            }
+                        }
+                    );
+                }, error => {
+                    if (error.status === 422) {
+                        // on some data incorrect
+                    } else {
+                        // on general error
+                    }
+                }
+            );  
         }, error => {
             if (error.status === 422) {
                 // on some data incorrect
@@ -140,32 +169,8 @@ export class DashboardComponent  {
             }
         }
     );
-    //Reabiertos
-    this.bitacoraService.getReopen().then(
-        success => {
-            this.reportesReopen = success;
-            this.reportReopen = this.reportesReopen.total;
-        }, error => {
-            if (error.status === 422) {
-                // on some data incorrect
-            } else {
-                // on general error
-            }
-        }
-    );
-    //Close
-    this.bitacoraService.getCloseAll().then(
-        success => {
-            this.reportesClose = success;
-            this.reportClose = this.reportesClose.total;
-        }, error => {
-            if (error.status === 422) {
-                // on some data incorrect
-            } else {
-                // on general error
-            }
-        }
-    );
+    
+    
     
   }
 
@@ -184,7 +189,7 @@ export class DashboardComponent  {
   }
 
     public doughnutChartLabels:string[] = ['Abiertos', 'Reabiertos', 'Cerrados'];
-    public doughnutChartData:number[] = [3, 3, 3];
+    public doughnutChartData2:number[] = [3, 3, 3];
     public doughnutChartType:string = 'doughnut';
-    public doughnutColors:any[] = [{ backgroundColor: ['#46c35f', '#fdad2a', '#ac6bec'] }]
+    public doughnutColors:any[] = [{ backgroundColor: ['#dc3545', '#ffc107', '#28a745'] }]
 }

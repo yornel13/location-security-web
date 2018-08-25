@@ -32,9 +32,9 @@ export class VisitantesComponent {
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
   visitantesFilter: any = { "dni": ""};
-
+  numElement:number = 10;
   
-  constructor(public router:Router, private visitanteService:VisitanteService) { 
+  constructor(public router:Router, private visitanteService:VisitanteService) {
     this.getAll();
   	this.lista = true;
     this.detalle = false;

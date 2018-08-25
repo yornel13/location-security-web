@@ -32,7 +32,7 @@ export class GuardiaComponent {
   errorEdit:boolean = false;
   errorEditData:boolean = false;
   errorEditMsg:string;
-  //crear
+  //createBoundView
   namea:string;
   lastnamea:string;
   emaila:string;
@@ -49,6 +49,7 @@ export class GuardiaComponent {
   //imagen firebase
   uploadPercent: Observable<number>;
   downloadURL: Observable<string>;
+  numElement:number = 10;
 
 
   constructor(public router:Router, private guardService:GuardService,  private storage: AngularFireStorage) { 

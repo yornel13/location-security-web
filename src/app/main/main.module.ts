@@ -22,7 +22,6 @@ import { MapOsmComponent } from './monitoring/map/map.osm';
 import { HeaderComponent } from './header/header.component';
 import { AsideComponent } from './monitoring/aside/aside.component';
 import { MainComponent } from './main.component';
-import { ControlComponent } from './control/control.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReportComponent } from './report/report.component';
 import {RouterModule, Routes} from '@angular/router';
@@ -33,7 +32,6 @@ import { FilterPipe } from './monitoring/aside/filter.pipe';
 import { FilterPipeModule } from 'ngx-filter-pipe';
 import {TabletService} from '../../model/tablet/tablet.service';
 import {ControlModule} from './control/control.module';
-import {VirtualComponent} from './virutal/virtual.component';
 import {CardAlertComponent} from './monitoring/aside/card.alert.component';
 
 const mainRoutes: Routes = [
@@ -45,7 +43,6 @@ const mainRoutes: Routes = [
                     { path: 'dashboard', component: DashboardComponent },
                     { path: 'monitoring', component: MonitoringComponent },
                     { path: 'control', loadChildren: () => ControlModule },
-                    { path: 'virtual', component: VirtualComponent },
                     { path: 'messaging', component: MessagingComponent },
                     { path: 'report', component: ReportComponent },
                     { path: '', redirectTo: '/u/dashboard', pathMatch: 'full' },
@@ -78,7 +75,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
       MonitoringComponent, MapOsmComponent, PopupVehicleComponent, PopupWatchComponent,
       HeaderComponent, AsideComponent, MainComponent,
       DashboardComponent, ReportComponent, MessagingComponent,
-      CardVehicleComponent, CardTabletComponent, VirtualComponent, FilterPipe, CardAlertComponent
+      CardVehicleComponent, CardTabletComponent, FilterPipe, CardAlertComponent
   ],
   bootstrap: [ MainComponent ]
 })

@@ -29,7 +29,7 @@ export class FuncionariosComponent {
   errorEdit:boolean = false;
   errorEditData:boolean = false;
   errorEditMsg:string;
-  //crear
+  //createBoundView
   namea:string;
   lastnamea:string;
   addressa:string;
@@ -42,6 +42,7 @@ export class FuncionariosComponent {
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
   funcionarioFilter: any = { "dni": ""};
+  numElement:number = 10;
 
   constructor(public router:Router, private funcionarioService:FuncionarioService) { 
   	this.getAll();

@@ -32,6 +32,7 @@ export class VehiculosComponent {
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
   vehicleFilter: any = { "plate": ""};
+  numElement:number = 10;
 
   constructor(public router:Router, private vehiculoService:VisitaVehiculoService) {
   	this.getAll();
