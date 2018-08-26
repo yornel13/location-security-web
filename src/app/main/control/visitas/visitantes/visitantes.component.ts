@@ -39,6 +39,9 @@ export class VisitantesComponent {
   //exportaciones
   contpdf:any = [];
   info: any = [];
+
+  key: string = 'id'; //set default
+  reverse: boolean = false;
   
   constructor(public router:Router, private visitanteService:VisitanteService, private excelService:ExcelService) {
     this.getAll();
@@ -46,6 +49,11 @@ export class VisitantesComponent {
     this.detalle = false;
     this.crear = false;
     this.editar = false;
+  }
+
+  sort(key){
+    this.key = key;
+    this.reverse = !this.reverse;
   }
 
   getAll() {
@@ -56,6 +64,8 @@ export class VisitantesComponent {
         var body = [];
         var excel = [];
         for(var i=0; i<this.data.length; i++){
+            this.data[i].id = Number(this.data[i].id);
+            this.data[i].dni = Number(this.data[i].dni);
             excel.push({'#' : this.data[i].id, 'Cédula': this.data[i].dni, 'Nombre':this.data[i].name, 'Apellido':this.data[i].lastname, 'Compañia':this.data[i].company})
             body.push([this.data[i].id, this.data[i].dni, this.data[i].name, this.data[i].lastname, this.data[i].company])
         }

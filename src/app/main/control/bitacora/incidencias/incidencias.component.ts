@@ -42,10 +42,19 @@ export class IncidenciasComponent {
   contpdf:any = [];
   info: any = [];
 
+  key: string = 'id'; //set default
+  reverse: boolean = false;
+
   constructor(public router:Router, private incidenciaService:IncidenciasService, private excelService:ExcelService) { 
   	this.getAll();
   	this.regresar();
   }
+
+  sort(key){
+    this.key = key;
+    this.reverse = !this.reverse;
+  }
+
   	getAll() {
     	this.incidenciaService.getAll().then(
     		success => {
@@ -60,6 +69,7 @@ export class IncidenciasComponent {
               }else{
                 level = "Importante"
               }
+              this.data[i].id = Number(this.data[i].id);
               excel.push({'#' : this.data[i].id, 'Nombre': this.data[i].name, 'Nivel':level})
               body.push([this.data[i].id, this.data[i].name, level])
           }

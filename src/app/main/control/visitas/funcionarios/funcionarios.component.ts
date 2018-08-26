@@ -49,6 +49,8 @@ export class FuncionariosComponent {
   //exportaciones
   contpdf:any = [];
   info: any = [];
+  key: string = 'id'; //set default
+  reverse: boolean = false;
 
   constructor(public router:Router, private funcionarioService:FuncionarioService, private excelService:ExcelService) { 
   	this.getAll();
@@ -56,6 +58,11 @@ export class FuncionariosComponent {
     this.detalle = false;
     this.crear = false;
     this.editar = false;
+  }
+
+  sort(key){
+    this.key = key;
+    this.reverse = !this.reverse;
   }
 
 	getAll() {
@@ -66,6 +73,8 @@ export class FuncionariosComponent {
         var body = [];
         var excel = [];
         for(var i=0; i<this.data.length; i++){
+            this.data[i].id = Number(this.data[i].id);
+            this.data[i].dni = Number(this.data[i].dni);
             excel.push({'#' : this.data[i].id, 'Cédula': this.data[i].dni, 'Nombre':this.data[i].name, 'Apellido':this.data[i].lastname, 'Dirección':this.data[i].address})
             body.push([this.data[i].id, this.data[i].dni, this.data[i].name, this.data[i].lastname, this.data[i].address])
         }

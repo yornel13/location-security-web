@@ -52,6 +52,9 @@ export class ReportetsComponent {
   contpdf:any = [];
   info: any = [];
 
+  key: string = 'id'; //set default
+  reverse: boolean = false;
+
 
   constructor(public router:Router, private bitacoraService:BitacoraService, private guardiaService:GuardService, 
     private incidenciaService:IncidenciasService, private excelService:ExcelService ) { 
@@ -60,6 +63,11 @@ export class ReportetsComponent {
     this.getGuardias();
     this.lista = true;
     this.detalle = false;
+  }
+
+  sort(key){
+    this.key = key;
+    this.reverse = !this.reverse;
   }
 
     getOpenAll() {
@@ -78,6 +86,7 @@ export class ReportetsComponent {
               }else{
                 resolve = "Reabierto";
               }
+              this.data[i].id = Number(this.data[i].id);
               excel.push({'#' : this.data[i].id, 'Título': this.data[i].title, 'Observación':this.data[i].observation, 'Fecha':this.data[i].create_date, 'Status':resolve})
               body.push([this.data[i].id, this.data[i].title, this.data[i].observation, this.data[i].create_date, resolve])
           }

@@ -28,6 +28,11 @@ aside{
     overflow-y:scroll;
 }
 
+.thead-light>th {
+    cursor: pointer;
+}
+
+
 .card-header {
     height: 50px;
 }

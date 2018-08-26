@@ -40,12 +40,20 @@ export class VehiculosComponent {
   contpdf:any = [];
   info: any = [];
 
+  key: string = 'id'; //set default
+  reverse: boolean = false;
+
   constructor(public router:Router, private vehiculoService:VisitaVehiculoService, private excelService:ExcelService) {
   	this.getAll();
   	this.lista = true;
     this.detalle = false;
     this.crear = false;
     this.editar = false;
+  }
+
+  sort(key){
+    this.key = key;
+    this.reverse = !this.reverse;
   }
 
   getAll() {
@@ -56,6 +64,7 @@ export class VehiculosComponent {
           var body = [];
           var excel = [];
           for(var i=0; i<this.data.length; i++){
+              this.data[i].id = Number(this.data[i].id);
               excel.push({'#' : this.data[i].id, 'Placa': this.data[i].plate, 'Vehiculo':this.data[i].vehicle, 'Modelo':this.data[i].model, 'Tipo':this.data[i].type})
               body.push([this.data[i].id, this.data[i].plate, this.data[i].vehicle, this.data[i].model, this.data[i].type])
           }

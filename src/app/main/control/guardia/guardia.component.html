@@ -44,27 +44,37 @@
           </label>
         </div>
     </div>
-    <div class="table mt-2">
-        <table class="table table-striped">
-         <thead>
-           <th></th>
-           <th>ID</th>
-           <th>Cédula</th>
-           <th>Nombres</th>
-           <th>Apellidos</th>
-           <th>Correo</th>
-           <th>Activo</th>
+    <div class="table mt-2 container-fluid">
+        <table class="table table-bordered">
+         <thead class="thead-light">
+           <th (click)="sort('id')">ID
+            <span class="fas" *ngIf="key =='id'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+           </th>
+           <th (click)="sort('dni')">Cédula
+            <span class="fas" *ngIf="key =='dni'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+           </th>
+           <th (click)="sort('name')">Nombre
+            <span class="fas" *ngIf="key =='name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+           </th>
+           <th (click)="sort('lastname')">Apellido
+            <span class="fas" *ngIf="key =='lastname'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+           </th>
+           <th (click)="sort('email')">Correo
+            <span class="fas" *ngIf="key =='email'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+           </th>
+           <th (click)="sort('active')">Status
+            <span class="fas" *ngIf="key =='active'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+           </th>
            <th>Acciones</th>
          </thead>
          <tbody>
-          <tr *ngFor="let d of data | filter:filter | paginate: { itemsPerPage: numElement, currentPage: p }">
-            <td></td>
+          <tr *ngFor="let d of data | filter:filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
             <td>{{d.id}}</td>
             <td>{{d.dni}}</td>
             <td>{{d.name}}</td>
             <td>{{d.lastname}}</td>
             <td>{{d.email}}</td>
-            <td>{{d.active}}</td>
+            <td><span *ngIf="d.active == 1">Activo</span><span *ngIf="d.active == 0">Desactivo</span></td>
             <td>
               <a class="btn btn-info" *ngIf="d.active == 0" (click)="activarGuardia(d.id)" style="display: inline-block; margin-right: 10px; width: 100px">Activar</a>
                         <a class="btn btn-secondary" *ngIf="d.active == 1" (click)="desactivarGuardia(d.id)" style="display: inline-block; margin-right: 10px;  width: 100px">Desactivar</a>

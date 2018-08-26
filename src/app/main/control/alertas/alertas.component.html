@@ -8,7 +8,7 @@
       </div>
 	  <div class="ml-auto form-inline" >
 		  <button class="btn btn-outline-secondary mr-2" style="display: inline-block;" data-toggle="modal" href="#modalStatic" title="Estadísticas de Alertas"><span class="fas fa-chart-pie"></span></button>
-      		<button class="btn btn-outline-secondary mr-2" style="display: inline-block;" data-toggle="modal" href="#modalMap" title="Map de Alertas"><span class="fas fa-map-marker-alt"></span></button>
+      		<button class="btn btn-outline-secondary mr-1" style="display: inline-block;" data-toggle="modal" href="#modalMap" title="Map de Alertas"><span class="fas fa-map-marker-alt"></span></button>
 	  </div>
     </div>
     <div class="modal" tabindex="-1" role="dialog" id="modalStatic">
@@ -76,7 +76,7 @@
           </select>
           <label for="start" class="mr-2">Fecha</label>
           <input class="form-control mr-2" type="date" name="date" [(ngModel)]="dateSelect" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
-          <div class="btn-group btn-group-toggle ml-2 mr-2" data-toggle="buttons">
+          <div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">
               <label class="btn btn-outline-secondary" (click)="excelDownload()">
                 <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
               </label>
@@ -90,21 +90,29 @@
         </div>
       </div>
     </div>
-    <div class="table mt-2">
-            <table class="table table-striped">
-             <thead>
-             <th></th>
-               <th>ID</th>
-               <th>Causa</th>
-               <th>Descripción</th>
-               <th>Generado por</th>
-               <th>Fecha</th>
+    <div class="table mt-2 container-fluid">
+            <table class="table table-bordered">
+             <thead class="thead-light">
+               <th (click)="sort('id')">ID
+                <span class="fas" *ngIf="key =='id'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('cause')">Causa
+                <span class="fas" *ngIf="key =='cause'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('message')">Descripción
+                <span class="fas" *ngIf="key =='message'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('guard_name')">Generado por
+                <span class="fas" *ngIf="key =='guard_name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('create_date')">Fecha
+                <span class="fas" *ngIf="key =='create_date'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
                <th>Aceptar</th>
                <th>Detalle</th>
              </thead>
              <tbody>
-              <tr *ngFor="let d of data  | paginate: { itemsPerPage: numElement, currentPage: p }">
-                <td></td>
+              <tr *ngFor="let d of data | orderBy: key : reverse  | paginate: { itemsPerPage: numElement, currentPage: p }">
                 <td>{{d.id}}</td>
                 <td><span *ngIf="d.cause == 'SOS1'">SOS</span><span *ngIf="d.cause == 'DROP'">Caída</span><span *ngIf="d.cause == 'OUT_BOUNDS'">Salida del cerco</span><span *ngIf="d.cause == 'GENERAL'">General</span></td>
                 <td>{{d.message}}</td>

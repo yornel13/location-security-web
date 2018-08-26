@@ -36,21 +36,29 @@
         </div>
       </div>
     </div>
-    <div class="table mt-2">
-            <table class="table table-striped">
-             <thead>
-             <th></th>
-               <th>ID</th>
-               <th>Placa</th>
-               <th>Vehículo</th>
-               <th>Modelo</th>
-               <th>Tipo</th>
+    <div class="table mt-2 container-fluid">
+            <table class="table table-bordered">
+             <thead class="thead-light">
+               <th (click)="sort('id')">ID
+                <span class="fas" *ngIf="key =='id'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('plate')">Placa
+                <span class="fas" *ngIf="key =='plate'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('vehicle')">Vehículo
+                <span class="fas" *ngIf="key =='vehicle'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('model')">Modelo
+                <span class="fas" *ngIf="key =='model'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('type')">Tipo
+                <span class="fas" *ngIf="key =='type'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
                <th>Foto</th>
                <th>Acciones</th>
              </thead>
              <tbody>
-              <tr *ngFor="let d of data | filter:filter | paginate: { itemsPerPage: numElement, currentPage: p }">
-                  <td></td>
+              <tr *ngFor="let d of data | filter:filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
                 <td>{{d.id}}</td>
                 <td>{{d.plate}}</td>
                 <td>{{d.vehicle}}</td>

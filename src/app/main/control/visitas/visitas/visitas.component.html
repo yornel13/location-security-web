@@ -63,21 +63,31 @@
           </div>
         </div>
     </div>
-    <div class="table mt-2">
-            <table class="table table-striped">
-             <thead>
-             <th></th>
-               <th>ID</th>
-               <th>Placa Vehículo</th>
-               <th>Visitante</th>
-               <th>Cédula visitante</th>
-               <th>Entrada</th>
-               <th>Salida</th>
+    <div class="table mt-2 container-fluid">
+            <table class="table table-bordered">
+             <thead class="thead-light">
+               <th (click)="sort('id')">ID
+                <span class="fas" *ngIf="key =='id'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('plate')">Placa Vehículo
+                <span class="fas" *ngIf="key =='plate'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('visitor_name')">Visitante
+                <span class="fas" *ngIf="key =='visitor_name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('visitor_dni')">Cédula visitante
+                <span class="fas" *ngIf="key =='visitor_dni'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('create_date')">Entrada
+                <span class="fas" *ngIf="key =='create_date'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('finish_date')">Salida
+                <span class="fas" *ngIf="key =='finish_date'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
                <th>Detalle</th>
              </thead>
              <tbody>
-              <tr *ngFor="let d of data | filter:filter | paginate: { itemsPerPage: numElement, currentPage: p }">
-                <td></td>
+              <tr *ngFor="let d of data | filter:filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
                 <td>{{d.id}}</td>
                 <td>{{d.plate}}</td>
                 <td>{{d.visitor_name}} {{d.visitor_lastname}}</td>

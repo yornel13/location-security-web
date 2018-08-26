@@ -32,11 +32,19 @@ export class WactivasComponent {
   contpdf:any = [];
   info: any = [];
 
+  key: string = 'id'; //set default
+  reverse: boolean = false;
+
   constructor(public router:Router, private watchesService:WatchesService, private guardiasService:GuardService, private excelService:ExcelService) { 
   	this.getAll();
   	this.getGuard();
   	this.lista = true;
   	this.detalle = false;
+  }
+
+  sort(key){
+    this.key = key;
+    this.reverse = !this.reverse;
   }
 
   getAll() {
@@ -54,7 +62,9 @@ export class WactivasComponent {
                   status = "Activa";
                 }
                 excel.push({'#' : this.data[i].id, 'Nombre del Guardia': this.data[i].guard.name+' '+this.data[i].guard.lastname, 'Cédula del Guardia':this.data[i].guard.dni, 'Hora de inicio':this.data[i].create_date, 'Status':status})
-                body.push([this.data[i].id, this.data[i].guard.name+' '+this.data[i].guard.lastname, this.data[i].guard.dni, this.data[i].create_date, status])
+                body.push([this.data[i].id, this.data[i].guard.name+' '+this.data[i].guard.lastname, this.data[i].guard.dni, this.data[i].create_date, status]);
+                this.data[i].id = Number(this.data[i].id);
+                this.data[i].guard.dni = Number(this.data[i].guard.dni);
             }
             this.contpdf = body;
             this.info = excel;

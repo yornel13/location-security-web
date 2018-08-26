@@ -18,6 +18,10 @@ app-admin {
     color: #D9D9D9;
 }
 
+.thead-light>th {
+    cursor: pointer;
+}
+
 .btn.btn-secondary.btn-aside_menu {
     width: 100%;
     padding-top: 10px;

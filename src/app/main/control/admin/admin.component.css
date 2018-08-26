@@ -61,6 +61,11 @@ input::-webkit-inner-spin-button {
     padding-top: 4px;
 }
 
+.thead-light>th {
+    cursor: pointer;
+}
+
+
 .list-title {
     color: var(--secondary-color);
     margin-left: 2vw;

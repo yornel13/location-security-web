@@ -26,18 +26,22 @@
           </div>
         </div>
     </div>
-    <div class="table mt-2">
-            <table class="table table-striped">
-             <thead>
-             <th></th>
-               <th>ID</th>
-               <th>Nombre</th>
-               <th>Nivel</th>
+    <div class="table mt-2 container-fluid">
+            <table class="table table-bordered">
+             <thead class="thead-light">
+               <th (click)="sort('id')">ID
+                <span class="fas" *ngIf="key =='id'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('name')">Nombre
+                <span class="fas" *ngIf="key =='name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('level')">Nivel
+                <span class="fas" *ngIf="key =='level'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
                <th>Acciones</th>
              </thead>
              <tbody>
-              <tr *ngFor="let d of data">
-                  <td></td>
+              <tr *ngFor="let d of data | orderBy: key : reverse">
                 <td>{{d.id}}</td>
                 <td>{{d.name}}</td>
                 <td><span *ngIf="d.level == 1">General</span><span *ngIf="d.level == 2">Importante</span></td>

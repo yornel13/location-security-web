@@ -39,6 +39,7 @@ import { VisitasactivasComponent } from './visitas/visitasactivas/visitasactivas
 
 import { FilterPipeModule } from 'ngx-filter-pipe';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { OrderModule } from 'ngx-order-pipe'; 
 
 import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
 import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
@@ -100,6 +101,7 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         ChartsModule,
         FusionChartsModule,
         FilterPipeModule,
+        OrderModule,
         Ng2SearchPipeModule,
         LeafletModule.forRoot(),
         LeafletDrawModule.forRoot(),
