@@ -8,6 +8,7 @@
     margin-bottom: 10px;
     padding: 9px 10px;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .status-vehicle-cont{
