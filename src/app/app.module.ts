@@ -24,6 +24,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireStorageModule } from 'angularfire2/storage';
 import {NotificationService} from './shared/notification.service';
+import {GlobalOsm} from './global.osm';
 
 
 
@@ -53,7 +54,9 @@ import {NotificationService} from './shared/notification.service';
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         MessagingService,
         NotificationService,
-        fakeBackendProvider, AsyncPipe,
+        fakeBackendProvider,
+        AsyncPipe,
+        GlobalOsm
     ],
     bootstrap: [AppComponent],
     exports: [ AngularFireModule, AngularFireStorageModule ]
