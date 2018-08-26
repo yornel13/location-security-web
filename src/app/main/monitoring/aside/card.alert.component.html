@@ -1,6 +1,15 @@
 <div class="tablet-card">
-    <p class="alert-title ps">{{title}}</p>
-    <p class="alert-text ps">{{alert.extra}}</p>
-    <p class="alert-date ps">{{date | date : "fullDate"}}</p>
-    <p class="ps">Status:</p>
+    <!--<p class="alert-title ps">{{title}}</p>-->
+    <div *ngIf="alert.guard_id">
+        <p class="alert-title ps">{{title}}</p>
+        <p class="alert-text ps">{{alert.message}}</p>
+        <p class="alert-imei ps">{{alert.guard_name+" "+alert.guard_lastname}}</p>
+        <p class="alert-date ps">{{date | date : "fullDate"}}</p>
+    </div>
+    <div *ngIf="alert.imei">
+        <p class="alert-text ps">{{alert.message}}</p>
+        <p class="alert-imei ps">imei: {{alert.imei}}</p>
+        <p class="alert-date ps">{{date | date : "fullDate"}}</p>
+    </div>
+    <!--<p class="ps">Status:</p>-->
 </div>

@@ -19,9 +19,15 @@
 }
 
 .alert-text{
-    font-size: 0.9em;
+    font-size: .9em;
     line-height: 1.2;
 }
+
+.alert-imei{
+    font-size: .9em;
+    font-weight: bold;
+}
+
 
 .alert-date{
     color: #4A4048;
