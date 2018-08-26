@@ -1,7 +1,7 @@
 <div class="vehicle-card" (click)="focusMarker(vehicle.latitude, vehicle.longitude)">
     <p class="imei ps">IMEI {{vehicle.imei}}</p>
     <p class="alias ps">{{vehicle.alias}}</p>
-    <p class="date ps">Fecha {{vehicle.generated_time}}</p>
+    <p class="date-s ps">Fecha {{vehicle.generated_time}}</p>
     <div class="status-vehicle-cont">
         <img class="vehicle-icon" src="{{vehicle.iconUrl}}" alt="">
         <p class="bateria ps"><img src="./assets/cards/battery.png" alt="">{{vehicle.battery_level}}%</p>

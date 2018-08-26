@@ -30,21 +30,19 @@
 
     <div class="tab-content">
 
-      <div id="alerts" class="tab-pane fade in active" style="background: #c82333">
-        <div class="cards-container">
-          <app-card-alert></app-card-alert>
-          <app-card-alert></app-card-alert>
-          <app-card-alert></app-card-alert>
-          <app-card-alert></app-card-alert>
+      <div id="alerts" class="tab-pane fade in active">
+        <div class="cards-container" style="padding-top: 10px">
+          <div *ngFor="let alert of alerts">
+            <app-card-alert [alert]="alert"></app-card-alert>
+          </div>
         </div>
       </div>
 
       <div id="devices" class="tab-pane fade">
-        <p>hola</p>
         <input [(ngModel)]="search" name="search"  #newSearsh class="filter form-control" type="text" placeholder="Filtrar">
         <p *ngIf="noCards" class="no-cards">Seleccione dispositivo</p>
         <!--Cards contaniner-->
-        <div class="cards-container"  *ngIf="showCardContainer">
+        <div class="cards-container devices-container"  *ngIf="showCardContainer">
           <!--Cards-->
           <div *ngFor="let data of markersData | filter: search">
             <div  *ngIf="data.group_name === 'Tablet Guardia'">

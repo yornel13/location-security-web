@@ -34,7 +34,7 @@ export class MapOsmComponent implements OnChanges {
     @Input()
     markersData: any[] = [];
     @Input() showMarker = {vehicles: true , watches: true , bombas: true, noGroup: true, message: ''};
-        markerClusterGroup: L.MarkerClusterGroup;
+    markerClusterGroup: L.MarkerClusterGroup;
     markerClusterData: any[] = [];
     markerClusterOptions: L.MarkerClusterGroupOptions;
     center = L.latLng(([ this.lat, this.lng ]));

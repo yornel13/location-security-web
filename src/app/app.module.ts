@@ -23,6 +23,7 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireStorageModule } from 'angularfire2/storage';
+import {NotificationService} from './shared/notification.service';
 
 
 
@@ -51,7 +52,7 @@ import { AngularFireStorageModule } from 'angularfire2/storage';
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         MessagingService,
-        // provider used to create fake backend
+        NotificationService,
         fakeBackendProvider, AsyncPipe,
     ],
     bootstrap: [AppComponent],

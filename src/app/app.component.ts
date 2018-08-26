@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
-import { MessagingService } from "./shared/messaging.service";
+import {Component, OnInit} from '@angular/core';
+import { MessagingService } from './shared/messaging.service';
 @Component({
   selector: 'app-root',
   template: '<router-outlet></router-outlet>',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
   message;
 
@@ -13,8 +13,8 @@ export class AppComponent {
 
   ngOnInit() {
     const userId = 'user001';
-    this.messagingService.requestPermission(userId)
-    this.messagingService.receiveMessage()
-    this.message = this.messagingService.currentMessage
+    this.messagingService.requestPermission(userId);
+    this.messagingService.receiveMessage();
+    this.message = this.messagingService.currentMessage;
   }
 }

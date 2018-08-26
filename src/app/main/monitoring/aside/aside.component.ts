@@ -2,6 +2,10 @@ import {Component, Input, OnChanges, OnInit, Output, SimpleChanges, EventEmitter
 import {Vehicle} from '../../../../model/vehicle/vehicle';
 import {Watch} from '../../../../model/watch/watch';
 import {AsideService} from './aside.service';
+import {AlertaService} from '../../../../model/alerta/alerta.service';
+import {Alerta} from '../../../../model/alerta/alerta';
+import {AlertaList} from '../../../../model/alerta/alerta.list';
+import {NotificationService} from '../../../shared/notification.service';
 
 @Component({
   selector: 'app-aside',
@@ -11,7 +15,7 @@ import {AsideService} from './aside.service';
 
 export class AsideComponent implements OnInit, OnChanges {
 
-
+    alerts: Alerta[] = [];
     @Input() vehicles: Vehicle[] = [];
     @Input() watches: Watch[] = [];
     @Input() markersData: any[] = [];
@@ -27,10 +31,17 @@ export class AsideComponent implements OnInit, OnChanges {
     showCardContainer = true;
     CHECK_ICON_URL = './assets/aside-menu/checked.png';
 
-    constructor(private asideService: AsideService) {}
+    constructor(
+        private asideService: AsideService,
+        private alertService: AlertaService,
+        private notificationService: NotificationService) {}
 
     ngOnInit() {
-
+        this.getAlerts();
+        this.notificationService.newNotification.subscribe(
+            (data: any) => {
+                console.log(data);
+            });
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -77,5 +88,19 @@ export class AsideComponent implements OnInit, OnChanges {
                console.log('no match');
            }
         });
+    }
+
+    getAlerts() {
+        this.alertService.getAll().then(
+            (success: AlertaList) => {
+                this.alerts = success.data;
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
     }
 }

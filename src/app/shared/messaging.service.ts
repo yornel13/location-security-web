@@ -10,6 +10,8 @@ import { take } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 import { ChatService } from '../_services';
+import {AlertaService} from "../../model/alerta/alerta.service";
+import {NotificationService} from "./notification.service";
 
 @Injectable()
 export class MessagingService {
@@ -20,9 +22,10 @@ export class MessagingService {
     private loading: boolean;
 
   constructor(
-    private afDB: AngularFireDatabase,
-    private afAuth: AngularFireAuth,
-    private chatService: ChatService) { }
+        private notificationService: NotificationService,
+        private afDB: AngularFireDatabase,
+        private afAuth: AngularFireAuth,
+        private chatService: ChatService) { }
 
   /**
    * update token in firebase database
@@ -75,7 +78,8 @@ export class MessagingService {
    */
   receiveMessage() {
     this.messaging.onMessage((payload) => {
-      console.log('new message received: ', payload);
+      console.log('new message received in service: ', payload);
+      this.notificationService.newNotification.emit(payload);
       this.currentMessage.next(payload);
     });
   }

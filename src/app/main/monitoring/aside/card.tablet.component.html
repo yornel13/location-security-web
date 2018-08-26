@@ -1,8 +1,8 @@
 
 <div class="tablet-card" (click)="focusMarker(tablet.latitude, tablet.longitude)">
-    <p class="dni ps">DNI {{tablet.guard_dni}}</p>
+    <p class="dni ps">CEDULA {{tablet.guard_dni}}</p>
     <p class="nombre ps">Guardia: {{tablet.guard_name}} {{tablet.guard_lastname}}</p>
-    <p class="date ps">{{tablet.generated_time}}</p>
+    <p class="date-s ps">{{tablet.generated_time}}</p>
     <img class="guard-icon" src="{{tablet.iconUrl}}" alt="">
     <p class="ps">Status:</p>
     <p class="ps online" *ngIf="devices_status; else inactive">{{devices_status}}</p>
