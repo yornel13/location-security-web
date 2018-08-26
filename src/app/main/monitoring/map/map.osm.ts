@@ -11,7 +11,7 @@ import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import {Watch} from '../../../../model/watch/watch';
 import {PopupWatchComponent} from './popup.watch.component';
-import {AsideService} from "../aside/aside.service";
+import {AsideService} from '../aside/aside.service';
 
 @Component({
     selector : 'app-map-osm',
@@ -30,8 +30,11 @@ export class MapOsmComponent implements OnChanges {
     @Input()
     zoom: number;
     @Input()
-    changeMarker;
-    markerClusterGroup: L.MarkerClusterGroup;
+    markerChanged;
+    @Input()
+    markersData: any[] = [];
+    @Input() showMarker = {vehicles: true , watches: true , bombas: true, noGroup: true, message: ''};
+        markerClusterGroup: L.MarkerClusterGroup;
     markerClusterData: any[] = [];
     markerClusterOptions: L.MarkerClusterGroupOptions;
     center = L.latLng(([ this.lat, this.lng ]));
@@ -50,7 +53,7 @@ export class MapOsmComponent implements OnChanges {
         id: 'googlestreets',
         name: 'Google Street Map',
         enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=marker&x={x}&y={y}&z={z}', {
             maxZoom: 20,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
             attribution: 'Google Street Map'
@@ -102,68 +105,91 @@ export class MapOsmComponent implements OnChanges {
 
     onMapReady(map: L.Map) {
         this.map = map;
+
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes['vehicles']) {
-            console.log('updating vehicles');
-            this.setupVehicles();
-        }
-        if (changes['watches']) {
-            console.log('updating watches');
-            this.setupWatches();
+
+        this.setupMarkers(this.showMarker);
+
+        if (changes[this.lat]) {
+            this.setupMarkers(this.showMarker);
         }
         if (changes['lat']) {
             this.setCenter();
         }
-        if (changes['changeMarker']) {
-            if (this.changeMarker.match('showVehiclesMarkers')) {
-                this.setupVehicles();
-            } else {
-                this.setupWatches();
-            }
-        }
+
     }
 
     markerClusterReady(group: L.MarkerClusterGroup) {
         this.markerClusterGroup = group;
     }
 
-    setupVehicles() {
+    setupMarkers(showMarker) {
         const data: any[] = [];
-        this.vehicles.forEach(vehicle => {
-            const imageIcon = {
-                icon: L.icon({
-                    iconUrl   : vehicle.iconUrl,
-                })
-            };
-            const m = L.marker([vehicle.latitude, vehicle.longitude], imageIcon);
-            const factory = this.resolver.resolveComponentFactory(PopupVehicleComponent);
-            const component = factory.create(this.injector);
-            const popupContent = component.location.nativeElement;
-            component.instance.vehicle = vehicle;
-            component.changeDetectorRef.detectChanges();
-            m.bindPopup(popupContent).openPopup();
-            data.push(m);
-        });
-        this.markerClusterData = data;
-    }
-    setupWatches() {
-        const data: any[] = [];
-        this.watches.forEach(watch => {
-            const imageIcon = {
-                icon: L.icon({
-                    iconUrl   : watch.iconUrl,
-                })
-            };
-            const m = L.marker([watch.latitude, watch.longitude], imageIcon);
-            const factory = this.resolver.resolveComponentFactory(PopupWatchComponent);
-            const component = factory.create(this.injector);
-            const popupContent = component.location.nativeElement;
-            component.instance.watch = watch;
-            component.changeDetectorRef.detectChanges();
-            m.bindPopup(popupContent).openPopup();
-            data.push(m);
+        this.markersData.forEach(mData => {
+            if (showMarker.vehicles) {
+                if (mData.group_name === 'AZUCARERA INGENIO VALDEZ') {
+                    const imageIcon = {
+                        icon: L.icon({
+                            iconUrl: mData.iconUrl,
+                        })
+                    };
+                    const m = L.marker([mData.latitude, mData.longitude], imageIcon);
+                    const factory = this.resolver.resolveComponentFactory(PopupVehicleComponent);
+                    const component = factory.create(this.injector);
+                    const popupContent = component.location.nativeElement;
+                    component.instance.imei = mData.imei;
+                    component.instance.alias = mData.alias;
+                    component.instance.speed = mData.speed;
+                    component.instance.generated_time = mData.generated_time;
+                    component.instance.model_name = mData.model_name;
+                    component.changeDetectorRef.detectChanges();
+                    m.bindPopup(popupContent).openPopup();
+                    data.push(m);
+                }
+            }
+            if (showMarker.bombas) {
+                if (mData.group_name.match('BOMBA')) {
+                    const imageIcon = {
+                        icon: L.icon({
+                            iconUrl: mData.iconUrl,
+                        })
+                    };
+                    const m = L.marker([mData.latitude, mData.longitude], imageIcon);
+                    const factory = this.resolver.resolveComponentFactory(PopupVehicleComponent);
+                    const component = factory.create(this.injector);
+                    const popupContent = component.location.nativeElement;
+                    component.instance.imei = mData.imei;
+                    component.instance.alias = mData.alias;
+                    component.instance.speed = mData.speed;
+                    component.instance.generated_time = mData.generated_time;
+                    component.instance.model_name = mData.model_name;
+                    component.changeDetectorRef.detectChanges();
+                    m.bindPopup(popupContent).openPopup();
+                    data.push(m);
+                }
+            }
+            if (showMarker.watches) {
+                if (mData.group_name === 'Tablet Guardia') {
+                    const imageIcon = {
+                        icon: L.icon({
+                            iconUrl: mData.iconUrl,
+                        })
+                    };
+                    const m = L.marker([mData.latitude, mData.longitude], imageIcon);
+                    const factory = this.resolver.resolveComponentFactory(PopupWatchComponent);
+                    const component = factory.create(this.injector);
+                    const popupContent = component.location.nativeElement;
+                    component.instance.dni = mData.guard_dni;
+                    component.instance.name = mData.guard_name;
+                    component.instance.lastname = mData.guard_lastname;
+                    component.instance.generated_time = mData.generated_time;
+                    component.changeDetectorRef.detectChanges();
+                    m.bindPopup(popupContent).openPopup();
+                    data.push(m);
+                }
+            }
         });
         this.markerClusterData = data;
     }

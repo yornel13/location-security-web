@@ -1,0 +1,32 @@
+<!--<div class="mr-auto row ml-2" style="background-color: white">-->
+	<!--<a routerLink="/u/control/home" [routerLinkActive]="['active']" title="Atrás">-->
+	    <!--<i class="fas fa-reply icono" style="padding: 10px !important; font-size: 1.8rem !important; color: var(&#45;&#45;secondary-color)"></i>-->
+	<!--</a>-->
+	<!--<h3 class="list-title mt-2 ml-2"  style="color: var(&#45;&#45;secondary-color)">Vigilancia</h3>-->
+<!--</div>-->
+<div class="home" [ngStyle]="{background: 'url(./assets/img/background-control.jpg)'}">
+<div class="container-fluid row mx-auto" style="background-color: white">
+	<div class="mr-auto row ml-1 mt-2">
+		<a routerLink="/u/control/home" [routerLinkActive]="['active']" title="Atrás" style="color: var(--secondary-color)">
+			<i class="fas fa-reply icon-return"></i>
+		</a>
+		<h3 class="list-title">Vigilancia</h3>
+	</div>
+</div>
+<div>
+	<div class="row mx-auto">
+		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/guardias/activas" [routerLinkActive]="['active']">
+			<div class="mx-auto content-control pb-2 pt-3">
+				<i class="fas fa-user-check icono" style="background-color: #dc3545; padding: 12px 9px !important"></i>
+				<p class="enlace">Guardias Activas</p>
+			</div>
+		</a>
+		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/guardias/todas" [routerLinkActive]="['active']">
+			<div class="mx-auto content-control pb-2 pt-3">
+				<i class="fas fa-user-secret icono" style="background-color: #6610f2; padding: 12px 14px !important"></i>
+				<p class="enlace">Todos las Guardias</p>
+			</div>
+		</a>
+	</div>
+</div>
+</div>

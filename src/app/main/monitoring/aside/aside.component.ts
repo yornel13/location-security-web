@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, OnInit, Output, SimpleChanges, EventEmitter, Injectable} from '@angular/core';
 import {Vehicle} from '../../../../model/vehicle/vehicle';
 import {Watch} from '../../../../model/watch/watch';
-import {AsideService} from "./aside.service";
+import {AsideService} from './aside.service';
 
 @Component({
   selector: 'app-aside',
@@ -11,19 +11,26 @@ import {AsideService} from "./aside.service";
 
 export class AsideComponent implements OnInit, OnChanges {
 
-    @Output() latlng = {lat: null , lng: null};
+
     @Input() vehicles: Vehicle[] = [];
     @Input() watches: Watch[] = [];
-    @Output() showOpt = {showVehicles: true , showWatches: false , showMarkers: true};
-    @Output() showWVMarkers = new EventEmitter();
+    @Input() markersData: any[] = [];
+    @Output() showMarker = {vehicles: true , watches: true , bombas: true, noGroups: true, message: ''};
+    @Output() markerChanged = new EventEmitter();
     @Output() markerFocused = new EventEmitter();
-    eventMessage = null;
-    devices_status = 'DESCONECTADO';
+
+    @Output() vehiclesCheck = true;
+    @Output() watchesCheck = true;
+    @Output() bombasCheck = true;
+    @Output() noGroupCheck = true;
+    noCards = false;
+    showCardContainer = true;
+    CHECK_ICON_URL = './assets/aside-menu/checked.png';
 
     constructor(private asideService: AsideService) {}
 
     ngOnInit() {
-        this.changeOptions('showVehiclesMarkers');
+
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -34,18 +41,34 @@ export class AsideComponent implements OnInit, OnChanges {
             // Use if necessary
         }
     }
-    changeOptions(message) {
-        if (message.match('showVehiclesMarkers')) {
-            this.eventMessage = message;
-            this.showOpt = {showVehicles: true , showWatches: false , showMarkers: false};
-            this.showWVMarkers.emit(this.eventMessage);
+    selectMarkersOpts(message) {
+        if (message.match('showVehicles')) {
+            this.vehiclesCheck = !this.vehiclesCheck;
+            this.showMarker.vehicles =  this.vehiclesCheck;
+            this.showMarker.message =  message;
+            this.markerChanged.emit(this.showMarker);
+        }
+        if (message.match('showBombas')) {
+            this.bombasCheck = !this.bombasCheck;
+            this.showMarker.bombas = this.bombasCheck;
+            this.showMarker.message =  message;
+            this.markerChanged.emit(this.showMarker);
+        }
+        if (message.match('showTablets')) {
+            this.watchesCheck = !this.watchesCheck;
+            this.showMarker.watches = this.watchesCheck;
+            this.showMarker.message =  message;
+            this.markerChanged.emit(this.showMarker);
+        }
+        if (!this.vehiclesCheck && !this.bombasCheck && !this.watchesCheck) {
+            this.noCards = true;
+            this.showCardContainer = false;
         } else {
-            this.eventMessage = message;
-            this.showOpt = {showVehicles: false , showWatches: true , showMarkers: true};
-            this.showWVMarkers.emit(this.eventMessage);
+            this.noCards = false;
+            this.showCardContainer = true;
         }
     }
-    find(newSearch) {
+        find(newSearch) {
         console.log(newSearch.value);
         this.vehicles.forEach( vehicle => {
            if (vehicle.imei.match(newSearch.value)) {
@@ -54,12 +77,5 @@ export class AsideComponent implements OnInit, OnChanges {
                console.log('no match');
            }
         });
-    }
-    focusMarker(lat, lng) {
-        console.log('lat: ', lat, 'lng: ', lng);
-        this.latlng.lat = lat;
-        this.latlng.lng = lng;
-        this.markerFocused.emit(this.latlng);
-        this.asideService.marker.emit(this.latlng);
     }
 }

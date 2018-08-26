@@ -7,7 +7,7 @@ const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full'},
     { path: 'u', loadChildren: () => MainModule },
     { path: 'login', component: LoginComponent },
-    { path: '**', redirectTo: '/login', pathMatch: 'full' }
+    { path: '**', redirectTo: '/login', pathMatch: 'full' },
 ];
 
 @NgModule({

@@ -1,0 +1,216 @@
+
+  <div class="info-container panel panel-default" *ngIf="lista">
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto row ml-1">
+        <a routerLink="/u/control/home/visitas" title="Atrás" style="color: var(--secondary-color)">
+            <i class="fas fa-reply icon-return"></i>
+        </a>
+        <h3 class="list-title">Vehículos Visitantes</h3>
+      </div>
+    </div>
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto row ml-2 form-inline">
+          <label class="mr-1"><b>Mostrar:</b></label>
+          <select id="inputState" class="form-control mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
+            <option [ngValue]="10">10</option>
+            <option [ngValue]="25">25</option>
+            <option [ngValue]="50">50</option>
+            <option [ngValue]="100">100</option>
+          </select>
+          <label>Elementos</label>
+      </div>
+      <div class="ml-auto form-inline">
+        <div class="form-group row">
+          <input type="text" name="searchString" class="form-control mr-2" placeholder="Buscar Placa" [(ngModel)]="vehicleFilter.plate">
+          <div class="btn-group btn-group-toggle ml-2 mr-2" data-toggle="buttons">
+              <label class="btn btn-outline-secondary" (click)="excelDownload()">
+                <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+              </label>
+              <label class="btn btn-outline-secondary" (click)="pdfDownload()">
+                <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+              </label>
+              <label class="btn btn-outline-secondary" (click)="print()">
+                <input type="radio" name="options" id="option3" autocomplete="off"> Print
+              </label>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="table mt-2">
+            <table class="table table-striped">
+             <thead>
+             <th></th>
+               <th>ID</th>
+               <th>Placa</th>
+               <th>Vehículo</th>
+               <th>Modelo</th>
+               <th>Tipo</th>
+               <th>Foto</th>
+               <th>Acciones</th>
+             </thead>
+             <tbody>
+              <tr *ngFor="let d of data | filterBy: vehicleFilter | paginate: { itemsPerPage: numElement, currentPage: p }">
+                  <td></td>
+                <td>{{d.id}}</td>
+                <td>{{d.plate}}</td>
+                <td>{{d.vehicle}}</td>
+                <td>{{d.model}}</td>
+                <td>{{d.type}}</td>
+                <td><a [hidden]="!d.photo" data-toggle="modal" href="#modal{{d.id}}"><img src="{{d.photo}}" class="image-detail-row"></a></td>
+                <td>
+                  <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
+                  <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editarVisitVehiculo(d.id)" title="Editar"><span class="fas fa-edit"></span></a>
+                  <a class="btn btn-danger btn-xs" data-toggle="modal" href="#eliminar{{d.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
+                 </td>
+                 <div class="modal" tabindex="-1" role="dialog" id="eliminar{{d.id}}">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header" style="background-color: #c82333; color: white;">
+                          <h5 class="modal-title">Eliminar Vehículo</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <p>¿Está seguro que desea eliminar este vehículo?</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-danger" (click)="deleteVehiculo(d.id)" data-dismiss="modal">Eliminar</button>
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                 <!--Modal: modalVM-->
+                  <div class="modal fade" id="modal{{d.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" role="document">
+                          <!--Content-->
+                          <div class="modal-content">
+                              <!--Body-->
+                              <div class="modal-body mb-0 p-0">
+                                   <img src="{{d.photo}}" class="image-detail-photo-full">
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+               </tr>
+            </tbody>
+          </table>
+          <div style="text-align: center; padding-right: 40px;">
+              <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
+                    nextLabel="">
+              </pagination-controls>
+          </div>
+    </div>
+  </div>
+  <div class="info-container panel panel-default" *ngIf="detalle">
+    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
+      <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle Vehiculo Visitante</h3>
+    </div>
+    <div class="panel-body mt-2">          
+          <div class="table-container container">
+            <form  role="form">
+              <div class="form-group row">
+                <label for="plate" class="col-sm-2 col-form-label">Placa</label>
+                <div class="col-sm-10">
+                  <input type="text" readonly class="form-control" id="plate" value="{{vehi.plate}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="vehicle" class="col-sm-2 col-form-label">Vehículo</label>
+                <div class="col-sm-10">
+                  <input type="text" readonly class="form-control" id="vehicle" value="{{vehi.vehicle}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Modelo</label>
+                <div class="col-sm-10">
+                  <input type="text" readonly class="form-control" value="{{vehi.model}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="type" class="col-sm-2 col-form-label">Tipo</label>
+                <div class="col-sm-10">
+                  <input type="text" readonly class="form-control" id="type" value="{{vehi.type}}">
+                </div>
+              </div>
+              <div [hidden]="!vehi.photo" class="form-group row">
+                <label class="col-sm-2 col-form-label">Foto</label>
+                <div class="col-sm-10">
+                  <a data-toggle="modal" href="#vehiphoto"><img src="{{vehi.photo}}" class="image-detail-photo"></a>
+                </div>
+              </div>
+              <!--Modal: modalVM-->
+              <div class="modal fade" id="vehiphoto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg" role="document">
+                      <!--Content-->
+                      <div class="modal-content">
+                          <!--Body-->
+                          <div class="modal-body mb-0 p-0">
+                               <img src="{{vehi.photo}}" class="image-detail-photo-full">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group row">
+                <label for="creation" class="col-sm-2 col-form-label">Fecha de creación</label>
+                <div class="col-sm-10">
+                  <input type="text" readonly class="form-control" id="creation" value="{{vehi.create_date}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="update" class="col-sm-2 col-form-label">Última actualización</label>
+                <div class="col-sm-10">
+                  <input type="text" readonly class="form-control" id="update" value="{{vehi.update_date}}">
+                </div>
+              </div>
+              <div class="row mt-4">
+                  <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
+              </div>
+            </form>
+          </div>
+        </div>
+  </div>
+  <div class="info-container panel panel-default" *ngIf="editar">
+    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
+      <h3 class="panel-title"><i class="fas fa-edit" style="margin-right: 20px;"></i>Editar Vehículo Visitante</h3>
+    </div>
+    <div class="panel-body mt-2">          
+          <div class="table-container container">
+            <form role="form">
+              <div class="form-group row">
+                <label for="placa" class="col-sm-2 col-form-label">Placa</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="placa" placeholder="Placa" [(ngModel)]="placa" [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="vehiculo" class="col-sm-2 col-form-label">Vehículo</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="vehiculo" placeholder="Vehículo" [(ngModel)]="vehiculo" [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="modelo" class="col-sm-2 col-form-label">Modelo</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="modelo" placeholder="Modelo" [(ngModel)]="modelo" [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="tipo" class="col-sm-2 col-form-label">Tipo</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="tipo" placeholder="Tipo" [(ngModel)]="tipo" [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div>
+                <p *ngIf="errorEdit" class="text-danger">Error al guardar, intente nuevamente</p>
+                <p *ngIf="errorEditData" class="text-danger">{{errorEditMsg}}</p>
+              </div>
+              <div class="row mt-4">
+                  <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="regresar()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
+                  <button type="button" class="btn btn-success btn-block col-md-3 mr-auto" (click)="saveEdit()" style=" margin: 0px 0px 0px 20px"><i class="fas fa-edit" style="margin-right: 10px;"></i>Editar Administrador</button>
+              </div>
+            </form>
+          </div>
+        </div>
+  </div>

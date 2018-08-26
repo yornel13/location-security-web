@@ -2,6 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GuardService } from '../../../../model/guard/guard.service';
 import { Guard } from '../../../../model/guard/guard';
+import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from 'angularfire2/storage';
+import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { ExcelService } from '../../../../model/excel/excel.services';
 
 @Component({
   selector: 'app-guardia',
@@ -23,15 +29,18 @@ export class GuardiaComponent {
   apellido:string;
   correo:string;
   identificacion:string;
+  photo:string;
+  contrasena:string = "password";
   idEdit:number;
   errorEdit:boolean = false;
   errorEditData:boolean = false;
   errorEditMsg:string;
-  //crear
+  //createBoundView
   namea:string;
   lastnamea:string;
   emaila:string;
   dnia:string;
+  photoa:string;
   passworda:string;
   errorSave:boolean = false;
   errorSaveData:boolean = false;
@@ -39,8 +48,17 @@ export class GuardiaComponent {
   //eliminar
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
+  guardFilter: any = { "dni": ""};
+  //imagen firebase
+  uploadPercent: Observable<number>;
+  downloadURL: Observable<string>;
+  numElement:number = 10;
+  //exportaciones
+  contpdf:any = [];
+  info: any = [];
 
-  constructor(public router:Router, private guardService:GuardService) { 
+
+  constructor(public router:Router, private guardService:GuardService,  private storage: AngularFireStorage, private excelService:ExcelService) { 
   	this.getAll();
   	this.regresar();
   }
@@ -50,6 +68,14 @@ export class GuardiaComponent {
     		success => {
     			this.guardias = success;
     			this.data = this.guardias.data;
+          var body = [];
+          var excel = [];
+          for(var i=0; i<this.data.length; i++){
+              excel.push({'#' : this.data[i].id, 'Cedula': this.data[i].dni, 'Nombre':this.data[i].name, 'Apellido':this.data[i].lastname, 'Correo':this.data[i].email})
+              body.push([this.data[i].id, this.data[i].dni, this.data[i].name, this.data[i].lastname, this.data[i].email])
+          }
+          this.contpdf = body;
+          this.info = excel;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -85,6 +111,33 @@ export class GuardiaComponent {
         );
     }
 
+    upload(event) {
+        const file = event.target.files[0];
+        const randomId = Math.random().toString(36).substring(2);
+        var url = '/icsse/' + randomId;
+        const ref = this.storage.ref(url);
+        //const task = ref.put(file);
+        const task = this.storage.upload(url, file);
+        this.uploadPercent = task.percentageChanges();
+        task.snapshotChanges().pipe(
+        finalize(() => {this.downloadURL = ref.getDownloadURL();
+                        this.downloadURL.subscribe(url => (this.photo = url));} 
+        )).subscribe();
+   }
+
+   uploadNew(event) {
+        const file = event.target.files[0];
+        const randomId = Math.random().toString(36).substring(2);
+        var url = '/icsse/' + randomId;
+        const ref = this.storage.ref(url);
+        const task = this.storage.upload(url, file);
+        this.uploadPercent = task.percentageChanges();
+        task.snapshotChanges().pipe(
+        finalize(() => {this.downloadURL = ref.getDownloadURL();
+                        this.downloadURL.subscribe(url => (this.photoa = url));} 
+        )).subscribe();
+   }
+
     editarGuardia(id) {
       this.guardService.getId(id).then(
         success => {
@@ -94,6 +147,7 @@ export class GuardiaComponent {
           this.correo = this.guardia.email;
           this.identificacion = this.guardia.dni;
           this.idEdit = this.guardia.id;
+          this.photo = this.guardia.photo;
           this.lista = false;
           this.detalle = false;
           this.crear = false;
@@ -108,18 +162,40 @@ export class GuardiaComponent {
         );
     }
 
+    getValueEdit(){
+      if(this.contrasena == "password"){
+          console.log("Entra aquí");
+          const editadmin : Guard = {
+          id: this.idEdit,
+          dni: this.identificacion,
+          name: this.nombre,
+          lastname: this.apellido,
+          email: this.correo,
+          photo: this.photo
+        }
+        return editadmin;
+      }else{
+          const editadmin : Guard = {
+          id: this.idEdit,
+          dni: this.identificacion,
+          name: this.nombre,
+          lastname: this.apellido,
+          email: this.correo,
+          password: this.contrasena,
+          photo: this.photo
+        }
+        return editadmin;
+      }
+    }
+
     saveEdit() {
-      const editadmin : Guard = {
-        id: this.idEdit,
-        dni: this.identificacion,
-        name: this.nombre,
-        lastname: this.apellido,
-        email: this.correo
-      };
-      this.guardService.set(editadmin).then(
+      var valores = this.getValueEdit();
+      console.log(valores);
+      this.guardService.set(valores).then(
         success => {
           this.getAll();
           this.regresar();
+          this.photo = '',
           this.errorEditData = false;
           this.errorEdit = false;
             }, error => {
@@ -151,6 +227,7 @@ export class GuardiaComponent {
       this.detalle = false;
       this.crear = true;
       this.editar = false;
+      this.photoa = './assets/img/user_empty.jpg';
     }
 
     saveNewGuardia() {
@@ -159,12 +236,14 @@ export class GuardiaComponent {
         name: this.namea,
         lastname: this.lastnamea,
         email: this.emaila,
-        password: this.passworda
+        password: this.passworda,
+        photo: this.photoa
       };
       this.guardService.add(createguard).then(
         success => {
           this.getAll();
           this.regresar();
+          this.photoa = '',
           this.errorEditData = false;
           this.errorEdit = false;
             }, error => {
@@ -208,6 +287,89 @@ export class GuardiaComponent {
                 }
             }
         );
+    }
+
+    activarGuardia(id) {
+        this.guardService.activeGuard(id).then(
+            success => {
+                this.getAll();
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
+
+    desactivarGuardia(id) {
+        this.guardService.desactiveGuard(id).then(
+            success => {
+                this.getAll();
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
+
+    pdfDownload() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Usuarios Guardias del sistema', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Cédula', 'Nombre', 'Apellido', 'Correo']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'},
+              3: {columnWidth: 'auto'},
+              4: {columnWidth: 'auto'}
+            }
+        });   
+        doc.save('guardias.pdf');
+    }
+
+    excelDownload() {
+        this.excelService.exportAsExcelFile(this.info, 'guardias');
+    }
+
+    print() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Usuarios Guardias del sistema', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Cédula', 'Nombre', 'Apellido', 'Correo']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'},
+              3: {columnWidth: 'auto'},
+              4: {columnWidth: 'auto'}
+            }
+        });   
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
     }
 
 

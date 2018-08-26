@@ -1,48 +1,68 @@
 <!--Sidebar-->
 <aside class="aside">
+
   <!--header aside-->
+  <!--<div class="header-aside">-->
+    <!--<div class="dropdown">-->
+      <!--<div class="btn btn-secondary menu-item dropdown-toggle" href="#"   id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+        <!--Dispositivos-->
+      <!--</div>-->
+    <!---->
+      <!--<div class="dropdown-menu menu-item" >-->
+        <!--<div class=" menu-items" (click)="selectMarkersOpts('showVehicles')" >Vehiculos<img *ngIf="vehiclesCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>-->
+        <!--<div class=" menu-items" (click)="selectMarkersOpts('showBombas')">Bombas<img *ngIf="bombasCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>-->
+        <!--<div class=" menu-items" (click)="selectMarkersOpts('showTablets')">Tablets   <img *ngIf="watchesCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>-->
+        <!--&lt;!&ndash;<div class=" menu-items" (click)="selectMarkersOpts('showNoGroups')">No agrupados<img *ngIf="noGroupCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>&ndash;&gt;-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="menu-item alerta">Alertas</div>-->
+  <!--</div>-->
 
-  <div class="header-aside" id="header-aside">
-   
-    <ul class="menu-items" id="menu-items">
-      <li class="menu-item active-side" >Dispositivos</li>
-      <li class="menu-item">Alertas</li>
+  <div class="container">
+    <ul class="nav nav-tabs header-aside">
+      <li class="menu-item active">
+        <a class="tab-title" data-toggle="tab" href="#alerts">Alertas</a>
+      </li>
+      <li class="menu-item">
+        <a class="tab-title" data-toggle="tab" href="#devices">Dispositivos</a>
+      </li>
     </ul>
-    <li  (click)="changeOptions('showVehiclesMarkers')" class="menu-item">Vehiculos</li>
-    <li  (click)="changeOptions('showWatchesMarkers')" class="menu-item">Guardias</li>
-    
-    <input  (keyup)="$event.keyCode == 13 ? find(newSearsh) : null" #newSearsh class="filter" type="text" placeholder="Filtrar">
-    
-  </div>
 
-  <div class="cards-container">
-    <!--Vehicles Card-->
-    <div *ngIf="showOpt.showVehicles" >
-      <div  *ngFor="let vehicle of vehicles"  class="vehicle-card" (click)="focusMarker(vehicle.latitude, vehicle.longitude)">
-        <p class="imei">IMEI {{vehicle.imei}}</p>
-        <p class="alias">{{vehicle.alias}}</p>
-        <p class="date">Fecha {{vehicle.generated_time}}</p>
-        <p class="status-container">Status:<span class=""
-                                                 *ngIf="vehicle.device_status == 'OFFOROUTOFCOVERAGE'; else online"
-                                                 [ngClass]="{'inactive':vehicle.device_status=='OFFOROUTOFCOVERAGE'}">{{devices_status}}</span></p>
-      </div>
-    </div>
-    
-    <!--watches card-->
-      <div *ngIf="showOpt.showWatches">
-        <div   *ngFor="let watch of watches"  class="watch-card">
-          <p class="imei">DNI {{watch.guard.dni}}</p>
-          <p class="alias">Nombre: {{watch.guard.name}}</p>
-          <p class="date">Apellido: {{watch.guard.lastname}}</p>
-          <p class="status-container">Status: <span class="">{{'ACTIVO'}}</span></p>
+    <div class="tab-content">
+
+      <div id="alerts" class="tab-pane fade in active" style="background: #c82333">
+        <div class="cards-container">
+          <app-card-alert></app-card-alert>
+          <app-card-alert></app-card-alert>
+          <app-card-alert></app-card-alert>
+          <app-card-alert></app-card-alert>
         </div>
       </div>
+
+      <div id="devices" class="tab-pane fade">
+        <p>hola</p>
+        <input [(ngModel)]="search" name="search"  #newSearsh class="filter form-control" type="text" placeholder="Filtrar">
+        <p *ngIf="noCards" class="no-cards">Seleccione dispositivo</p>
+        <!--Cards contaniner-->
+        <div class="cards-container"  *ngIf="showCardContainer">
+          <!--Cards-->
+          <div *ngFor="let data of markersData | filter: search">
+            <div  *ngIf="data.group_name === 'Tablet Guardia'">
+              <app-card-tablet *ngIf="watchesCheck" [tablet]="data"></app-card-tablet>
+            </div>
+            <div *ngIf="data.group_name === 'BOMBAS DE DRENAJE'">
+              <app-card-vehicle *ngIf="bombasCheck" [vehicle]="data"></app-card-vehicle>
+            </div>
+            <div *ngIf="data.group_name === 'AZUCARERA INGENIO VALDEZ'">
+              <app-card-vehicle *ngIf="vehiclesCheck" [vehicle]="data"></app-card-vehicle>
+            </div>
+            <div *ngIf="data.group_name !== 'AZUCARERA INGENIO VALDEZ' && 'BOMBAS DE DRENAJE' && 'Tablet Guardia'">
+              <!--no group-->
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
-  
-  <ng-template #online>
-      <p class="online">
-          ONLINE
-      </p>
-  </ng-template>
-  
 </aside>

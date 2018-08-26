@@ -1,0 +1,330 @@
+
+  <div class="info-container panel panel-default" *ngIf="lista">
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto row ml-1">
+        <a routerLink="/u/control/home/visitas" title="Atrás" style="color: var(--secondary-color)">
+            <i class="fas fa-reply icon-return"></i>
+        </a>
+        <h3 class="list-title">Visitas Activas</h3>
+      </div>
+    </div>
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto row ml-2 form-inline">
+          <label class="mr-1"><b>Mostrar:</b></label>
+          <select id="inputState" class="form-control mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
+            <option [ngValue]="10">10</option>
+            <option [ngValue]="25">25</option>
+            <option [ngValue]="50">50</option>
+            <option [ngValue]="100">100</option>
+          </select>
+          <label>Elementos</label>
+      </div>
+      <div class="ml-auto form-inline">
+        <div class="form-group row">
+            <label class="mr-4"><b>Filtrar por:</b></label>
+            <select id="inputState" class="form-control mr-4" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
+              <option [ngValue]="0">Vehículo</option>
+              <option [ngValue]="1">Guardia</option>
+              <option [ngValue]="2">Visitante</option>
+              <option [ngValue]="3">Funcionario</option>
+            </select>
+            <select id="inputState" class="form-control mr-4" [(ngModel)]="vehiculoSelect" (change)="getByVehiculo(vehiculoSelect)" [ngModelOptions]="{standalone: true}" *ngIf="filtro == 1">
+              <option [ngValue]="0">Todos</option>
+              <option *ngFor="let v of vehi" [ngValue]="v.id">{{v.plate}}</option>
+            </select>
+            <select id="inputState" class="form-control mr-4" [(ngModel)]="guardiaSelect" (change)="getByGuardia(guardiaSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="filtro == 2">
+              <option [ngValue]="0">Guardias</option>
+              <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
+            </select>
+            <select id="inputState" class="form-control mr-4" [(ngModel)]="visitanteSelect" (change)="getByVisitante(visitanteSelect)" [ngModelOptions]="{standalone: true}" *ngIf="filtro == 3">
+              <option [ngValue]="0">Visitantes</option>
+              <option *ngFor="let i of visit" [ngValue]="i.id">{{i.name}} {{i.lastname}}</option>
+            </select>
+            <select id="inputState" class="form-control mr-4" [(ngModel)]="funcionarioSelect" (change)="getByFuncionario(funcionarioSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="filtro == 4">
+              <option [ngValue]="0">Funcionarios</option>
+              <option *ngFor="let f of funcio" [ngValue]="f.id">{{f.name}} {{f.lastname}}</option>
+            </select>
+            <input type="text" name="searchString" class="form-control" placeholder="Buscar Placa" [(ngModel)]="userFilter.plate">
+            <div class="btn-group btn-group-toggle ml-2 mr-2" data-toggle="buttons">
+              <label class="btn btn-outline-secondary" (click)="excelDownload()">
+                <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+              </label>
+              <label class="btn btn-outline-secondary" (click)="pdfDownload()">
+                <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+              </label>
+              <label class="btn btn-outline-secondary" (click)="print()">
+                <input type="radio" name="options" id="option3" autocomplete="off"> Print
+              </label>
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="table mt-2">
+            <table class="table table-striped">
+             <thead>
+             <th></th>
+               <th>ID</th>
+               <th>Placa Vehículo</th>
+               <th>Visitante</th>
+               <th>Cédula visitante</th>
+               <th>Entrada</th>
+               <th>Salida</th>
+               <th>Detalle</th>
+             </thead>
+             <tbody>
+              <tr *ngFor="let d of data | filterBy: userFilter | paginate: { itemsPerPage: numElement, currentPage: p }">
+                <td></td>
+                <td>{{d.id}}</td>
+                <td>{{d.plate}}</td>
+                <td>{{d.visitor_name}} {{d.visitor_lastname}}</td>
+                <td>{{d.visitor_dni}}</td>
+                <td>{{d.create_date}}</td>
+                <td>--</td>
+                <td>
+                  <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
+                 </td>
+               </tr>
+               <tr *ngIf="nohay">
+                  <th colspan="7"><h3>No hay visitas activas</h3></th>
+               </tr>
+            </tbody>
+          </table>
+          <div style="text-align: center; padding-right: 40px;">
+              <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
+                    nextLabel="">
+              </pagination-controls>
+          </div>
+    </div>
+  </div>
+  <div class="info-container panel panel-default" *ngIf="detalle">
+    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
+      <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle de la Visita</h3>
+    </div>
+    <div class="panel-body mt-2">          
+          <div class="table-container container">
+            <form  role="form">
+              <div class="form-group row">
+                <label for="lastname" class="col-sm-2 col-form-label">Entrada</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="lastname" value="{{visi.create_date}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Latitud</label>
+                <div class="col-sm-4">
+                  <input type="number" readonly class="form-control" id="dni" value="{{visi.latitude}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Longitud</label>
+                <div class="col-sm-4">
+                  <input type="number" readonly class="form-control" id="dni" value="{{visi.longitude}}">
+                </div>
+              </div>
+                <div class="form-group row">
+                    <label for="lastname" class="col-sm-2 col-form-label">Materiales</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly  class="form-control" style="margin-bottom: 4px" *ngFor="let d of visi.observation" value="{{d}}">
+                    </div>
+                </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label"></label>
+                  <a [hidden]="!visi.image_1" data-toggle="modal" href="#image1"><img src="{{visi.image_1}}" class="image-detail-gallery"></a>
+                  <a [hidden]="!visi.image_2" data-toggle="modal" href="#image2"><img src="{{visi.image_2}}" class="image-detail-gallery"></a>
+                  <a [hidden]="!visi.image_3" data-toggle="modal" href="#image3"><img src="{{visi.image_3}}" class="image-detail-gallery"></a>
+                  <a [hidden]="!visi.image_4" data-toggle="modal" href="#image4"><img src="{{visi.image_4}}" class="image-detail-gallery"></a>
+                  <a [hidden]="!visi.image_5" data-toggle="modal" href="#image5"><img src="{{visi.image_5}}" class="image-detail-gallery"></a>
+              </div>
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="image1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{visi.image_1}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="image2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{visi.image_2}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="image3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{visi.image_3}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="image4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{visi.image_4}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="image5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{visi.image_5}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              <hr>
+              <div class="form-group row">
+                <label for="creation" class="col-sm-12 col-form-label"><b>Vehiculo</b></label>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.vehicle.vehicle}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Placa</label>
+                <div class="col-sm-4">
+                  <input type="number" readonly class="form-control" id="dni" value="{{visi.vehicle.plate}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Modelo</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.vehicle.model}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Tipo</label>
+                <div class="col-sm-4">
+                  <input type="number" readonly class="form-control" id="dni" value="{{visi.vehicle.type}}">
+                </div>
+              </div>
+                <div [hidden]="!visi.vehicle.photo" class="form-group row">
+                    <label class="col-sm-2 col-form-label">Imagen</label>
+                    <a data-toggle="modal" href="#vehiphoto"><img src="{{visi.vehicle.photo}}" class="image-detail-photo"></a>
+                </div>
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="vehiphoto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{visi.vehicle.photo}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              <hr>
+              <div class="form-group row">
+                <label class="col-sm-12 col-form-label"><b>Funcionario</b></label>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visited.name}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Apellido</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visited.lastname}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Dirección</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visited.address}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visited.dni}}">
+                </div>
+              </div>
+              <hr>
+              <div class="form-group row">
+                <label for="creation" class="col-sm-12 col-form-label"><b>Visitante</b></label>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visitor.name}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Apellido</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visitor.lastname}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Compañía</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visitor.company}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visitor.dni}}">
+                </div>
+              </div>
+                <div [hidden]="!visi.visitor.photo" class="form-group row">
+                    <label class="col-sm-2 col-form-label">Imagen</label>
+                    <a data-toggle="modal" href="#visitorphoto"><img src="{{visi.visitor.photo}}" class="image-detail-photo"></a>
+                </div>
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="visitorphoto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{visi.visitor.photo}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              <hr>
+              <div class="form-group row">
+                <label class="col-sm-12 col-form-label"><b>Registrado por</b></label>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.name}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Apellido</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.lastname}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.dni}}">
+                </div>
+                <label for="dni" class="col-sm-2 col-form-label">Correo</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.email}}">
+                </div>
+              </div>
+              <div class="row mt-4">
+                  <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
+              </div>
+            </form>
+          </div>
+        </div>
+  </div>

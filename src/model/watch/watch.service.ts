@@ -19,6 +19,41 @@ export class WatchesService {
         return this.http.get<WatchList>(this.WATCH_URL + this.activePath);
     }
 
+    getAll() {
+        return this.http.get(this.WATCH_URL).toPromise()
+            .then((response) => response);
+    }
+
+    getActive() {
+        return this.http.get(this.WATCH_URL + '/active/1').toPromise()
+            .then((response) => response);
+    }
+
+    getActiveByGuard(id) {
+        return this.http.get(this.WATCH_URL + '/guard/' + id + '/active/1').toPromise()
+            .then((response) => response);
+    }
+
+    getByGuard(id) {
+        return this.http.get(this.WATCH_URL + '/guard/' + id).toPromise()
+            .then((response) => response);
+    }
+
+    getByDate(year, month, day) {
+        return this.http.get(this.WATCH_URL + '/date/' + year + '/' + month + '/' + day).toPromise()
+            .then((response) => response);
+    }
+
+    getByGuardDate(id, year, month, day) {
+        return this.http.get(this.WATCH_URL + '/guard/' + id +'/date/' + year + '/' + month + '/' + day).toPromise()
+            .then((response) => response);
+    }
+
+    getById(id){
+        return this.http.get(this.WATCH_URL + '/' + id).toPromise()
+            .then((response) => response);
+    }
+
     private handleError<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             console.error(error);

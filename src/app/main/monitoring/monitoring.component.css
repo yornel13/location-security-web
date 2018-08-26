@@ -4,10 +4,9 @@
     left: 0;
     right: 0;
     bottom: 0;
-
+    height: auto;
     display: flex;
 }
-
 
 app-monitoring{
     height: 100%;
@@ -24,7 +23,7 @@ app-monitoring{
     width: 100%;
 }
 
-app-map-google, app-map-osm {
+app-map-osm {
     height: 100%;
     width: 100%;
 }

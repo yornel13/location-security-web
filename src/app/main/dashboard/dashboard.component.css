@@ -1,0 +1,120 @@
+.dashboard {
+    height: 100%;
+    width: 100%;
+    padding-bottom: 30px;
+    padding-top: 30px;
+    background-color: #E0E0E0;
+    position: absolute;
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.titulo {
+  background-color: white;
+}
+
+
+.statistic-box {
+ -webkit-border-radius: 4px;
+  border-radius: 4px;
+  text-align: center;
+  color: #fff;
+  background: no-repeat 50% 50%;
+  background-size: cover;
+  margin: 0 0 30px;
+}
+
+.red {
+  background-color: #fa424a;
+  background-image: url(/assets/img/statistic-box-red.png);
+}
+
+.yellow {
+  background-color: #fdad2a;
+  background-image: url(/assets/img/statistic-box-yellow.png);
+}
+
+.green {
+  background-color: #46c35f;
+  background-image: url(/assets/img/statistic-box-green.png);
+}
+
+.title {
+  font-size: 1.4rem;
+}
+
+.number {
+  font-size: 3rem;
+}
+
+.purple {
+  background-color: #ac6bec;
+  background-image: url(/assets/img/statistic-box-purple.png);
+}
+
+.statistic-box>div {
+    -webkit-border-radius: inherit;
+    border-radius: inherit;
+    height: 140px;
+    background: url(/assets/img/statistic-box-grid.png) 50% 0;
+    background-size: 21px 20px;
+    position: relative;
+}
+
+.panel-heading {
+    font-size: 18px;
+    font-weight: 300;
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 10px;
+    margin: 0 20px;
+    border-bottom-width: 0;
+    border-radius: 3px 3px 0 0;
+}
+
+.panel-heading .tools {
+    float: right;
+    color: var(--secondary-color);
+}
+
+.tools span {
+  margin-left: 20px;
+}
+
+.lastvisitas {
+  font-size: 15px !important;
+  background-color: white;
+  padding-top: 20px;
+  border-radius: 5px;
+}
+
+.reportes {
+  font-size: 15px !important;
+  background-color: white;
+  padding-top: 20px;
+  border-radius: 5px;
+  width: 95%;
+}
+
+.table tbody tr td.user-avatar img {
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.tablavisitas {
+  overflow-y: hidden;
+  height: 287px;
+}
+
+.tablavisitas:hover {
+  overflow-y:scroll;
+  height: 287px;
+}
+
+img {
+    vertical-align: middle;
+}

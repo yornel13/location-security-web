@@ -1,0 +1,133 @@
+
+  <div class="info-container panel panel-default" *ngIf="lista">
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto row ml-1">
+        <a routerLink="/u/control/home" title="Atrás" style="color: var(--secondary-color)">
+            <i class="fas fa-reply icon-return"></i>
+        </a>
+        <h3 class="list-title">Configuraciones</h3>
+      </div>
+        <div class="ml-auto">
+          <!--
+          <div class="btn-group">
+            <a class="btn btn-success" style="color: white" (click)="crearConfiguracion()"><i class="fas fa-plus-circle"></i>
+              Añadir Configuración
+            </a>
+          </div>
+          -->
+        </div>
+    </div>
+    <div class="table mt-2">
+            <table class="table table-striped">
+             <thead>
+             <th></th>
+               <th>ID</th>
+               <th>Nombre</th>
+               <th>Valor</th>
+               <th>Editar</th>
+             </thead>
+             <tbody>
+              <tr>
+                  <td></td>
+                <td>1</td>
+                <td>Tiempo para actualización de GPS en tablets</td>
+                <td>{{data.value}} segundos</td>
+                <td>
+                  <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editarConfiguracion(data.id)" title="Editar"><span class="fas fa-edit"></span></a>
+                 </td>
+               </tr>
+               <tr>
+                  <td></td>
+                <td>2</td>
+                <td>Banner en tablets</td>
+                <td>{{numbanner}}</td>
+                <td>
+                  <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editarBanner()" title="Editar"><span class="fas fa-edit"></span></a>
+                 </td>
+               </tr>
+            </tbody>
+ 
+          </table>
+    </div>
+  </div>
+  <div class="info-container panel panel-default" *ngIf="editar">
+    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
+      <h3 class="panel-title"><i class="fas fa-edit" style="margin-right: 20px;"></i>Editar Configuracion</h3>
+    </div>
+    <div class="panel-body mt-2">          
+          <div class="table-container container">
+            <form role="form">
+              <div class="form-group row">
+                <label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="nombre" placeholder="Introduzca Nombre" [(ngModel)]="nombre" [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="nivel" class="col-sm-2 col-form-label">Valor (en segundos)</label>
+                <div class="col-sm-10">
+                  <input type="text"  class="form-control" id="nivel" placeholder="Introduzca valor" [(ngModel)]="valor" [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div>
+                <p *ngIf="errorEdit" class="text-danger">Error al guardar, intente nuevamente</p>
+                <p *ngIf="errorEditData" class="text-danger">{{errorEditMsg}}</p>
+              </div>
+              <div class="row mt-4">
+                  <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="regresar()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
+                  <button type="button" class="btn btn-success btn-block col-md-3 mr-auto" (click)="saveEdit()" style=" margin: 0px 0px 0px 20px"><i class="fas fa-edit" style="margin-right: 10px;"></i>Editar Valor</button>
+              </div>
+            </form>
+          </div>
+        </div>
+  </div>
+  <div class="info-container panel panel-default" *ngIf="editarb">
+    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
+      <h3 class="panel-title"><i class="fas fa-edit" style="margin-right: 20px;"></i>Editar Banner</h3>
+    </div>
+    <div class="panel-body mt-2">          
+          <div class="table-container container">
+            <form role="form">
+              <div class="form-group row"  *ngIf="numbanner != 0">
+                <label class="col-sm-9 col-form-label"><b>Imágenes</b></label>
+                <div class="col-sm-3">
+                  <button class="btn btn-success form-control ml-auto" *ngIf="limitbanner" (click)="agregarImagen()">Agregar agregar imagen</button>
+                </div>
+              </div>
+              <div class="form-group row" *ngIf="numbanner == 0">
+                <label class="col-sm-9 col-form-label"><b>No hay imágenes</b></label>
+                <div class="col-sm-3">
+                  <button class="btn btn-success form-control ml-auto" *ngIf="limitbanner" (click)="agregarImagen()">Agregar agregar imagen</button>
+                </div>
+              </div>
+              <div class="form-group row" *ngIf="newimagen">
+                  <label for="photo" class="col-sm-2 col-form-label">Nueva Imagen</label>
+                  <div class="col-sm-5">
+                      <img src="{{imagen}}" class="profile-image">
+                  </div>
+                  <div class="col-sm-5">
+                      <input type="file" class="form-control" id="photo" accept="image/*" (change)="uploadBanner($event)">
+                      <div class="progress mt-3">
+                          <div class="progress-bar progress-bar-striped bg-success" role="progressbar" [style.width]="(uploadPercent | async) + '%'" [attr.aria-valuenow]="(uploadPercent | async)" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <a class="btn btn-primary btn-xs mt-3" title="Guardar" (click)="saveBanner()"><span class="fas fa-save"></span></a>
+                  </div>
+              </div>
+              <div *ngFor="let d of banner; let i = index" class="row pt-3 pb-3" style="border-top: 2px solid #666">
+                <label for="photo" class="col-sm-2 col-form-label">Imagen {{i + 1}}</label>
+                  <div class="col-sm-5">
+                      <img src="{{d.photo}}" class="profile-image">
+                  </div>
+                  <div class="col-sm-2">
+                    <a class="btn btn-danger btn-xs" title="Eliminar" (click)="eliminarImagen(d.id)"><span class="fas fa-trash-alt"></span></a>
+                  </div>
+              </div>
+              <div class="row mt-4">
+                  <a class="btn btn-info btn-block col-md-3 mx-auto" style="color: white;" (click)="regresar()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
+              </div>
+            </form>
+          </div>
+        </div>
+  </div>
+
+

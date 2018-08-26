@@ -1,0 +1,131 @@
+.control-container{
+    position: absolute;
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    display: flex;
+}
+
+agm-map {
+    height: 350px;
+}
+
+app-control {
+    height: 100%;
+    width: 100%;
+}
+
+aside{
+    list-style: none;
+    height: 100%;
+    min-height: 100vh;
+    width: 350px;
+    background-color: var(--secondary-color);
+    padding: 0 0 0 5px;
+}
+
+.info-container {
+    height: 100%;
+    width: 100%;
+    overflow-y:scroll;
+    padding-bottom: 100px;
+}
+
+main {
+    height: 100%;
+    width: 100%;
+    font-size: 0.8rem;
+}
+
+.filtros {
+    font-size: 1rem;
+}
+
+.card-header {
+    height: 50px;
+}
+
+.btn.btn-secondary {
+    width: 100%;
+    text-align: left;
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: #D9D9D9;
+}
+
+.btn.btn-secondary.collap {
+    background-color: #D9D9D9;
+    width: 100%;
+    text-align: left;
+    color: #000;
+}
+
+.btn.btn-secondary.collap:hover{
+    background-color: #444;
+    width: 100%;
+    text-align: left;
+    color: #FFF;
+}
+
+.menu-button {
+    color: black;
+    font-weight: bold;
+    padding: 0
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+.image-detail-gallery {
+    background: #D9D9D9;
+    height: 100px;
+    width: 100px;
+    object-fit: scale-down;
+    object-position: center;
+    margin: 0 12px;
+}
+
+.image-detail-photo {
+    background: #D9D9D9;
+    height: 200px;
+    width: 200px;
+    object-fit: scale-down;
+    object-position: center;
+    margin: 0 12px;
+}
+
+.image-detail-photo-full {
+    display: block;
+    margin: auto;
+    max-height: 90%;
+    max-width: 90%;
+    height: auto;
+    min-height: 400px;
+    width: auto;
+    object-position: center;
+}
+
+.container-fluid {
+    padding-top: 4px;
+}
+
+.list-title {
+    color: var(--secondary-color);
+    margin-left: 2vw;
+    margin-top: 4px;
+}
+
+.icon-return {
+    padding: 6px;
+    font-size: 1.8rem
+}
+
+.modal-body {
+    padding: 0 !important;
+}

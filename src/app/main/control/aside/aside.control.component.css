@@ -1,0 +1,37 @@
+aside{
+    list-style: none;
+    height: 100%;
+    width: 60px;
+    background-color: var(--secondary-color);
+    padding: 20px 10px 10px 20px;
+}
+
+#accordion a i {
+    font-size: 1.4rem !important;
+}
+
+.btn-aside_menu {
+    margin-left: -15px;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    padding-left: 35px;
+    margin-bottom: 10px;
+    text-align: left;
+    background-color: transparent;
+    border-color: var(--secondary-color);
+    color: #D9D9D9;
+}
+
+.btn-aside_menu:hover {
+    background-color: var(--secondary-color);
+}
+
+.active{
+    background-color: var(--secondary-color);
+}
+
+.fas {
+    margin-top: 5px;
+    float: right;
+}

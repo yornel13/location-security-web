@@ -24,7 +24,7 @@ export class VisitaVehiculoService {
     }
 
     getAll() {
-        return this.http.get <Vvehiculo>(this.VEHICULO_URL+'/active/1').toPromise()
+        return this.http.get(this.VEHICULO_URL+'/active/1').toPromise()
             .then((response) => response);
     }
 

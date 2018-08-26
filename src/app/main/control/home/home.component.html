@@ -1,0 +1,56 @@
+<div class="home" [ngStyle]="{background: 'url(./assets/img/background-control.jpg)'}">
+	<div class="row mx-auto">
+		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/admin" [routerLinkActive]="['active']">
+			<div class="mx-auto content-control pb-2 pt-3">
+				<i class="fas fa-user-circle" style="color: #17a2b8; font-size: 3rem !important;"></i>
+				<p class="enlace">Administradores<br><span class="subtitle">Gestión de usuarios administradores</span></p>
+			</div>
+		</a>
+		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/guardia" [routerLinkActive]="['active']">
+			<div class="mx-auto content-control pb-2 pt-3">
+				<i class="fas fa-user-shield icono" style="background-color: #28a745;"></i>
+				<p class="enlace">Guardias<br><span class="subtitle">Gestión de guardias</span></p>
+			</div>
+		</a>
+		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/home/visitas" [routerLinkActive]="['active']">
+			<div class="mx-auto content-control pb-2 pt-3">
+				<i class="fas fa-users icono" style="background-color: #007bff;"></i>
+				<p class="enlace">Visitas<br><span class="subtitle">Visitas de usuarios</span></p>
+			</div>
+		</a>
+	</div>
+	<div class="row mx-auto">
+		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/alertas" [routerLinkActive]="['active']">
+			<div class="mx-auto content-control pb-2 pt-3">
+				<i class="fas fa-bell icono" style="background-color: #ffc107; padding: 12px !important"></i>
+				<p class="enlace">Alertas<br><span class="subtitle">Reportes de alertas</span></p>
+			</div>
+		</a>
+		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/home/bitacora" [routerLinkActive]="['active']">
+			<div class="mx-auto content-control pb-2 pt-3">
+				<i class="fas fa-list-ol icono" style="background-color: #6610f2; padding: 12px !important"></i>
+				<p class="enlace">Bitácora<br><span class="subtitle">Reportes de actividades</span></p>
+			</div>
+		</a>
+		<a class="col-4 cardcontrol mt-5 link"  routerLink="/u/control/home/vigilancia" [routerLinkActive]="['active']">
+			<div class="mx-auto content-control pb-2 pt-3">
+				<i class="fas fa-search icono" style="background-color: #fd7e14; padding: 12px"></i>
+				<p class="enlace">Vigilancia<br><span class="subtitle">Guardias de vigilancia</span></p>
+			</div>
+		</a>
+	</div>
+	<div class="row mx-auto">
+		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/cerco" [routerLinkActive]="['active']">
+			<div class="mx-auto content-control pb-2 pt-3">
+				<i class="fas fa-map-marked icono" style="background-color: #20c997; padding: 12px !important"></i>
+				<p class="enlace">Cerco Virtual<br><span class="subtitle">Limitaciones de vehiculos</span></p>
+			</div>
+		</a>
+		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/configuracion" [routerLinkActive]="['active']">
+			<div class="mx-auto content-control pb-2 pt-3">
+				<i class="fas fa-cog icono" style="background-color: #dc3545; padding: 12px !important"></i>
+				<p class="enlace">Configuración<br><span class="subtitle">Configuración del sistema</span></p>
+			</div>
+		</a>
+	</div>
+</div>

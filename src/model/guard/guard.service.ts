@@ -26,8 +26,23 @@ export class GuardService {
             .then((response) => response);
     }
 
+    activeGuard(id: number) {
+        return this.http.put(this.GUARD_URL + '/' + id + '/active/1', httpOptions).toPromise()
+            .then((response) => response);
+    }
+
+    desactiveGuard(id: number) {
+        return this.http.put(this.GUARD_URL + '/' + id + '/active/0', httpOptions).toPromise()
+            .then((response) => response);
+    }
+
     getAll() {
-        return this.http.get<Guard>(this.GUARD_URL+'/active/1').toPromise()
+        return this.http.get<Guard>(this.GUARD_URL).toPromise()
+            .then((response) => response);
+    }
+
+    getAllActive() {
+        return this.http.get<Guard>(this.GUARD_URL + '/active/1').toPromise()
             .then((response) => response);
     }
 

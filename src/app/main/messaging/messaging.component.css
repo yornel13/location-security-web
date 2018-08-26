@@ -1,0 +1,40 @@
+h1 {
+  margin: 0 auto;
+  width: 8em;
+  text-align: center;
+}
+li {
+  text-align: left;
+}
+
+.loader {
+  border: 8px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 8px solid #3498db;
+  width: 45px;
+  height: 45px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  align-items: center;
+  margin: auto;
+  position: relative;
+  margin-top: 5%;
+}
+
+.dropdown{
+  height: 100%;
+  overflow: scroll;
+}
+
+.buttonContact{
+  border-color: transparent;
+  background-color: transparent;
+  width: auto;
+}
+
+.list{
+  border-bottom: 1;
+  border-bottom-color: black;
+}
+
+/* Styles go here */
