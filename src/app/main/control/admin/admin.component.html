@@ -8,7 +8,7 @@
                 <h3 class="list-title">Administradores</h3>
             </div>
             <div class="ml-auto form-inline">
-                <div class="btn-group" style="margin-right: 20px;">
+                <div class="btn-group">
                     <a class="btn btn-success" style="color: white" (click)="crearAdmin()"><i class="fas fa-plus-circle"></i>
                         Añadir Administrador
                     </a>
@@ -28,7 +28,7 @@
             </div>
             <div class="ml-auto form-inline">
                 <div class="form-group row">
-                  <input type="text" name="searchString" class="form-control" placeholder="Buscar Cédula" [(ngModel)]="adminFilter.dni">
+                  <input type="text" name="searchString" class="form-control" placeholder="Buscar" name="search" [(ngModel)]="filter">
                 </div>
             </div>
             <div class="btn-group btn-group-toggle ml-4" data-toggle="buttons">
@@ -43,20 +43,28 @@
               </label>
             </div>
         </div>
-        <div class="table mt-2">
-            <table class="table table-striped">
-                <thead>
-                <th></th>
-                <th>ID</th>
-                <th>Cédula</th>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Correo</th>
+        <div class="table mt-2 container-fluid">
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                <th (click)="sort('id')">ID
+                    <span class="fas" *ngIf="key =='id'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+                </th>
+                <th (click)="sort('dni')">Cédula
+                    <span class="fas" *ngIf="key =='dni'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+                </th>
+                <th (click)="sort('name')">Nombre
+                    <span class="fas" *ngIf="key =='name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+                </th>
+                <th (click)="sort('lastname')">Apellido
+                    <span class="fas" *ngIf="key =='lastname'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+                </th>
+                <th (click)="sort('email')">Correo
+                    <span class="fas" *ngIf="key =='email'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+                </th>
                 <th>Acciones</th>
                 </thead>
                 <tbody>
-                <tr *ngFor="let d of data | filterBy: adminFilter | paginate: { itemsPerPage: numElement, currentPage: p }">
-                    <td></td>
+                <tr *ngFor="let d of data | filter:filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
                     <td>{{d.id}}</td>
                     <td>{{d.dni}}</td>
                     <td>{{d.name}}</td>

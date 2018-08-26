@@ -8,6 +8,7 @@ import { finalize } from 'rxjs/operators';
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { ExcelService } from '../../../../model/excel/excel.services';
+import { OrderPipe } from 'ngx-order-pipe';
 
 @Component({
     selector: 'app-admin',
@@ -50,7 +51,7 @@ export class AdminComponent {
     //eliminar
     errorDelete:boolean = false;
     errorDeleteData:boolean = false;
-    adminFilter: any = { "dni": ""};
+    filter:string;
     //imagen firebase
     uploadPercent: Observable<number>;
     downloadURL: Observable<string>;
@@ -60,12 +61,21 @@ export class AdminComponent {
     contpdf:any = [];
     info: any = [];
 
+    key: string = 'id'; //set default
+    reverse: boolean = false;
+    
+
     constructor(public router:Router, private adminService:AdminService, private storage: AngularFireStorage, private excelService:ExcelService) {
         this.getAll();
         this.lista = true;
         this.detalle = false;
         this.crear = false;
         this.editar = false;
+    }
+
+    sort(key){
+      this.key = key;
+      this.reverse = !this.reverse;
     }
 
 
@@ -77,6 +87,8 @@ export class AdminComponent {
                 var body = [];
                 var excel = [];
                 for(var i=0; i<this.data.length; i++){
+                    this.data[i].id = Number(this.data[i].id);
+                    this.data[i].dni = Number(this.data[i].dni);
                     excel.push({'#' : this.data[i].id, 'Cedula': this.data[i].dni, 'Nombre':this.data[i].name, 'Apellido':this.data[i].lastname, 'Correo':this.data[i].email})
                     body.push([this.data[i].id, this.data[i].dni, this.data[i].name, this.data[i].lastname, this.data[i].email])
                 }

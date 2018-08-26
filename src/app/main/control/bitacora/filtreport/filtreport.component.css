@@ -17,6 +17,10 @@ app-control {
     width: 100%;
 }
 
+.thead-light>th {
+    cursor: pointer;
+}
+
 aside{
     list-style: none;
     height: 100%;

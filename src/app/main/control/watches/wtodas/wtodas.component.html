@@ -27,8 +27,8 @@
           </select>
           <label for="start" class="mr-2">Fecha</label>
           <input class="form-control mr-2" type="date" name="date" [(ngModel)]="dateSelect"  [ngModelOptions]="{standalone: true}" (change)="getByDate(dateSelect)">
-          <input type="text" name="searchString" class="form-control mr-2" placeholder="Buscar Cédula" [(ngModel)]="guardiaFilter.guard_dni">
-          <div class="btn-group btn-group-toggle ml-2 mr-2" data-toggle="buttons">
+          <input type="text" name="searchString" class="form-control mr-2" placeholder="Buscar" name="search" [(ngModel)]="filter">
+          <div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">
             <label class="btn btn-outline-secondary" (click)="excelDownload()">
               <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
             </label>
@@ -42,21 +42,31 @@
         </div>
       </div>
     </div>
-    <div class="table mt-2">
-            <table class="table table-striped">
-             <thead>
-              <th></th>
-               <th>ID</th>
-               <th>Nombre del Guardia</th>
-               <th>Cédula del Guardia</th>
-              <th>Hora de Inicio</th>
-              <th>Hora de Finalizacion</th>
-               <th>Status</th>
+    <div class="table mt-2 container-fluid">
+            <table class="table table-bordered">
+             <thead class="thead-light">
+               <th (click)="sort('id')">ID
+                <span class="fas" *ngIf="key =='id'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('guard_name')">Nombre del Guardia
+                <span class="fas" *ngIf="key =='guard_name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('guard_dni')">Cédula del Guardia
+                <span class="fas" *ngIf="key =='guard_dni'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+              <th (click)="sort('create_date')">Hora de Inicio
+                <span class="fas" *ngIf="key =='create_date'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+              </th>
+              <th (click)="sort('update_date')">Hora de Finalizacion
+                <span class="fas" *ngIf="key =='update_date'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+              </th>
+               <th (click)="sort('status')">Status
+                <span class="fas" *ngIf="key =='status'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
                <th>Detalle</th>
              </thead>
              <tbody>
-              <tr *ngFor="let d of data | filterBy: guardiaFilter | paginate: { itemsPerPage: numElement, currentPage: p }">
-                <td></td>
+              <tr *ngFor="let d of data | filter:filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
                 <td>{{d.id}}</td>
                 <td>{{d.guard_name}} {{d.guard_lastname}}</td>
                 <td>{{d.guard_dni}}</td>

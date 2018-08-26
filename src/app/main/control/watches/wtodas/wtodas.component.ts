@@ -17,7 +17,7 @@ export class WtodasComponent {
   detalle:boolean;
   watches:any = undefined;
   data:any = undefined;
-  guardiaFilter: any = { "guard_dni": ""};
+  filter:string;
   //filtro guardia
   guardias:any = [];
   guard:any = [];
@@ -31,11 +31,19 @@ export class WtodasComponent {
   contpdf:any = [];
   info: any = [];
 
+  key: string = 'id'; //set default
+  reverse: boolean = false;
+
   constructor(public router:Router, private watchesService:WatchesService, private guardiasService:GuardService, private excelService:ExcelService) { 
   	this.getAll();
   	this.getGuard();
   	this.lista = true;
   	this.detalle = false;
+  }
+
+  sort(key){
+    this.key = key;
+    this.reverse = !this.reverse;
   }
 
   getAll() {
@@ -54,7 +62,9 @@ export class WtodasComponent {
                   this.data[i].update_date = "--";
                 }
                 excel.push({'#' : this.data[i].id, 'Nombre del Guardia': this.data[i].guard_name+' '+this.data[i].guard_lastname, 'Cédula del Guardia':this.data[i].guard_dni, 'Hora de inicio':this.data[i].create_date, 'Hora de finalización':this.data[i].update_date, 'Status':status})
-                body.push([this.data[i].id, this.data[i].guard_name+' '+this.data[i].guard_lastname, this.data[i].guard_dni, this.data[i].create_date, this.data[i].update_date, status])
+                body.push([this.data[i].id, this.data[i].guard_name+' '+this.data[i].guard_lastname, this.data[i].guard_dni, this.data[i].create_date, this.data[i].update_date, status]);
+                this.data[i].id = Number(this.data[i].id);
+                this.data[i].guard_dni = Number(this.data[i].guard_dni);
             }
             this.contpdf = body;
             this.info = excel;

@@ -46,11 +46,14 @@ export class VisitasComponent {
   funcio:any = [];
   funcionarioSelect:number=0;
   valueDate:any = [];
-  userFilter: any = { "plate": "" };
+  filter:string;
   numElement:number = 10;
   //exportaciones
   contpdf:any = [];
   info: any = [];
+
+  key: string = 'id'; //set default
+  reverse: boolean = false;
 
   constructor(public router:Router, private visitasService:VisitasService, private guardiaService:GuardService, private excelService:ExcelService,
   	private vehiculoService:VisitaVehiculoService, private visitanteService:VisitanteService, private funcionarioService:FuncionarioService) { 
@@ -63,6 +66,11 @@ export class VisitasComponent {
   	this.getFuncionarios();
   }
 
+  	sort(key){
+	  this.key = key;
+	  this.reverse = !this.reverse;
+	}
+
   getAll(){
   	this.visitasService.getAll().then(
       success => {
@@ -71,6 +79,8 @@ export class VisitasComponent {
         var body = [];
         var excel = [];
         for(var i=0; i<this.data.length; i++){
+        	this.data[i].id = Number(this.data[i].id);
+            this.data[i].visitor_dni = Number(this.data[i].visitor_dni);
             excel.push({'#' : this.data[i].id, 'Placa del Vehículo': this.data[i].plate, 'Visitante':this.data[i].visitor_name+' '+this.data[i].visitor_lastname, 'Cédula del visitante':this.data[i].visitor_dni, 'Entrada':this.data[i].create_date, 'Salida':this.data[i].finish_date})
             body.push([this.data[i].id, this.data[i].plate, this.data[i].visitor_name+' '+this.data[i].visitor_lastname, this.data[i].visitor_dni, this.data[i].create_date, this.data[i].finish_date])
         }

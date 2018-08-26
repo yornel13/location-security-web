@@ -20,6 +20,10 @@
     color: #000;
 }
 
+.thead-light>th {
+    cursor: pointer;
+}
+
 .btn.btn-secondary.collap:hover{
     background-color: #444;
     width: 100%;

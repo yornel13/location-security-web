@@ -48,7 +48,7 @@ export class GuardiaComponent {
   //eliminar
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
-  guardFilter: any = { "dni": ""};
+  filter:string;
   //imagen firebase
   uploadPercent: Observable<number>;
   downloadURL: Observable<string>;
@@ -56,11 +56,18 @@ export class GuardiaComponent {
   //exportaciones
   contpdf:any = [];
   info: any = [];
+  key: string = 'id'; //set default
+  reverse: boolean = false;
 
 
   constructor(public router:Router, private guardService:GuardService,  private storage: AngularFireStorage, private excelService:ExcelService) { 
   	this.getAll();
   	this.regresar();
+  }
+
+  sort(key){
+    this.key = key;
+    this.reverse = !this.reverse;
   }
 
   getAll() {
@@ -71,6 +78,9 @@ export class GuardiaComponent {
           var body = [];
           var excel = [];
           for(var i=0; i<this.data.length; i++){
+              this.data[i].id = Number(this.data[i].id);
+              this.data[i].dni = Number(this.data[i].dni);
+              this.data[i].active = Number(this.data[i].active);
               excel.push({'#' : this.data[i].id, 'Cedula': this.data[i].dni, 'Nombre':this.data[i].name, 'Apellido':this.data[i].lastname, 'Correo':this.data[i].email})
               body.push([this.data[i].id, this.data[i].dni, this.data[i].name, this.data[i].lastname, this.data[i].email])
           }

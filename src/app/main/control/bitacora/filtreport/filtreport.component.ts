@@ -56,6 +56,9 @@ export class FiltreportComponent {
   contpdf:any = [];
   info: any = [];
 
+  key: string = 'id'; //set default
+  reverse: boolean = false;
+
   constructor(public router:Router, private bitacoraService:BitacoraService, private guardiaService:GuardService, 
     private incidenciaService:IncidenciasService, private excelService:ExcelService) { 
   	this.getIncidencias();
@@ -75,6 +78,11 @@ export class FiltreportComponent {
         };
   }
 
+  sort(key){
+    this.key = key;
+    this.reverse = !this.reverse;
+  }
+
   	getAll() {
     	this.bitacoraService.getAll().then(
     		success => {
@@ -90,6 +98,7 @@ export class FiltreportComponent {
             var excel = [];
             var resolve = "";
             for(var i=0; i<this.data.length; i++){
+                this.data[i].id = Number(this.data[i].id);
                 if(this.data[i].resolved == 0){
                   resolve = "Cerrado";
                 }else if(this.data[i].resolved == 1){
@@ -147,9 +156,11 @@ export class FiltreportComponent {
       }else{
         for(var j=0; j<this.incidencias.total; j++){
           var hola = 0;
-          for(var i=0; i<data.length; i++){
-            if(data[i].incidence_id == this.inciden[j].id){
-              hola++;
+          if(this.inciden[j].name != "General"){
+            for(var i=0; i<data.length; i++){
+              if(data[i].incidence_id == this.inciden[j].id){
+                hola++;
+              }
             }
           }
           value[j] = hola; 
@@ -161,7 +172,9 @@ export class FiltreportComponent {
     nameInciden(){
       var name = [];
       for(var i=0; i<this.incidencias.total; i++){
-        name[i] = this.inciden[i].name;
+        if(this.inciden[i].name != "General"){
+          name[i] = this.inciden[i].name;
+        }
       }
       return name;
     }

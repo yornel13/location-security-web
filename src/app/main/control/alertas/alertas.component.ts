@@ -39,6 +39,9 @@ export class AlertasComponent  {
   contpdf:any = [];
   info: any = [];
 
+  key: string = 'id'; //set default
+  reverse: boolean = false;
+
   constructor(private alertaService:AlertaService, private guardiaService:GuardService, private excelService:ExcelService) { 
   	this.getAll();
   	this.getGuardias();
@@ -70,13 +73,17 @@ export class AlertasComponent  {
 
   }
 
+  	sort(key){
+	  this.key = key;
+	  this.reverse = !this.reverse;
+	}
+
   getAll() {
         this.alertaService.getAll().then(
             success => {
                 this.alertas = success;
                 this.data = this.alertas.data;
                 this.valores = this.countAlert(this.data);
-                console.log(this.data);
                 this.dataSource.data[0].value = this.valores[0];
 	            this.dataSource.data[1].value = this.valores[1];
 	            this.dataSource.data[2].value = this.valores[2];
@@ -85,7 +92,8 @@ export class AlertasComponent  {
 		        var status = "";
 		        var cause = "";
 		        for(var i=0; i<this.data.length; i++){
-
+		        	this.data[i].id = Number(this.data[i].id);
+		        	
 		        	if(this.data[i].status == 1){
 		        		status = "Activa"
 		        	}else{

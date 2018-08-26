@@ -21,8 +21,8 @@
       </div>
       <div class="ml-auto form-inline">
         <div class="form-group row">
-          <input type="text" name="searchString" class="form-control mr-2" placeholder="Buscar Cédula" [(ngModel)]="visitantesFilter.dni">
-          <div class="btn-group btn-group-toggle ml-2 mr-2" data-toggle="buttons">
+          <input type="text" name="searchString" class="form-control mr-2" placeholder="Buscar" name="search" [(ngModel)]="filter">
+          <div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">
               <label class="btn btn-outline-secondary" (click)="excelDownload()">
                 <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
               </label>
@@ -36,21 +36,29 @@
         </div>
       </div>
     </div>
-    <div class="table mt-2">
-            <table class="table table-striped">
-             <thead>
-             <th></th>
-               <th>ID</th>
-               <th>Cédula</th>
-               <th>Nombres</th>
-               <th>Apellidos</th>
-               <th>Compañia</th>
+    <div class="table mt-2 container-fluid">
+            <table class="table table-bordered">
+             <thead class="thead-light">
+               <th (click)="sort('id')">ID
+                <span class="fas" *ngIf="key =='id'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('dni')">Cédula
+                <span class="fas" *ngIf="key =='dni'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('name')">Nombre
+                <span class="fas" *ngIf="key =='name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('lastname')">Apellido
+                <span class="fas" *ngIf="key =='lastname'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
+               <th (click)="sort('company')">Compañia
+                <span class="fas" *ngIf="key =='company'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               </th>
                <th>Foto</th>
                <th>Acciones</th>
              </thead>
              <tbody>
-              <tr *ngFor="let d of data | filterBy: visitantesFilter | paginate: { itemsPerPage: numElement, currentPage: p }">
-                  <td></td>
+              <tr *ngFor="let d of data | filter:filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
                 <td>{{d.id}}</td>
                 <td>{{d.dni}}</td>
                 <td>{{d.name}}</td>
