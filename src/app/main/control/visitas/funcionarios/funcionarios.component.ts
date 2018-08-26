@@ -23,7 +23,7 @@ export class FuncionariosComponent {
   detalle:boolean;
   crear:boolean;
   editar:boolean;
-  //editar
+  //editBoundView
   nombre:string;
   apellido:string;
   direccion:string;

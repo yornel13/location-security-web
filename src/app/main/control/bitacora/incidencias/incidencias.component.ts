@@ -22,7 +22,7 @@ export class IncidenciasComponent {
   detalle:boolean;
   crear:boolean;
   editar:boolean;
-  //editar
+  //editBoundView
   nombre:string;
   nivel:string;
   idEdit:number;

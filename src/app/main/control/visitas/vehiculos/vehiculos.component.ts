@@ -22,7 +22,7 @@ export class VehiculosComponent {
   detalle:boolean;
   crear:boolean;
   editar:boolean;
-  //editar
+  //editBoundView
   placa:string;
   vehiculo:string;
   modelo:string;
