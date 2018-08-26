@@ -44,7 +44,7 @@
               <option [ngValue]="0">Funcionarios</option>
               <option *ngFor="let f of funcio" [ngValue]="f.id">{{f.name}} {{f.lastname}}</option>
             </select>
-            <input type="text" name="searchString" class="form-control" placeholder="Buscar Placa" [(ngModel)]="userFilter.plate">
+            <input type="text" name="searchString" class="form-control" placeholder="Buscar" name="search" [(ngModel)]="filter">
             <div class="btn-group btn-group-toggle ml-2 mr-2" data-toggle="buttons">
               <label class="btn btn-outline-secondary" (click)="excelDownload()">
                 <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
@@ -72,7 +72,7 @@
                <th>Detalle</th>
              </thead>
              <tbody>
-              <tr *ngFor="let d of data | filterBy: userFilter | paginate: { itemsPerPage: numElement, currentPage: p }">
+              <tr *ngFor="let d of data | filter:filter | paginate: { itemsPerPage: numElement, currentPage: p }">
                 <td></td>
                 <td>{{d.id}}</td>
                 <td>{{d.plate}}</td>

@@ -147,9 +147,11 @@ export class FiltreportComponent {
       }else{
         for(var j=0; j<this.incidencias.total; j++){
           var hola = 0;
-          for(var i=0; i<data.length; i++){
-            if(data[i].incidence_id == this.inciden[j].id){
-              hola++;
+          if(this.inciden[j].name != "General"){
+            for(var i=0; i<data.length; i++){
+              if(data[i].incidence_id == this.inciden[j].id){
+                hola++;
+              }
             }
           }
           value[j] = hola; 
@@ -161,7 +163,9 @@ export class FiltreportComponent {
     nameInciden(){
       var name = [];
       for(var i=0; i<this.incidencias.total; i++){
-        name[i] = this.inciden[i].name;
+        if(this.inciden[i].name != "General"){
+          name[i] = this.inciden[i].name;
+        }
       }
       return name;
     }

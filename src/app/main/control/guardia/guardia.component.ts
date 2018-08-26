@@ -48,7 +48,7 @@ export class GuardiaComponent {
   //eliminar
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
-  guardFilter: any = { "dni": ""};
+  filter:string;
   //imagen firebase
   uploadPercent: Observable<number>;
   downloadURL: Observable<string>;

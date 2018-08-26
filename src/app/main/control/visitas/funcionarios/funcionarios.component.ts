@@ -44,7 +44,7 @@ export class FuncionariosComponent {
   //eliminar
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
-  funcionarioFilter: any = { "dni": ""};
+  filter:string;
   numElement:number = 10;
   //exportaciones
   contpdf:any = [];

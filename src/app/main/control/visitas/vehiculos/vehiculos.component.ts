@@ -34,7 +34,7 @@ export class VehiculosComponent {
   //eliminar
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
-  vehicleFilter: any = { "plate": ""};
+  filter:string;
   numElement:number = 10;
   //exportaciones
   contpdf:any = [];

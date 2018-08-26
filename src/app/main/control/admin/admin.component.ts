@@ -50,7 +50,7 @@ export class AdminComponent {
     //eliminar
     errorDelete:boolean = false;
     errorDeleteData:boolean = false;
-    adminFilter: any = { "dni": ""};
+    filter:string;
     //imagen firebase
     uploadPercent: Observable<number>;
     downloadURL: Observable<string>;

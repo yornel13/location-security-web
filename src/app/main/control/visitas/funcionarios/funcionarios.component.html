@@ -28,7 +28,7 @@
       </div>
         <div class="ml-auto form-inline">
           <div class="form-group row">
-            <input type="text" name="searchString" class="form-control mr-2" placeholder="Buscar Cédula" [(ngModel)]="funcionarioFilter.dni">
+            <input type="text" name="searchString" class="form-control mr-2" placeholder="Buscar" name="search" [(ngModel)]="filter">
             <div class="btn-group btn-group-toggle ml-2 mr-2" data-toggle="buttons">
               <label class="btn btn-outline-secondary" (click)="excelDownload()">
                 <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
@@ -55,7 +55,7 @@
                <th>Acciones</th>
              </thead>
              <tbody>
-              <tr *ngFor="let d of data | filterBy: funcionarioFilter | paginate: { itemsPerPage: numElement, currentPage: p }">
+              <tr *ngFor="let d of data | filter:filter | paginate: { itemsPerPage: numElement, currentPage: p }">
                 <td></td>
                 <td>{{d.id}}</td>
                 <td>{{d.dni}}</td>

@@ -28,7 +28,7 @@
             </div>
             <div class="ml-auto form-inline">
                 <div class="form-group row">
-                  <input type="text" name="searchString" class="form-control" placeholder="Buscar Cédula" [(ngModel)]="adminFilter.dni">
+                  <input type="text" name="searchString" class="form-control" placeholder="Buscar" name="search" [(ngModel)]="filter">
                 </div>
             </div>
             <div class="btn-group btn-group-toggle ml-4" data-toggle="buttons">
@@ -55,7 +55,7 @@
                 <th>Acciones</th>
                 </thead>
                 <tbody>
-                <tr *ngFor="let d of data | filterBy: adminFilter | paginate: { itemsPerPage: numElement, currentPage: p }">
+                <tr *ngFor="let d of data | filter:filter | paginate: { itemsPerPage: numElement, currentPage: p }">
                     <td></td>
                     <td>{{d.id}}</td>
                     <td>{{d.dni}}</td>

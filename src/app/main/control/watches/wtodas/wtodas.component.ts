@@ -17,7 +17,7 @@ export class WtodasComponent {
   detalle:boolean;
   watches:any = undefined;
   data:any = undefined;
-  guardiaFilter: any = { "guard_dni": ""};
+  filter:string;
   //filtro guardia
   guardias:any = [];
   guard:any = [];

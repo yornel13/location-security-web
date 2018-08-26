@@ -27,7 +27,7 @@
           </select>
           <label for="start" class="mr-2">Fecha</label>
           <input class="form-control mr-2" type="date" name="date" [(ngModel)]="dateSelect"  [ngModelOptions]="{standalone: true}" (change)="getByDate(dateSelect)">
-          <input type="text" name="searchString" class="form-control mr-2" placeholder="Buscar Cédula" [(ngModel)]="guardiaFilter.guard_dni">
+          <input type="text" name="searchString" class="form-control mr-2" placeholder="Buscar" name="search" [(ngModel)]="filter">
           <div class="btn-group btn-group-toggle ml-2 mr-2" data-toggle="buttons">
             <label class="btn btn-outline-secondary" (click)="excelDownload()">
               <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
@@ -55,7 +55,7 @@
                <th>Detalle</th>
              </thead>
              <tbody>
-              <tr *ngFor="let d of data | filterBy: guardiaFilter | paginate: { itemsPerPage: numElement, currentPage: p }">
+              <tr *ngFor="let d of data | filter:filter | paginate: { itemsPerPage: numElement, currentPage: p }">
                 <td></td>
                 <td>{{d.id}}</td>
                 <td>{{d.guard_name}} {{d.guard_lastname}}</td>

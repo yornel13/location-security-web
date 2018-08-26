@@ -34,7 +34,7 @@ export class VisitantesComponent {
   //eliminar
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
-  visitantesFilter: any = { "dni": ""};
+  filter:string;
   numElement:number = 10;
   //exportaciones
   contpdf:any = [];

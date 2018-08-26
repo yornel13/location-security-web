@@ -21,7 +21,7 @@ export class VisitasactivasComponent {
   data:any = undefined;
   visi:any = [];
   searchString: string;
-  userFilter: any = { "plate": "" };
+  filter:string;
   //vistas vehiculos
   lista:boolean;
   detalle:boolean;

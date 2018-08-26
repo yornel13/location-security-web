@@ -46,7 +46,7 @@ export class VisitasComponent {
   funcio:any = [];
   funcionarioSelect:number=0;
   valueDate:any = [];
-  userFilter: any = { "plate": "" };
+  filter:string;
   numElement:number = 10;
   //exportaciones
   contpdf:any = [];

@@ -17,7 +17,7 @@ export class WactivasComponent {
   detalle:boolean;
   watches:any = undefined;
   data:any = undefined;
-  guardiaFilter: any = { "guard":{ "dni" : ""}};
+  filter:string;
   //filtro guardia
   guardias:any = [];
   guard:any = [];
