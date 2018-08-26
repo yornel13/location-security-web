@@ -30,7 +30,7 @@ export class ConfiguracionComponent  {
   detalle:boolean;
   editar:boolean;
   editarb:boolean;
-  //editBoundView
+  //editar
   nombre:string;
   valor:string;
   idEdit:number;

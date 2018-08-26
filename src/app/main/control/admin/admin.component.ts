@@ -27,7 +27,7 @@ export class AdminComponent {
     detalle:boolean;
     crear:boolean;
     editar:boolean;
-    //editBoundView
+    //editar
     nombre:string;
     apellido:string;
     correo:string;

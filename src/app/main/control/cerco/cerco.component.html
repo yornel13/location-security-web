@@ -12,7 +12,7 @@
                     Añadir Cerco
                 </a>
             </div>
-           
+
             <div class="form-group row">
                 <input type="text" name="searchString" class="form-control mr-4" placeholder="Buscar Cerco" [(ngModel)]="boundsFilter.name">  <!---->
             </div>
@@ -29,12 +29,12 @@
             </thead>
             <tbody>
             <tr *ngFor="let cerco of data | filterBy: boundsFilter ">            <!--| filterBy: adminFilter-->
-    
+
                 <td></td>
                 <td>{{cerco.id}}</td>
                 <td>{{cerco.name}}</td>
                 <td>{{cerco.create_at}}</td>
-                
+
                 <td>
                     <a class="btn btn-info" *ngIf="cerco.active == 0" (click)="activarAdmin(cerco.id)" style="display: inline-block; margin-right: 10px; width: 100px">Activar</a>
                     <a class="btn btn-secondary" *ngIf="cerco.active == 1" (click)="desactivarAdmin(cerco.id)" style="display: inline-block; margin-right: 10px;  width: 100px">Desactivar</a>
@@ -42,8 +42,8 @@
                     <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editBound(cerco.id)" title="Editar"><span class="fas fa-edit"></span></a>
                     <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{cerco.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
                 </td>
-                
-                
+
+
                 <div class="modal" tabindex="-1" role="dialog" id="modal{{cerco.id}}">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -63,7 +63,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <div class="modal" tabindex="-1" role="dialog" id="modal{{cerco.name}}">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -83,10 +83,10 @@
                         </div>
                     </div>
                 </div>
-                
+
             </tr>
             </tbody>
-        
+
         </table>
     </div>
 </div>
@@ -97,14 +97,14 @@
         <h3 class="panel-title"><i class="fas fa-plus-circle" style="margin-right: 20px;"></i>Nuevo Cerco Virtual</h3>
     </div>
     <form role="form">
-    <div class="panel-body mt-2">
-        <div class="table-container container">
+        <div class="panel-body mt-2">
+            <div class="table-container container">
                 <div class="form-group row name-bounds-f">
                     <div class="col-sm-5">
                         <input #nameBoundField type="text" class="form-control" id="namea" placeholder="Nombre del cerco" [(ngModel)]="nameBound" [ngModelOptions]="{standalone: true}">
                     </div>
                 </div>
-                
+
                 <div class="form-group row">
                     <div class="map-bounds"
                          leaflet
@@ -118,19 +118,19 @@
                          (leafletMapReady)="onMapReady($event)">
                     </div>
                 </div>
-            <div *ngIf="alertError" class="alert alert-danger" role="alert">
-                {{message}}
+                <div *ngIf="alertError" class="alert alert-danger" role="alert">
+                    {{message}}
+                </div>
+                <div *ngIf="alertSuccess" class="alert alert-success" role="alert">
+                    {{message}}
+                </div>
+
+                <div class="row mt-4 back-save-btn">
+                    <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="regresar()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
+                    <button type="button" class="btn btn-success btn-block col-md-3 mr-auto" (click)="saveNewBound()"  style=" margin: 0px 0px 0px 20px"><i class="fas fa-plus-circle" style="margin-right: 10px;"></i>Guardar Cerco</button>
+                </div>
             </div>
-            <div *ngIf="alertSuccess" class="alert alert-success" role="alert">
-                {{message}}
-            </div>
-            
-            <div class="row mt-4 back-save-btn">
-                <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="regresar()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
-                <button type="button" class="btn btn-success btn-block col-md-3 mr-auto" (click)="saveNewBound()"  style=" margin: 0px 0px 0px 20px"><i class="fas fa-plus-circle" style="margin-right: 10px;"></i>Guardar Cerco</button>
-            </div>
-      </div>
-    </div>
+        </div>
     </form>
 </div>
 
@@ -147,7 +147,7 @@
                         <input #nameBoundField type="text" class="form-control"  placeholder="Nombre del cerco" [(ngModel)]="nameBound" [ngModelOptions]="{standalone: true}">
                     </div>
                 </div>
-                
+
                 <div class="form-group row" >
                     <div id="editPoly" class="map-bounds"
                          leaflet
@@ -167,7 +167,7 @@
                 <div *ngIf="alertSuccess" class="alert alert-success" role="alert">
                     {{message}}
                 </div>
-                
+
                 <div class="row mt-4 back-save-btn">
                     <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="regresar()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
                     <button type="button" class="btn btn-success btn-block col-md-3 mr-auto" (click)="saveEditedBound()" style=" margin: 0px 0px 0px 20px"><i class="fas fa-plus-circle" style="margin-right: 10px;"></i>Guardar Cerco</button>

@@ -419,12 +419,12 @@ export class CercoComponent implements OnInit {
             this.map.addLayer(this.toEditPolygon);
         }
 
-            this.toEditPolygon.on('click', e => {
-                e.target.editing.enable();
-                const drawnItems = new L.FeatureGroup().getBounds();
-                this.map.addLayer(drawnItems);
-                console.log('diooo');
-            });
+        this.toEditPolygon.on('click', e => {
+            e.target.editing.enable();
+            const drawnItems = new L.FeatureGroup().getBounds();
+            this.map.addLayer(drawnItems);
+            console.log('diooo');
+        });
 
     }
 
