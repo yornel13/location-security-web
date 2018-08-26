@@ -32,10 +32,27 @@
                       <span aria-hidden="true">&times;</span>
                   </button>
               </div>
+              <div class="row form-inline mt-2">
+                <div class="mr-auto form-inline pl-4">
+                  <input class="form-control form-control-sm mr-1" type="date" name="date" [(ngModel)]="desde" (change)="getChartDate()" [ngModelOptions]="{standalone: true}">
+                  <input class="form-control form-control-sm mr-1" type="date" name="date" [(ngModel)]="hasta" (change)="getChartDate()" [ngModelOptions]="{standalone: true}" disabled *ngIf="rangeday">
+                  <input class="form-control form-control-sm mr-1" type="date" name="date" [(ngModel)]="hasta" (change)="getChartDate()" [ngModelOptions]="{standalone: true}" *ngIf="!rangeday">
+                </div>
+                <div class="ml-auto form-inline pr-4">
+                  <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-outline-info btn-sm active" (click)="selectRange(1)">
+                      <input type="radio" name="options" id="option2" autocomplete="off"> Dia
+                    </label>
+                    <label class="btn btn-outline-info btn-sm" (click)="selectRange(2)">
+                      <input type="radio" name="options" id="option3" autocomplete="off" [attr.disabled]="rangeday == true ? true : null"> Rango
+                    </label>
+                  </div>
+                </div>
+              </div>
               <div class="modal-body">
                   <div style="display: block;">
                   <fusioncharts
-                    width="500px"
+                    width="490px"
                     height="300px"
                     type="Doughnut2d"
                     [dataSource]="dataSource">
@@ -274,13 +291,13 @@
                 </div>
               </div>
               <hr>
-              <div class="form-group row"  *ngIf="haycomentarios">
+              <div class="form-group row mt-2"  *ngIf="haycomentarios">
                 <label for="creation" class="col-sm-9 col-form-label"><b>Comentarios</b></label>
                 <div class="col-sm-3">
                   <button class="btn btn-success form-control ml-auto" *ngIf="report.resolved != 0" (click)="agregarComentario()">Agregar comentario</button>
                 </div>
               </div>
-              <div class="form-group row" *ngIf="!haycomentarios">
+              <div class="form-group row mt-2" *ngIf="!haycomentarios">
                 <label for="creation" class="col-sm-9 col-form-label"><b>No hay comentarios</b></label>
                 <div class="col-sm-3">
                   <button class="btn btn-success form-control ml-auto" *ngIf="report.resolved != 0" (click)="agregarComentario()">Agregar comentario</button>

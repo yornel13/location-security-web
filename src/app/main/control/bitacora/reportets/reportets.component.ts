@@ -53,7 +53,7 @@ export class ReportetsComponent {
   info: any = [];
 
   key: string = 'id'; //set default
-  reverse: boolean = false;
+  reverse: boolean = true;
 
 
   constructor(public router:Router, private bitacoraService:BitacoraService, private guardiaService:GuardService, 

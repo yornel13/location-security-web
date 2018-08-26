@@ -40,7 +40,7 @@ export class AlertasComponent  {
   info: any = [];
 
   key: string = 'id'; //set default
-  reverse: boolean = false;
+  reverse: boolean = true;
 
   constructor(private alertaService:AlertaService, private guardiaService:GuardService, private excelService:ExcelService) { 
   	this.getAll();

@@ -55,9 +55,15 @@ export class FiltreportComponent {
   //exportaciones
   contpdf:any = [];
   info: any = [];
-
-  key: string = 'id'; //set default
-  reverse: boolean = false;
+  //order table
+  key: string = 'id';
+  reverse: boolean = true;
+  //filter chart
+  rangeday:boolean = true;
+  desde:string = "";
+  hasta:string = "";
+  chartreportes:any = [];
+  chartdata:any = [];
 
   constructor(public router:Router, private bitacoraService:BitacoraService, private guardiaService:GuardService, 
     private incidenciaService:IncidenciasService, private excelService:ExcelService) { 
@@ -118,7 +124,9 @@ export class FiltreportComponent {
             nombres = this.nameInciden();
             valores = this.countInciden(this.data);
             for(var i=0; i<this.incidencias.total; i++){
-              hola.push({"label":nombres[i], "value":valores[i]})
+              if(nombres[i] != "General"){
+                hola.push({"label":nombres[i], "value":valores[i]})
+              }
             }
             this.datos = hola;
             this.dataSource.data = this.datos;
@@ -156,27 +164,204 @@ export class FiltreportComponent {
       }else{
         for(var j=0; j<this.incidencias.total; j++){
           var hola = 0;
-          if(this.inciden[j].name != "General"){
             for(var i=0; i<data.length; i++){
               if(data[i].incidence_id == this.inciden[j].id){
                 hola++;
               }
             }
-          }
           value[j] = hola; 
       }
       return value;
     }
   }
 
+    countIncidenDate(data){
+        var value = []
+
+        var fecha1 = String(this.desde);
+        var valueDate1 = fecha1.split('-');
+        var year1 = valueDate1[0];
+        var month1 = valueDate1[1];
+        var day1 = valueDate1[2];
+
+        var fecha2 = String(this.hasta);
+        var valueDate2 = fecha2.split('-');
+        var year2 = valueDate2[0];
+        var month2 = valueDate2[1];
+        var day2 = valueDate2[2];
+
+        var date1 = fecha1.replace('-','');
+        var date11 = Number(date1.replace('-',''));
+        var date2 = fecha2.replace('-','');
+        var date22 = Number(date2.replace('-',''));        
+
+        if(data.length == 0){
+          value = [];
+          return value;
+        }else{
+          for(var j=0; j<this.incidencias.total; j++){
+            var hola = 0;
+              for(var i=0; i<data.length; i++){
+                var date = String(this.chartdata[i].create_date);
+                var valueDate = date.split(' ');
+                var fecha = valueDate[0].toString();
+                var fecha1 = fecha.replace('-','');
+                var fecha11 = Number(fecha1.replace('-',''));
+                console.log(fecha11);
+                console.log(date11);
+                console.log(date22);
+
+                if(fecha11 >= date11 && fecha11 <= date22){
+                  if(data[i].incidence_id == this.inciden[j].id){
+                    hola++;
+                  }
+                }                
+              }
+            value[j] = hola; 
+        }
+        return value;
+      }
+    }
+
     nameInciden(){
       var name = [];
       for(var i=0; i<this.incidencias.total; i++){
-        if(this.inciden[i].name != "General"){
-          name[i] = this.inciden[i].name;
-        }
+        name[i] = this.inciden[i].name;
       }
       return name;
+    }
+
+    getChartDate(){
+      var fecha1 = String(this.desde);
+      var valueDate1 = fecha1.split('-');
+      var year1 = valueDate1[0];
+      var month1 = valueDate1[1];
+      var day1 = valueDate1[2];
+
+      var fecha2 = String(this.hasta);
+      var valueDate2 = fecha2.split('-');
+      var year2 = valueDate2[0];
+      var month2 = valueDate2[1];
+      var day2 = valueDate2[2];
+
+      var date1 = fecha1.replace('-','');
+      var date11 = Number(date1.replace('-',''));
+      var date2 = fecha2.replace('-','');
+      var date22 = Number(date2.replace('-',''));
+
+      if(this.rangeday){
+        if(this.desde == ""){
+          this.bitacoraService.getAll().then(
+          success => {
+            this.chartreportes = success;
+            this.chartdata = this.chartreportes.data;
+            //chart
+            var hola = [];
+            var nombres = [];
+            var valores = [];
+            nombres = this.nameInciden();
+            valores = this.countInciden(this.chartdata);
+            for(var i=0; i<this.incidencias.total; i++){
+              if(nombres[i] != "General"){
+                hola.push({"label":nombres[i], "value":valores[i]})
+              }
+            }
+            this.datos = hola;
+            this.dataSource.data = hola;
+              }, error => {
+                  if (error.status === 422) {
+                      // on some data incorrect
+                  } else {
+                      // on general error
+                  }
+              }
+          );
+        }else{
+          this.bitacoraService.getByDate(year1, month1, day1).then(
+          success => {
+            this.chartreportes = success;
+            this.chartdata = this.chartreportes.data;
+            //chart
+            var hola = [];
+            var nombres = [];
+            var valores = [];
+            nombres = this.nameInciden();
+            valores = this.countInciden(this.chartdata);
+            for(var i=0; i<this.incidencias.total; i++){
+              if(nombres[i] != "General"){
+                hola.push({"label":nombres[i], "value":valores[i]})
+              }
+            }
+            this.datos = hola;
+            this.dataSource.data = hola;
+              }, error => {
+                  if (error.status === 422) {
+                      // on some data incorrect
+                  } else {
+                      // on general error
+                  }
+              }
+          );
+        }
+      }else{
+        if(this.desde == ""){
+          this.hasta = "";
+          this.bitacoraService.getAll().then(
+          success => {
+            this.chartreportes = success;
+            this.chartdata = this.chartreportes.data;
+            //chart
+            var hola = [];
+            var nombres = [];
+            var valores = [];
+            nombres = this.nameInciden();
+            valores = this.countInciden(this.chartdata);
+            for(var i=0; i<this.incidencias.total; i++){
+              if(nombres[i] != "General"){
+                hola.push({"label":nombres[i], "value":valores[i]})
+              }
+            }
+            this.datos = hola;
+            this.dataSource.data = hola;
+              }, error => {
+                  if (error.status === 422) {
+                      // on some data incorrect
+                  } else {
+                      // on general error
+                  }
+              }
+          );
+        }else{
+          if(this.hasta != ""){
+            this.bitacoraService.getAll().then(
+            success => {
+              this.chartreportes = success;
+              this.chartdata = this.chartreportes.data;
+              //chart
+              var hola = [];
+              var nombres = [];
+              var valores = [];
+              nombres = this.nameInciden();
+              valores = this.countIncidenDate(this.chartdata);
+              for(var i=0; i<this.incidencias.total; i++){
+                if(nombres[i] != "General"){
+                  hola.push({"label":nombres[i], "value":valores[i]})                
+                }
+              }
+              console.log(hola);
+              this.datos = hola;
+              this.dataSource.data = hola;
+                }, error => {
+                    if (error.status === 422) {
+                        // on some data incorrect
+                    } else {
+                        // on general error
+                    }
+                }
+            );
+          }
+        }
+      }
     }
 
     viewDetail(id) {
@@ -751,6 +936,18 @@ export class FiltreportComponent {
         });   
         doc.autoPrint();
         window.open(doc.output('bloburl'), '_blank');
+    }
+
+    selectRange(id){
+      if(id == 1){
+        this.rangeday = true;
+        this.desde = "";
+        this.hasta = "";
+      }else{
+        this.rangeday = false;
+        this.desde = "";
+        this.hasta = "";
+      }
     }
 
     public doughnutChartType:string = 'doughnut';

@@ -53,7 +53,7 @@ export class VisitasactivasComponent {
   contpdf:any = [];
   info: any = [];
   key: string = 'id'; //set default
-  reverse: boolean = false;
+  reverse: boolean = true;
 
   constructor(public router:Router, private visitasService:VisitasService, private guardiaService:GuardService, private excelService:ExcelService, 
     private vehiculoService:VisitaVehiculoService, private visitanteService:VisitanteService, private funcionarioService:FuncionarioService) { 

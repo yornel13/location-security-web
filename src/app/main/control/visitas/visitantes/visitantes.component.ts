@@ -41,7 +41,7 @@ export class VisitantesComponent {
   info: any = [];
 
   key: string = 'id'; //set default
-  reverse: boolean = false;
+  reverse: boolean = true;
   
   constructor(public router:Router, private visitanteService:VisitanteService, private excelService:ExcelService) {
     this.getAll();

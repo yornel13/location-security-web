@@ -32,7 +32,7 @@ export class WtodasComponent {
   info: any = [];
 
   key: string = 'id'; //set default
-  reverse: boolean = false;
+  reverse: boolean = true;
 
   constructor(public router:Router, private watchesService:WatchesService, private guardiasService:GuardService, private excelService:ExcelService) { 
   	this.getAll();
