@@ -1,10 +1,10 @@
 <div class="tablet-card">
     <!--<p class="alert-title ps">{{title}}</p>-->
     <div *ngIf="alert.guard_id">
-        <p class="alert-title ps">{{title}}</p>
+        <p class="alert-title ps" *ngIf="alert.cause != 'GENERAL'">{{title}}</p>
         <p class="alert-text ps">{{alert.message}}</p>
-        <p class="alert-imei ps">{{alert.guard_name+" "+alert.guard_lastname}}</p>
         <p class="alert-date ps">{{date | date : "fullDate"}}</p>
+        <button class="btn btn-success"><span class="fas fa-check"></span></button>
     </div>
     <div *ngIf="alert.imei">
         <p class="alert-text ps">{{alert.message}}</p>

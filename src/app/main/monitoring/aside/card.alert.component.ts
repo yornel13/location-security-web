@@ -20,6 +20,8 @@ export class CardAlertComponent implements OnInit {
             this.title = 'CAIDA';
         } else if (this.alert.cause === 'OUT_BOUNDS') {
             this.title = 'Fuera de Los Limites';
+        } else if (this.alert.cause === 'INCIDENCE') {
+            this.title = 'Incidencia';
         } else {
             this.title = 'General';
         }
