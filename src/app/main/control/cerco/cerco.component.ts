@@ -11,6 +11,7 @@ import 'leaflet.markercluster';
 import 'leaflet-draw';
 import {CercoService} from '../../../../model/cerco/cerco.service';
 import {Cerco} from '../../../../model/cerco/cerco';
+import {forEach} from '@angular/router/src/utils/collection';
 
 
 @Component({
@@ -19,7 +20,7 @@ import {Cerco} from '../../../../model/cerco/cerco';
     styleUrls: ['./cerco.component.css']
 })
 
-export class CercoComponent {
+export class CercoComponent implements OnInit {
     //general
     administradores: any = undefined;
     data: any = undefined;
@@ -29,8 +30,8 @@ export class CercoComponent {
     lista: boolean;
     mapView: boolean;
     createBoundView: boolean;
-    editar: boolean;
-    //editar
+    editBoundView: boolean;
+    //editBoundView
     nombre: string;
     apellido: string;
     correo: string;
@@ -62,7 +63,7 @@ export class CercoComponent {
     marker = L.marker([-2.071522, -79.607105], {draggable: true});
     polygonDrawed: boolean;
     drawing: boolean;
-    polygon;
+    polygon = L.polygon([]);
     onArea;
     private map;
 
@@ -72,15 +73,16 @@ export class CercoComponent {
     @ViewChild('nameBoundField') nameBoundField: any;
 
     cercos: any = undefined;
-    polyCoords = [];
-
+    polyCoords = {latitude: [], longitude: []};
+    toEditPolygon =  L.polygon([]);
+    editPolygon = false;
 
     constructor(public router: Router, private adminService: AdminService, private storage: AngularFireStorage, private cercoServise: CercoService) {
         this.getAllBounds();
         this.lista = true;
         this.mapView = false;
         this.createBoundView = false;
-        this.editar = false;
+        this.editBoundView = false;
     }
 
     zoom: 12;
@@ -137,6 +139,7 @@ export class CercoComponent {
     options = {
         zoom: 8,
         center: L.latLng(([ -2.071522, -79.607105 ])),
+        editable: true
     };
     drawOptions = {
         position: 'topleft',
@@ -146,19 +149,22 @@ export class CercoComponent {
             circle: false,
             polyline: false,
             rectangle: false,
+        },
+        edit: {
+
         }
     };
 
 
 
-    saveNewBound() {
+    saveNewBound() {   /****************************************************/
         const nameBound = this.nameBoundField.nativeElement.value;
         if (nameBound) {
             if (typeof this.polygon !== 'undefined') {
 
                 if (this.polygonDrawed) {
                     for (const poly of this.data) {
-                        if (poly.name.toLowerCase().match(nameBound.toLowerCase())) {
+                        if (poly.name.toLowerCase() === nameBound.toLowerCase()) {
                             this.message = 'El nombre del cerco ya se encuentra en uso!';
                             this.alertError = true;
                             this.alertSuccess = false;
@@ -168,9 +174,9 @@ export class CercoComponent {
 
                     const  coords =  JSON.stringify(this.polyCoords);
                     const bound: Cerco = {
-                        name : this.nameBound,
-                        points : coords,
-                        status: true
+                        name: this.nameBound,
+                        points: coords,
+                        status:  true
                     };
 
                     this.cercoServise.add(bound).then(sucess => {
@@ -214,14 +220,14 @@ export class CercoComponent {
         );
     }
 
-    viewBoundsOnMap(id) {
+    viewBound(id) {
         this.adminService.getId(id).then(
             success => {
                 this.admin = success;
                 this.lista = false;
                 this.mapView = true;
                 this.createBoundView = false;
-                this.editar = false;
+                this.editBoundView = false;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -232,38 +238,11 @@ export class CercoComponent {
         );
     }
 
-    upload(event) {
-        const file = event.target.files[0];
-        const randomId = Math.random().toString(36).substring(2);
-        const url = '/icsse/' + randomId;
-        const ref = this.storage.ref(url);
-        //const task = ref.put(file);
-        const task = this.storage.upload(url, file);
-        this.uploadPercent = task.percentageChanges();
-        task.snapshotChanges().pipe(
-            finalize(() => {this.downloadURL = ref.getDownloadURL();
-                this.downloadURL.subscribe(url => (this.photo = url)); }
-            )).subscribe();
-    }
-
-    uploadNew(event) {
-        const file = event.target.files[0];
-        const randomId = Math.random().toString(36).substring(2);
-        const url = '/icsse/' + randomId;
-        const ref = this.storage.ref(url);
-        const task = this.storage.upload(url, file);
-        this.uploadPercent = task.percentageChanges();
-        task.snapshotChanges().pipe(
-            finalize(() => {this.downloadURL = ref.getDownloadURL();
-                this.downloadURL.subscribe(url => (this.photoa = url)); }
-            )).subscribe();
-    }
-
     regresar() {
         this.lista = true;
         this.mapView = false;
         this.createBoundView = false;
-        this.editar = false;
+        this.editBoundView = false;
         this.errorEditData = false;
         this.nameBound = '';
         this.message = '';
@@ -271,21 +250,34 @@ export class CercoComponent {
         this.alertSuccess = false;
     }
 
-    editarAdmmin(id) {
-        this.adminService.getId(id).then(
+    editBound(id) {
+        this.editPolygon = true;
+        this.cercoServise.getId(id).then(
             success => {
-                this.admin = success;
-                console.log(this.admin);
-                this.nombre = this.admin.name;
-                this.apellido = this.admin.lastname;
-                this.correo = this.admin.email;
-                this.photo = this.admin.photo;
-                this.identificacion = this.admin.dni;
-                this.idEdit = this.admin.id;
+                const cercoToEdit: Cerco = success;
+                // console.log(cercoToEdit);
+                const coords = JSON.parse(cercoToEdit.points);
+
+
+                const coordinates = [];
+                for (let i = 0; i < coords.latitude.length; i++) {
+                    // console.log('-> lat ', coords.latitude[i]);
+                    // console.log('-> lng ', coords.longitude[i]);
+                    coordinates.push([ coords.latitude[i], coords.longitude[i]]);
+                }
+                this.toEditPolygon = L.polygon([[]]).setLatLngs(coordinates);
+                // const latLngs = [];
+                // L.polygon([]).setLatLngs(latLngs);
+                // this.nombre = this.admin.name;
+                // this.apellido = this.admin.lastname;
+                // this.correo = this.admin.email;
+                // this.photo = this.admin.photo;
+                // this.identificacion = this.admin.dni;
+                // this.idEdit = this.admin.id;
                 this.lista = false;
-                this.mapView = false;
-                this.createBoundView = false;
-                this.editar = true;
+                // this.mapView = false;
+                // this.createBoundView = false;
+                this.editBoundView = true;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -297,7 +289,7 @@ export class CercoComponent {
     }
 
     getValueEdit() {
-        if (this.contrasena == 'password') {
+        if (this.contrasena === 'password') {
             const editadmin: Admin = {
                 id: this.idEdit,
                 dni: this.identificacion,
@@ -321,10 +313,9 @@ export class CercoComponent {
         }
     }
 
-    saveEdit() {
+    saveEditedBound() {
 
         const valores = this.getValueEdit();
-
         this.adminService.set(valores).then(
             success => {
                 this.getAllBounds();
@@ -357,10 +348,12 @@ export class CercoComponent {
     }
 
     createBounds() {
+
+        this.editPolygon = false;
         this.lista = false;
         this.mapView = false;
         this.createBoundView = true;
-        this.editar = false;
+        this.editBoundView = false;
     }
 
     deleteBound(id) {
@@ -412,15 +405,34 @@ export class CercoComponent {
 //    ------------------------------------------------------------------------------------
 
     onMapReady(map: L.Map) {
-        this.map = map;
-        this.setBounds();
+        this.map =  map;
+
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            detectRetina: true,
+            attribution: 'Open Street Map'
+        }).addTo(map);
+        this.drawBounds();
         this.actionControls();
+
+        if (this.editPolygon) {
+            this.map.addLayer(this.toEditPolygon);
+        }
+
+
+
+            this.toEditPolygon.on('click', e => {
+                e.target.editing.enable();
+                const drawnItems = new L.FeatureGroup().getBounds();
+                this.map.addLayer(drawnItems);
+                console.log('diooo');
+            });
+
     }
 
     actionControls() {
         this.marker.addTo(this.map);
         this.map.on('draw:drawstart ', e => {
-            console.log('started');
             this.polygon = L.polygon([]);
             this.polygonDrawed = false;
             this.drawing = true;
@@ -429,7 +441,6 @@ export class CercoComponent {
             this.alertSuccess = false;
         });
         this.map.on('draw:drawstop ', e => {
-            console.log('stopped');
             this.onArea = this.polygon.getBounds().contains(this.marker.getLatLng());
             this.polygonDrawed = true;
             this.drawing = false;
@@ -441,16 +452,27 @@ export class CercoComponent {
         });
     }
 
-    setBounds() {
+
+
+    drawBounds() {
+        let  i = 0;
         this.map.on('click', ev => {
             if (this.drawing) {
                 const lat = ev.latlng.lat;
                 const lng  = ev.latlng.lng;
                 this.polygon.addLatLng([lat, lng]);
-                this.polyCoords.push('{latitude: ' + lat, 'longitude: ' + lng + '},');
 
+                this.polyCoords.latitude[i] = lat ;
+                this.polyCoords.longitude[i] = lng ;
+                i++;
+                // console.log('lat: ', lat, '  lng: ', lng);
             }
+
         });
+    }
+
+    ngOnInit() {
+
     }
 
 

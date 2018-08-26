@@ -19,7 +19,7 @@ export class VisitantesComponent {
   detalle:boolean;
   crear:boolean;
   editar:boolean;
-  //editar
+  //editBoundView
   nombre:string;
   apellido:string;
   compania:string;

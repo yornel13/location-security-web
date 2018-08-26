@@ -18,6 +18,11 @@ export class CercoService {
             .then((response) => response);
     }
 
+    getId(id: number) {
+        return this.http.get(this.CERCO_URL + '/' + id).toPromise()
+            .then((response) => response);
+    }
+
     add(cerco: Cerco) {
         return this.http.post(this.CERCO_URL, cerco, httpOpts).toPromise()
             .then((response) => response);
