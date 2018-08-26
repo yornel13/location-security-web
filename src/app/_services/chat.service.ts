@@ -16,16 +16,22 @@ export class ChatService {
   readonly tokenFire = localStorage.TokenFire;
   readonly admin_id  = localStorage.UserDni;
   readonly session   = 123;
-  readonly user_1_id   = JSON.parse(localStorage.User)['id'];
-  readonly user_1_type = JSON.parse(localStorage.User)['isAdmin'] ? 'ADMIN' : 'GUARD';
-  readonly user_1_name = JSON.parse(localStorage.User)['name'];
+  readonly user_1_id;
+  readonly user_1_type;
+  readonly user_1_name;
 
     constructor(
           private http: HttpClient,
           private route: ActivatedRoute,
           private router: Router,
 
-          ) { }
+          ) {
+        if (localStorage.User !== undefined) {
+            this.user_1_id   = JSON.parse(localStorage.User)['id'];
+            this.user_1_type = JSON.parse(localStorage.User)['isAdmin'] ? 'ADMIN' : 'GUARD';
+            this.user_1_name = JSON.parse(localStorage.User)['name'];
+        }
+    }
 
     webRegistre(token) {
         return this.http.post<any>(`${environment.BASIC_URL}/messenger/register/web`,{registration_id: token, admin_id: this.user_1_id, session: this.admin_id})
