@@ -13,11 +13,16 @@ import { VisitasService } from '../../../model/visitas/visitas.service';
 import { ConfiguracionService } from '../../../model/configuracion/configuracion.service';
 import { BannerService } from '../../../model/banner/banner.service';
 import { AlertaService } from '../../../model/alerta/alerta.service';
+import { ExcelService } from '../../../model/excel/excel.services';
 
 import { HttpClientModule } from '@angular/common/http';
 import { AgmCoreModule } from '@agm/core';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { ChartsModule } from 'ng2-charts';
+import { FusionChartsModule } from 'angular-fusioncharts';
+import FusionCharts from 'fusioncharts/core';
+import Doughnut2D from 'fusioncharts/viz/doughnut2d';
+FusionChartsModule.fcRoot(FusionCharts, Doughnut2D);
 
 import { IgxSnackbarModule } from 'igniteui-angular';
 import { ControlComponent } from './control.component';
@@ -91,6 +96,7 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         FormsModule,
         controlRouting,
         ChartsModule,
+        FusionChartsModule,
         FilterPipeModule,
         LeafletModule.forRoot(),
         LeafletDrawModule.forRoot(),
@@ -100,7 +106,7 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         AgmCoreModule.forRoot(environment.google_map_api_key),
     ],
     providers: [
-        GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService,
+        GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService, ExcelService,
         IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService, AlertaService, CercoService ],
     entryComponents: [ ],
     declarations: [

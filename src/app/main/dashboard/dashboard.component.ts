@@ -13,10 +13,38 @@ export class DashboardComponent  {
 
   constructor(private watchesService:WatchesService, private bitacoraService:BitacoraService, 
     private vistasService:VisitasService, private vehicleService:VehiclesService) { 
-    this.doughnutChartData = [3, 3, 3];
-    this.getData();
+    this.getWatchActive();
+    this.getReportToday();
+    this.getReportes();
+    this.getVisitasActivas();
     this.getVehicles();
+
+     this.dataSource = {
+            chart: {
+                "theme": "fusion",
+                "showBorder": "0",
+                "bgColor": "#FFFFFF",
+                "bgAlpha": "50",
+            },
+            // Chart Data
+            "data": [{
+                "label": "Abiertos",
+                "color": "#dc3545",
+                "value": this.valores[0]
+            }, {
+                "label": "Reabiertos",
+                "color": "#ffc107",
+                "value": this.valores[1]
+            }, {
+                "label": "Cerrados",
+                "color": "#28a745",
+                "value": this.valores[2]
+            }]
+        };
   }
+
+  //new chart
+  dataSource:any = {};
 
   //visitas activas
   watches:any = undefined;
@@ -40,23 +68,8 @@ export class DashboardComponent  {
   vehicle:any = undefined;
   numconnect:any = undefined;
   numdesconnect:any = undefined;
-  doughnutChartData:number[] = [3,3,3];
+  valores:number[] = [1,1,1];
 
-  // events
-  public chartClicked(e:any):void {
-    console.log(e);
-  }
- 
-  public chartHovered(e:any):void {
-    console.log(e);
-  }
-
-  getData() {
-    this.getWatchActive();
-    this.getReportToday();
-    this.getReportes();
-    this.getVisitasActivas();
-  }
 
   getWatchActive() {
     this.watchesService.getAll().then(
@@ -144,7 +157,10 @@ export class DashboardComponent  {
                         success => {
                             this.reportesClose = success;
                             var tres = this.reportesClose.total;
-                             this.doughnutChartData = [uno, dos, tres];
+                             this.valores = [uno, dos, tres];
+                             this.dataSource.data[0].value = this.valores[0];
+                             this.dataSource.data[1].value = this.valores[1];
+                             this.dataSource.data[2].value = this.valores[2];
                         }, error => {
                             if (error.status === 422) {
                                 // on some data incorrect
@@ -168,10 +184,7 @@ export class DashboardComponent  {
                 // on general error
             }
         }
-    );
-    
-    
-    
+    );  
   }
 
   verifyActive(data) {
@@ -188,8 +201,4 @@ export class DashboardComponent  {
     }
   }
 
-    public doughnutChartLabels:string[] = ['Abiertos', 'Reabiertos', 'Cerrados'];
-    public doughnutChartData2:number[] = [3, 3, 3];
-    public doughnutChartType:string = 'doughnut';
-    public doughnutColors:any[] = [{ backgroundColor: ['#dc3545', '#ffc107', '#28a745'] }]
 }

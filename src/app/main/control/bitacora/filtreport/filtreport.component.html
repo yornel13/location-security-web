@@ -7,6 +7,58 @@
         </a>
         <h3 class="list-title">Todos los Reportes</h3>
       </div>
+      <div class="ml-auto form-inline" >
+        <button class="btn btn-outline-secondary mr-2" style="display: inline-block;" data-toggle="modal" href="#modalStatic" title="Estadísticas de Reportes"><span class="fas fa-chart-pie"></span></button>
+        <button class="btn btn-outline-secondary mr-2" style="display: inline-block;" data-toggle="modal" href="#modalMap" title="Map de Reportes"><span class="fas fa-map-marker-alt"></span></button>
+         <div class="btn-group btn-group-toggle ml-2 mr-2" data-toggle="buttons">
+          <label class="btn btn-outline-secondary" (click)="excelDownload()">
+            <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+          </label>
+          <label class="btn btn-outline-secondary" (click)="pdfDownload()">
+            <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+          </label>
+          <label class="btn btn-outline-secondary" (click)="print()">
+            <input type="radio" name="options" id="option3" autocomplete="off"> Print
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="modalStatic">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header" style="background-color: #17a2b8; color: white;">
+                  <h5 class="modal-title">Estadísticas de reportes</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <div style="display: block;">
+                  <fusioncharts
+                    width="500px"
+                    height="300px"
+                    type="Doughnut2d"
+                    [dataSource]="dataSource">
+                </fusioncharts>
+              </div>
+              </div>
+          </div>
+      </div>  
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="modalMap">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header" style="background-color: #17a2b8; color: white;">
+                  <h5 class="modal-title">Mapa de reportes</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <p>Mapas</p>
+              </div>
+          </div>
+      </div>  
     </div>
     <div class="container-fluid row mx-auto mt-2">
       <div class="mr-auto row ml-2 form-inline">
@@ -21,24 +73,24 @@
       </div>
       <div class="ml-auto form-inline">
         <div class="form-group row">
-          <label class="mr-4"><b>Filtrar por:</b></label>
-          <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
+          <label class="mr-2"><b>Filtrar por:</b></label>
+          <select id="inputState" class="form-control mr-2 filtros" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
             <option [ngValue]="0">Incidencia</option>
             <option [ngValue]="1">Guardia</option>
           </select>
-          <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="incidenSelect" (change)="getByIncidencia(incidenSelect)" [ngModelOptions]="{standalone: true}" *ngIf="filtro">
+          <select id="inputState" class="form-control mr-2 filtros" [(ngModel)]="incidenSelect" (change)="getByIncidencia(incidenSelect)" [ngModelOptions]="{standalone: true}" *ngIf="filtro">
             <option [ngValue]="0">Todas</option>
             <option *ngFor="let i of inciden" [ngValue]="i.id">{{i.name}}</option>
           </select>
-          <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="guardiaSelect" (change)="getByGuardia(guardiaSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="!filtro">
+          <select id="inputState" class="form-control mr-2 filtros" [(ngModel)]="guardiaSelect" (change)="getByGuardia(guardiaSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="!filtro">
             <option [ngValue]="0">Todos</option>
             <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
           </select>
-          <label for="start" class="mr-4">Fecha</label>
+          <label for="start" class="mr-2">Fecha</label>
           <input class="form-control mr-4" type="date" name="date" [(ngModel)]="dateSelect" (change)="getByDate()" [ngModelOptions]="{standalone: true}">
         </div>
-        <label for="inputState" class="mr-4">Status</label>
-        <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="status" (change)="getByStatus()" [ngModelOptions]="{standalone: true}">
+        <label for="inputState" class="mr-2">Status</label>
+        <select id="inputState" class="form-control mr-2 filtros" [(ngModel)]="status" (change)="getByStatus()" [ngModelOptions]="{standalone: true}">
           <option [value]="0">Todos</option>
           <option [value]="1">Abiertos</option>
           <option [value]="2">Cerrados</option>

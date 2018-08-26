@@ -21,21 +21,32 @@
       </div>
         <div class="ml-auto form-inline">
           <div class="form-group row">
-            <label class="mr-4"><b>Filtrar por:</b></label>
-            <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
+            <label class="mr-2"><b>Filtrar por:</b></label>
+            <select id="inputState" class="form-control mr-2 filtros" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
               <option [ngValue]="0">Incidencia</option>
               <option [ngValue]="1">Guardia</option>
             </select>
-            <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="incidenSelect" (change)="getByIncidencia(incidenSelect)" [ngModelOptions]="{standalone: true}" *ngIf="filtro">
+            <select id="inputState" class="form-control mr-2 filtros" [(ngModel)]="incidenSelect" (change)="getByIncidencia(incidenSelect)" [ngModelOptions]="{standalone: true}" *ngIf="filtro">
               <option [ngValue]="0">Todas</option>
               <option *ngFor="let i of inciden" [ngValue]="i.id">{{i.name}}</option>
             </select>
-            <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="guardiaSelect" (change)="getByGuardia(guardiaSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="!filtro">
+            <select id="inputState" class="form-control mr-2 filtros" [(ngModel)]="guardiaSelect" (change)="getByGuardia(guardiaSelect)" [ngModelOptions]="{standalone: true}"  *ngIf="!filtro">
               <option [ngValue]="0">Todos</option>
               <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
             </select>
-            <label for="start" class="mr-4">Fecha</label>
-            <input class="form-control  mr-4" type="date" name="date" [(ngModel)]="dateSelect" (change)="getByDate()" [ngModelOptions]="{standalone: true}">
+            <label for="start" class="mr-2">Fecha</label>
+            <input class="form-control  mr-2" type="date" name="date" [(ngModel)]="dateSelect" (change)="getByDate()" [ngModelOptions]="{standalone: true}">
+            <div class="btn-group btn-group-toggle ml-2 mr-2" data-toggle="buttons">
+              <label class="btn btn-outline-secondary" (click)="excelDownload()">
+                <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+              </label>
+              <label class="btn btn-outline-secondary" (click)="pdfDownload()">
+                <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+              </label>
+              <label class="btn btn-outline-secondary" (click)="print()">
+                <input type="radio" name="options" id="option3" autocomplete="off"> Print
+              </label>
+            </div>
           </div>
         </div>
     </div>

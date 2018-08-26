@@ -3,6 +3,9 @@ import {HttpErrorResponse} from '@angular/common/http';
 import { Router } from '@angular/router';
 import { FuncionarioService } from '../../../../../model/funcionarios/funcionario.service';
 import { Funcionario } from '../../../../../model/funcionarios/funcionario';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { ExcelService } from '../../../../../model/excel/excel.services';
 
 @Component({
   selector: 'app-funcionarios',
@@ -43,8 +46,11 @@ export class FuncionariosComponent {
   errorDeleteData:boolean = false;
   funcionarioFilter: any = { "dni": ""};
   numElement:number = 10;
+  //exportaciones
+  contpdf:any = [];
+  info: any = [];
 
-  constructor(public router:Router, private funcionarioService:FuncionarioService) { 
+  constructor(public router:Router, private funcionarioService:FuncionarioService, private excelService:ExcelService) { 
   	this.getAll();
     this.lista = true;
     this.detalle = false;
@@ -57,6 +63,14 @@ export class FuncionariosComponent {
 			success => {
 				this.funcionarios = success;
 				this.data = this.funcionarios.data;
+        var body = [];
+        var excel = [];
+        for(var i=0; i<this.data.length; i++){
+            excel.push({'#' : this.data[i].id, 'Cédula': this.data[i].dni, 'Nombre':this.data[i].name, 'Apellido':this.data[i].lastname, 'Dirección':this.data[i].address})
+            body.push([this.data[i].id, this.data[i].dni, this.data[i].name, this.data[i].lastname, this.data[i].address])
+        }
+        this.contpdf = body;
+        this.info = excel;
 		    }, error => {
 		        if (error.status === 422) {
 		            // on some data incorrect
@@ -222,6 +236,61 @@ export class FuncionariosComponent {
                 }
             }
         );
+    }
+
+    pdfDownload() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Funcionarios', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Cédula', 'Nombre', 'Apellido', 'Dirección']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'},
+              3: {columnWidth: 'auto'},
+              4: {columnWidth: 'auto'}
+            }
+        });   
+        doc.save('funcionarios.pdf');
+    }
+
+    excelDownload() {
+        this.excelService.exportAsExcelFile(this.info, 'funcionarios');
+    }
+
+    print() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Funcionarios', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Cédula', 'Nombre', 'Apellido', 'Dirección']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'},
+              3: {columnWidth: 'auto'},
+              4: {columnWidth: 'auto'}
+            }
+        });   
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
     }
 
 }

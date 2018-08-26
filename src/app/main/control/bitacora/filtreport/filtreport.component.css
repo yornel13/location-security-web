@@ -125,3 +125,7 @@ input::-webkit-inner-spin-button {
     padding: 6px;
     font-size: 1.8rem
 }
+
+.modal-body {
+    padding: 0 !important;
+}

@@ -3,6 +3,9 @@ import {HttpErrorResponse} from '@angular/common/http';
 import { Router } from '@angular/router';
 import { VisitanteService } from '../../../../../model/vistavisitantes/visitantes.service';
 import { Visitantes } from '../../../../../model/vistavisitantes/visitantes';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { ExcelService } from '../../../../../model/excel/excel.services';
 
 @Component({
   selector: 'app-visitantes',
@@ -33,8 +36,11 @@ export class VisitantesComponent {
   errorDeleteData:boolean = false;
   visitantesFilter: any = { "dni": ""};
   numElement:number = 10;
+  //exportaciones
+  contpdf:any = [];
+  info: any = [];
   
-  constructor(public router:Router, private visitanteService:VisitanteService) {
+  constructor(public router:Router, private visitanteService:VisitanteService, private excelService:ExcelService) {
     this.getAll();
   	this.lista = true;
     this.detalle = false;
@@ -47,6 +53,14 @@ export class VisitantesComponent {
       success => {
         this.visitantes = success;
         this.data = this.visitantes.data;
+        var body = [];
+        var excel = [];
+        for(var i=0; i<this.data.length; i++){
+            excel.push({'#' : this.data[i].id, 'Cédula': this.data[i].dni, 'Nombre':this.data[i].name, 'Apellido':this.data[i].lastname, 'Compañia':this.data[i].company})
+            body.push([this.data[i].id, this.data[i].dni, this.data[i].name, this.data[i].lastname, this.data[i].company])
+        }
+        this.contpdf = body;
+        this.info = excel;
           }, error => {
               if (error.status === 422) {
                   // on some data incorrect
@@ -161,6 +175,61 @@ export class VisitantesComponent {
                 }
             }
         );
+    }
+
+    pdfDownload() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Visitantes', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Cédula', 'Nombre', 'Apellido', 'Compañia']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'},
+              3: {columnWidth: 'auto'},
+              4: {columnWidth: 'auto'}
+            }
+        });   
+        doc.save('visitantes.pdf');
+    }
+
+    excelDownload() {
+        this.excelService.exportAsExcelFile(this.info, 'visitantes');
+    }
+
+    print() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Visitantes', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Cédula', 'Nombre', 'Apellido', 'Compañia']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'},
+              3: {columnWidth: 'auto'},
+              4: {columnWidth: 'auto'}
+            }
+        });   
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
     }
 
 }

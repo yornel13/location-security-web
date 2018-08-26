@@ -4,6 +4,9 @@ import { AlertaService } from '../../../../model/alerta/alerta.service';
 import { Alerta } from '../../../../model/alerta/alerta';
 import { GuardService } from '../../../../model/guard/guard.service';
 import { AgmMap } from '@agm/core';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { ExcelService } from '../../../../model/excel/excel.services';
 
 @Component({
   selector: 'app-alertas',
@@ -29,12 +32,42 @@ export class AlertasComponent  {
   doughnutChartData:number[] = [3,3];
   lista:boolean = true;
   detalle:boolean = false;
+  //new chart
+  dataSource:any = {};
+  valores:number[] = [1,1,1];
+  //exportaciones
+  contpdf:any = [];
+  info: any = [];
 
-  constructor(private alertaService:AlertaService, private guardiaService:GuardService) { 
+  constructor(private alertaService:AlertaService, private guardiaService:GuardService, private excelService:ExcelService) { 
   	this.getAll();
   	this.getGuardias();
-  	this.doughnutChartData = [3, 3];
+  	this.doughnutChartData = [3, 3, 0];
   	this.regresar();
+
+  	this.dataSource = {
+        chart: {
+            "theme": "fusion",
+            "showBorder": "0",
+            "bgColor": "#FFFFFF",
+            "bgAlpha": "50",
+        },
+        // Chart Data
+        "data": [{
+            "label": "SOS",
+            "color": "#dc3545",
+            "value": this.valores[0]
+        }, {
+            "label": "Caída",
+            "color": "#ffc107",
+            "value": this.valores[1]
+        }, {
+            "label": "Salida del cerco",
+            "color": "#28a745",
+            "value": this.valores[2]
+        }]
+    };
+
   }
 
   getAll() {
@@ -42,7 +75,38 @@ export class AlertasComponent  {
             success => {
                 this.alertas = success;
                 this.data = this.alertas.data;
-                this.doughnutChartData = this.countAlert(this.data);
+                this.valores = this.countAlert(this.data);
+                console.log(this.data);
+                this.dataSource.data[0].value = this.valores[0];
+	            this.dataSource.data[1].value = this.valores[1];
+	            this.dataSource.data[2].value = this.valores[2];
+	            var body = [];
+		        var excel = [];
+		        var status = "";
+		        var cause = "";
+		        for(var i=0; i<this.data.length; i++){
+
+		        	if(this.data[i].status == 1){
+		        		status = "Activa"
+		        	}else{
+		        		status = "Aceptada"
+		        	}
+
+					if(this.data[i].cause == "SOS1"){
+						cause = "SOS";
+					}else if(this.data[i].cause == "DROP"){
+						cause = "Caída";
+					}else if(this.data[i].cause == "OUT_BOUNDS"){
+						cause = "Salida del cerco";
+					}else if(this.data[i].cause == "GENERAL"){
+						cause = "General";
+					}
+
+		            excel.push({'#' : this.data[i].id, 'Causa': cause, 'Descripción':this.data[i].message, 'Generado por':this.data[i].guard_name+' '+this.data[i].guard_lastname, 'Fecha':this.data[i].create_date, 'Status':status})
+		            body.push([this.data[i].id, cause, this.data[i].message, this.data[i].guard_name+' '+this.data[i].guard_lastname, this.data[i].create_date, status])
+		        }
+		        this.contpdf = body;
+		        this.info = excel;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -92,7 +156,7 @@ export class AlertasComponent  {
     				drop++;
     			}
     		}
-    		values = [sos, drop];
+    		values = [sos, drop, 0];
     		return values;
     	}
     }
@@ -256,12 +320,63 @@ export class AlertasComponent  {
 				}
 			}
 		}
-
 	}
 
-	public doughnutChartLabels:string[] = ['SOS', 'Caída'];
-    public doughnutChartData2:number[] = [3, 3];
-    public doughnutChartType:string = 'doughnut';
-    public doughnutColors:any[] = [{ backgroundColor: ['#dc3545', '#ffc107'] }]
+	pdfDownload() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Alertas', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Causa', 'Descripción', 'Generado por', 'Fecha', 'Status']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+            	0: {columnWidth: 10},
+			    1: {columnWidth: 20},
+			    2: {columnWidth: 'auto'},
+			    3: {columnWidth: 'auto'},
+			    4: {columnWidth: 'auto'},
+			    5: {columnWidth: 20},
+            }
+        });   
+        doc.save('alertas.pdf');
+    }
+
+    excelDownload() {
+        this.excelService.exportAsExcelFile(this.info, 'visitas');
+    }
+
+    print() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Alertas', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Causa', 'Descripción', 'Generado por', 'Fecha', 'Status']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+            	0: {columnWidth: 10},
+			    1: {columnWidth: 20},
+			    2: {columnWidth: 'auto'},
+			    3: {columnWidth: 'auto'},
+			    4: {columnWidth: 'auto'},
+			    5: {columnWidth: 20},
+            }
+        });   
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
+    }
 
 }

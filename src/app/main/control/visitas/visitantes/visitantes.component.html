@@ -21,7 +21,18 @@
       </div>
       <div class="ml-auto form-inline">
         <div class="form-group row">
-          <input type="text" name="searchString" class="form-control mr-4" placeholder="Buscar Cédula" [(ngModel)]="visitantesFilter.dni">
+          <input type="text" name="searchString" class="form-control mr-2" placeholder="Buscar Cédula" [(ngModel)]="visitantesFilter.dni">
+          <div class="btn-group btn-group-toggle ml-2 mr-2" data-toggle="buttons">
+              <label class="btn btn-outline-secondary" (click)="excelDownload()">
+                <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+              </label>
+              <label class="btn btn-outline-secondary" (click)="pdfDownload()">
+                <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+              </label>
+              <label class="btn btn-outline-secondary" (click)="print()">
+                <input type="radio" name="options" id="option3" autocomplete="off"> Print
+              </label>
+            </div>
         </div>
       </div>
     </div>

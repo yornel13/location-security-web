@@ -5,6 +5,9 @@ import { Guard } from '../../../../model/guard/guard';
 import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from 'angularfire2/storage';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { ExcelService } from '../../../../model/excel/excel.services';
 
 @Component({
   selector: 'app-guardia',
@@ -50,9 +53,12 @@ export class GuardiaComponent {
   uploadPercent: Observable<number>;
   downloadURL: Observable<string>;
   numElement:number = 10;
+  //exportaciones
+  contpdf:any = [];
+  info: any = [];
 
 
-  constructor(public router:Router, private guardService:GuardService,  private storage: AngularFireStorage) { 
+  constructor(public router:Router, private guardService:GuardService,  private storage: AngularFireStorage, private excelService:ExcelService) { 
   	this.getAll();
   	this.regresar();
   }
@@ -62,6 +68,14 @@ export class GuardiaComponent {
     		success => {
     			this.guardias = success;
     			this.data = this.guardias.data;
+          var body = [];
+          var excel = [];
+          for(var i=0; i<this.data.length; i++){
+              excel.push({'#' : this.data[i].id, 'Cedula': this.data[i].dni, 'Nombre':this.data[i].name, 'Apellido':this.data[i].lastname, 'Correo':this.data[i].email})
+              body.push([this.data[i].id, this.data[i].dni, this.data[i].name, this.data[i].lastname, this.data[i].email])
+          }
+          this.contpdf = body;
+          this.info = excel;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -302,5 +316,61 @@ export class GuardiaComponent {
             }
         );
     }
+
+    pdfDownload() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Usuarios Guardias del sistema', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Cédula', 'Nombre', 'Apellido', 'Correo']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'},
+              3: {columnWidth: 'auto'},
+              4: {columnWidth: 'auto'}
+            }
+        });   
+        doc.save('guardias.pdf');
+    }
+
+    excelDownload() {
+        this.excelService.exportAsExcelFile(this.info, 'guardias');
+    }
+
+    print() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Usuarios Guardias del sistema', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Cédula', 'Nombre', 'Apellido', 'Correo']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'},
+              3: {columnWidth: 'auto'},
+              4: {columnWidth: 'auto'}
+            }
+        });   
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
+    }
+
 
 }

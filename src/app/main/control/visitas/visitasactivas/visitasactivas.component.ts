@@ -6,6 +6,9 @@ import { GuardService } from '../../../../../model/guard/guard.service';
 import { VisitaVehiculoService } from '../../../../../model/visitavehiculo/visitavehiculo.service';
 import { VisitanteService } from '../../../../../model/vistavisitantes/visitantes.service';
 import { FuncionarioService } from '../../../../../model/funcionarios/funcionario.service';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { ExcelService } from '../../../../../model/excel/excel.services';
 
 @Component({
   selector: 'app-visitasactivas',
@@ -46,8 +49,11 @@ export class VisitasactivasComponent {
   dateSelect:any = '';
   nohay:boolean = false;
   numElement:number = 10;
+  //exportaciones
+  contpdf:any = [];
+  info: any = [];
 
-  constructor(public router:Router, private visitasService:VisitasService, private guardiaService:GuardService,
+  constructor(public router:Router, private visitasService:VisitasService, private guardiaService:GuardService, private excelService:ExcelService, 
     private vehiculoService:VisitaVehiculoService, private visitanteService:VisitanteService, private funcionarioService:FuncionarioService) { 
   	this.lista = true;
     this.detalle = false;
@@ -64,6 +70,14 @@ export class VisitasactivasComponent {
       success => {
         this.visitas = success;
         this.data = this.visitas.data;
+        var body = [];
+        var excel = [];
+        for(var i=0; i<this.data.length; i++){
+            excel.push({'#' : this.data[i].id, 'Placa del Vehículo': this.data[i].plate, 'Visitante':this.data[i].visitor_name+' '+this.data[i].visitor_lastname, 'Cédula del visitante':this.data[i].visitor_dni, 'Entrada':this.data[i].create_date})
+            body.push([this.data[i].id, this.data[i].plate, this.data[i].visitor_name+' '+this.data[i].visitor_lastname, this.data[i].visitor_dni, this.data[i].create_date])
+        }
+        this.contpdf = body;
+        this.info = excel;
         if(this.data.length == 0){
           this.nohay = true;
         }
@@ -412,6 +426,61 @@ export class VisitasactivasComponent {
         }
     );
   }
+
+  pdfDownload() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Visitas activas', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Placa del Vehículo', 'Visitante', 'Cédula del visitante', 'Entrada']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'},
+              3: {columnWidth: 'auto'},
+              4: {columnWidth: 'auto'}
+            }
+        });   
+        doc.save('visitasactivas.pdf');
+    }
+
+    excelDownload() {
+        this.excelService.exportAsExcelFile(this.info, 'visitasActivas');
+    }
+
+    print() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Visitas activas', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Placa del Vehículo', 'Visitante', 'Cédula del visitante', 'Entrada']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'},
+              3: {columnWidth: 'auto'},
+              4: {columnWidth: 'auto'}
+            }
+        });   
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
+    }
 
 
 }

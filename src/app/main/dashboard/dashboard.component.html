@@ -35,20 +35,18 @@
   </div>
   <div class="container-fluid row mx-auto line2">
     <div class="col-sm-5">
-      <div class="reportes" style="padding-bottom: 40px;">
+      <div class="reportes">
         <div class="panel-heading">
           <div class="tools"><span class="fas fa-sync btn" (click)="getReportes()"></span></div>
           <div class="titulo">Reportes</div>
         </div>
-        <div style="display: block; width: 450px; height: 225px; margin-top: 20px">
-          <canvas baseChart
-                    [data]="doughnutChartData"
-                    [labels]="doughnutChartLabels"
-                    [chartType]="doughnutChartType"
-                    [colors]="doughnutColors"
-                    (chartHover)="chartHovered($event)"
-                    (chartClick)="chartClicked($event)">
-          </canvas>
+        <div style="display: block;">
+          <fusioncharts
+              width="500px"
+              height="300px"
+              type="Doughnut2d"
+              [dataSource]="dataSource">
+          </fusioncharts>
         </div>
       </div>
     </div>

@@ -6,6 +6,9 @@ import { GuardService } from '../../../../../model/guard/guard.service';
 import { VisitaVehiculoService } from '../../../../../model/visitavehiculo/visitavehiculo.service';
 import { VisitanteService } from '../../../../../model/vistavisitantes/visitantes.service';
 import { FuncionarioService } from '../../../../../model/funcionarios/funcionario.service';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { ExcelService } from '../../../../../model/excel/excel.services';
 
 @Component({
   selector: 'app-visitas',
@@ -45,8 +48,11 @@ export class VisitasComponent {
   valueDate:any = [];
   userFilter: any = { "plate": "" };
   numElement:number = 10;
+  //exportaciones
+  contpdf:any = [];
+  info: any = [];
 
-  constructor(public router:Router, private visitasService:VisitasService, private guardiaService:GuardService,
+  constructor(public router:Router, private visitasService:VisitasService, private guardiaService:GuardService, private excelService:ExcelService,
   	private vehiculoService:VisitaVehiculoService, private visitanteService:VisitanteService, private funcionarioService:FuncionarioService) { 
   	this.lista = true;
     this.detalle = false;
@@ -62,6 +68,14 @@ export class VisitasComponent {
       success => {
         this.visitas = success;
         this.data = this.visitas.data;
+        var body = [];
+        var excel = [];
+        for(var i=0; i<this.data.length; i++){
+            excel.push({'#' : this.data[i].id, 'Placa del Vehículo': this.data[i].plate, 'Visitante':this.data[i].visitor_name+' '+this.data[i].visitor_lastname, 'Cédula del visitante':this.data[i].visitor_dni, 'Entrada':this.data[i].create_date, 'Salida':this.data[i].finish_date})
+            body.push([this.data[i].id, this.data[i].plate, this.data[i].visitor_name+' '+this.data[i].visitor_lastname, this.data[i].visitor_dni, this.data[i].create_date, this.data[i].finish_date])
+        }
+        this.contpdf = body;
+        this.info = excel;
           }, error => {
               if (error.status === 422) {
                   // on some data incorrect
@@ -619,6 +633,63 @@ export class VisitasComponent {
         }
     );
   }
+
+  pdfDownload() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Todas las visitas', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Placa del Vehículo', 'Visitante', 'Cédula del visitante', 'Entrada', 'Salida']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+            	0: {columnWidth: 10},
+			    1: {columnWidth: 'auto'},
+			    2: {columnWidth: 'auto'},
+			    3: {columnWidth: 'auto'},
+			    4: {columnWidth: 'auto'},
+			    5: {columnWidth: 'auto'},
+            }
+        });   
+        doc.save('visitas.pdf');
+    }
+
+    excelDownload() {
+        this.excelService.exportAsExcelFile(this.info, 'visitas');
+    }
+
+    print() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Todas las visitas', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Placa del Vehículo', 'Visitante', 'Cédula del visitante', 'Entrada', 'Salida']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+            	0: {columnWidth: 10},
+			    1: {columnWidth: 'auto'},
+			    2: {columnWidth: 'auto'},
+			    3: {columnWidth: 'auto'},
+			    4: {columnWidth: 'auto'},
+			    5: {columnWidth: 'auto'},
+            }
+        });   
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
+    }
 
 
 }

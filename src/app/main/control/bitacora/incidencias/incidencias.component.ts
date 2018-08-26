@@ -2,12 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { IncidenciasService } from '../../../../../model/incidencias/incidencia.service';
 import { Incidencia } from '../../../../../model/incidencias/incidencia';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { ExcelService } from '../../../../../model/excel/excel.services';
 
 @Component({
   selector: 'app-incidencias',
   templateUrl: './incidencias.component.html',
   styleUrls: ['./incidencias.component.css']
 })
+
 export class IncidenciasComponent {
   //general
   incidencias:any = [];
@@ -34,8 +38,11 @@ export class IncidenciasComponent {
   //eliminar
   errorDelete:boolean = false;
   errorDeleteData:boolean = false;
+  //exportaciones
+  contpdf:any = [];
+  info: any = [];
 
-  constructor(public router:Router, private incidenciaService:IncidenciasService) { 
+  constructor(public router:Router, private incidenciaService:IncidenciasService, private excelService:ExcelService) { 
   	this.getAll();
   	this.regresar();
   }
@@ -44,7 +51,20 @@ export class IncidenciasComponent {
     		success => {
     			this.incidencias = success;
     			this.data = this.incidencias.data;
-    			console.log(this.data);
+    			var body = [];
+          var excel = [];
+          var level = "";
+          for(var i=0; i<this.data.length; i++){
+              if(this.data[i].level == 1){
+                level = "General"
+              }else{
+                level = "Importante"
+              }
+              excel.push({'#' : this.data[i].id, 'Nombre': this.data[i].name, 'Nivel':level})
+              body.push([this.data[i].id, this.data[i].name, level])
+          }
+          this.contpdf = body;
+          this.info = excel;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -167,5 +187,56 @@ export class IncidenciasComponent {
                 }
             }
         );
+    }
+
+    pdfDownload() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Incidencias', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Nombre', 'Nivel']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'}
+            }
+        });   
+        doc.save('incidencias.pdf');
+    }
+
+    excelDownload() {
+        this.excelService.exportAsExcelFile(this.info, 'incidencias');
+    }
+
+    print() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Incidencias', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Nombre', 'Nivel']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'}
+            }
+        });   
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
     }
 }

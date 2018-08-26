@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 import { WatchesService } from '../../../../../model/watch/watch.service';
 import { Watch } from '../../../../../model/watch/watch';
 import { GuardService } from '../../../../../model/guard/guard.service';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { ExcelService } from '../../../../../model/excel/excel.services';
 
 @Component({
   selector: 'app-wtodas',
@@ -24,8 +27,11 @@ export class WtodasComponent {
   valueDate:any = [];
   guardia:any = [];
   numElement:number = 10;
+  //exportaciones
+  contpdf:any = [];
+  info: any = [];
 
-  constructor(public router:Router, private watchesService:WatchesService, private guardiasService:GuardService) { 
+  constructor(public router:Router, private watchesService:WatchesService, private guardiasService:GuardService, private excelService:ExcelService) { 
   	this.getAll();
   	this.getGuard();
   	this.lista = true;
@@ -37,6 +43,21 @@ export class WtodasComponent {
         success => {
             this.watches = success;
             this.data = this.watches.data;
+            var body = [];
+            var excel = [];
+            var status = "";
+            for(var i=0; i<this.data.length; i++){
+                if(this.data[i].status == 0){
+                  status = "Finalizada";
+                }else if(this.data[i].status == 1){
+                  status = "Activa";
+                  this.data[i].update_date = "--";
+                }
+                excel.push({'#' : this.data[i].id, 'Nombre del Guardia': this.data[i].guard_name+' '+this.data[i].guard_lastname, 'Cédula del Guardia':this.data[i].guard_dni, 'Hora de inicio':this.data[i].create_date, 'Hora de finalización':this.data[i].update_date, 'Status':status})
+                body.push([this.data[i].id, this.data[i].guard_name+' '+this.data[i].guard_lastname, this.data[i].guard_dni, this.data[i].create_date, this.data[i].update_date, status])
+            }
+            this.contpdf = body;
+            this.info = excel;
         }, error => {
             if (error.status === 422) {
                 // on some data incorrect
@@ -190,5 +211,63 @@ export class WtodasComponent {
             }
         );
   }
+
+  pdfDownload() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Todas las Guardias', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Nombre del Guardia', 'Cédula del Guardia', 'Hora de inicio', 'Hora de finalización', 'Status']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'},
+              3: {columnWidth: 'auto'},
+              4: {columnWidth: 'auto'},
+              5: {columnWidth: 20}
+            }
+        });   
+        doc.save('guardias.pdf');
+    }
+
+    excelDownload() {
+        this.excelService.exportAsExcelFile(this.info, 'guardias');
+    }
+
+    print() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Todas las Guardias', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Nombre del Guardia', 'Cédula del Guardia', 'Hora de inicio', 'Hora de finalización', 'Status']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'},
+              3: {columnWidth: 'auto'},
+              4: {columnWidth: 'auto'},
+              5: {columnWidth: 20}
+            }
+        });   
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
+    }
+
 
 }

@@ -15,6 +15,10 @@ import {CardTabletComponent} from './monitoring/aside/card.tablet.component';
 
 import { HttpClientModule } from '@angular/common/http';
 import { ChartsModule } from 'ng2-charts';
+import { FusionChartsModule } from 'angular-fusioncharts';
+import FusionCharts from 'fusioncharts/core';
+import Doughnut2D from 'fusioncharts/viz/doughnut2d';
+FusionChartsModule.fcRoot(FusionCharts, Doughnut2D);
 
 // My Modulus
 import { MonitoringComponent } from './monitoring/monitoring.component';
@@ -61,6 +65,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     FormsModule,
     mainRouting,
     ChartsModule,
+    FusionChartsModule,
     FilterPipeModule,
     LeafletModule.forRoot(),
     LeafletMarkerClusterModule.forRoot(),

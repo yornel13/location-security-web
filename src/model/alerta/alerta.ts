@@ -1,7 +1,9 @@
 export interface Alerta {
     id?: number;
     guard_id?: string;
+    imei?: string;
     cause?: string;
+    message?: string;
     extra?: string;
     latitude?: string;
     longitude?: string;

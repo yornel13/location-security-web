@@ -21,15 +21,13 @@
 	                </button>
 	            </div>
 	            <div class="modal-body">
-	                <div style="display: block; margin-top: 20px; margin-bottom: 40px">
-			          <canvas baseChart
-			                    [data]="doughnutChartData"
-			                    [labels]="doughnutChartLabels"
-			                    [chartType]="doughnutChartType"
-			                    [colors]="doughnutColors"
-			                    (chartHover)="chartHovered($event)"
-			                    (chartClick)="chartClicked($event)">
-			          </canvas>
+	             <div style="display: block;">
+  			          <fusioncharts
+                    width="450px"
+                    height="260px"
+                    type="Doughnut2d"
+                    [dataSource]="dataSource">
+                </fusioncharts>
 			        </div>
 	            </div>
 	        </div>
@@ -63,21 +61,32 @@
       </div>
       <div class="ml-auto form-inline">
         <div class="form-group row">
-          <label class="mr-4"><b>Causa:</b></label>
-          <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="causaSelect" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
+          <label class="mr-2"><b>Tipo:</b></label>
+          <select id="inputState" class="form-control mr-2 filtros" [(ngModel)]="causaSelect" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
             <option [ngValue]="0">Todas</option>
             <option [ngValue]="1">SOS</option>
             <option [ngValue]="2">Caída</option>
             <option [ngValue]="3">Salida del Cerco</option>
-            <option [ngValue]="4">GENERAL</option>
+            <option [ngValue]="4">General</option>
           </select>
-          <label class="mr-4"><b>Guardia:</b></label>
-          <select id="inputState" class="form-control mr-4 filtros" [(ngModel)]="guardiaSelect" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
+          <label class="mr-2"><b>Guardia:</b></label>
+          <select id="inputState" class="form-control mr-2 filtros" [(ngModel)]="guardiaSelect" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
             <option [ngValue]="0">Todos</option>
             <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
           </select>
-          <label for="start" class="mr-4">Fecha</label>
-          <input class="form-control mr-4" type="date" name="date" [(ngModel)]="dateSelect" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
+          <label for="start" class="mr-2">Fecha</label>
+          <input class="form-control mr-2" type="date" name="date" [(ngModel)]="dateSelect" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
+          <div class="btn-group btn-group-toggle ml-2 mr-2" data-toggle="buttons">
+              <label class="btn btn-outline-secondary" (click)="excelDownload()">
+                <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+              </label>
+              <label class="btn btn-outline-secondary" (click)="pdfDownload()">
+                <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+              </label>
+              <label class="btn btn-outline-secondary" (click)="print()">
+                <input type="radio" name="options" id="option3" autocomplete="off"> Print
+              </label>
+            </div>
         </div>
       </div>
     </div>
@@ -88,22 +97,21 @@
                <th>ID</th>
                <th>Causa</th>
                <th>Descripción</th>
-               <th>Nombre del guardia</th>
+               <th>Generado por</th>
                <th>Fecha</th>
-               <th>Modificar</th>
+               <th>Aceptar</th>
                <th>Detalle</th>
              </thead>
              <tbody>
               <tr *ngFor="let d of data  | paginate: { itemsPerPage: numElement, currentPage: p }">
                 <td></td>
                 <td>{{d.id}}</td>
-                <td>{{d.cause}}</td>
-                <td>{{d.extra}}</td>
+                <td><span *ngIf="d.cause == 'SOS1'">SOS</span><span *ngIf="d.cause == 'DROP'">Caída</span><span *ngIf="d.cause == 'OUT_BOUNDS'">Salida del cerco</span><span *ngIf="d.cause == 'GENERAL'">General</span></td>
+                <td>{{d.message}}</td>
                 <td>{{d.guard_name}} {{d.guard_lastname}}</td>
                 <td>{{d.create_date}}</td>
                 <td>
-                  <button class="btn btn-danger" *ngIf="d.status == 1" (click)="solveAlert(d.id)">Cerrar</button>
-                  <button class="btn btn-success" *ngIf="d.status != 1"  disabled><span class="fas fa-check"></span></button>
+                  <button class="btn btn-success" *ngIf="d.status == 1" (click)="solveAlert(d.id)"><span class="fas fa-check"></span></button>
                 </td>
                 <td>
                   <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)"  title="Detalle"><span class="far fa-eye"></span></a>
@@ -132,7 +140,7 @@
                 </div>
                 <label for="descrip" class="col-sm-2 col-form-label">Descripción</label>
                 <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="descrip" value="{{detailcause.extra}}">
+                  <input type="text" readonly class="form-control" id="descrip" value="{{detailcause.message}}">
                 </div>
               </div>
               <div class="form-group row">

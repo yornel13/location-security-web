@@ -44,7 +44,18 @@
               <option [ngValue]="0">Funcionarios</option>
               <option *ngFor="let f of funcio" [ngValue]="f.id">{{f.name}} {{f.lastname}}</option>
             </select>
-            <input type="text" name="searchString" class="form-control mr-4" placeholder="Buscar Placa" [(ngModel)]="userFilter.plate">
+            <input type="text" name="searchString" class="form-control" placeholder="Buscar Placa" [(ngModel)]="userFilter.plate">
+            <div class="btn-group btn-group-toggle ml-2 mr-2" data-toggle="buttons">
+              <label class="btn btn-outline-secondary" (click)="excelDownload()">
+                <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+              </label>
+              <label class="btn btn-outline-secondary" (click)="pdfDownload()">
+                <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+              </label>
+              <label class="btn btn-outline-secondary" (click)="print()">
+                <input type="radio" name="options" id="option3" autocomplete="off"> Print
+              </label>
+            </div>
           </div>
       </div>
     </div>

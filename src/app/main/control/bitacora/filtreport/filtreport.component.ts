@@ -4,6 +4,9 @@ import { BitacoraService } from '../../../../../model/bitacora/bitacora.service'
 import { Bitacora } from '../../../../../model/bitacora/bitacora';
 import { GuardService } from '../../../../../model/guard/guard.service';
 import { IncidenciasService } from '../../../../../model/incidencias/incidencia.service';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { ExcelService } from '../../../../../model/excel/excel.services';
 
 @Component({
   selector: 'app-filtreport',
@@ -41,13 +44,35 @@ export class FiltreportComponent {
   //status
   status:number = 0;
   numElement:number = 10;
+  //new chart
+  dataSource:any = {};
+  valores:number[] = [2,2];
+  names:string[] = ["Robo", "Incendio"];
+  datos:any = [{"label": "Robo",
+                "value": 2},
+                {"label": "Incendio",
+                "value": 2}];
+  //exportaciones
+  contpdf:any = [];
+  info: any = [];
 
-  constructor(public router:Router, private bitacoraService:BitacoraService, private guardiaService:GuardService, private incidenciaService:IncidenciasService ) { 
-  	this.getAll();
+  constructor(public router:Router, private bitacoraService:BitacoraService, private guardiaService:GuardService, 
+    private incidenciaService:IncidenciasService, private excelService:ExcelService) { 
   	this.getIncidencias();
+    this.getAll();
   	this.getGuardias();
     this.lista = true;
     this.detalle = false;
+    this.dataSource = {
+            chart: {
+                "theme": "fusion",
+                "showBorder": "0",
+                "bgColor": "#FFFFFF",
+                "bgAlpha": "50",
+            },
+            // Chart Data
+            "data": this.datos
+        };
   }
 
   	getAll() {
@@ -55,6 +80,48 @@ export class FiltreportComponent {
     		success => {
     			this.reportes = success;
     			this.data = this.reportes.data;
+
+          this.incidenciaService.getAll().then(
+          success => {
+            this.incidencias = success;
+            this.inciden = this.incidencias.data;
+            //exports files
+            var body = [];
+            var excel = [];
+            var resolve = "";
+            for(var i=0; i<this.data.length; i++){
+                if(this.data[i].resolved == 0){
+                  resolve = "Cerrado";
+                }else if(this.data[i].resolved == 1){
+                  resolve = "Abierto";
+                }else{
+                  resolve = "Reabierto";
+                }
+                excel.push({'#' : this.data[i].id, 'Título': this.data[i].title, 'Observación':this.data[i].observation, 'Fecha':this.data[i].create_date, 'Status':resolve})
+                body.push([this.data[i].id, this.data[i].title, this.data[i].observation, this.data[i].create_date, resolve])
+            }
+            this.contpdf = body;
+            this.info = excel;
+            //chart
+            var hola = [];
+            var nombres = [];
+            var valores = [];
+            nombres = this.nameInciden();
+            valores = this.countInciden(this.data);
+            for(var i=0; i<this.incidencias.total; i++){
+              hola.push({"label":nombres[i], "value":valores[i]})
+            }
+            this.datos = hola;
+            this.dataSource.data = this.datos;
+              }, error => {
+                  if (error.status === 422) {
+                      // on some data incorrect
+                  } else {
+                      // on general error
+                  }
+              }
+          );
+          
           for(var i = 0; i < this.data.length; i++){
             if(this.data[i].resolved == 0){
               this.change[i] = 0;
@@ -70,6 +137,33 @@ export class FiltreportComponent {
                 }
             }
         );
+    }
+
+    countInciden(data){
+      var value = []
+      if(data.length == 0){
+        value = [];
+        return value;
+      }else{
+        for(var j=0; j<this.incidencias.total; j++){
+          var hola = 0;
+          for(var i=0; i<data.length; i++){
+            if(data[i].incidence_id == this.inciden[j].id){
+              hola++;
+            }
+          }
+          value[j] = hola; 
+      }
+      return value;
+    }
+  }
+
+    nameInciden(){
+      var name = [];
+      for(var i=0; i<this.incidencias.total; i++){
+        name[i] = this.inciden[i].name;
+      }
+      return name;
     }
 
     viewDetail(id) {
@@ -590,5 +684,63 @@ export class FiltreportComponent {
             }
         );
     }
+
+    pdfDownload() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Todos los Reportes', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Título', 'Observación', 'Fecha', 'Status']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'},
+              3: {columnWidth: 'auto'},
+              4: {columnWidth: 20}
+            }
+        });   
+        doc.save('reportes.pdf');
+    }
+
+    excelDownload() {
+        this.excelService.exportAsExcelFile(this.info, 'reportes');
+    }
+
+    print() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Todos los Reportes', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Título', 'Observación', 'Fecha', 'Status']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'},
+              3: {columnWidth: 'auto'},
+              4: {columnWidth: 20}
+            }
+        });   
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
+    }
+
+    public doughnutChartType:string = 'doughnut';
+    public doughnutColors:any[] = [{ backgroundColor: ['#dc3545', '#ffc107'] }]
 
 }

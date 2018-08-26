@@ -5,6 +5,9 @@ import { Bitacora } from '../../../../../model/bitacora/bitacora';
 import { GuardService } from '../../../../../model/guard/guard.service';
 import { AgmMap } from '@agm/core';
 import { IncidenciasService } from '../../../../../model/incidencias/incidencia.service';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { ExcelService } from '../../../../../model/excel/excel.services';
 
 @Component({
   selector: 'app-reportets',
@@ -45,9 +48,13 @@ export class ReportetsComponent {
   status:number = 0;
   hay: boolean;
   numElement:number = 10;
+  //exportaciones
+  contpdf:any = [];
+  info: any = [];
 
 
-  constructor(public router:Router, private bitacoraService:BitacoraService, private guardiaService:GuardService, private incidenciaService:IncidenciasService ) { 
+  constructor(public router:Router, private bitacoraService:BitacoraService, private guardiaService:GuardService, 
+    private incidenciaService:IncidenciasService, private excelService:ExcelService ) { 
   	this.getOpenAll();
     this.getIncidencias();
     this.getGuardias();
@@ -60,6 +67,22 @@ export class ReportetsComponent {
         success => {
           this.reportes = success;
           this.data = this.reportes.data;
+          var body = [];
+          var excel = [];
+          var resolve = "";
+          for(var i=0; i<this.data.length; i++){
+              if(this.data[i].resolved == 0){
+                resolve = "Cerrado";
+              }else if(this.data[i].resolved == 1){
+                resolve = "Abierto";
+              }else{
+                resolve = "Reabierto";
+              }
+              excel.push({'#' : this.data[i].id, 'Título': this.data[i].title, 'Observación':this.data[i].observation, 'Fecha':this.data[i].create_date, 'Status':resolve})
+              body.push([this.data[i].id, this.data[i].title, this.data[i].observation, this.data[i].create_date, resolve])
+          }
+          this.contpdf = body;
+          this.info = excel;
           if(this.reportes.total == 0){
             this.hay = false;
           }else{
@@ -592,6 +615,61 @@ export class ReportetsComponent {
                 }
             }
         );
+    }
+
+    pdfDownload() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Reportes Abiertos', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Título', 'Observación', 'Fecha', 'Status']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'},
+              3: {columnWidth: 'auto'},
+              4: {columnWidth: 20}
+            }
+        });   
+        doc.save('reportesopen.pdf');
+    }
+
+    excelDownload() {
+        this.excelService.exportAsExcelFile(this.info, 'reportesopen');
+    }
+
+    print() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Reportes Abiertos', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Título', 'Observación', 'Fecha', 'Status']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+              0: {columnWidth: 10},
+              1: {columnWidth: 'auto'},
+              2: {columnWidth: 'auto'},
+              3: {columnWidth: 'auto'},
+              4: {columnWidth: 20}
+            }
+        });   
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
     }
 
 }
