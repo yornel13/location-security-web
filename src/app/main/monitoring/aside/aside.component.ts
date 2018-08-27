@@ -32,6 +32,7 @@ export class AsideComponent implements OnInit, OnChanges {
     @Output() noGroupCheck = true;
     noCards = false;
     showCardContainer = true;
+    search: any;
     CHECK_ICON_URL = './assets/aside-menu/checked.png';
 
     constructor(

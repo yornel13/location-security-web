@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { WatchesService } from '../../../../../model/watch/watch.service';
-import { Watch } from '../../../../../model/watch/watch';
 import { GuardService } from '../../../../../model/guard/guard.service';
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -89,7 +87,7 @@ export class WtodasComponent {
         })
     };
 
-  constructor(public router:Router, private watchesService:WatchesService, private guardiasService:GuardService, private excelService:ExcelService) { 
+  constructor(private watchesService:WatchesService, private guardiasService:GuardService, private excelService:ExcelService) {
   	this.getAll();
   	this.getGuard();
   	this.lista = true;

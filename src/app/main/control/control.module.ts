@@ -16,7 +16,6 @@ import { AlertaService } from '../../../model/alerta/alerta.service';
 import { ExcelService } from '../../../model/excel/excel.services';
 
 import { HttpClientModule } from '@angular/common/http';
-import { AgmCoreModule } from '@agm/core';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { ChartsModule } from 'ng2-charts';
 import { FusionChartsModule } from 'angular-fusioncharts';
@@ -39,7 +38,7 @@ import { VisitasactivasComponent } from './visitas/visitasactivas/visitasactivas
 
 import { FilterPipeModule } from 'ngx-filter-pipe';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { OrderModule } from 'ngx-order-pipe'; 
+import { OrderModule } from 'ngx-order-pipe';
 
 import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
 import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
@@ -52,7 +51,6 @@ import { WtodasComponent } from './watches/wtodas/wtodas.component';
 import { MvisitasComponent } from './subhome/mvisitas/mvisitas.component';
 import { MbitacoraComponent } from './subhome/mbitacora/mbitacora.component';
 import { MvigilanciaComponent } from './subhome/mvigilancia/mvigilancia.component';
-import {environment} from '../../../environments/environment';
 import {LeafletModule} from '@asymmetrik/ngx-leaflet';
 import {CercoComponent} from './cerco/cerco.component';
 import { AlertasComponent } from './alertas/alertas.component';
@@ -108,7 +106,6 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         LeafletMarkerClusterModule.forRoot(),
         IgxSnackbarModule,
         NgxPaginationModule,
-        AgmCoreModule.forRoot(environment.google_map_api_key),
     ],
     providers: [
         GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService, ExcelService,

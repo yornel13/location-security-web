@@ -13,9 +13,6 @@ export const environment = {
       storageBucket: 'icsseseguridad-6f751.appspot.com',
       messagingSenderId: '962881875237'
     },
-    google_map_api_key : {
-        apiKey: 'AIzaSyA24mC9OAkD08aAkO_UADkSOSxaCKUZFBQ'
-    },
 };
 
 /*

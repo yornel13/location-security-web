@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { WatchesService } from '../../../../../model/watch/watch.service';
-import { Watch } from '../../../../../model/watch/watch';
 import { GuardService } from '../../../../../model/guard/guard.service';
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { ExcelService } from '../../../../../model/excel/excel.services';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
-import * as geolib from 'geolib';
 
 @Component({
   selector: 'app-wactivas',
@@ -90,7 +87,7 @@ export class WactivasComponent {
         })
     };
 
-  constructor(public router:Router, private watchesService:WatchesService, private guardiasService:GuardService, private excelService:ExcelService) { 
+  constructor(private watchesService:WatchesService, private guardiasService:GuardService, private excelService:ExcelService) {
   	this.getAll();
   	this.getGuard();
   	this.lista = true;

@@ -28,17 +28,17 @@
 
 .red {
   background-color: #fa424a;
-  background-image: url(/assets/img/statistic-box-red.png);
+  background-image: url('../../../assets/img/statistic-box-red.png');
 }
 
 .yellow {
   background-color: #fdad2a;
-  background-image: url(/assets/img/statistic-box-yellow.png);
+  background-image: url('../../../assets/img/statistic-box-yellow.png');
 }
 
 .green {
   background-color: #46c35f;
-  background-image: url(/assets/img/statistic-box-green.png);
+  background-image: url('../../../assets/img/statistic-box-green.png');
 }
 
 .title {
@@ -51,14 +51,14 @@
 
 .purple {
   background-color: #ac6bec;
-  background-image: url(/assets/img/statistic-box-purple.png);
+  background-image: url('../../../assets/img/statistic-box-purple.png');
 }
 
 .statistic-box>div {
     -webkit-border-radius: inherit;
     border-radius: inherit;
     height: 140px;
-    background: url(/assets/img/statistic-box-grid.png) 50% 0;
+    background: url('../../../assets/img/statistic-box-grid.png') 50% 0;
     background-size: 21px 20px;
     position: relative;
 }

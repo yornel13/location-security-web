@@ -68,7 +68,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let v of visit">
-                <td class="user-avatar"> <img src="{{v.visitor.photo}}" alt="Avatar" *ngIf="!(v.visitor.photo == null)"><img src="/assets/img/avatar.png" alt="Avatar" *ngIf="(v.visitor.photo == null)">{{v.visitor.name}} {{v.visitor.lastname}}</td>
+                <td class="user-avatar"> <img src="{{v.visitor.photo}}" alt="Avatar" *ngIf="!(v.visitor.photo == null)"><img src="./assets/img/avatar.png" alt="Avatar" *ngIf="(v.visitor.photo == null)">{{v.visitor.name}} {{v.visitor.lastname}}</td>
                 <td>{{v.visitor.dni}}</td>
                 <td>{{v.create_date}}</td>
                 <td></td>
