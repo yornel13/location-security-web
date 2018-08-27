@@ -37,4 +37,13 @@ app-cerco {
     /*top: 89.5%;*/
 }
 
+.add-vehicle-cont {
+    height: 300px;
+    overflow: auto;
+}
+
+.checkbox-vehicle {
+    overflow: hidden;
+}
+
 

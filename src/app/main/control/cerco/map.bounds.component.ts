@@ -9,8 +9,8 @@ import 'leaflet-draw';
 
 @Component({
     selector : 'app-map-bounds',
-    templateUrl : './mapView.bounds.component.html',
-    styleUrls: ['./mapView.bounds.component.css']
+    templateUrl : './vehiclesBoundView.bounds.component.html',
+    styleUrls: ['./vehiclesBoundView.bounds.component.css']
 })
 export class MapBoundsComponent implements OnChanges, DoCheck {
 

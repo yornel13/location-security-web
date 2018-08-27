@@ -12,7 +12,17 @@ import 'leaflet-draw';
 import {CercoService} from '../../../../model/cerco/cerco.service';
 import {Cerco} from '../../../../model/cerco/cerco';
 import {forEach} from '@angular/router/src/utils/collection';
+import {VehiclesService} from '../../../../model/vehicle/vehicle.service';
+import {Vehicle} from '../../../../model/vehicle/vehicle';
+import {CheckboxControlValueAccessor} from '@angular/forms';
+import {ListBounds} from '../../../../model/cerco/list.bounds';
+import {Bounds} from '../../../../model/cerco/bounds';
 
+
+export class VechicleS {
+    imei: string;
+    constructor () {}
+}
 
 @Component({
     selector: 'app-cerco',
@@ -21,17 +31,17 @@ import {forEach} from '@angular/router/src/utils/collection';
 })
 
 export class CercoComponent implements OnInit {
-    //general
+    // general
     administradores: any = undefined;
     data: any = undefined;
     admin: any = [];
     error: string;
-    //vistas admin
+    // vistas admin
     lista: boolean;
-    mapView: boolean;
+    vehiclesBoundView: boolean;
     createBoundView: boolean;
     editBoundView: boolean;
-    //editBoundView
+    // editBoundView
     nombre: string;
     apellido: string;
     correo: string;
@@ -42,7 +52,7 @@ export class CercoComponent implements OnInit {
     errorEdit = false;
     errorEditData = false;
     errorEditMsg: string;
-    //createBoundView
+    // createBoundView
     nameBound: string;
     lastnamea: string;
     emaila: string;
@@ -52,11 +62,11 @@ export class CercoComponent implements OnInit {
     errorSave = false;
     errorSaveData = false;
     errorNewMsg: string;
-    //eliminar
+    // eliminar
     errorDelete = false;
     errorDeleteData = false;
     boundsFilter: any = { 'name': ''};
-    //imagen firebase
+    // imagen firebase
     uploadPercent: Observable<number>;
     downloadURL: Observable<string>;
 
@@ -71,16 +81,24 @@ export class CercoComponent implements OnInit {
     alertError: boolean;
     alertSuccess: boolean;
     @ViewChild('nameBoundField') nameBoundField: any;
+    @ViewChild('vehicleChecked') vehicleChecked: any;
 
+
+    bounds: Bounds[];
     cercos: any = undefined;
     polyCoords = {latitude: [], longitude: []};
     toEditPolygon =  L.polygon([]);
     editPolygon = false;
+    vehiclesList;
+    checked = false;
+    vehicles = {imei: [], alias: []};
+    cercoId;
+    vehiclesInBound: Bounds[] = [];
 
-    constructor(public router: Router, private adminService: AdminService, private storage: AngularFireStorage, private cercoServise: CercoService) {
+    constructor (public router: Router, private adminService: AdminService, private storage: AngularFireStorage, private cercoServise: CercoService, private vehiculoServise: VehiclesService) {
         this.getAllBounds();
         this.lista = true;
-        this.mapView = false;
+        this.vehiclesBoundView = false;
         this.createBoundView = false;
         this.editBoundView = false;
     }
@@ -155,9 +173,7 @@ export class CercoComponent implements OnInit {
         }
     };
 
-
-
-    saveNewBound() {   /****************************************************/
+    saveNewBound() {
         const nameBound = this.nameBoundField.nativeElement.value;
         if (nameBound) {
             if (typeof this.polygon !== 'undefined') {
@@ -173,6 +189,7 @@ export class CercoComponent implements OnInit {
                     }
 
                     const  coords =  JSON.stringify(this.polyCoords);
+                    console.log(coords);
                     const bound: Cerco = {
                         name: this.nameBound,
                         points: coords,
@@ -218,14 +235,18 @@ export class CercoComponent implements OnInit {
                 }
             }
         );
+
     }
 
-    viewBound(id) {
-        this.adminService.getId(id).then(
-            success => {
-                this.admin = success;
+    getVehiclesInBound(id, name) {
+        this.cercoId = id;
+        this.nameBound = name;
+        this.cercoServise.getVehiclesInBound(id).then(
+            (success: ListBounds) => {
+                this.bounds = success.data;
+                this.loadVehicleListModal();
+                this.vehiclesBoundView = true;
                 this.lista = false;
-                this.mapView = true;
                 this.createBoundView = false;
                 this.editBoundView = false;
             }, error => {
@@ -236,11 +257,88 @@ export class CercoComponent implements OnInit {
                 }
             }
         );
+
+        this.cercoServise.getId(id).then(
+            success => {
+                const cercoToEdit: Cerco = success;
+                const coords = JSON.parse(cercoToEdit.points);
+
+
+                const coordinates = [];
+                for (let i = 0; i < coords.latitude.length; i++) {
+                    coordinates.push([ coords.latitude[i], coords.longitude[i]]);
+                }
+                this.toEditPolygon = L.polygon([[]]).setLatLngs(coordinates).addTo(this.map);
+
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
+
+    loadVehicleListModal() {
+        this.vehiculoServise.getVehiclesList().then(
+            success => {
+                this.vehiclesList = success.data;
+                this.bounds.forEach(vBounds => {
+                   this.vehiclesList.forEach(vehicle => {
+                       if (vehicle.imei == vBounds.imei) {
+                           vBounds.alias = vehicle.alias;
+                       }
+                   });
+                });
+                this.vehiclesInBound = this.bounds;
+            });
+    }
+
+
+
+    getVehicleByChecked(vehicle) {
+           const index = this.vehicles.imei.indexOf(vehicle.imei);
+           if  (index > -1) {
+               this.vehicles.imei.splice(index, 1);
+               this.vehicles.alias.splice(index, 1);
+
+               console.log('se borro', vehicle.imei);
+
+           } else {
+               this.vehicles.imei.push(vehicle.imei);
+               this.vehicles.alias.push(vehicle.alias);
+               console.log('se agrego!', this.vehicles.imei);
+           }
+           this.vehicles.imei.forEach( data => {
+               console.log('vehiculos-> ', data);
+           });
+    }
+
+    addVehiclesToBound(id) {
+        const array = [];
+        console.log(id);
+        this.vehicles.imei.forEach( data => {
+            const vehicler: VechicleS = new VechicleS();
+            vehicler.imei = data;
+            array.push(vehicler);
+        });
+
+        this.cercoServise.addVehiclesToBound(id, JSON.stringify(array))
+            .then( sucess => {
+            this.getVehiclesInBound(this.cercoId, this.nameBound);
+        },  error => {
+            if (error.status === 422) {
+                // on some data incorrect
+            } else {
+                // on general error
+            }
+        });
     }
 
     regresar() {
         this.lista = true;
-        this.mapView = false;
+        this.vehiclesBoundView = false;
         this.createBoundView = false;
         this.editBoundView = false;
         this.errorEditData = false;
@@ -255,14 +353,11 @@ export class CercoComponent implements OnInit {
         this.cercoServise.getId(id).then(
             success => {
                 const cercoToEdit: Cerco = success;
-                // console.log(cercoToEdit);
                 const coords = JSON.parse(cercoToEdit.points);
 
 
                 const coordinates = [];
                 for (let i = 0; i < coords.latitude.length; i++) {
-                    // console.log('-> lat ', coords.latitude[i]);
-                    // console.log('-> lng ', coords.longitude[i]);
                     coordinates.push([ coords.latitude[i], coords.longitude[i]]);
                 }
                 this.toEditPolygon = L.polygon([[]]).setLatLngs(coordinates);
@@ -275,7 +370,7 @@ export class CercoComponent implements OnInit {
                 // this.identificacion = this.admin.dni;
                 // this.idEdit = this.admin.id;
                 this.lista = false;
-                // this.mapView = false;
+                // this.vehiclesBoundView = false;
                 // this.createBoundView = false;
                 this.editBoundView = true;
             }, error => {
@@ -348,11 +443,10 @@ export class CercoComponent implements OnInit {
     }
 
     createBounds() {
-
+        this.createBoundView = true;
         this.editPolygon = false;
         this.lista = false;
-        this.mapView = false;
-        this.createBoundView = true;
+        this.vehiclesBoundView = false;
         this.editBoundView = false;
     }
 
@@ -374,32 +468,22 @@ export class CercoComponent implements OnInit {
         );
     }
 
-    activarAdmin(id) {
-        this.adminService.activeAdmin(id).then(
-            success => {
-                this.getAllBounds();
-            }, error => {
+    deleteVehicleFromBound(vehicle) {
+        this.cercoServise.deleteVehicleFromBound(vehicle.id)
+            .then(success => {
+                const index = this.vehiclesInBound.indexOf(vehicle, 0);
+                if (index > -1) {
+                    this.vehiclesInBound.splice(index, 1);
+                }
+        }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
+                    this.errorDeleteData = true;
                 } else {
                     // on general error
+                    this.errorDelete = true;
                 }
-            }
-        );
-    }
-
-    desactivarAdmin(id) {
-        this.adminService.desactiveAdmin(id).then(
-            success => {
-                this.getAllBounds();
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
+            });
     }
 
 //    ------------------------------------------------------------------------------------
