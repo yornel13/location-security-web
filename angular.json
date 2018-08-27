@@ -19,10 +19,10 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
+              "src/favicon.png",
               "src/assets",
               "src/firebase-messaging-sw.js",
-              "src/manifest.json",
+              "src/manifest.json"
             ],
             "styles": [
               "src/styles.css",
