@@ -37,4 +37,32 @@ app-cerco {
     /*top: 89.5%;*/
 }
 
+.add-vehicle-cont {
+    height: 300px;
+    overflow: auto;
+}
+
+.checkbox-vehicle {
+    overflow: hidden;
+}
+
+.container-fluid {
+    padding-top: 4px;
+}
+
+.thead-light>th {
+    cursor: pointer;
+}
+
+.list-title {
+    color: var(--secondary-color);
+    margin-left: 2vw;
+    margin-top: 4px;
+}
+
+.icon-return {
+    padding: 6px;
+    font-size: 1.8rem
+}
+
 

@@ -23,8 +23,19 @@ export class CercoService {
             .then((response) => response);
     }
 
+    getVehiclesInBound(id: number) {
+        return this.http.get(this.CERCO_URL + '/' + id + '/vehicle').toPromise()
+            .then((response) => response);
+    }
+
+
     add(cerco: Cerco) {
         return this.http.post(this.CERCO_URL, cerco, httpOpts).toPromise()
+            .then((response) => response);
+    }
+
+    addVehiclesToBound(id: number, points: string) {
+        return this.http.post(this.CERCO_URL + '/' + id + '/vehicle', points, httpOpts).toPromise()
             .then((response) => response);
     }
 
@@ -35,6 +46,11 @@ export class CercoService {
 
     delete(id: number) {
         return this.http.delete(this.CERCO_URL + '/' + id).toPromise()
+            .then((response) => response);
+    }
+
+    deleteVehicleFromBound(id: number) {
+        return this.http.delete(this.CERCO_URL + '/vehicle/' + id).toPromise()
             .then((response) => response);
     }
 

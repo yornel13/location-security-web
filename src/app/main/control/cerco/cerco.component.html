@@ -4,7 +4,7 @@
             <a routerLink="/u/control/home" title="Atrás" style="color: var(--secondary-color)">
                 <i class="fas fa-reply icon-return"></i>
             </a>
-            <h3 class="list-title">Cercos</h3>
+            <h3 class="list-title">Cercos Virutales</h3>
         </div>
         <div class="ml-auto form-inline">
             <div class="btn-group" style="margin-right: 20px;">
@@ -38,8 +38,8 @@
                 <td>
                     <a class="btn btn-info" *ngIf="cerco.active == 0" (click)="activarAdmin(cerco.id)" style="display: inline-block; margin-right: 10px; width: 100px">Activar</a>
                     <a class="btn btn-secondary" *ngIf="cerco.active == 1" (click)="desactivarAdmin(cerco.id)" style="display: inline-block; margin-right: 10px;  width: 100px">Desactivar</a>
-                    <a class="btn btn-primary btn-xs" (click)="viewBound(cerco.id)" style="display: inline-block; margin-right: 10px;" title="Map"><span class="far fa-eye"></span></a>
-                    <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editBound(cerco.id)" title="Editar"><span class="fas fa-edit"></span></a>
+                    <a class="btn btn-primary btn-xs" (click)="getVehiclesInBound(cerco.id, cerco.name)" style="display: inline-block; margin-right: 10px;" title="Map"><span class="far fa-eye"></span></a>
+                    <!--<a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editBound(cerco.id)" title="Editar"><span class="fas fa-edit"></span></a>-->
                     <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{cerco.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
                 </td>
 
@@ -176,5 +176,138 @@
         </div>
     </form>
 </div>
+
+
+
+
+
+<div class="info-container panel panel-default map-panel" *ngIf="vehiclesBoundView">
+    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
+        <h3 class="panel-title"><i class="fas fa-plus-circle" style="margin-right: 20px;"></i>Cerco Virtual - {{nameBound}}</h3>
+    </div>
+    <form role="form">
+        <div class="panel-body mt-2">
+            <div class="table-container container">
+              
+                
+                <div class="form-group row" >
+                    <div class="map-bounds"
+                         leaflet
+                         leafletDraw
+                         [leafletDrawOptions]="drawOptions"
+                         [leafletOptions]="options"
+                         [(leafletZoom)]="zoom"
+                         [(leafletCenter)]="center"
+                         [leafletBaseLayers]="baseLayers"
+                         [leafletLayersControlOptions]="layersControlOptions"
+                         (leafletMapReady)="onMapReady($event)">
+                    </div>
+                </div>
+                
+                <!--<div *ngIf="alertError" class="alert alert-danger" role="alert">-->
+                    <!--{{message}}-->
+                <!--</div>-->
+                <!--<div *ngIf="alertSuccess" class="alert alert-success" role="alert">-->
+                    <!--{{message}}-->
+                <!--</div>-->
+    <!---->
+                <div class="form-group col " style="display: flex; justify-content: space-between">
+                    <div class="col-sm-5">
+                        <input  type="text" class="form-control"  placeholder="Buscar vehiculo"  >
+                    </div>
+                    <a class="btn btn-secondary" data-toggle="modal" href="#modal{{7}}" style="background-color: #28a745; border: none; color: #fff" ><i class="fas fa-plus-circle"> </i>  Agregar vehiculo</a>
+                </div>
+    
+                <div class="table mt-2">
+                    <table class="table table-striped">
+                        <thead>
+                            <th>IMEI</th>
+                            <th>Alias</th>
+                            <th>Eliminar</th>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let vehicle of vehiclesInBound ">            <!--| filterBy: adminFilter-->
+                
+                            
+                            <td>{{vehicle.imei}}</td>
+                            <td>{{vehicle.alias}}</td>
+                
+                            <td>
+                                <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{vehicle.imei}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
+                            </td>
+                
+                
+                            <div class="modal" tabindex="-1" role="dialog" id="modal{{vehicle.imei}}">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color: #c82333; color: white;">
+                                            <h5 class="modal-title">Eliminar Cerco Virtual</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                                    <p>¿Está seguro que desea eliminar el cerco '{{''}}' ?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" (click)="deleteVehicleFromBound(vehicle)" data-dismiss="modal">Eliminar</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--ADD VEHICLE MODAL -->
+                            <div class="modal fade"  role="dialog" id="modal{{7}}" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color: #c82333; color: white;">
+                                            <h5 class="modal-title">Añadir vehiculos</h5>
+                                        </div>
+                                        <div class="modal-body scrolled">
+                                      
+                                                <div style="display: flex; overflow: hidden">
+                                                    <h6 style="margin-left: 1%; margin-bottom: 10px">IMEI</h6>
+                                                    <h6 style="margin-left: 29%; margin-bottom: 10px">Alias</h6>
+                                                    <h6 style="margin-left: 49%; margin-bottom: 10px">Agregar</h6>
+                                                </div>
+                                    
+                                            <div class="add-vehicle-cont">
+                                       
+                                                <table style="width: 100%">
+                                                    <tbody>
+                                                        <tr *ngFor="let vehicle of vehiclesList " >
+                                                            <td>{{vehicle.imei}}</td>
+                                                            <td>{{vehicle.alias}}</td>
+                                                            <td class="checkbox-vehicle"><input  #vehicleChecked type="checkbox" id="che" value="{{vehicle.imei}}" (click)="getVehicleByChecked(vehicle)"  /></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success" (click)="addVehiclesToBound(cercoId)" data-dismiss="modal">Guardar</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                          
+                            
+            
+                        </tr>
+                        </tbody>
+        
+                    </table>
+                    <div class="row mt-4 back-save-btn">
+                        <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="regresar()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
+                    </div>
+                </div>
+         
+            </div>
+        </div>
+    </form>
+</div>
+
 
 
