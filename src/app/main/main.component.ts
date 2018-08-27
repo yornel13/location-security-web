@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MessagingService } from "./shared/messaging.service";
+import { MessagingService } from "../shared/messaging.service";
 
 
 @Component({
@@ -11,9 +11,7 @@ import { MessagingService } from "./shared/messaging.service";
       </div>
   `
 })
-<<<<<<< HEAD
-export class MainComponent { }
-=======
+
 export class MainComponent {
 
   message;
@@ -28,4 +26,3 @@ export class MainComponent {
   }
 
   }
->>>>>>> ee6984de653e35dbd0adeecdaccd8e8e86509bb2

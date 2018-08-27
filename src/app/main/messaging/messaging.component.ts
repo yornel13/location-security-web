@@ -320,7 +320,7 @@ export class MessagingComponent implements OnInit {
         const id = tags.id;
         const name = tags.name;
         const type = tags.type;
-        this.chatService.addUsers(channel_id,id,name,type)
+        this.chatService.addUsers(channel_id,id,type,name)
             .pipe(first())
             .subscribe(
                 data => {
@@ -344,8 +344,8 @@ export class MessagingComponent implements OnInit {
       console.log(this.addUsers);
     } else {
       console.log("deselect");
-      let index = this.addUsers.controls.findIndex(x => x.value == id);
-      const list.removeAt(index);
+      let index = this.addUsers.findIndex(x => x.value == id);
+      //this.addUsers.removeAt(index);
     }
 
   }
