@@ -16,13 +16,11 @@ export class MessagingService {
 
   messaging = firebase.messaging();
   currentMessage = new BehaviorSubject(null);
-    private error: any;
-    private loading: boolean;
 
   constructor(
     private afDB: AngularFireDatabase,
     private afAuth: AngularFireAuth,
-    private chatService: ChatService) { }
+    ) { }
 
   /**
    * update token in firebase database
@@ -54,15 +52,6 @@ export class MessagingService {
       .then(token => {
         console.log(token)
         localStorage.setItem('TokenFire', token);
-        this.chatService.webRegistre(token)
-          .subscribe(
-             data => {
-                console.log(data);
-              },
-              error => {
-                  this.error = error;
-                  this.loading = false;
-              });
         this.updateToken(userId, token);
       })
       .catch((err) => {

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
 import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
@@ -59,6 +59,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     HttpClientModule,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     mainRouting,
     ChartsModule,
     FilterPipeModule,

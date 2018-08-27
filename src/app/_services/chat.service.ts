@@ -16,9 +16,9 @@ export class ChatService {
   readonly tokenFire = localStorage.TokenFire;
   readonly admin_id  = localStorage.UserDni;
   readonly session   = 123;
-  readonly user_1_id   = JSON.parse(localStorage.User)['id'];
-  readonly user_1_type = JSON.parse(localStorage.User)['isAdmin'] ? 'ADMIN' : 'GUARD';
-  readonly user_1_name = JSON.parse(localStorage.User)['name'];
+  user_1_id: string;
+  user_1_type: string;
+  user_1_name: string;
 
     constructor(
           private http: HttpClient,
@@ -28,6 +28,9 @@ export class ChatService {
           ) { }
 
     webRegistre(token) {
+      this.user_1_id  = JSON.parse(localStorage.User)['id'];
+      this.user_1_type= JSON.parse(localStorage.User)['isAdmin'] ? 'ADMIN' : 'GUARD';
+      this.user_1_name =  JSON.parse(localStorage.User)['name'];
         return this.http.post<any>(`${environment.BASIC_URL}/messenger/register/web`,{registration_id: token, admin_id: this.user_1_id, session: this.admin_id})
             .pipe(map(res => {
               if(res.result != null) {
@@ -39,6 +42,9 @@ export class ChatService {
     }
 
     chat(user_2_id: number, user_2_name: string, user_2_type: string) {
+      this.user_1_id  = JSON.parse(localStorage.User)['id'];
+      this.user_1_type= JSON.parse(localStorage.User)['isAdmin'] ? 'ADMIN' : 'GUARD';
+      this.user_1_name =  JSON.parse(localStorage.User)['name'];
      return this.http.post<any>(`${environment.BASIC_URL}/messenger/chat`, { user_1_id: this.user_1_id, user_1_type: this.user_1_type, user_1_name: this.user_1_name, user_2_id, user_2_name, user_2_type })
           .pipe(map(chat => {
               if (chat['result'] != null) {
@@ -50,7 +56,25 @@ export class ChatService {
             }));
     }
 
+    channel(name: string) {
+      this.user_1_id  = JSON.parse(localStorage.User)['id'];
+      this.user_1_type= JSON.parse(localStorage.User)['isAdmin'] ? 'ADMIN' : 'GUARD';
+      this.user_1_name =  JSON.parse(localStorage.User)['name'];
+     return this.http.post<any>(`${environment.BASIC_URL}/messenger/channel`, { name: name, creator_id: this.user_1_id, creator_type: this.user_1_type, creator_name: this.user_1_name })
+          .pipe(map(chat => {
+              if (chat['result'] != null) {
+                return chat;
+              }
+            }),
+            catchError((error: any) => {
+              return Observable.throw(error);
+            }));
+    }
+
     conversation(user_2_id: string, user_2_type: string, user_2_name: string) {
+      this.user_1_id  = JSON.parse(localStorage.User)['id'];
+      this.user_1_type= JSON.parse(localStorage.User)['isAdmin'] ? 'ADMIN' : 'GUARD';
+      this.user_1_name =  JSON.parse(localStorage.User)['name'];
       let httpHeaders = new HttpHeaders()
           .set('Content-Type', 'application/json')
           .set('user_1_id', this.user_1_id)
@@ -70,14 +94,28 @@ export class ChatService {
         });
     }
 
-    sendMessage(text:string, sender_id: number, chat_id: number, sender_type: string, sender_name: string){
-      return this.http.post<any>(`${environment.BASIC_URL}/messenger/send`, { text, sender_id, chat_id, sender_type, sender_name })
+    sendMessage(text:string, sender_id: number, chat_id: number, sender_type: string, sender_name: string, isChannel: boolean){
+      this.user_1_id  = JSON.parse(localStorage.User)['id'];
+      this.user_1_type= JSON.parse(localStorage.User)['isAdmin'] ? 'ADMIN' : 'GUARD';
+      this.user_1_name =  JSON.parse(localStorage.User)['name'];
+      if(!isChannel){
+      return this.http.post<any>(`${environment.BASIC_URL}/messenger/send`, { text, sender_id, chat_id, sender_type, sender_name})
           .pipe(map(mess => {
               if (mess.result != null) {
-                console.log(mess.result.id);
+                console.log(mess.result);
                 return mess.result.id;
               }
             }));
+    }else{
+      var channel_id = chat_id;
+      return this.http.post<any>(`${environment.BASIC_URL}/messenger/send`, { text, sender_id, channel_id, sender_type, sender_name})
+          .pipe(map(mess => {
+              if (mess.result != null) {
+                console.log(mess.result);
+                return mess.result.id;
+              }
+            }));
+    }
     }
 
     listContactGuard(){
@@ -96,11 +134,63 @@ export class ChatService {
       return this.http.get(`${environment.BASIC_URL}/messenger/conversations/chat/`+id, { headers : httpHeaders });
     }
 
+    listOldMessageChannel(id){
+      let httpHeaders = new HttpHeaders()
+          .set('Content-Type', 'application/json')
+          .set('Authorization', id)
+      return this.http.get(`${environment.BASIC_URL}/messenger/conversations/channel/`+id, { headers : httpHeaders });
+    }
+
     listAllChatId(){
-      var id = this.user_1_id;
+      var id = JSON.parse(localStorage.User)['id'];
       let httpHeaders = new HttpHeaders()
           .set('Content-Type', 'application/json')
           .set('Authorization', id)
       return this.http.get(`${environment.BASIC_URL}/messenger/conversations/admin/`+id, { headers : httpHeaders });
     }
+
+    listAllChatIdGuard(){
+      var id = JSON.parse(localStorage.User)['id'];
+      let httpHeaders = new HttpHeaders()
+          .set('Content-Type', 'application/json')
+          .set('Authorization', id)
+      return this.http.get(`${environment.BASIC_URL}/messenger/conversations/guard/`+id, { headers : httpHeaders });
+    }
+
+    listAllChannelIdAdmin(){
+      var id = JSON.parse(localStorage.User)['id'];
+      let httpHeaders = new HttpHeaders()
+          .set('Content-Type', 'application/json')
+          .set('Authorization', id)
+      return this.http.get(`${environment.BASIC_URL}/messenger/channel/admin/`+id, { headers : httpHeaders });
+    }
+    listAllChannelIdGuard(){
+      var id = JSON.parse(localStorage.User)['id'];
+      let httpHeaders = new HttpHeaders()
+          .set('Content-Type', 'application/json')
+          .set('Authorization', id)
+      return this.http.get(`${environment.BASIC_URL}/messenger/channel/guard/`+id, { headers : httpHeaders });
+    }
+
+    listAllChanelId(){
+      this.user_1_id  = JSON.parse(localStorage.User)['id'];
+      var id = this.user_1_id;
+      let httpHeaders = new HttpHeaders()
+          .set('Content-Type', 'application/json')
+          .set('Authorization', id)
+      return this.http.get(`${environment.BASIC_URL}/messenger/channel/guard/`+id, { headers : httpHeaders });
+    }
+
+    addUsers(channel_id, user_id,user_type,user_name) {
+      console.log("canal",channel_id);
+     return this.http.post<any>(`${environment.BASIC_URL}/messenger/channel/`+channel_id+`/add`, { user_id: user_id, user_type: user_type, user_name: user_name})
+          .pipe(map(add => {
+            console.log(add);
+            return(add);
+            }),
+            catchError((error: any) => {
+              return Observable.throw(error);
+            }));
+    }
+
 }

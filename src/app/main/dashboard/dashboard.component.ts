@@ -3,6 +3,7 @@ import { WatchesService } from '../../../model/watch/watch.service';
 import { BitacoraService } from '../../../model/bitacora/bitacora.service';
 import { VisitasService } from '../../../model/visitas/visitas.service';
 import { VehiclesService } from '../../../model/vehicle/vehicle.service';
+import { ChatService } from '../../_services';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,11 +12,12 @@ import { VehiclesService } from '../../../model/vehicle/vehicle.service';
 })
 export class DashboardComponent  {
 
-  constructor(private watchesService:WatchesService, private bitacoraService:BitacoraService, 
-    private vistasService:VisitasService, private vehicleService:VehiclesService) { 
+  constructor(private watchesService:WatchesService, private bitacoraService:BitacoraService,
+    private vistasService:VisitasService, private vehicleService:VehiclesService, private chatService:ChatService) {
     this.doughnutChartData = [3, 3, 3];
     this.getData();
     this.getVehicles();
+    this.getWebService();
   }
 
   //visitas activas
@@ -41,12 +43,14 @@ export class DashboardComponent  {
   numconnect:any = undefined;
   numdesconnect:any = undefined;
   doughnutChartData:number[] = [3,3,3];
+  private error: any;
+  private loading: boolean;
 
   // events
   public chartClicked(e:any):void {
     console.log(e);
   }
- 
+
   public chartHovered(e:any):void {
     console.log(e);
   }
@@ -74,6 +78,22 @@ export class DashboardComponent  {
     );
   }
 
+  getWebService(){
+    if(localStorage.TokenFire){
+    this.chatService.webRegistre(localStorage.TokenFire)
+        .subscribe(
+          data => {
+            console.log(data);
+          },
+          error => {
+            this.error = error;
+            this.loading = false;
+          });
+    }else{
+      return null;
+    }
+  }
+
   getVehicles() {
     this.vehicleService.getVehicles().subscribe(success => {
       this.vehicles = success;
@@ -96,7 +116,7 @@ export class DashboardComponent  {
       }
       return count;
     }
-  } 
+  }
 
   getReportToday() {
     this.bitacoraService.getAllToday().then(
@@ -160,7 +180,7 @@ export class DashboardComponent  {
                         // on general error
                     }
                 }
-            );  
+            );
         }, error => {
             if (error.status === 422) {
                 // on some data incorrect
@@ -169,9 +189,9 @@ export class DashboardComponent  {
             }
         }
     );
-    
-    
-    
+
+
+
   }
 
   verifyActive(data) {
