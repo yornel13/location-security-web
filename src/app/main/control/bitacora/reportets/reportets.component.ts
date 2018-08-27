@@ -8,6 +8,9 @@ import { IncidenciasService } from '../../../../../model/incidencias/incidencia.
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { ExcelService } from '../../../../../model/excel/excel.services';
+import * as L from 'leaflet';
+import 'leaflet.markercluster';
+import * as geolib from 'geolib';
 
 @Component({
   selector: 'app-reportets',
@@ -55,6 +58,58 @@ export class ReportetsComponent {
   key: string = 'id'; //set default
   reverse: boolean = true;
 
+  //map
+  map: any;
+  mapchart: any;
+  lat2:number= -2.0000;
+  lng2:number = -79.0000;
+  viewmap:boolean = false;
+
+  zoom: 12;
+  center = L.latLng(([ this.lat2, this.lng2 ]));
+  marker = L.marker([this.lat2, this.lng2], {draggable: false});
+
+  LAYER_OSM = {
+        id: 'openstreetmap',
+        name: 'Open Street Map',
+        enabled: false,
+        layer: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            detectRetina: true,
+            attribution: 'Open Street Map'
+        })
+    };
+    LAYER_GOOGLE_STREET = {
+        id: 'googlestreets',
+        name: 'Google Street Map',
+        enabled: false,
+        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=marker&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: 'Google Street Map'
+        })
+    };
+    LAYER_GOOGLE_SATELLITE = {
+        id: 'googlesatellite',
+        name: 'Google Satellite Map',
+        enabled: false,
+        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: 'Google Satellite Map'
+        })
+    };
+    LAYER_GOOGLE_TERRAIN = {
+        id: 'googletarrain',
+        name: 'Google Terrain Map',
+        enabled: false,
+        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: 'Google Terrain Map'
+        })
+    };
+
 
   constructor(public router:Router, private bitacoraService:BitacoraService, private guardiaService:GuardService, 
     private incidenciaService:IncidenciasService, private excelService:ExcelService ) { 
@@ -64,6 +119,62 @@ export class ReportetsComponent {
     this.lista = true;
     this.detalle = false;
   }
+
+  // Values to bind to Leaflet Directive
+    layersControlOptions = { position: 'bottomright' };
+    baseLayers = {
+        'Open Street Map': this.LAYER_OSM.layer,
+        'Google Street Map': this.LAYER_GOOGLE_STREET.layer,
+        'Google Satellite Map': this.LAYER_GOOGLE_SATELLITE.layer,
+        'Google Terrain Map': this.LAYER_GOOGLE_TERRAIN.layer
+    };
+    options = {
+        zoom: 12,
+        center: L.latLng(([this.lat2, this.lng2 ]))
+    };
+
+    onMapReady(map: L.Map) {
+      console.log("entra aqui");
+      this.map =  map;
+        this.zoom = 12;
+        this.center = L.latLng(([ this.lat2, this.lng2 ]));
+      this.marker = L.marker([this.lat2, this.lng2], {draggable: false});
+      this.layersControlOptions = { position: 'bottomright' };
+      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            detectRetina: true,
+            attribution: 'Open Street Map'
+        }).addTo(this.map);
+        this.marker.addTo(this.map);
+    }
+
+    onMapReadyChart(map:L.Map){
+      console.log("vamos a ver si entra");
+      this.mapchart = map;
+      this.zoom = 12;
+      this.layersControlOptions = { position: 'bottomright' };
+      var southWest = new L.LatLng(-2.100599,-79.560921);
+      var northEast = new L.LatLng(-2.030906,-79.568947);            
+      var bounds = new L.LatLngBounds(southWest, northEast);
+      if(this.data.length){
+        var coord = [];
+        for(var i=0; i<this.data.length; i++){
+          var lat = Number(this.data[i].latitude);
+          var lng = Number(this.data[i].longitude);
+          var maker = L.marker([lat, lng]).addTo(this.mapchart);
+          coord.push({latitude: lat, longitude: lng});
+          bounds.extend(maker.getLatLng());
+        }
+        this.mapchart.fitBounds(bounds);
+        var centro = geolib.getCenter(coord);
+      }
+
+      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            detectRetina: true,
+            attribution: 'Open Street Map'
+        }).addTo(this.mapchart);
+    }
 
   sort(key){
     this.key = key;
@@ -111,10 +222,11 @@ export class ReportetsComponent {
       this.bitacoraService.getId(id).then(
         success => {
           this.report = success;
-          this.report.latitude = Number(this.report.latitude);
-          this.report.longitude = Number(this.report.longitude);
+          this.report.latitude = this.lat2 = Number(this.report.latitude);
+          this.report.longitude = this.lng2 = Number(this.report.longitude);
           this.lista = false;
           this.detalle = true;
+          this.zoom = 12;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -146,6 +258,7 @@ export class ReportetsComponent {
     regresar() {
       this.lista = true;
       this.detalle = false;
+      this.viewmap = false;
     }
 
     changeResolve(id, resolved) {
@@ -680,5 +793,12 @@ export class ReportetsComponent {
         doc.autoPrint();
         window.open(doc.output('bloburl'), '_blank');
     }
+
+    getMapAlertas(){
+      this.zoom = 12;
+      this.lista = false;
+      this.viewmap = true;
+    }
+
 
 }

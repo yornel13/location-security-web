@@ -8,7 +8,7 @@
       </div>
 	  <div class="ml-auto form-inline" >
 		  <button class="btn btn-outline-secondary mr-2" style="display: inline-block;" data-toggle="modal" href="#modalStatic" title="Estadísticas de Alertas"><span class="fas fa-chart-pie"></span></button>
-      		<button class="btn btn-outline-secondary mr-1" style="display: inline-block;" data-toggle="modal" href="#modalMap" title="Map de Alertas"><span class="fas fa-map-marker-alt"></span></button>
+      		<button class="btn btn-outline-secondary mr-1" style="display: inline-block;" title="Map de Alertas" (click)="getMapAlertas()"><span class="fas fa-map-marker-alt"></span></button>
 	  </div>
     </div>
     <div class="modal" tabindex="-1" role="dialog" id="modalStatic">
@@ -29,21 +29,6 @@
                     [dataSource]="dataSource">
                 </fusioncharts>
 			        </div>
-	            </div>
-	        </div>
-	    </div>  
-    </div>
-    <div class="modal" tabindex="-1" role="dialog" id="modalMap">
-	    <div class="modal-dialog" role="document">
-	        <div class="modal-content">
-	            <div class="modal-header" style="background-color: #17a2b8; color: white;">
-	                <h5 class="modal-title">Mapa de las alertas</h5>
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                    <span aria-hidden="true">&times;</span>
-	                </button>
-	            </div>
-	            <div class="modal-body">
-	                <p>Mapas</p>
 	            </div>
 	        </div>
 	    </div>  
@@ -175,18 +160,42 @@
               <div class="form-group row">
                 <label for="dni" class="col-sm-2 col-form-label">Mapa</label>
                 <div class="col-sm-10">
-                  <div id="map">
-                    <agm-map [zoom]="13" [latitude]="detailcause.latitude" [longitude]="detailcause.longitude">
-                      <agm-marker [latitude]="detailcause.latitude" [longitude]="detailcause.longitude"></agm-marker>
-                    </agm-map>
+                  <div class="map"
+                       leaflet
+                       [leafletOptions]="options"
+                       [(leafletZoom)]="zoom"
+                       [(leafletCenter)]="center"
+                       [leafletBaseLayers]="baseLayers"
+                       [leafletLayersControlOptions]="layersControlOptions"
+                       (leafletMapReady)="onMapReady($event)">
                   </div>
                 </div>
               </div>
-
               <div class="row mt-4">
                   <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
               </div>
             </form>
           </div>
         </div>
+  </div>
+  <div class="info-container panel panel-default"  *ngIf="viewmap">
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto row ml-1">
+        <a (click)="regresar()" title="Atrás" style="color: var(--secondary-color)">
+            <i class="fas fa-reply icon-return"></i>
+        </a>
+        <h3 class="list-title">Mapa de Alertas</h3>
+      </div>
+    </div>
+  <div class="table mt-2 container-fluid">
+    <div class="mapchart"
+         leaflet
+         [leafletOptions]="options"
+         [(leafletZoom)]="zoom"
+         [(leafletCenter)]="center"
+         [leafletBaseLayers]="baseLayers"
+         [leafletLayersControlOptions]="layersControlOptions"
+         (leafletMapReady)="onMapReadyChart($event)">
+    </div>
+  </div>
   </div>

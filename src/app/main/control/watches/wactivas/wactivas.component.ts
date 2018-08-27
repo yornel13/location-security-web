@@ -6,6 +6,9 @@ import { GuardService } from '../../../../../model/guard/guard.service';
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { ExcelService } from '../../../../../model/excel/excel.services';
+import * as L from 'leaflet';
+import 'leaflet.markercluster';
+import * as geolib from 'geolib';
 
 @Component({
   selector: 'app-wactivas',
@@ -35,12 +38,92 @@ export class WactivasComponent {
   key: string = 'id'; //set default
   reverse: boolean = true;
 
+  //map
+  map: any;
+  mapchart: any;
+  lat:number= -2.0000;
+  lng:number = -79.0000;
+  viewmap:boolean = false;
+
+  zoom: 12;
+  center = L.latLng(([ this.lat, this.lng ]));
+  marker = L.marker([this.lat, this.lng], {draggable: false});
+
+  LAYER_OSM = {
+        id: 'openstreetmap',
+        name: 'Open Street Map',
+        enabled: false,
+        layer: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            detectRetina: true,
+            attribution: 'Open Street Map'
+        })
+    };
+    LAYER_GOOGLE_STREET = {
+        id: 'googlestreets',
+        name: 'Google Street Map',
+        enabled: false,
+        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=marker&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: 'Google Street Map'
+        })
+    };
+    LAYER_GOOGLE_SATELLITE = {
+        id: 'googlesatellite',
+        name: 'Google Satellite Map',
+        enabled: false,
+        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: 'Google Satellite Map'
+        })
+    };
+    LAYER_GOOGLE_TERRAIN = {
+        id: 'googletarrain',
+        name: 'Google Terrain Map',
+        enabled: false,
+        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: 'Google Terrain Map'
+        })
+    };
+
   constructor(public router:Router, private watchesService:WatchesService, private guardiasService:GuardService, private excelService:ExcelService) { 
   	this.getAll();
   	this.getGuard();
   	this.lista = true;
   	this.detalle = false;
   }
+
+  // Values to bind to Leaflet Directive
+    layersControlOptions = { position: 'bottomright' };
+    baseLayers = {
+        'Open Street Map': this.LAYER_OSM.layer,
+        'Google Street Map': this.LAYER_GOOGLE_STREET.layer,
+        'Google Satellite Map': this.LAYER_GOOGLE_SATELLITE.layer,
+        'Google Terrain Map': this.LAYER_GOOGLE_TERRAIN.layer
+    };
+    options = {
+        zoom: 12,
+        center: L.latLng(([this.lat, this.lng ]))
+    };
+
+    onMapReady(map: L.Map) {
+      console.log("entra aqui");
+      this.map =  map;
+        this.zoom = 12;
+        this.center = L.latLng(([ this.lat, this.lng ]));
+      this.marker = L.marker([this.lat, this.lng], {draggable: false});
+      this.layersControlOptions = { position: 'bottomright' };
+      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            detectRetina: true,
+            attribution: 'Open Street Map'
+        }).addTo(this.map);
+        this.marker.addTo(this.map);
+    }
 
   sort(key){
     this.key = key;
@@ -87,6 +170,7 @@ export class WactivasComponent {
   regresar() {
   	this.lista = true;
   	this.detalle = false;
+    this.viewmap = false;
   }
 
   getGuard() {
@@ -130,6 +214,9 @@ export class WactivasComponent {
           this.guardia = success;
           this.lista = false;
           this.detalle = true;
+          this.guardia.latitude = this.lat = Number(this.guardia.latitude);
+          this.guardia.longitude = this.lng = Number(this.guardia.longitude);
+          this.zoom = 12;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -195,5 +282,10 @@ export class WactivasComponent {
         window.open(doc.output('bloburl'), '_blank');
     }
 
+    getMapAlertas(){
+      this.zoom = 12;
+      this.lista = false;
+      this.viewmap = true;
+    }
 
 }
