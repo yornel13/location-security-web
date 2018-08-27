@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment';
 
 import { Observable, of } from 'rxjs';
 import {Admin} from './admin';
-import {Guard} from "../guard/guard";
+import {Guard} from '../guard/guard';
 
 
 const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' })};

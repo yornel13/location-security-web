@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Alerta} from '../../../../model/alerta/alerta';
-import * as moment from 'moment/moment';
 
 @Component({
     selector: 'app-card-alert',
@@ -9,6 +8,7 @@ import * as moment from 'moment/moment';
 })
 export class CardAlertComponent implements OnInit {
 
+    @Output() solveAlert = new EventEmitter<Alerta>();
     @Input() alert: Alerta;
     title: string;
     date: Date;
@@ -28,5 +28,9 @@ export class CardAlertComponent implements OnInit {
         const newDate = new Date(this.alert.create_date);
 
         this.date = newDate;
+    }
+
+    callParent(alert: any) {
+        this.solveAlert.emit(alert);
     }
 }

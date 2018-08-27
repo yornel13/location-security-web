@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { first } from 'rxjs/operators';
 
 import { AuthenticationService } from '../_services';
+import {MessagingService} from '../shared/messaging.service';
+import {ApiResponse} from '../../model/app.response';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -20,16 +21,15 @@ export class LoginComponent implements OnInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private authenticationService: AuthenticationService) {}
+        private authService: AuthenticationService,
+        private messagingService: MessagingService) {}
 
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
             dni: ['', Validators.required],
             password: ['', Validators.required]
         });
-        // reset login status
-        this.authenticationService.logout();
-        // get return url from route parameters or default to '/'
+        this.authService.cleanStore();
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/u/dashboard/';
     }
 
@@ -38,25 +38,38 @@ export class LoginComponent implements OnInit {
 
     onSubmit() {
         this.submitted = true;
-
-        // stop here if form is invalid
         if (this.loginForm.invalid) {
             return;
         }
-
         this.loading = true;
-        if(this.error != ''){
+        if (this.error != '') {
           this.error = '';
         }
-        this.authenticationService.login(this.f.dni.value, this.f.password.value)
-            .pipe(first())
-            .subscribe(
-                data => {
+        this.authService.login(this.f.dni.value, this.f.password.value)
+            .then((success: ApiResponse) => {
+                    this.onSuccess(success.result);
+                },
+                error => {
+                    this.error = error;
+                    this.loading = false;
+                });
+    }
+
+    onSuccess(tokenSession: string) {
+        this.authService.verify(tokenSession)
+            .then(success => {
+                    if (this.authService.getUser() === null) {
+                        this.error = 'Usuario no definido';
+                        this.loading = false;
+                        return;
+                    }
                     this.router.navigate([this.returnUrl]);
                 },
                 error => {
                     this.error = error;
                     this.loading = false;
                 });
+
+
     }
 }

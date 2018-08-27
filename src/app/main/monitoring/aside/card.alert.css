@@ -14,6 +14,12 @@
     margin: 0;
 }
 
+.alert-import {
+    float: right;
+    color: red;
+    font-size: .8em;
+}
+
 .alert-title{
     font-weight: bold;
 }
@@ -35,5 +41,5 @@
 }
 
 .btn-success {
-    margin-left: 260px;
+    float: right;
 }

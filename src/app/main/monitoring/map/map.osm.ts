@@ -44,6 +44,8 @@ export class MapOsmComponent implements OnChanges {
     layersControlOptions;
     baseLayers;
     options;
+    bounds: L.LatLngBounds;
+    results: any;
 
     constructor(private resolver: ComponentFactoryResolver,
                 private asideService: AsideService,
@@ -64,6 +66,11 @@ export class MapOsmComponent implements OnChanges {
 
     onMapReady(map: L.Map) {
         this.map = map;
+        //.results = L.layerGroup().addTo(map);
+        //this.results.clearLayers();
+        // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        //     attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+        // }).addTo(map);
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -105,6 +112,7 @@ export class MapOsmComponent implements OnChanges {
                     component.changeDetectorRef.detectChanges();
                     m.bindPopup(popupContent).openPopup();
                     data.push(m);
+                    //this.bounds.extend(m.getLatLng());
                 }
             }
             if (showMarker.bombas) {

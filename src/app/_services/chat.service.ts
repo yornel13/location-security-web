@@ -6,42 +6,33 @@ import { Observable } from 'rxjs';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import { filter, map, catchError } from 'rxjs/operators';
-import { _throw } from 'rxjs/observable/throw';
+import {Admin} from '../../model/admin/admin';
 
-//35324 56132
+const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
 
-  readonly tokenFire = localStorage.TokenFire;
-  readonly admin_id  = localStorage.UserDni;
-  readonly session   = 123;
-  readonly user_1_id;
-  readonly user_1_type;
-  readonly user_1_name;
+    readonly user_1_id;
+    readonly user_1_type;
+    readonly user_1_name;
+    readonly token_session;
 
-    constructor(
-          private http: HttpClient,
-          private route: ActivatedRoute,
-          private router: Router,
-
-          ) {
-        if (localStorage.User !== undefined) {
-            this.user_1_id   = JSON.parse(localStorage.User)['id'];
-            this.user_1_type = JSON.parse(localStorage.User)['isAdmin'] ? 'ADMIN' : 'GUARD';
-            this.user_1_name = JSON.parse(localStorage.User)['name'];
+    constructor(private http: HttpClient) {
+        if (localStorage.getItem('User') !== null) {
+            this.user_1_id   = JSON.parse(localStorage.getItem('User'))['id'];
+            this.user_1_type = 'ADMIN';
+            this.user_1_name = JSON.parse(localStorage.getItem('User'))['name'];
+            this.token_session = localStorage.getItem('TokenUser');
         }
     }
 
-    webRegistre(token) {
-        return this.http.post<any>(`${environment.BASIC_URL}/messenger/register/web`,{registration_id: token, admin_id: this.user_1_id, session: this.admin_id})
-            .pipe(map(res => {
-              if(res.result != null) {
-                  console.log(res);
-                  return res.result;
-              }
-            }
-          ));
+    webRegister(tokenFire: String, tokenSession: String, adminId: number) {
+        return this.http.post(`${environment.BASIC_URL}/messenger/register/web`, {
+                                            registration_id: tokenFire,
+                                            session: tokenSession,
+                                            admin_id: adminId}, httpOptions)
+            .toPromise().then((response) => response);
     }
 
     chat(user_2_id: number, user_2_name: string, user_2_type: string) {

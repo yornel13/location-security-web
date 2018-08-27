@@ -9,4 +9,5 @@ export interface Admin {
   create_date?: string;
   update_date?: string;
   active?: boolean;
+  isAdmin?: boolean;
 }

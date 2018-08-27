@@ -4,13 +4,14 @@
     background-color: var(--secondary-color);
 }
 
-.header-aside{
+.menu-items{
     display: flex;
-    max-height: 47px;
-}
-
-.alerta {
-    height: 100%;
+    justify-content: space-between;
+    margin: 0;
+    padding: 8px;
+    list-style: none;
+    color: #fff;
+    background-color: #444;
 }
 
 .menu-item{
@@ -24,11 +25,6 @@
     border-radius: 0;
 }
 
-.show {
-    background-color: #555;
-    border-radius: 6px;
-}
-
 .menu-item:hover{
     background-color: #333333;
 }
@@ -40,8 +36,8 @@
 }
 
 .is-active{
-    background: #333;
-    border-bottom: 3px solid white;
+    //background: #333;
+    //border-bottom: 3px solid white;
 }
 
 .filter{
@@ -50,12 +46,6 @@
     margin-bottom: 12px;
     margin-top: 12px;
 }
-
-.menu-items:hover{
-    background-color: #333;
-    cursor: pointer;
-}
-
 
 .cards-container{
     overflow: auto;
@@ -72,16 +62,12 @@
 
 .no-cards {
     margin: auto auto;
+    padding-left: 10px;
+    color: honeydew;
 }
 
 .status-container{
     display: flex;
-}
-
-.tab-title {
-    color: white;
-    text-decoration: none;
-    padding: 0 8px
 }
 
 .tab-content {
@@ -102,8 +88,6 @@
     right: 0;
     top: 0;
     bottom: 0;
-    /*display: flex;*/
-    /*flex-direction: column;*/
 }
 
 .container {
@@ -129,8 +113,3 @@
     bottom: 0;
 }
 
-#exTab .tab-content {
-    color : white;
-    background-color: #428bca;
-    padding : 5px 15px;
-}

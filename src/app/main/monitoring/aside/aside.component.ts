@@ -6,6 +6,7 @@ import {AlertaService} from '../../../../model/alerta/alerta.service';
 import {Alerta} from '../../../../model/alerta/alerta';
 import {AlertaList} from '../../../../model/alerta/alerta.list';
 import {NotificationService} from '../../../shared/notification.service';
+import {Notification} from '../../../../model/alerta/notification';
 
 @Component({
   selector: 'app-aside',
@@ -15,7 +16,9 @@ import {NotificationService} from '../../../shared/notification.service';
 
 export class AsideComponent implements OnInit, OnChanges {
 
-    alerts: Alerta[] = [];
+    alerts0: Alerta[] = [];
+    alerts1: Alerta[] = [];
+    isShow = false;
     @Input() vehicles: Vehicle[] = [];
     @Input() watches: Watch[] = [];
     @Input() markersData: any[] = [];
@@ -33,14 +36,19 @@ export class AsideComponent implements OnInit, OnChanges {
 
     constructor(
         private asideService: AsideService,
-        private alertService: AlertaService,
-        private notificationService: NotificationService) {}
+        public alertService: AlertaService,
+        private notificationService: NotificationService) {
+    }
 
     ngOnInit() {
         this.getAlerts();
         this.notificationService.newNotification.subscribe(
-            (data: any) => {
-                console.log(data);
+            (newAlert: Alerta) => {
+                if (newAlert.status == 1) {
+                    this.alerts1.unshift(newAlert);
+                } else {
+                    this.alerts0.unshift(newAlert);
+                }
             });
     }
 
@@ -52,6 +60,28 @@ export class AsideComponent implements OnInit, OnChanges {
             // Use if necessary
         }
     }
+
+    solveAlert(alert: Alerta) {
+        console.log('paso la prueba: ' + alert.id);
+        this.alertService.solveAlert(alert.id).then(
+            success => {
+                console.log('is success');
+                const index = this.alerts1.indexOf(alert, 0);
+                if (index > -1) {
+                    this.alerts1.splice(index, 1);
+                }
+                alert.status = 0;
+                this.alerts0.unshift(alert);
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
+
     selectMarkersOpts(message) {
         if (message.match('showVehicles')) {
             this.vehiclesCheck = !this.vehiclesCheck;
@@ -93,7 +123,15 @@ export class AsideComponent implements OnInit, OnChanges {
     getAlerts() {
         this.alertService.getAll().then(
             (success: AlertaList) => {
-                this.alerts = success.data;
+                // this.alerts0 = [];
+                // this.alerts1 = [];
+                success.data.forEach(alert => {
+                    if (alert.status == 1) {
+                        this.alerts1.push(alert);
+                    } else {
+                        this.alerts0.push(alert);
+                    }
+                });
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect

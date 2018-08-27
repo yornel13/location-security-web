@@ -9,9 +9,9 @@ import * as firebase from 'firebase';
 import { take } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
-import { ChatService } from '../_services';
-import {AlertaService} from "../../model/alerta/alerta.service";
-import {NotificationService} from "./notification.service";
+import {AuthenticationService, ChatService} from '../_services';
+import {NotificationService} from './notification.service';
+import {Alerta} from '../../model/alerta/alerta';
 
 @Injectable()
 export class MessagingService {
@@ -23,6 +23,7 @@ export class MessagingService {
 
   constructor(
         private notificationService: NotificationService,
+        private authService: AuthenticationService,
         private afDB: AngularFireDatabase,
         private afAuth: AngularFireAuth,
         private chatService: ChatService) { }
@@ -49,18 +50,16 @@ export class MessagingService {
   requestPermission(userId) {
     this.messaging.requestPermission()
       .then(() => {
-        localStorage.removeItem('TokenFire');
         console.log('notification permission granted.');
         console.log(firebase.messaging().getToken());
         return firebase.messaging().getToken();
       })
       .then(token => {
-        console.log(token)
-        localStorage.setItem('TokenFire', token);
-        this.chatService.webRegistre(token)
-          .subscribe(
-             data => {
-                console.log(data);
+        console.log(token);
+        this.authService.setTokenFire(token);
+        this.chatService.webRegister(token, this.authService.getTokenSession(), this.authService.getUser().id)
+          .then(success => {
+                console.log(success);
               },
               error => {
                   this.error = error;
@@ -79,7 +78,10 @@ export class MessagingService {
   receiveMessage() {
     this.messaging.onMessage((payload) => {
       console.log('new message received in service: ', payload);
-      this.notificationService.newNotification.emit(payload);
+      if (payload.data.type === 'ALERT') {
+          const alert = JSON.parse(payload.data.message.toString());
+          this.notificationService.newNotification.emit(alert);
+      }
       this.currentMessage.next(payload);
     });
   }

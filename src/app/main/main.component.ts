@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {MessagingService} from '../shared/messaging.service';
 
 
 @Component({
@@ -10,4 +11,16 @@ import { Component } from '@angular/core';
       </div>
   `
 })
-export class MainComponent { }
+export class MainComponent implements OnInit {
+
+    message;
+
+    constructor(private messagingService: MessagingService) { }
+
+    ngOnInit() {
+        const userId = 'user001';
+        this.messagingService.requestPermission(userId);
+        this.messagingService.receiveMessage();
+        this.message = this.messagingService.currentMessage;
+    }
+}
