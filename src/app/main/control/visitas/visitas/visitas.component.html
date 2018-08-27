@@ -19,6 +19,9 @@
             <input type="radio" name="options" id="option3" autocomplete="off"> Print
           </label>
         </div>
+        <div class="ml-auto form-inline" >
+          <button class="btn btn-outline-secondary mr-1" style="display: inline-block;" title="Map de Alertas" (click)="getMapAlertas()"><span class="fas fa-map-marker-alt"></span></button>
+        </div>
       </div>
     </div>
     <div class="container-fluid row mx-auto mt-2">
@@ -132,6 +135,20 @@
                 <label for="dni" class="col-sm-2 col-form-label">Longitud</label>
                 <div class="col-sm-4">
                   <input type="number" readonly class="form-control" id="dni" value="{{visi.longitude}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Mapa</label>
+                <div class="col-sm-10">
+                  <div class="map"
+                       leaflet
+                       [leafletOptions]="options"
+                       [(leafletZoom)]="zoom"
+                       [(leafletCenter)]="center"
+                       [leafletBaseLayers]="baseLayers"
+                       [leafletLayersControlOptions]="layersControlOptions"
+                       (leafletMapReady)="onMapReady($event)">
+                  </div>
                 </div>
               </div>
                 <div class="form-group row">
@@ -342,4 +359,25 @@
             </form>
           </div>
         </div>
+  </div>
+  <div class="info-container panel panel-default"  *ngIf="viewmap">
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto row ml-1">
+        <a (click)="regresar()" title="Atrás" style="color: var(--secondary-color)">
+            <i class="fas fa-reply icon-return"></i>
+        </a>
+        <h3 class="list-title">Mapa de todas las Visitas</h3>
+      </div>
+    </div>
+  <div class="table mt-2 container-fluid">
+    <div class="mapchart"
+         leaflet
+         [leafletOptions]="options"
+         [(leafletZoom)]="zoom"
+         [(leafletCenter)]="center"
+         [leafletBaseLayers]="baseLayers"
+         [leafletLayersControlOptions]="layersControlOptions"
+         (leafletMapReady)="onMapReadyChart($event)">
+    </div>
+  </div>
   </div>

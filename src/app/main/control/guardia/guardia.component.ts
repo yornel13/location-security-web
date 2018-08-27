@@ -57,7 +57,7 @@ export class GuardiaComponent {
   contpdf:any = [];
   info: any = [];
   key: string = 'id'; //set default
-  reverse: boolean = false;
+  reverse: boolean = true;
 
 
   constructor(public router:Router, private guardService:GuardService,  private storage: AngularFireStorage, private excelService:ExcelService) { 

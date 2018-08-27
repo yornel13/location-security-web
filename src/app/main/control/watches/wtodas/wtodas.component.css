@@ -1,3 +1,5 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css";
+
 .info-container {
     height: 100%;
     width: 100%;
@@ -22,6 +24,16 @@
 
 .thead-light>th {
     cursor: pointer;
+}
+
+.map {
+    height: 350px;
+    width: 100%;
+}
+
+.mapchart {
+    height: 450px;
+    width: 100%;
 }
 
 .btn.btn-secondary.collap:hover{

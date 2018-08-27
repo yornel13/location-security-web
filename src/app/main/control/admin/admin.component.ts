@@ -62,7 +62,7 @@ export class AdminComponent {
     info: any = [];
 
     key: string = 'id'; //set default
-    reverse: boolean = false;
+    reverse: boolean = true;
     
 
     constructor(public router:Router, private adminService:AdminService, private storage: AngularFireStorage, private excelService:ExcelService) {

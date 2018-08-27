@@ -103,6 +103,20 @@
                   <input type="text" readonly class="form-control" id="long" value="{{guardia.longitude}}">
                 </div>
               </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Mapa</label>
+                <div class="col-sm-10">
+                  <div class="map"
+                       leaflet
+                       [leafletOptions]="options"
+                       [(leafletZoom)]="zoom"
+                       [(leafletCenter)]="center"
+                       [leafletBaseLayers]="baseLayers"
+                       [leafletLayersControlOptions]="layersControlOptions"
+                       (leafletMapReady)="onMapReady($event)">
+                  </div>
+                </div>
+              </div>
               <hr>
               <div class="form-group row">
                   <label for="creation" class="col-sm-12 col-form-label"><b>Guardia</b></label>

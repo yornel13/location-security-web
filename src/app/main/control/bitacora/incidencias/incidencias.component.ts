@@ -43,7 +43,7 @@ export class IncidenciasComponent {
   info: any = [];
 
   key: string = 'id'; //set default
-  reverse: boolean = false;
+  reverse: boolean = true;
 
   constructor(public router:Router, private incidenciaService:IncidenciasService, private excelService:ExcelService) { 
   	this.getAll();

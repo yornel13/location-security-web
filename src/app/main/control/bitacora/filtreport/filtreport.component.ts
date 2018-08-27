@@ -7,6 +7,9 @@ import { IncidenciasService } from '../../../../../model/incidencias/incidencia.
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { ExcelService } from '../../../../../model/excel/excel.services';
+import * as L from 'leaflet';
+import 'leaflet.markercluster';
+import * as geolib from 'geolib';
 
 @Component({
   selector: 'app-filtreport',
@@ -55,9 +58,67 @@ export class FiltreportComponent {
   //exportaciones
   contpdf:any = [];
   info: any = [];
+  //order table
+  key: string = 'id';
+  reverse: boolean = true;
+  //filter chart
+  rangeday:boolean = true;
+  desde:string = "";
+  hasta:string = "";
+  chartreportes:any = [];
+  chartdata:any = [];
 
-  key: string = 'id'; //set default
-  reverse: boolean = false;
+  //map
+  map: any;
+  mapchart: any;
+  lat:number= -2.0000;
+  lng:number = -79.0000;
+  viewmap:boolean = false;
+
+  zoom: 12;
+  center = L.latLng(([ this.lat, this.lng ]));
+  marker = L.marker([this.lat, this.lng], {draggable: false});
+
+  LAYER_OSM = {
+        id: 'openstreetmap',
+        name: 'Open Street Map',
+        enabled: false,
+        layer: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            detectRetina: true,
+            attribution: 'Open Street Map'
+        })
+    };
+    LAYER_GOOGLE_STREET = {
+        id: 'googlestreets',
+        name: 'Google Street Map',
+        enabled: false,
+        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=marker&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: 'Google Street Map'
+        })
+    };
+    LAYER_GOOGLE_SATELLITE = {
+        id: 'googlesatellite',
+        name: 'Google Satellite Map',
+        enabled: false,
+        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: 'Google Satellite Map'
+        })
+    };
+    LAYER_GOOGLE_TERRAIN = {
+        id: 'googletarrain',
+        name: 'Google Terrain Map',
+        enabled: false,
+        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: 'Google Terrain Map'
+        })
+    };
 
   constructor(public router:Router, private bitacoraService:BitacoraService, private guardiaService:GuardService, 
     private incidenciaService:IncidenciasService, private excelService:ExcelService) { 
@@ -78,6 +139,63 @@ export class FiltreportComponent {
         };
   }
 
+  // Values to bind to Leaflet Directive
+    layersControlOptions = { position: 'bottomright' };
+    baseLayers = {
+        'Open Street Map': this.LAYER_OSM.layer,
+        'Google Street Map': this.LAYER_GOOGLE_STREET.layer,
+        'Google Satellite Map': this.LAYER_GOOGLE_SATELLITE.layer,
+        'Google Terrain Map': this.LAYER_GOOGLE_TERRAIN.layer
+    };
+    options = {
+        zoom: 12,
+        center: L.latLng(([this.lat, this.lng ]))
+    };
+
+    onMapReady(map: L.Map) {
+      console.log("entra aqui");
+      this.map =  map;
+        this.zoom = 12;
+        this.center = L.latLng(([ this.lat, this.lng ]));
+      this.marker = L.marker([this.lat, this.lng], {draggable: false});
+      this.layersControlOptions = { position: 'bottomright' };
+      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            detectRetina: true,
+            attribution: 'Open Street Map'
+        }).addTo(this.map);
+        this.marker.addTo(this.map);
+    }
+
+    onMapReadyChart(map:L.Map){
+      console.log("vamos a ver si entra");
+      this.mapchart = map;
+      this.zoom = 12;
+      this.layersControlOptions = { position: 'bottomright' };
+      var southWest = new L.LatLng(-2.100599,-79.560921);
+      var northEast = new L.LatLng(-2.030906,-79.568947);            
+      var bounds = new L.LatLngBounds(southWest, northEast);
+      if(this.data.length){
+        var coord = [];
+        for(var i=0; i<this.data.length; i++){
+          var lat = Number(this.data[i].latitude);
+          var lng = Number(this.data[i].longitude);
+          var maker = L.marker([lat, lng]).addTo(this.mapchart);
+          coord.push({latitude: lat, longitude: lng});
+          bounds.extend(maker.getLatLng());
+        }
+        this.mapchart.fitBounds(bounds);
+        var centro = geolib.getCenter(coord);
+      }
+      console.log(coord);
+      this.center = L.latLng([centro.latitude, centro.longitude]);
+      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            detectRetina: true,
+            attribution: 'Open Street Map'
+        }).addTo(this.mapchart);
+    }
+
   sort(key){
     this.key = key;
     this.reverse = !this.reverse;
@@ -88,7 +206,7 @@ export class FiltreportComponent {
     		success => {
     			this.reportes = success;
     			this.data = this.reportes.data;
-
+          console.log(this.data);
           this.incidenciaService.getAll().then(
           success => {
             this.incidencias = success;
@@ -118,7 +236,9 @@ export class FiltreportComponent {
             nombres = this.nameInciden();
             valores = this.countInciden(this.data);
             for(var i=0; i<this.incidencias.total; i++){
-              hola.push({"label":nombres[i], "value":valores[i]})
+              if(nombres[i] != "General"){
+                hola.push({"label":nombres[i], "value":valores[i]})
+              }
             }
             this.datos = hola;
             this.dataSource.data = this.datos;
@@ -156,37 +276,215 @@ export class FiltreportComponent {
       }else{
         for(var j=0; j<this.incidencias.total; j++){
           var hola = 0;
-          if(this.inciden[j].name != "General"){
             for(var i=0; i<data.length; i++){
               if(data[i].incidence_id == this.inciden[j].id){
                 hola++;
               }
             }
-          }
           value[j] = hola; 
       }
       return value;
     }
   }
 
+    countIncidenDate(data){
+        var value = []
+
+        var fecha1 = String(this.desde);
+        var valueDate1 = fecha1.split('-');
+        var year1 = valueDate1[0];
+        var month1 = valueDate1[1];
+        var day1 = valueDate1[2];
+
+        var fecha2 = String(this.hasta);
+        var valueDate2 = fecha2.split('-');
+        var year2 = valueDate2[0];
+        var month2 = valueDate2[1];
+        var day2 = valueDate2[2];
+
+        var date1 = fecha1.replace('-','');
+        var date11 = Number(date1.replace('-',''));
+        var date2 = fecha2.replace('-','');
+        var date22 = Number(date2.replace('-',''));        
+
+        if(data.length == 0){
+          value = [];
+          return value;
+        }else{
+          for(var j=0; j<this.incidencias.total; j++){
+            var hola = 0;
+              for(var i=0; i<data.length; i++){
+                var date = String(this.chartdata[i].create_date);
+                var valueDate = date.split(' ');
+                var fecha = valueDate[0].toString();
+                var fecha1 = fecha.replace('-','');
+                var fecha11 = Number(fecha1.replace('-',''));
+                console.log(fecha11);
+                console.log(date11);
+                console.log(date22);
+
+                if(fecha11 >= date11 && fecha11 <= date22){
+                  if(data[i].incidence_id == this.inciden[j].id){
+                    hola++;
+                  }
+                }                
+              }
+            value[j] = hola; 
+        }
+        return value;
+      }
+    }
+
     nameInciden(){
       var name = [];
       for(var i=0; i<this.incidencias.total; i++){
-        if(this.inciden[i].name != "General"){
-          name[i] = this.inciden[i].name;
-        }
+        name[i] = this.inciden[i].name;
       }
       return name;
+    }
+
+    getChartDate(){
+      var fecha1 = String(this.desde);
+      var valueDate1 = fecha1.split('-');
+      var year1 = valueDate1[0];
+      var month1 = valueDate1[1];
+      var day1 = valueDate1[2];
+
+      var fecha2 = String(this.hasta);
+      var valueDate2 = fecha2.split('-');
+      var year2 = valueDate2[0];
+      var month2 = valueDate2[1];
+      var day2 = valueDate2[2];
+
+      var date1 = fecha1.replace('-','');
+      var date11 = Number(date1.replace('-',''));
+      var date2 = fecha2.replace('-','');
+      var date22 = Number(date2.replace('-',''));
+
+      if(this.rangeday){
+        if(this.desde == ""){
+          this.bitacoraService.getAll().then(
+          success => {
+            this.chartreportes = success;
+            this.chartdata = this.chartreportes.data;
+            //chart
+            var hola = [];
+            var nombres = [];
+            var valores = [];
+            nombres = this.nameInciden();
+            valores = this.countInciden(this.chartdata);
+            for(var i=0; i<this.incidencias.total; i++){
+              if(nombres[i] != "General"){
+                hola.push({"label":nombres[i], "value":valores[i]})
+              }
+            }
+            this.datos = hola;
+            this.dataSource.data = hola;
+              }, error => {
+                  if (error.status === 422) {
+                      // on some data incorrect
+                  } else {
+                      // on general error
+                  }
+              }
+          );
+        }else{
+          this.bitacoraService.getByDate(year1, month1, day1).then(
+          success => {
+            this.chartreportes = success;
+            this.chartdata = this.chartreportes.data;
+            //chart
+            var hola = [];
+            var nombres = [];
+            var valores = [];
+            nombres = this.nameInciden();
+            valores = this.countInciden(this.chartdata);
+            for(var i=0; i<this.incidencias.total; i++){
+              if(nombres[i] != "General"){
+                hola.push({"label":nombres[i], "value":valores[i]})
+              }
+            }
+            this.datos = hola;
+            this.dataSource.data = hola;
+              }, error => {
+                  if (error.status === 422) {
+                      // on some data incorrect
+                  } else {
+                      // on general error
+                  }
+              }
+          );
+        }
+      }else{
+        if(this.desde == ""){
+          this.hasta = "";
+          this.bitacoraService.getAll().then(
+          success => {
+            this.chartreportes = success;
+            this.chartdata = this.chartreportes.data;
+            //chart
+            var hola = [];
+            var nombres = [];
+            var valores = [];
+            nombres = this.nameInciden();
+            valores = this.countInciden(this.chartdata);
+            for(var i=0; i<this.incidencias.total; i++){
+              if(nombres[i] != "General"){
+                hola.push({"label":nombres[i], "value":valores[i]})
+              }
+            }
+            this.datos = hola;
+            this.dataSource.data = hola;
+              }, error => {
+                  if (error.status === 422) {
+                      // on some data incorrect
+                  } else {
+                      // on general error
+                  }
+              }
+          );
+        }else{
+          if(this.hasta != ""){
+            this.bitacoraService.getAll().then(
+            success => {
+              this.chartreportes = success;
+              this.chartdata = this.chartreportes.data;
+              //chart
+              var hola = [];
+              var nombres = [];
+              var valores = [];
+              nombres = this.nameInciden();
+              valores = this.countIncidenDate(this.chartdata);
+              for(var i=0; i<this.incidencias.total; i++){
+                if(nombres[i] != "General"){
+                  hola.push({"label":nombres[i], "value":valores[i]})                
+                }
+              }
+              console.log(hola);
+              this.datos = hola;
+              this.dataSource.data = hola;
+                }, error => {
+                    if (error.status === 422) {
+                        // on some data incorrect
+                    } else {
+                        // on general error
+                    }
+                }
+            );
+          }
+        }
+      }
     }
 
     viewDetail(id) {
       this.bitacoraService.getId(id).then(
         success => {
           this.report = success;
-          this.report.latitude = Number(this.report.latitude);
-          this.report.longitude = Number(this.report.longitude);
+          this.report.latitude = this.lat = Number(this.report.latitude);
+          this.report.longitude = this.lng = Number(this.report.longitude);
           this.lista = false;
           this.detalle = true;
+          this.zoom = 12;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -218,6 +516,7 @@ export class FiltreportComponent {
     regresar() {
       this.lista = true;
       this.detalle = false;
+      this.viewmap = false;
     }
 
     changeResolve(id, resolved) {
@@ -751,6 +1050,24 @@ export class FiltreportComponent {
         });   
         doc.autoPrint();
         window.open(doc.output('bloburl'), '_blank');
+    }
+
+    selectRange(id){
+      if(id == 1){
+        this.rangeday = true;
+        this.desde = "";
+        this.hasta = "";
+      }else{
+        this.rangeday = false;
+        this.desde = "";
+        this.hasta = "";
+      }
+    }
+
+    getMapAlertas(){
+      this.zoom = 12;
+      this.lista = false;
+      this.viewmap = true;
     }
 
     public doughnutChartType:string = 'doughnut';

@@ -7,6 +7,9 @@
         </a>
         <h3 class="list-title">Reportes Abiertos</h3>
       </div>
+      <div class="ml-auto form-inline" >
+        <button class="btn btn-outline-secondary mr-1" style="display: inline-block;" title="Map de Alertas" (click)="getMapAlertas()"><span class="fas fa-map-marker-alt"></span></button>
+    </div>
     </div>
     <div class="container-fluid row mx-auto mt-2">
       <div class="mr-auto row ml-2 form-inline">
@@ -130,10 +133,14 @@
               <div class="form-group row">
                 <label for="dni" class="col-sm-2 col-form-label">Mapa</label>
                 <div class="col-sm-10">
-                  <div id="map">
-                    <agm-map [zoom]="13" [latitude]="+report.latitude" [longitude]="+report.longitude">
-                      <agm-marker [latitude]="+report.latitude" [longitude]="+report.longitude"></agm-marker>
-                    </agm-map>
+                  <div class="map"
+                       leaflet
+                       [leafletOptions]="options"
+                       [(leafletZoom)]="zoom"
+                       [(leafletCenter)]="center"
+                       [leafletBaseLayers]="baseLayers"
+                       [leafletLayersControlOptions]="layersControlOptions"
+                       (leafletMapReady)="onMapReady($event)">
                   </div>
                 </div>
               </div>
@@ -230,13 +237,13 @@
                 </div>
               </div>
               <hr>
-              <div class="form-group row">
+              <div class="form-group row mt-2">
                 <label for="creation" class="col-sm-9 col-form-label" *ngIf="haycomentarios"><b>Comentarios</b></label>
                 <div class="col-sm-3">
                   <button class="btn btn-success form-control ml-auto" *ngIf="haycomentarios" (click)="agregarComentario()">Agregar comentario</button>
                 </div>
               </div>
-              <div class="form-group row">
+              <div class="form-group row mt-2">
                 <label for="creation" class="col-sm-9 col-form-label" *ngIf="!haycomentarios"><b>No hay comentarios</b></label>
                 <div class="col-sm-3">
                   <button class="btn btn-success form-control ml-auto" *ngIf="!haycomentarios" (click)="agregarComentario()">Agregar comentario</button>
@@ -279,6 +286,27 @@
             </form>
           </div>
         </div>
+  </div>
+  <div class="info-container panel panel-default"  *ngIf="viewmap">
+    <div class="container-fluid row mx-auto mt-2">
+      <div class="mr-auto row ml-1">
+        <a (click)="regresar()" title="Atrás" style="color: var(--secondary-color)">
+            <i class="fas fa-reply icon-return"></i>
+        </a>
+        <h3 class="list-title">Mapa de Reportes Abiertos</h3>
+      </div>
+    </div>
+  <div class="table mt-2 container-fluid">
+    <div class="mapchart"
+         leaflet
+         [leafletOptions]="options"
+         [(leafletZoom)]="zoom"
+         [(leafletCenter)]="center"
+         [leafletBaseLayers]="baseLayers"
+         [leafletLayersControlOptions]="layersControlOptions"
+         (leafletMapReady)="onMapReadyChart($event)">
+    </div>
+  </div>
   </div>
 
 
