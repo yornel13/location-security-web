@@ -1,5 +1,5 @@
-import {LOCALE_ID, NgModule} from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
 import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
@@ -63,6 +63,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     HttpClientModule,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     mainRouting,
     ChartsModule,
     FusionChartsModule,

@@ -37,4 +37,32 @@ li {
   border-bottom-color: black;
 }
 
+.aside{
+    height: 100%;
+    width: 380px;
+    display:flex;
+    flex-direction: column;
+    flex: 1;
+    margin-left: -7%;
+    background:var(--primary-color);
+}
+
+.header-aside{
+    display: flex;
+    margin-bottom: 12px;
+    max-height: 47px;
+    color: #FFFFFF
+}
+
+a{
+  color:white;
+}
+
+a.active{
+  color: black;
+}
+
+html, body {
+height: 100%;
+}
 /* Styles go here */
