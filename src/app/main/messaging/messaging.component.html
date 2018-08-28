@@ -11,7 +11,7 @@
 						<a class="nav-link" data-toggle="tab" href="#admin">List Admin</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" data-toggle="tab" href="#channel">List Channel</a>
+						<a class="nav-link" data-toggle="tab" href="#channel">List channel.ts</a>
 					</li>
 				</ul>
 				<div id="myTabContent" class="tab-content" style="height:100% !important;"> <!--  MY TAB CONTENT -->
@@ -37,8 +37,8 @@
 							<ul class="list-group">
 							<form #channelForm="ngForm" (ngSubmit)="newChannel(channelForm.value)" autocomplete="off" syle="background-color:#FFFFFF">
 								<div class="form-group">
-									<label for="nameChannel" style="color: white">New Channel</label>
-									<input [(ngModel)]="nameChannel" type="text" class="form-control" id="nameChannel" name="nameChannel" placeholder="Name Channel...">
+									<label for="nameChannel" style="color: white">New channel.ts</label>
+									<input [(ngModel)]="nameChannel" type="text" class="form-control" id="nameChannel" name="nameChannel" placeholder="Name channel.ts...">
 								</div>
 								<button type="submit" class="btn btn-primary" [disabled]="loading" *ngIf="!loading disable" >Submit</button>
 								<div class="loader" *ngIf="loading"></div>

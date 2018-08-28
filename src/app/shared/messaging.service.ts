@@ -72,17 +72,21 @@ export class MessagingService {
       });
   }
 
-  /**
-   * hook method when new notification received
-   */
-  receiveMessage() {
-    this.messaging.onMessage((payload) => {
-      console.log('new message received in service: ', payload);
-      if (payload.data.type === 'ALERT') {
-          const alert = JSON.parse(payload.data.message.toString());
-          this.notificationService.newNotification.emit(alert);
-      }
-      this.currentMessage.next(payload);
-    });
-  }
+    /**
+    * hook method when new notification received
+    */
+    receiveMessage() {
+        this.messaging.onMessage((payload) => {
+            console.log('new message received in service: ', payload);
+            if (payload.data.type === 'ALERT') {
+                const alert = JSON.parse(payload.data.message.toString());
+                this.notificationService.newNotification.emit(alert);
+            }
+            if (payload.data.type === 'MESSAGE') {
+                const message = JSON.parse(payload.data.message.toString());
+                this.notificationService.newMessage.emit(message);
+            }
+            this.currentMessage.next(payload);
+        });
+    }
 }
