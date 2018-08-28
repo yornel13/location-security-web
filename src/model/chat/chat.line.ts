@@ -1,12 +1,11 @@
-export interface Chat {
+export interface ChatLine {
     id?: number;
-    user_1_id: number;
-    user_1_type: string;
-    user_1_name: string;
-    user_2_id: number;
-    user_2_type: string;
-    user_2_name: string;
+    chat_id: number;
+    channel_id: string;
+    text: string;
     create_at: string;
-    update_at: string;
+    sender_id: number;
+    sender_type: string;
+    sender_name: string;
     state: number;
 }

@@ -1,6 +1,6 @@
-import {Channel} from './channel';
+import {ChatLine} from './chat.line';
 
-export interface ListChannel {
-    data: Channel[];
+export interface ListChatLine {
+    data: ChatLine[];
     total: number;
 }

@@ -13,9 +13,9 @@ export class AuthenticationService {
 
     user: Admin;
 
-    private readonly TOKEN_SESSION = 'TOKEN-SESSION4';
-    private readonly TOKEN_FIRE = 'TOKEN-FIRE4';
-    private readonly USER = 'USER-ADMIN4';
+    private readonly TOKEN_SESSION = 'TOKEN-SESSION';
+    private readonly TOKEN_FIRE = 'TOKEN-FIRE';
+    private readonly USER = 'USER-ADMIN';
 
     constructor(
           private http: HttpClient,

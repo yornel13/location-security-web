@@ -5,11 +5,16 @@ import { first } from 'rxjs/operators';
 import { interval } from 'rxjs';
 import { MessagingService } from '../../shared/messaging.service';
 
-import { ChatService } from '../../_services';
+import {AuthenticationService, ChatService} from '../../_services';
 import {GuardService} from '../../../model/guard/guard.service';
 import {Guard} from '../../../model/guard/guard';
 import {AdminService} from '../../../model/admin/admin.service';
 import {Admin} from '../../../model/admin/admin';
+import {Chat} from '../../../model/chat/chat';
+import {Channel} from '../../../model/chat/channel';
+import {ChatLine} from '../../../model/chat/chat.line';
+import {Alerta} from '../../../model/alerta/alerta';
+import {NotificationService} from '../../shared/notification.service';
 
 @Component({
     selector: 'app-messaging',
@@ -17,6 +22,7 @@ import {Admin} from '../../../model/admin/admin';
     styleUrls: ['./messaging.component.css']
 })
 export class MessagingComponent implements OnInit {
+    user: Admin;
     loading = false;
     submitted = false;
     returnUrl: string;
@@ -34,10 +40,10 @@ export class MessagingComponent implements OnInit {
     optionsChecked: any[];
     options: any[];
     accepted = true;
-    private oldMessage:any = undefined;
-    private channelMessage:any = undefined;
-    private allChat:any = undefined;
-    private allChannel:any = undefined;
+    private oldMessage: ChatLine[];
+    private channelMessage: ChatLine[];
+    private allChat: Chat[];
+    private allChannel: Channel[];
     private guards: Guard[];
     private guardsData;
     private admins: Admin[];
@@ -46,13 +52,17 @@ export class MessagingComponent implements OnInit {
     myForm: FormGroup;
 
     constructor(
+        private authService: AuthenticationService,
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
         private messagingService: MessagingService,
+        private notificationService: NotificationService,
         private chatService: ChatService,
         private guardService: GuardService,
-        private adminService: AdminService) {}
+        private adminService: AdminService) {
+        this.user = authService.getUser();
+    }
 
     ngOnInit() {
         this.currentChat = [];
@@ -63,11 +73,14 @@ export class MessagingComponent implements OnInit {
         this.loadContactGuard();
         this.loadContactAdmin();
         this.listAllChannel();
-        this.messagingService.receiveMessage();
-        console.log(localStorage.User);
+        console.log(this.authService.getUser());
         this.myForm = this.formBuilder.group({
-          data: this.formBuilder.array([])
+            data: this.formBuilder.array([])
         });
+        this.notificationService.newMessage.subscribe(
+            (chatLine: ChatLine) => {
+                this.receivedMessage(chatLine);
+            });
     }
 
     loadContactGuard() {
@@ -79,9 +92,9 @@ export class MessagingComponent implements OnInit {
                     const contact = Object.assign(
                         {id: this.guards[i].id},
                         {name: this.guards[i].name},
-                        { lastname: this.guards[i].lastname},
+                        {lastname: this.guards[i].lastname},
                         {type: 'GUARD'});
-                    const list = this.listContactGuard.push(contact);
+                    this.listContactGuard.push(contact);
                 }
             }, error => {
                 this.error = error;
@@ -110,21 +123,28 @@ export class MessagingComponent implements OnInit {
         );
     }
 
-    receivedMessage(message, id, idChat, sender_type, name){
-      const newMessage = Object.assign({message: message},{user: name});
-      this.currentChat.push(newMessage);
+    receivedMessage(chatLine: ChatLine) {
+        if (chatLine.chat_id != null) {
+            if (this.idChat == chatLine.chat_id) {
+                const newMessage = Object.assign(
+                    {message: chatLine.text},
+                    {user: chatLine.sender_name}
+                    );
+                this.currentChat.push(newMessage);
+            }
+        }
+        //
     }
 
     newMessage(formValue) {
         console.log(this.idChat);
         this.submitted = true;
         this.loading = true;
-        var obj = JSON.parse(localStorage.User);
-        const newMessage = Object.assign(formValue, { user: obj['name']});
-        var sender_type = obj['isAdmin'] ? 'ADMIN' : 'GUARD';
+        const newMessage = Object.assign(formValue, { user: this.user.name});
+        const sender_type = 'ADMIN';
         this.loading = true;
-        console.log(this.isChannel);
-        this.chatService.sendMessage(formValue.message, obj['id'], this.idChat, sender_type, obj['name'], this.isChannel)
+        console.log('channel.ts: ' + this.isChannel);
+        this.chatService.sendMessage(formValue.message, this.user.id, this.idChat, sender_type, this.user.name, this.isChannel)
             .pipe(first())
             .subscribe(
                 data => {
@@ -136,11 +156,11 @@ export class MessagingComponent implements OnInit {
                     this.loading = false;
                 });
     }
+
     newChannel(formValue) {
         this.submitted = true;
         this.loading = true;
-        var obj = JSON.parse(localStorage.User);
-        var sender_type = obj['isAdmin'] ? 'ADMIN' : 'GUARD';
+        const sender_type = 'ADMIN';
         this.loading = true;
         this.listChannelAdmin = [];
         this.chatService.channel(formValue.nameChannel)
@@ -157,8 +177,8 @@ export class MessagingComponent implements OnInit {
                 });
     }
 
-    openChat(id,name,type){
-        this.chatService.chat(id,name,type)
+    openChat(id, name, type) {
+        this.chatService.chat(id, name, type)
             .subscribe(
                 data => {
                     this.currentChat = [];
@@ -171,19 +191,19 @@ export class MessagingComponent implements OnInit {
                 });
     }
 
-    openOldMessage(chat_id){
+    openOldMessage(chat_id) {
           this.chatService.listOldMessage(chat_id)
             .subscribe(
                 data => {
                     this.currentChat = [];
-                    this.oldMessage = data;
-                    this.oldMessage = this.oldMessage.data;
+                    this.oldMessage = data.data;
                     console.log(this.oldMessage.reverse());
-                    for (var i=0; i< this.oldMessage.length; i++) {
+                    let lastMessage;
+                    for (let i = 0; i < this.oldMessage.length; i++) {
                         const messageOld = Object.assign({message: this.oldMessage[i].text}, {user: this.oldMessage[i].sender_name});
-                        var list = this.currentChat.push(messageOld);
+                        lastMessage = this.currentChat.push(messageOld);
                     }
-                    return list;
+                    return lastMessage;
                 },
                 error => {
                     this.error = error;
@@ -191,121 +211,70 @@ export class MessagingComponent implements OnInit {
                 });
     }
 
-    listAllChat(id,name,type){
-        var obj = JSON.parse(localStorage.User);
-        if(obj['isAdmin'] == true){
-          this.chatService.listAllChatId()
-              .subscribe(
-                  data => {
-                      this.allChat = data;
-                      this.allChat = this.allChat.data;
-                      console.log(obj['id']);
-                      for (var i=0; i< this.allChat.length; i++) {
-                          if((this.allChat[i].user_2_id == id && this.allChat[i].user_2_type == type) ||
-                        (this.allChat[i].user_2_id == obj['id'] && this.allChat[i].user_1_id == id)) {
-                              console.log(this.allChat[i]);
-                              var userSelect = this.allChat[i];
-                              break;
-                          }
-                      }
-                      if(userSelect){
-                          console.log(userSelect);
-                          this.openOldMessage(userSelect.id);
-                          this.idChat = userSelect.id;
-                      }else{
-                          this.openChat(id,name,type);
-                      }
-                  },
-                  error => {
-                      this.error = error;
-                      this.loading = false;
-                  });
-        }else{
-          this.chatService.listAllChatIdGuard()
-              .subscribe(
-                  data => {
-                      this.allChat = data;
-                      this.allChat = this.allChat.data;
-                      console.log(obj['id']);
-                      for (var i=0; i< this.allChat.length; i++) {
-                          if((this.allChat[i].user_2_id == id && this.allChat[i].user_2_type == type) ||
-                        (this.allChat[i].user_2_id == obj['id'] && this.allChat[i].user_1_id == id)) {
-                              console.log(this.allChat[i]);
-                              var userSelect = this.allChat[i];
-                              break;
-                          }
-                      }
-                      if(userSelect){
-                          console.log(userSelect);
-                          this.openOldMessage(userSelect.id);
-                          this.idChat = userSelect.id;
-                      }else{
-                          this.openChat(id,name,type);
-                      }
-                  },
-                  error => {
-                      this.error = error;
-                      this.loading = false;
-                  });
-        }
-    }
-    listAllChannel(){
-        var obj = JSON.parse(localStorage.User);
-        if(obj['isAdmin'] == true){
-          this.chatService.listAllChannelIdAdmin()
+    listAllChat(id, name, type) {
+        this.chatService.listAllChatId()
             .subscribe(
-                success => {
-                  this.allChannel = success;
-                  this.allChannel = this.allChannel.data;
-                  for (let i = 0; i < this.allChannel.length; i++) {
-                      const channel = Object.assign(
-                          {id: this.allChannel[i].channel_id},
-                          {name: this.allChannel[i].channel_name});
-                          console.log(this.allChannel[i]);
-                      const list = this.listChannelAdmin.push(channel);
+                data => {
+                    this.allChat = data.data;
+                    let userSelect;
+                    for (let i = 0; i < this.allChat.length; i++) {
+                        if ((this.allChat[i].user_2_id == id && this.allChat[i].user_2_type == type) ||
+                            (this.allChat[i].user_2_id == this.user.id && this.allChat[i].user_1_id == id)) {
+                            console.log(this.allChat[i]);
+                            userSelect = this.allChat[i];
+                          break;
+                      }
                   }
-                },
-                error => {
-                    this.error = error;
-                    this.loading = false;
-                });
-        }else{
-          this.chatService.listAllChannelIdGuard()
-            .subscribe(
-                success => {
-                  this.allChannel = success;
-                  this.allChannel = this.allChannel.data;
-                  for (let i = 0; i < this.allChannel.length; i++) {
-                      const channel = Object.assign(
-                          {id: this.allChannel[i].channel_id},
-                          {name: this.allChannel[i].channel_name});
-                          console.log(this.allChannel[i]);
-                      const list = this.listChannelAdmin.push(channel);
+                  if (userSelect) {
+                      console.log(userSelect);
+                      this.openOldMessage(userSelect.id);
+                      this.idChat = userSelect.id;
+                  } else {
+                      this.openChat(id, name, type);
                   }
-                },
-                error => {
-                    this.error = error;
-                    this.loading = false;
-                });
-        }
+              },
+              error => {
+                  this.error = error;
+                  this.loading = false;
+              });
     }
 
-    openChannel(id){
-      this.chatService.listOldMessageChannel(id)
-        .subscribe(
-          data => {
-            this.currentChat = [];
-            var list;
-            this.channelMessage = data;
-            this.channelMessage = this.channelMessage.data;
-            console.log(this.channelMessage.reverse());
-              for (var i=0; i< this.channelMessage.length; i++) {
-                  this.idChat = id;
-                  console.log(this.idChat);
-                  this.isChannel = true;
-                  const messageOld = Object.assign({message: this.channelMessage[i].text}, {user: this.channelMessage[i].sender_name});
-                  list = this.currentChat.push(messageOld);
-              }
+    listAllChannel() {
+        this.chatService.listAllChannelIdAdmin()
+            .subscribe(
+                success => {
+                    this.allChannel = success.data;
+                    for (let i = 0; i < this.allChannel.length; i++) {
+                        const channel = Object.assign(
+                            {id: this.allChannel[i].channel_id},
+                            {name: this.allChannel[i].channel_name});
+                        console.log(this.allChannel[i]);
+                        const list = this.listChannelAdmin.push(channel);
+                    }
+            },
+            error => {
+                this.error = error;
+                this.loading = false;
+            });
+    }
+
+    openChannel(id) {
+        this.chatService.listOldMessageChannel(id)
+            .subscribe(
+                data => {
+                    this.currentChat = [];
+                    this.channelMessage = data.data;
+                    console.log(this.channelMessage.reverse());
+                    let list;
+                    for (let i = 0; i < this.channelMessage.length; i++) {
+                        this.idChat = id;
+                        console.log(this.idChat);
+                        this.isChannel = true;
+                        const messageOld = Object.assign(
+                            {message: this.channelMessage[i].text},
+                            {user: this.channelMessage[i].sender_name});
+                        list = this.currentChat.push(messageOld);
+                    }
               return list;
           },
           error => {
@@ -315,37 +284,36 @@ export class MessagingComponent implements OnInit {
         );
     }
 
-    add(channel_id,tags) {
-      for (var i=0; i< tags.length; i++) {
-        const id = tags.id;
-        const name = tags.name;
-        const type = tags.type;
-        this.chatService.addUsers(channel_id,id,type,name)
-            .pipe(first())
-            .subscribe(
-                data => {
-                    console.log(data);
-                    this.loading = false;
-                },
-                error => {
+    add(channel_id, tags) {
+        for (let i = 0; i < tags.length; i++) {
+            const id = tags.id;
+            const name = tags.name;
+            const type = tags.type;
+            this.chatService.addUsers(channel_id, id, type, name)
+                .pipe(first())
+                .subscribe(
+                    data => {
+                        console.log(data);
+                        this.loading = false;
+                }, error => {
                     this.error = error;
                     this.loading = false;
                 });
-      }
+        }
     }
 
     onChange(id: string, name: string, type: string, isChecked: boolean) {
-    if (isChecked) {
-      const user = Object.assign(
-          {id: id},
-          {name: name},
-          {type: type});
-      const list = this.addUsers.push(user);
-      console.log(this.addUsers);
+        if (isChecked) {
+            const user = Object.assign(
+                {id: id},
+                {name: name},
+                {type: type});
+            const list = this.addUsers.push(user);
+            console.log(this.addUsers);
     } else {
-      console.log("deselect");
-      let index = this.addUsers.findIndex(x => x.value == id);
-      //this.addUsers.removeAt(index);
+            console.log('deselect');
+            //let index = this.addUsers.findIndex(x => x.value == id);
+            //this.addUsers.removeAt(index);
     }
 
   }

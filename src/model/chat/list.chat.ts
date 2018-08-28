@@ -1,6 +1,6 @@
-import { Bounds } from './bounds';
+import {Chat} from './chat';
 
-export interface ListBounds {
-    data: Bounds[];
+export interface ListChat {
+    data: Chat[];
     total: number;
 }
