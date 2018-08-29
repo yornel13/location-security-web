@@ -1,5 +1,5 @@
 
-import { Injectable } from '@angular/core';
+import {Injectable, OnChanges, SimpleChanges} from '@angular/core';
 import { AngularFireModule } from 'angularfire2';
 // for AngularFireDatabase
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -11,7 +11,6 @@ import { BehaviorSubject } from 'rxjs';
 
 import {AuthenticationService, ChatService} from '../_services';
 import {NotificationService} from './notification.service';
-import {Alerta} from '../../model/alerta/alerta';
 
 @Injectable()
 export class MessagingService {
@@ -26,7 +25,8 @@ export class MessagingService {
         private authService: AuthenticationService,
         private afDB: AngularFireDatabase,
         private afAuth: AngularFireAuth,
-        private chatService: ChatService) { }
+        private chatService: ChatService) {
+  }
 
   /**
    * update token in firebase database

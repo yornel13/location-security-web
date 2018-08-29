@@ -50,9 +50,13 @@ export class GlobalOsm {
         'Google Terrain Map': this.LAYER_GOOGLE_TERRAIN.layer
     };
 
-    readonly layerReset = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
-    });
-
     readonly layersOptions = { position: 'bottomright' };
+
+    setupLayer(map: L.Map) {
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            detectRetina: true,
+            attribution: 'Open Street Map'
+        }).addTo(map);
+    }
 }

@@ -6,7 +6,7 @@ import {AlertaService} from '../../../../model/alerta/alerta.service';
 import {Alerta} from '../../../../model/alerta/alerta';
 import {AlertaList} from '../../../../model/alerta/alerta.list';
 import {NotificationService} from '../../../shared/notification.service';
-import {Notification} from '../../../../model/alerta/notification';
+import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
 
 @Component({
   selector: 'app-aside',
@@ -25,7 +25,6 @@ export class AsideComponent implements OnInit, OnChanges {
     @Output() showMarker = {vehicles: true , watches: true , bombas: true, noGroups: true, message: ''};
     @Output() markerChanged = new EventEmitter();
     @Output() markerFocused = new EventEmitter();
-
     @Output() vehiclesCheck = true;
     @Output() watchesCheck = true;
     @Output() bombasCheck = true;
@@ -34,11 +33,32 @@ export class AsideComponent implements OnInit, OnChanges {
     showCardContainer = true;
     search: any;
     CHECK_ICON_URL = './assets/aside-menu/checked.png';
+    readonly alertCollection0: AngularFirestoreCollection<Alerta>;
+    readonly alertCollection1: AngularFirestoreCollection<Alerta>;
 
     constructor(
         private asideService: AsideService,
         public alertService: AlertaService,
-        private notificationService: NotificationService) {
+        private notificationService: NotificationService,
+        private db: AngularFirestore) {
+        this.alertCollection0 = db.collection<Alerta>('alerts', ref => ref.where('status', '==', 0))
+        this.alertCollection0.valueChanges()
+            .subscribe((alerts: Alerta[]) => {
+                this.alerts0 = alerts.sort((n1, n2) => {
+                    if (n1.create_date > n2.create_date) { return -1; }
+                    if (n1.create_date < n2.create_date) {return 1; }
+                    return 0;
+                });
+            });
+        this.alertCollection1 = db.collection<Alerta>('alerts', ref => ref.where('status', '==', 1))
+        this.alertCollection1.valueChanges()
+            .subscribe((alerts: Alerta[]) => {
+                this.alerts1 = alerts.sort((n1, n2) => {
+                    if (n1.create_date > n2.create_date) { return -1; }
+                    if (n1.create_date < n2.create_date) {return 1; }
+                    return 0;
+                });
+            });
     }
 
     ngOnInit() {
@@ -63,16 +83,9 @@ export class AsideComponent implements OnInit, OnChanges {
     }
 
     solveAlert(alert: Alerta) {
-        console.log('paso la prueba: ' + alert.id);
         this.alertService.solveAlert(alert.id).then(
             success => {
-                console.log('is success');
-                const index = this.alerts1.indexOf(alert, 0);
-                if (index > -1) {
-                    this.alerts1.splice(index, 1);
-                }
-                alert.status = 0;
-                this.alerts0.unshift(alert);
+                this.alertCollection1.doc(String(alert.id)).update({'status': 0});
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -110,7 +123,8 @@ export class AsideComponent implements OnInit, OnChanges {
             this.showCardContainer = true;
         }
     }
-        find(newSearch) {
+
+    find(newSearch) {
         console.log(newSearch.value);
         this.vehicles.forEach( vehicle => {
            if (vehicle.imei.match(newSearch.value)) {
@@ -124,15 +138,7 @@ export class AsideComponent implements OnInit, OnChanges {
     getAlerts() {
         this.alertService.getAll().then(
             (success: AlertaList) => {
-                // this.alerts0 = [];
-                // this.alerts1 = [];
-                success.data.forEach(alert => {
-                    if (alert.status == 1) {
-                        this.alerts1.push(alert);
-                    } else {
-                        this.alerts0.push(alert);
-                    }
-                });
+                // if do something
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect

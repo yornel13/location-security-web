@@ -66,11 +66,7 @@ export class MapOsmComponent implements OnChanges {
 
     onMapReady(map: L.Map) {
         this.map = map;
-        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
-            detectRetina: true,
-            attribution: 'Open Street Map'
-        }).addTo(this.map);
+        this.globalOSM.setupLayer(this.map);
     }
 
     ngOnChanges(changes: SimpleChanges) {
