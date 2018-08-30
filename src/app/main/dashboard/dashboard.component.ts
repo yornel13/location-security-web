@@ -21,10 +21,8 @@ export class DashboardComponent  {
 
      this.dataSource = {
             chart: {
-                "theme": "fusion",
-                "showBorder": "0",
-                "bgColor": "#FFFFFF",
-                "bgAlpha": "50",
+                "yAxisName": "Cantidad de reportes",
+                "yAxisMaxValue": Math.max(...this.valores)+5
             },
             // Chart Data
             "data": [{
@@ -158,6 +156,7 @@ export class DashboardComponent  {
                             this.reportesClose = success;
                             var tres = this.reportesClose.total;
                              this.valores = [uno, dos, tres];
+                             this.dataSource.chart.yAxisMaxValue = Math.max(...this.valores) + 5;
                              this.dataSource.data[0].value = this.valores[0];
                              this.dataSource.data[1].value = this.valores[1];
                              this.dataSource.data[2].value = this.valores[2];

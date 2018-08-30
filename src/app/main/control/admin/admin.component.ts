@@ -396,4 +396,114 @@ export class AdminComponent {
         window.open(doc.output('bloburl'), '_blank');
     }
 
+    pdfDetalle() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Usuario Administrador del sistema', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34);
+        //inserting data
+        doc.setTextColor(0);
+        doc.setFontType("bold");
+        doc.text('Nombre: ', 15, 100);
+        doc.setFontType("normal");
+        doc.text(this.admin.name, 34, 100);
+        doc.setFontType("bold");
+        doc.text('Apellido: ', 100, 100);
+        doc.setFontType("normal");
+        doc.text(this.admin.lastname, 123, 100);
+
+        doc.setFontType("bold");
+        doc.text('Cédula: ', 15, 107);
+        doc.setFontType("normal");
+        doc.text(this.admin.dni, 34, 107);
+        doc.setFontType("bold");
+        doc.text('Correo: ', 100, 107);
+        doc.setFontType("normal");
+        doc.text(this.admin.email, 123, 107);
+
+        doc.setFontType("bold");
+        doc.text('Fecha de creación: ', 15, 114);
+        doc.setFontType("normal");
+        doc.text(this.admin.create_date, 56, 114);
+        doc.setFontType("bold");
+        doc.text('Última actualización: ', 100, 114);
+        doc.setFontType("normal");
+        doc.text(this.admin.update_date, 146, 114);
+
+        this.toDataURL(this.admin.photo).then(dataUrl => {
+            var imgData = dataUrl;
+            doc.addImage(imgData, 'JPEG', 15, 45, 40, 40);
+            doc.save('adminDetail.pdf');
+          });
+        
+    }
+
+    toDataURL = url => fetch(url)
+      .then(response => response.blob())
+      .then(blob => new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.onerror = reject
+        reader.readAsDataURL(blob)
+      }));
+
+    printDetalle() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Usuario Administrador del sistema', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34);
+        //inserting data
+        doc.setTextColor(0);
+        doc.setFontType("bold");
+        doc.text('Nombre: ', 15, 100);
+        doc.setFontType("normal");
+        doc.text(this.admin.name, 34, 100);
+        doc.setFontType("bold");
+        doc.text('Apellido: ', 100, 100);
+        doc.setFontType("normal");
+        doc.text(this.admin.lastname, 123, 100);
+
+        doc.setFontType("bold");
+        doc.text('Cédula: ', 15, 107);
+        doc.setFontType("normal");
+        doc.text(this.admin.dni, 34, 107);
+        doc.setFontType("bold");
+        doc.text('Correo: ', 100, 107);
+        doc.setFontType("normal");
+        doc.text(this.admin.email, 123, 107);
+
+        doc.setFontType("bold");
+        doc.text('Fecha de creación: ', 15, 114);
+        doc.setFontType("normal");
+        doc.text(this.admin.create_date, 56, 114);
+        doc.setFontType("bold");
+        doc.text('Última actualización: ', 100, 114);
+        doc.setFontType("normal");
+        doc.text(this.admin.update_date, 146, 114);
+
+        this.toDataURL(this.admin.photo).then(dataUrl => {
+            var imgData = dataUrl;
+            doc.addImage(imgData, 'JPEG', 15, 45, 40, 40);
+            doc.autoPrint();
+            window.open(doc.output('bloburl'), '_blank');
+          });
+        
+    }
+
+    excelDetalle() {
+        var excel = [];
+        excel = [{'#' : this.admin.id, 'Cedula': this.admin.dni, 'Nombre':this.admin.name, 'Apellido':this.admin.lastname, 'Correo':this.admin.email, 'Fecha de creación':this.admin.create_date, 'Última actualización':this.admin.update_date}];
+        this.excelService.exportAsExcelFile(excel, 'admindetail');
+    }
+
 }

@@ -824,4 +824,481 @@ export class VisitasComponent {
     	this.viewmap = true;
     }
 
+    pdfDetalle() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Vigilancia Activa: #' + this.visi.id, 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34);
+        //inserting visita
+        doc.setTextColor(0);
+        doc.setFontType("bold");
+        doc.text('Entrada: ', 15, 50);
+        doc.setFontType("normal");
+        doc.text(this.visi.create_date, 34, 50);
+
+        doc.setFontType("bold");
+        doc.text('Latitud: ', 15, 57);
+        doc.setFontType("normal");
+        doc.text(this.visi.latitude.toString(), 36, 57);
+        doc.setFontType("bold");
+        doc.text('Longitud: ', 100, 57);
+        doc.setFontType("normal");
+        doc.text(this.visi.longitude.toString(), 123, 57);
+
+        doc.setFontType("bold");
+        doc.text('Materiales: ', 15, 64);
+        doc.setFontType("normal");
+        if(this.visi.observation.length != 0){
+          doc.text(this.visi.observation[0], 42, 64);
+        }else{
+          doc.text('Sin materiales', 42, 64);
+        }
+
+        doc.setFontType("bold");
+        doc.text('Imagenes: ', 15, 71);
+        //vehiculo
+        doc.line(10, 125, 200, 125);
+
+        doc.text('Vehículo ', 15, 133);
+  
+        doc.setFontType("bold");
+        doc.text('Nombre: ', 15, 140);
+        doc.setFontType("normal");
+        doc.text(this.visi.vehicle.vehicle, 34, 140);
+        doc.setFontType("bold");
+        doc.text('Placa: ', 100, 140);
+        doc.setFontType("normal");
+        doc.text(this.visi.vehicle.plate, 117, 140);  
+
+        doc.setFontType("bold");
+        doc.text('Modelo: ', 15, 147);
+        doc.setFontType("normal");
+        doc.text(this.visi.vehicle.model, 34, 147);
+        doc.setFontType("bold");
+        doc.text('Tipo: ', 100, 147);
+        doc.setFontType("normal");
+        doc.text(this.visi.vehicle.type, 115, 147);   
+        //funionario
+        doc.line(10, 200, 200, 200);
+
+        doc.setFontType("bold");
+        doc.text('Funcionario', 15, 208);
+  
+        doc.text('Nombre: ', 15, 215);
+        doc.setFontType("normal");
+        doc.text(this.visi.visited.name, 34, 215);
+        doc.setFontType("bold");
+        doc.text('Apellido: ', 100, 215);
+        doc.setFontType("normal");
+        doc.text(this.visi.visited.lastname, 123, 215);  
+
+        doc.setFontType("bold");
+        doc.text('Dirección: ', 15, 222);
+        doc.setFontType("normal");
+        doc.text(this.visi.visited.address, 40, 222);
+        doc.setFontType("bold");
+        doc.text('Cédula: ', 100, 222);
+        doc.setFontType("normal");
+        doc.text(this.visi.visited.dni, 119, 222);  
+
+        //visitante
+        doc.line(10, 230, 200, 230);
+
+        doc.setFontType("bold");
+        doc.text('Visitante', 15, 238);
+ 
+        doc.text('Nombre: ', 15, 245);
+        doc.setFontType("normal");
+        doc.text(this.visi.visitor.name, 34, 245);
+        doc.setFontType("bold");
+        doc.text('Apellido: ', 100, 245);
+        doc.setFontType("normal");
+        doc.text(this.visi.visitor.lastname, 123, 245);  
+
+        doc.setFontType("bold");
+        doc.text('Compañia: ', 15, 252);
+        doc.setFontType("normal");
+        doc.text(this.visi.visitor.company, 38, 252);
+        doc.setFontType("bold");
+        doc.text('Cédula: ', 100, 252);
+        doc.setFontType("normal");
+        doc.text(this.visi.visitor.dni, 119, 252);
+
+        //registrado por
+        doc.line(10, 260, 200, 260);
+
+        doc.setFontType("bold");
+        doc.text('Registrado por', 15, 268);
+ 
+        doc.text('Nombre: ', 15, 275);
+        doc.setFontType("normal");
+        doc.text(this.visi.guard.name, 34, 275);
+        doc.setFontType("bold");
+        doc.text('Apellido: ', 100, 275);
+        doc.setFontType("normal");
+        doc.text(this.visi.guard.lastname, 123, 275); 
+
+        doc.setFontType("bold");
+        doc.text('Correo: ', 15, 282);
+        doc.setFontType("normal");
+        doc.text(this.visi.guard.email, 36, 282);
+        doc.setFontType("bold");
+        doc.text('Cédula: ', 100, 282);
+        doc.setFontType("normal");
+        doc.text(this.visi.guard.dni, 119, 282);  
+
+        if(this.visi.image_1){
+          this.toDataURL(this.visi.image_1).then(dataUrl => {
+            var imgData = dataUrl;
+            doc.addImage(imgData, 'JPEG', 15, 78, 40, 40);
+            if(this.visi.image_2){
+              this.toDataURL(this.visi.image_2).then(dataUrl => {
+                var imgData = dataUrl;
+                doc.addImage(imgData, 'JPEG', 65, 78, 40, 40);
+                if(this.visi.image_3){
+                  this.toDataURL(this.visi.image_3).then(dataUrl => {
+                    var imgData = dataUrl;
+                    doc.addImage(imgData, 'JPEG', 115, 78, 40, 40);
+                     if(this.visi.image_4){
+                      this.toDataURL(this.visi.image_4).then(dataUrl => {
+                        var imgData = dataUrl;
+                        doc.addImage(imgData, 'JPEG', 165, 78, 40, 40);
+                        if(this.visi.image_5){
+                          this.toDataURL(this.visi.image_5).then(dataUrl => {
+                            var imgData = dataUrl;
+                            doc.addImage(imgData, 'JPEG', 215, 78, 40, 40);
+                            if(this.visi.vehicle.photo){
+                              this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
+                                var imgData = dataUrl;
+                                doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                                doc.save('visitaactivadetalle.pdf');
+                              });
+                            }else{
+                              doc.save('visitaactivadetalle.pdf');
+                            }
+                          });
+                        }else{
+                          if(this.visi.vehicle.photo){
+                              this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
+                                var imgData = dataUrl;
+                                doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                                doc.save('visitaactivadetalle.pdf');
+                              });
+                            }else{
+                              doc.save('visitaactivadetalle.pdf');
+                            }
+                        }
+                      });
+                    }else{
+                      if(this.visi.vehicle.photo){
+                          this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
+                            var imgData = dataUrl;
+                            doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                            doc.save('visitaactivadetalle.pdf');
+                          });
+                        }else{
+                          doc.save('visitaactivadetalle.pdf');
+                        }
+                    }
+                  });
+                }else{
+                  if(this.visi.vehicle.photo){
+                    this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
+                      var imgData = dataUrl;
+                      doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                      doc.save('visitaactivadetalle.pdf');
+                    });
+                  }else{
+                    doc.save('visitaactivadetalle.pdf');
+                  }
+                }
+              });
+            }else{
+              if(this.visi.vehicle.photo){
+                this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
+                  var imgData = dataUrl;
+                  doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                  doc.save('visitaactivadetalle.pdf');
+                });
+              }else{
+                doc.save('visitaactivadetalle.pdf');
+              }
+            }
+          });
+        }else{
+          if(this.visi.vehicle.photo){
+            this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
+              var imgData = dataUrl;
+              doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+              doc.save('visitaactivadetalle.pdf');
+            });
+          }else{
+            doc.save('visitaactivadetalle.pdf');
+          }
+      }        
+    }
+
+    printDetalle() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Vigilancia Activa: #' + this.visi.id, 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34);
+        //inserting visita
+        doc.setTextColor(0);
+        doc.setFontType("bold");
+        doc.text('Entrada: ', 15, 50);
+        doc.setFontType("normal");
+        doc.text(this.visi.create_date, 34, 50);
+
+        doc.setFontType("bold");
+        doc.text('Latitud: ', 15, 57);
+        doc.setFontType("normal");
+        doc.text(this.visi.latitude.toString(), 36, 57);
+        doc.setFontType("bold");
+        doc.text('Longitud: ', 100, 57);
+        doc.setFontType("normal");
+        doc.text(this.visi.longitude.toString(), 123, 57);
+
+        doc.setFontType("bold");
+        doc.text('Materiales: ', 15, 64);
+        doc.setFontType("normal");
+        if(this.visi.observation.length != 0){
+          doc.text(this.visi.observation[0], 42, 64);
+        }else{
+          doc.text('Sin materiales', 42, 64);
+        }
+
+        doc.setFontType("bold");
+        doc.text('Imagenes: ', 15, 71);
+        //vehiculo
+        doc.line(10, 125, 200, 125);
+
+        doc.text('Vehículo ', 15, 133);
+  
+        doc.setFontType("bold");
+        doc.text('Nombre: ', 15, 140);
+        doc.setFontType("normal");
+        doc.text(this.visi.vehicle.vehicle, 34, 140);
+        doc.setFontType("bold");
+        doc.text('Placa: ', 100, 140);
+        doc.setFontType("normal");
+        doc.text(this.visi.vehicle.plate, 117, 140);  
+
+        doc.setFontType("bold");
+        doc.text('Modelo: ', 15, 147);
+        doc.setFontType("normal");
+        doc.text(this.visi.vehicle.model, 34, 147);
+        doc.setFontType("bold");
+        doc.text('Tipo: ', 100, 147);
+        doc.setFontType("normal");
+        doc.text(this.visi.vehicle.type, 115, 147);   
+        //funionario
+        doc.line(10, 200, 200, 200);
+
+        doc.setFontType("bold");
+        doc.text('Funcionario', 15, 208);
+  
+        doc.text('Nombre: ', 15, 215);
+        doc.setFontType("normal");
+        doc.text(this.visi.visited.name, 34, 215);
+        doc.setFontType("bold");
+        doc.text('Apellido: ', 100, 215);
+        doc.setFontType("normal");
+        doc.text(this.visi.visited.lastname, 123, 215);  
+
+        doc.setFontType("bold");
+        doc.text('Dirección: ', 15, 222);
+        doc.setFontType("normal");
+        doc.text(this.visi.visited.address, 40, 222);
+        doc.setFontType("bold");
+        doc.text('Cédula: ', 100, 222);
+        doc.setFontType("normal");
+        doc.text(this.visi.visited.dni, 119, 222);  
+
+        //visitante
+        doc.line(10, 230, 200, 230);
+
+        doc.setFontType("bold");
+        doc.text('Visitante', 15, 238);
+ 
+        doc.text('Nombre: ', 15, 245);
+        doc.setFontType("normal");
+        doc.text(this.visi.visitor.name, 34, 245);
+        doc.setFontType("bold");
+        doc.text('Apellido: ', 100, 245);
+        doc.setFontType("normal");
+        doc.text(this.visi.visitor.lastname, 123, 245);  
+
+        doc.setFontType("bold");
+        doc.text('Compañia: ', 15, 252);
+        doc.setFontType("normal");
+        doc.text(this.visi.visitor.company, 38, 252);
+        doc.setFontType("bold");
+        doc.text('Cédula: ', 100, 252);
+        doc.setFontType("normal");
+        doc.text(this.visi.visitor.dni, 119, 252);
+
+        //registrado por
+        doc.line(10, 260, 200, 260);
+
+        doc.setFontType("bold");
+        doc.text('Registrado por', 15, 268);
+ 
+        doc.text('Nombre: ', 15, 275);
+        doc.setFontType("normal");
+        doc.text(this.visi.guard.name, 34, 275);
+        doc.setFontType("bold");
+        doc.text('Apellido: ', 100, 275);
+        doc.setFontType("normal");
+        doc.text(this.visi.guard.lastname, 123, 275); 
+
+        doc.setFontType("bold");
+        doc.text('Correo: ', 15, 282);
+        doc.setFontType("normal");
+        doc.text(this.visi.guard.email, 36, 282);
+        doc.setFontType("bold");
+        doc.text('Cédula: ', 100, 282);
+        doc.setFontType("normal");
+        doc.text(this.visi.guard.dni, 119, 282);  
+
+        if(this.visi.image_1){
+          this.toDataURL(this.visi.image_1).then(dataUrl => {
+            var imgData = dataUrl;
+            doc.addImage(imgData, 'JPEG', 15, 78, 40, 40);
+            if(this.visi.image_2){
+              this.toDataURL(this.visi.image_2).then(dataUrl => {
+                var imgData = dataUrl;
+                doc.addImage(imgData, 'JPEG', 65, 78, 40, 40);
+                if(this.visi.image_3){
+                  this.toDataURL(this.visi.image_3).then(dataUrl => {
+                    var imgData = dataUrl;
+                    doc.addImage(imgData, 'JPEG', 115, 78, 40, 40);
+                     if(this.visi.image_4){
+                      this.toDataURL(this.visi.image_4).then(dataUrl => {
+                        var imgData = dataUrl;
+                        doc.addImage(imgData, 'JPEG', 165, 78, 40, 40);
+                        if(this.visi.image_5){
+                          this.toDataURL(this.visi.image_5).then(dataUrl => {
+                            var imgData = dataUrl;
+                            doc.addImage(imgData, 'JPEG', 215, 78, 40, 40);
+                            if(this.visi.vehicle.photo){
+                              this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
+                                var imgData = dataUrl;
+                                doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                                doc.autoPrint();
+                                window.open(doc.output('bloburl'), '_blank');
+                              });
+                            }else{
+                              doc.autoPrint();
+                              window.open(doc.output('bloburl'), '_blank');
+                            }
+                          });
+                        }else{
+                          if(this.visi.vehicle.photo){
+                              this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
+                                var imgData = dataUrl;
+                                doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                                doc.autoPrint();
+                                window.open(doc.output('bloburl'), '_blank');
+                              });
+                            }else{
+                              doc.autoPrint();
+                              window.open(doc.output('bloburl'), '_blank');
+                            }
+                        }
+                      });
+                    }else{
+                      if(this.visi.vehicle.photo){
+                          this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
+                            var imgData = dataUrl;
+                            doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                            doc.autoPrint();
+                            window.open(doc.output('bloburl'), '_blank');
+                          });
+                        }else{
+                          doc.autoPrint();
+                          window.open(doc.output('bloburl'), '_blank');
+                        }
+                    }
+                  });
+                }else{
+                  if(this.visi.vehicle.photo){
+                    this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
+                      var imgData = dataUrl;
+                      doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                      doc.autoPrint();
+                      window.open(doc.output('bloburl'), '_blank');
+                    });
+                  }else{
+                    doc.autoPrint();
+                    window.open(doc.output('bloburl'), '_blank');
+                  }
+                }
+              });
+            }else{
+              if(this.visi.vehicle.photo){
+                this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
+                  var imgData = dataUrl;
+                  doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                  doc.autoPrint();
+                  window.open(doc.output('bloburl'), '_blank');
+                });
+              }else{
+                doc.autoPrint();
+                window.open(doc.output('bloburl'), '_blank');
+              }
+            }
+          });
+        }else{
+          if(this.visi.vehicle.photo){
+            this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
+              var imgData = dataUrl;
+              doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+              doc.autoPrint();
+              window.open(doc.output('bloburl'), '_blank');
+            });
+          }else{
+            doc.autoPrint();
+            window.open(doc.output('bloburl'), '_blank');
+          }
+      }        
+    }
+
+    toDataURL = url => fetch(url)
+      .then(response => response.blob())
+      .then(blob => new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.onerror = reject
+        reader.readAsDataURL(blob)
+      }));
+
+    excelDetalle() {
+        var excel = [];
+        excel = [{'Entrada':this.visi.create_date, 'Latitud':this.visi.latitude, 'Longitude':this.visi.longitude, '':''},{'Entrada':'Materiales'},{'Entrada':this.visi.observation[0]}];
+        excel.push({'Entrada':'Vehiculo'});
+        excel.push({'Entrada':'Nombre', 'Latitud':'Placa', 'Longitude':'Modelo', '':'Tipo'});
+        excel.push({'Entrada':this.visi.vehicle.vehicle, 'Latitud':this.visi.vehicle.plate, 'Longitude':this.visi.vehicle.model, '':this.visi.vehicle.type});
+        excel.push({'Entrada':'Funcionario'});
+        excel.push({'Entrada':'Nombre', 'Latitud':'Apellido', 'Longitude':'Dirección', '':'Cédula'});
+        excel.push({'Entrada':this.visi.visited.name, 'Latitud':this.visi.visited.lastname, 'Longitude':this.visi.visited.address, '':this.visi.visited.dni});
+        excel.push({'Entrada':'Visitante'});
+        excel.push({'Entrada':'Nombre', 'Latitud':'Apellido', 'Longitude':'Correo', '':'Cédula'});
+        excel.push({'Entrada':this.visi.visitor.name, 'Latitud':this.visi.visitor.lastname, 'Longitude':this.visi.visitor.email, '':this.visi.visitor.dni});
+        excel.push({'Entrada':'Registrado por'});
+        excel.push({'Entrada':'Nombre', 'Latitud':'Apellido', 'Longitude':'Correo', '':'Cédula'});
+        excel.push({'Entrada':this.visi.guard.name, 'Latitud':this.visi.guard.lastname, 'Longitude':this.visi.guard.email, '':this.visi.guard.dni});
+        this.excelService.exportAsExcelFile(excel, 'admindetail');
+    }
+
 }

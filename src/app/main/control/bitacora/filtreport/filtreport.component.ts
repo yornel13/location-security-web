@@ -129,10 +129,8 @@ export class FiltreportComponent {
     this.detalle = false;
     this.dataSource = {
             chart: {
-                "theme": "fusion",
-                "showBorder": "0",
-                "bgColor": "#FFFFFF",
-                "bgAlpha": "50",
+                "yAxisName": "Cantidad de reportes",
+                "yAxisMaxValue": 5
             },
             // Chart Data
             "data": this.datos
@@ -235,6 +233,7 @@ export class FiltreportComponent {
             var valores = [];
             nombres = this.nameInciden();
             valores = this.countInciden(this.data);
+            this.dataSource.chart.yAxisMaxValue = Math.max(...valores) + 2;
             for(var i=0; i<this.incidencias.total; i++){
               if(nombres[i] != "General"){
                 hola.push({"label":nombres[i], "value":valores[i]})
@@ -1068,6 +1067,162 @@ export class FiltreportComponent {
       this.zoom = 12;
       this.lista = false;
       this.viewmap = true;
+    }
+
+    pdfDetalle() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Reporte Abierto', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34);
+        //inserting data
+        doc.setTextColor(0);
+        doc.setFontType("bold");
+        doc.text('Incidencia: ', 15, 50);
+        doc.setFontType("normal");
+        doc.text(this.report.title, 42, 50);
+
+        doc.setFontType("bold");
+        doc.text('Observación: ', 15, 57);
+        doc.setFontType("normal");
+        doc.text(this.report.observation, 50, 57);        
+
+        doc.setFontType("bold");
+        doc.text('Latitud: ', 15, 64);
+        doc.setFontType("normal");
+        doc.text(this.report.latitude.toString(), 36, 64);
+        doc.setFontType("bold");
+        doc.text('Longitud: ', 100, 64);
+        doc.setFontType("normal");
+        doc.text(this.report.longitude.toString(), 123, 64);
+
+        //guardia
+        doc.line(10, 70, 200, 70);
+
+        doc.setFontType("bold");
+        doc.text('Guardia', 15, 77);
+
+        doc.setFontType("bold");
+        doc.text('Nombre: ', 15, 84);
+        doc.setFontType("normal");
+        doc.text(this.report.watch.guard.name, 34, 84);
+        doc.setFontType("bold");
+        doc.text('Apellido: ', 100, 84);
+        doc.setFontType("normal");
+        doc.text(this.report.watch.guard.lastname, 123, 84);
+
+        doc.setFontType("bold");
+        doc.text('Cédula: ', 15, 91);
+        doc.setFontType("normal");
+        doc.text(this.report.watch.guard.dni, 34, 91);
+        doc.setFontType("bold");
+        doc.text('Correo: ', 100, 91);
+        doc.setFontType("normal");
+        doc.text(this.report.watch.guard.email, 119, 91);
+
+        doc.line(10, 98, 200, 98);
+        for(var i=0; i < this.coment.length; i++){
+          doc.setFontType("bold");
+          doc.text('Comentario: #'+(i+1)+' ', 15, 105+i*(14));
+          doc.setFontType("normal");
+          doc.text(this.coment[i].text, 50, 105+i*(14));
+          doc.setFontType("bold");
+          doc.text('Usuario: ', 100, 105+i*(14));
+          doc.setFontType("normal");
+          doc.text(this.coment[i].user_name, 119, 105+i*(14));
+        }
+
+        doc.save('reporteabiertoDetail.pdf');
+
+    }
+
+    printDetalle() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Reporte Abierto', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34);
+        //inserting data
+        doc.setTextColor(0);
+        doc.setFontType("bold");
+        doc.text('Incidencia: ', 15, 50);
+        doc.setFontType("normal");
+        doc.text(this.report.title, 42, 50);
+
+        doc.setFontType("bold");
+        doc.text('Observación: ', 15, 57);
+        doc.setFontType("normal");
+        doc.text(this.report.observation, 50, 57);        
+
+        doc.setFontType("bold");
+        doc.text('Latitud: ', 15, 64);
+        doc.setFontType("normal");
+        doc.text(this.report.latitude.toString(), 36, 64);
+        doc.setFontType("bold");
+        doc.text('Longitud: ', 100, 64);
+        doc.setFontType("normal");
+        doc.text(this.report.longitude.toString(), 123, 64);
+
+        //guardia
+        doc.line(10, 70, 200, 70);
+
+        doc.setFontType("bold");
+        doc.text('Guardia', 15, 77);
+
+        doc.setFontType("bold");
+        doc.text('Nombre: ', 15, 84);
+        doc.setFontType("normal");
+        doc.text(this.report.watch.guard.name, 34, 84);
+        doc.setFontType("bold");
+        doc.text('Apellido: ', 100, 84);
+        doc.setFontType("normal");
+        doc.text(this.report.watch.guard.lastname, 123, 84);
+
+        doc.setFontType("bold");
+        doc.text('Cédula: ', 15, 91);
+        doc.setFontType("normal");
+        doc.text(this.report.watch.guard.dni, 34, 91);
+        doc.setFontType("bold");
+        doc.text('Correo: ', 100, 91);
+        doc.setFontType("normal");
+        doc.text(this.report.watch.guard.email, 119, 91);
+
+        doc.line(10, 98, 200, 98);
+        for(var i=0; i < this.coment.length; i++){
+          doc.setFontType("bold");
+          doc.text('Comentario: #'+(i+1)+' ', 15, 105+i*(14));
+          doc.setFontType("normal");
+          doc.text(this.coment[i].text, 50, 105+i*(14));
+          doc.setFontType("bold");
+          doc.text('Usuario: ', 100, 105+i*(14));
+          doc.setFontType("normal");
+          doc.text(this.coment[i].user_name, 119, 105+i*(14));
+        }
+
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
+
+    }
+
+    excelDetalle() {
+        var excel = [];
+        excel = [{'Incidencia' : this.report.title, 'Observacion' : this.report.observation, 'Latitud': this.report.latitude.toString(), 'Longitud':this.report.longitude.toString()}];
+        excel.push({'Incidencia':'Guardia'});
+        excel.push({'Incidencia':'Nombre', 'Observacion':'Apellido', 'Latitud':'Cédula', 'Longitud':'Correo'});
+        excel.push({'Incidencia':this.report.watch.guard.name, 'Observacion':this.report.watch.guard.lastname, 'Latitud':this.report.watch.guard.dni, 'Longitud':this.report.watch.guard.email});
+        excel.push({'Incidencia':'Comentarios'});
+        for(var i=0; i < this.coment.length; i++){
+          excel.push({'Incidencia':this.coment[i].text, 'Observacion':this.coment[i].user_name});
+        }
+        this.excelService.exportAsExcelFile(excel, 'reporteabiertodetail');
     }
 
     public doughnutChartType:string = 'doughnut';
