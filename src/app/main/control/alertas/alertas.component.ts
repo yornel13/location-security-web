@@ -107,10 +107,8 @@ export class AlertasComponent  {
 
   	this.dataSource = {
         chart: {
-            "theme": "fusion",
-            "showBorder": "0",
-            "bgColor": "#FFFFFF",
-            "bgAlpha": "50",
+            "yAxisName": "Cantidad de alertas",
+            "yAxisMaxValue": Math.max(...this.valores)+5
         },
         // Chart Data
         "data": [{
@@ -201,9 +199,10 @@ export class AlertasComponent  {
                 this.alertas = success;
                 this.data = this.alertas.data;
                 this.valores = this.countAlert(this.data);
+                this.dataSource.chart.yAxisMaxValue = Math.max(...this.valores) + 5;
                 this.dataSource.data[0].value = this.valores[0];
-	            this.dataSource.data[1].value = this.valores[1];
-	            this.dataSource.data[2].value = this.valores[2];
+	              this.dataSource.data[1].value = this.valores[1];
+	              this.dataSource.data[2].value = this.valores[2];
 	            var body = [];
 		        var excel = [];
 		        var status = "";
@@ -512,6 +511,116 @@ export class AlertasComponent  {
     	this.zoom = 12;
     	this.lista = false;
     	this.viewmap = true;
+    }
+
+    pdfDetalle() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Alertas del sistema', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34);
+        //inserting data
+        doc.setTextColor(0);
+        doc.setFontType("bold");
+        doc.text('Causa: ', 15, 50);
+        doc.setFontType("normal");
+        doc.text(this.detailcause.cause, 32, 50);
+        doc.setFontType("bold");
+        doc.text('Descripción: ', 100, 50);
+        doc.setFontType("normal");
+        doc.text(this.detailcause.message, 129, 50);
+
+        doc.setFontType("bold");
+        doc.text('Fecha: ', 15, 57);
+        doc.setFontType("normal");
+        doc.text(this.detailcause.create_date, 32, 57);
+        doc.setFontType("bold");
+        doc.text('Status: ', 100, 57);
+        doc.setFontType("normal");
+        var status = "";
+        if (this.detailcause.status == 0){
+          status = "Finalizado";
+        }else{
+          status = "Activa";
+        }
+        doc.text(status, 119, 57);
+
+        doc.setFontType("bold");
+        doc.text('Latitud: ', 15, 64);
+        doc.setFontType("normal");
+        doc.text(this.detailcause.latitude.toString(), 36, 64);
+        doc.setFontType("bold");
+        doc.text('Longitud: ', 100, 64);
+        doc.setFontType("normal");
+        doc.text(this.detailcause.longitude.toString(), 123, 64);
+
+        doc.save('alertaDetail.pdf');        
+    }
+
+    printDetalle() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Alertas del sistema', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34);
+        //inserting data
+        doc.setTextColor(0);
+        doc.setFontType("bold");
+        doc.text('Causa: ', 15, 50);
+        doc.setFontType("normal");
+        doc.text(this.detailcause.cause, 32, 50);
+        doc.setFontType("bold");
+        doc.text('Descripción: ', 100, 50);
+        doc.setFontType("normal");
+        doc.text(this.detailcause.message, 129, 50);
+
+        doc.setFontType("bold");
+        doc.text('Fecha: ', 15, 57);
+        doc.setFontType("normal");
+        doc.text(this.detailcause.create_date, 32, 57);
+        doc.setFontType("bold");
+        doc.text('Status: ', 100, 57);
+        doc.setFontType("normal");
+        var status = "";
+        if (this.detailcause.status == 0){
+          status = "Finalizado";
+        }else{
+          status = "Activa";
+        }
+        doc.text(status, 119, 57);
+
+        doc.setFontType("bold");
+        doc.text('Latitud: ', 15, 64);
+        doc.setFontType("normal");
+        doc.text(this.detailcause.latitude.toString(), 36, 64);
+        doc.setFontType("bold");
+        doc.text('Longitud: ', 100, 64);
+        doc.setFontType("normal");
+        doc.text(this.detailcause.longitude.toString(), 123, 64);
+
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
+        
+    }
+
+    excelDetalle() {
+        var excel = [];
+        var status = "";
+        if (this.detailcause.status == 0){
+          status = "Finalizado";
+        }else{
+          status = "Activa";
+        }
+        excel = [{'Causa': this.detailcause.cause, 'Descripción':this.detailcause.message, 'Fecha':this.detailcause.create_date, 'Status':status, 'Longitud':this.detailcause.longitude.toString(), 'Latitud':this.detailcause.latitude.toString()}];
+        this.excelService.exportAsExcelFile(excel, 'admindetail');
     }
 
 }

@@ -239,5 +239,114 @@ export class VehiculosComponent {
         window.open(doc.output('bloburl'), '_blank');
     }
 
+    pdfDetalle() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Vehículo Visitante', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34);
+        //inserting data
+        doc.setTextColor(0);
+        doc.setFontType("bold");
+        doc.text('Placa: ', 15, 100);
+        doc.setFontType("normal");
+        doc.text(this.vehi.plate, 32, 100);
+        doc.setFontType("bold");
+        doc.text('Vehículo: ', 100, 100);
+        doc.setFontType("normal");
+        doc.text(this.vehi.vehicle, 125, 100);
+
+        doc.setFontType("bold");
+        doc.text('Modelo: ', 15, 107);
+        doc.setFontType("normal");
+        doc.text(this.vehi.model, 34, 107);
+        doc.setFontType("bold");
+        doc.text('Tipo: ', 100, 107);
+        doc.setFontType("normal");
+        doc.text(this.vehi.type, 115, 107);
+
+        doc.setFontType("bold");
+        doc.text('Fecha de creación: ', 15, 114);
+        doc.setFontType("normal");
+        doc.text(this.vehi.create_date, 56, 114);
+        doc.setFontType("bold");
+        doc.text('Última actualización: ', 100, 114);
+        doc.setFontType("normal");
+        doc.text(this.vehi.update_date, 146, 114);
+
+        this.toDataURL(this.vehi.photo).then(dataUrl => {
+            var imgData = dataUrl;
+            doc.addImage(imgData, 'JPEG', 15, 45, 40, 40);
+            doc.save('vehiculoDetail.pdf');
+          });
+        
+    }
+
+    toDataURL = url => fetch(url)
+      .then(response => response.blob())
+      .then(blob => new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.onerror = reject
+        reader.readAsDataURL(blob)
+      }));
+
+    printDetalle() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Vehículo Visitante', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34);
+        //inserting data
+        doc.setTextColor(0);
+        doc.setFontType("bold");
+        doc.text('Placa: ', 15, 100);
+        doc.setFontType("normal");
+        doc.text(this.vehi.plate, 32, 100);
+        doc.setFontType("bold");
+        doc.text('Vehículo: ', 100, 100);
+        doc.setFontType("normal");
+        doc.text(this.vehi.vehicle, 125, 100);
+
+        doc.setFontType("bold");
+        doc.text('Modelo: ', 15, 107);
+        doc.setFontType("normal");
+        doc.text(this.vehi.model, 34, 107);
+        doc.setFontType("bold");
+        doc.text('Tipo: ', 100, 107);
+        doc.setFontType("normal");
+        doc.text(this.vehi.type, 115, 107);
+
+        doc.setFontType("bold");
+        doc.text('Fecha de creación: ', 15, 114);
+        doc.setFontType("normal");
+        doc.text(this.vehi.create_date, 56, 114);
+        doc.setFontType("bold");
+        doc.text('Última actualización: ', 100, 114);
+        doc.setFontType("normal");
+        doc.text(this.vehi.update_date, 146, 114);
+
+        this.toDataURL(this.vehi.photo).then(dataUrl => {
+            var imgData = dataUrl;
+            doc.addImage(imgData, 'JPEG', 15, 45, 40, 40);
+            doc.autoPrint();
+            window.open(doc.output('bloburl'), '_blank');
+          });
+        
+    }
+
+    excelDetalle() {
+        var excel = [];
+        excel = [{'#' : this.vehi.id, 'Placa': this.vehi.plate, 'Vehículo':this.vehi.vehicle, 'Modelo':this.vehi.model, 'Tipo':this.vehi.type, 'Fecha de creación':this.vehi.create_date, 'Última actualización':this.vehi.update_date}];
+        this.excelService.exportAsExcelFile(excel, 'vehiculDetail');
+    }
 
 }

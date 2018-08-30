@@ -32,7 +32,7 @@
                       <span aria-hidden="true">&times;</span>
                   </button>
               </div>
-              <div class="row form-inline mt-2">
+              <div class="row form-inline mt-2 pb-2">
                 <div class="mr-auto form-inline pl-4">
                   <input class="form-control form-control-sm mr-1" type="date" name="date" [(ngModel)]="desde" (change)="getChartDate()" [ngModelOptions]="{standalone: true}">
                   <input class="form-control form-control-sm mr-1" type="date" name="date" [(ngModel)]="hasta" (change)="getChartDate()" [ngModelOptions]="{standalone: true}" disabled *ngIf="rangeday">
@@ -50,11 +50,11 @@
                 </div>
               </div>
               <div class="modal-body">
-                  <div style="display: block;">
+                  <div style="display: block; text-align: center;">
                   <fusioncharts
                     width="490px"
                     height="300px"
-                    type="Doughnut2d"
+                    type="Column2d"
                     [dataSource]="dataSource">
                 </fusioncharts>
               </div>
@@ -145,8 +145,23 @@
     </div>
   </div>
   <div class="info-container panel panel-default" *ngIf="detalle">
-    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
-      <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle Reporte</h3>
+    <div class="row panel-heading mb-2" style="background-color: #D9D9D9; padding: 10px">
+        <div class="mr-auto ml-4">
+            <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle Reporte</h3>
+        </div>
+        <div class="ml-auto" style="margin-top: 25px; margin-right: 60px;">
+            <div class="btn-group btn-group-toggle ml-4" data-toggle="buttons">
+              <label class="btn btn-outline-dark" (click)="excelDetalle()">
+                <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+              </label>
+              <label class="btn btn-outline-dark" (click)="pdfDetalle()">
+                <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+              </label>
+              <label class="btn btn-outline-dark" (click)="printDetalle()">
+                <input type="radio" name="options" id="option3" autocomplete="off"> Print
+              </label>
+            </div>
+        </div>
     </div>
     <div class="panel-body mt-2">          
           <div class="table-container container">
@@ -294,7 +309,7 @@
               </div>
               <div *ngFor="let c of coment">
                 <hr>
-                <div class="form-group row">
+                <div class="form-group row mt-2">
                   <label for="dni" class="col-sm-2 col-form-label">Usuario</label>
                   <div class="col-sm-4">
                     <input type="text" readonly class="form-control" id="dni" value="{{c.user_name}}">
@@ -313,7 +328,7 @@
               </div>
               <hr>
               <div>
-                <div class="form-group row" *ngIf="addcomment">
+                <div class="form-group row mt-2" *ngIf="addcomment">
                   <label class="col-sm-2 col-form-label">Nuevo Comentario</label>
                   <div class="col-sm-8">
                     <textarea [(ngModel)]="newcoment" [ngModelOptions]="{standalone: true}" placeholder="Ingrese nuevo comentario" style="width: 100%"></textarea>

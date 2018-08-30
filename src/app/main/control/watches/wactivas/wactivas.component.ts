@@ -285,4 +285,122 @@ export class WactivasComponent {
       this.viewmap = true;
     }
 
+    pdfDetalle() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Guardia', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34);
+        //inserting data
+        doc.setTextColor(0);
+        doc.setFontType("bold");
+        doc.text('Hora de inicio: ', 15, 50);
+        doc.setFontType("normal");
+        doc.text(this.guardia.create_date, 50, 50);
+
+        doc.setFontType("bold");
+        doc.text('Latitud: ', 15, 57);
+        doc.setFontType("normal");
+        doc.text(this.guardia.latitude.toString(), 36, 57);
+        doc.setFontType("bold");
+        doc.text('Longitud: ', 100, 57);
+        doc.setFontType("normal");
+        doc.text(this.guardia.longitude.toString(), 123, 57);
+
+        //guardia
+        doc.line(10, 63, 200, 63);
+
+        doc.setFontType("bold");
+        doc.text('Guardia', 15, 70);
+
+        doc.setFontType("bold");
+        doc.text('Nombre: ', 15, 77);
+        doc.setFontType("normal");
+        doc.text(this.guardia.guard.name, 34, 77);
+        doc.setFontType("bold");
+        doc.text('Apellido: ', 100, 77);
+        doc.setFontType("normal");
+        doc.text(this.guardia.guard.lastname, 123, 77);
+
+        doc.setFontType("bold");
+        doc.text('Cédula: ', 15, 84);
+        doc.setFontType("normal");
+        doc.text(this.guardia.guard.dni, 34, 84);
+        doc.setFontType("bold");
+        doc.text('Correo: ', 100, 84);
+        doc.setFontType("normal");
+        doc.text(this.guardia.guard.email, 119, 84);
+
+        doc.save('guardiaDetail.pdf');
+
+    }
+
+    printDetalle() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Guardia', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34);
+        //inserting data
+        doc.setTextColor(0);
+        doc.setFontType("bold");
+        doc.text('Hora de inicio: ', 15, 50);
+        doc.setFontType("normal");
+        doc.text(this.guardia.create_date, 50, 50);
+
+        doc.setFontType("bold");
+        doc.text('Latitud: ', 15, 57);
+        doc.setFontType("normal");
+        doc.text(this.guardia.latitude.toString(), 36, 57);
+        doc.setFontType("bold");
+        doc.text('Longitud: ', 100, 57);
+        doc.setFontType("normal");
+        doc.text(this.guardia.longitude.toString(), 123, 57);
+
+        //guardia
+        doc.line(10, 63, 200, 63);
+
+        doc.setFontType("bold");
+        doc.text('Guardia', 15, 70);
+
+        doc.setFontType("bold");
+        doc.text('Nombre: ', 15, 77);
+        doc.setFontType("normal");
+        doc.text(this.guardia.guard.name, 34, 77);
+        doc.setFontType("bold");
+        doc.text('Apellido: ', 100, 77);
+        doc.setFontType("normal");
+        doc.text(this.guardia.guard.lastname, 123, 77);
+
+        doc.setFontType("bold");
+        doc.text('Cédula: ', 15, 84);
+        doc.setFontType("normal");
+        doc.text(this.guardia.guard.dni, 34, 84);
+        doc.setFontType("bold");
+        doc.text('Correo: ', 100, 84);
+        doc.setFontType("normal");
+        doc.text(this.guardia.guard.email, 119, 84);
+
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
+
+    }
+
+    excelDetalle() {
+        var excel = [];
+        excel = [{'Hora de inicio' : this.guardia.create_date, 'Latitud': this.guardia.latitude.toString(), 'Longitud':this.guardia.longitude.toString(), '':''}];
+        excel.push({'Hora de inicio':'Guardia'});
+        excel.push({'Hora de inicio':'Nombre', 'Latitud':'Apellido', 'Longitude':'Cédula', '':'Correo'});
+        excel.push({'Hora de inicio':this.guardia.guard.name, 'Latitud':this.guardia.guard.lastname, 'Longitude':this.guardia.guard.dni, '':this.guardia.guard.email});
+        this.excelService.exportAsExcelFile(excel, 'guardiadetail');
+    }
+
 }

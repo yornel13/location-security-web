@@ -302,4 +302,97 @@ export class FuncionariosComponent {
         window.open(doc.output('bloburl'), '_blank');
     }
 
+    pdfDetalle() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Funcionario', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34);
+        //inserting data
+        doc.setTextColor(0);
+        doc.setFontType("bold");
+        doc.text('Nombre: ', 15, 50);
+        doc.setFontType("normal");
+        doc.text(this.funcio.name, 34, 50);
+        doc.setFontType("bold");
+        doc.text('Apellido: ', 100, 50);
+        doc.setFontType("normal");
+        doc.text(this.funcio.lastname, 123, 50);
+
+        doc.setFontType("bold");
+        doc.text('Cédula: ', 15, 57);
+        doc.setFontType("normal");
+        doc.text(this.funcio.dni, 34, 57);
+        doc.setFontType("bold");
+        doc.text('Dirección: ', 100, 57);
+        doc.setFontType("normal");
+        doc.text(this.funcio.address, 125, 57);
+
+        doc.setFontType("bold");
+        doc.text('Fecha de creación: ', 15, 64);
+        doc.setFontType("normal");
+        doc.text(this.funcio.create_date, 56, 64);
+        doc.setFontType("bold");
+        doc.text('Última actualización: ', 100, 64);
+        doc.setFontType("normal");
+        doc.text(this.funcio.update_date, 146, 64);
+
+        doc.save('funcionarioDetail.pdf');
+        
+    }
+
+    printDetalle() {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Funcionario', 15, 27)
+        doc.text('Fecha: '+ fecha, 15, 34);
+        //inserting data
+        doc.setTextColor(0);
+        doc.setFontType("bold");
+        doc.text('Nombre: ', 15, 50);
+        doc.setFontType("normal");
+        doc.text(this.funcio.name, 34, 50);
+        doc.setFontType("bold");
+        doc.text('Apellido: ', 100, 50);
+        doc.setFontType("normal");
+        doc.text(this.funcio.lastname, 123, 50);
+
+        doc.setFontType("bold");
+        doc.text('Cédula: ', 15, 57);
+        doc.setFontType("normal");
+        doc.text(this.funcio.dni, 34, 57);
+        doc.setFontType("bold");
+        doc.text('Dirección: ', 100, 57);
+        doc.setFontType("normal");
+        doc.text(this.funcio.address, 125, 57);
+
+        doc.setFontType("bold");
+        doc.text('Fecha de creación: ', 15, 64);
+        doc.setFontType("normal");
+        doc.text(this.funcio.create_date, 56, 64);
+        doc.setFontType("bold");
+        doc.text('Última actualización: ', 100, 64);
+        doc.setFontType("normal");
+        doc.text(this.funcio.update_date, 146, 64);
+
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
+        
+    }
+
+    excelDetalle() {
+        var excel = [];
+        excel = [{'#' : this.funcio.id, 'Cedula': this.funcio.dni, 'Nombre':this.funcio.name, 'Apellido':this.funcio.lastname, 'Dirección':this.funcio.address, 'Fecha de creación':this.funcio.create_date, 'Última actualización':this.funcio.update_date}];
+        this.excelService.exportAsExcelFile(excel, 'funcionariodetail');
+    }
+
 }

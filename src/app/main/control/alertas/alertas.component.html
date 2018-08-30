@@ -25,7 +25,7 @@
   			          <fusioncharts
                     width="450px"
                     height="260px"
-                    type="Doughnut2d"
+                    type="Column2d"
                     [dataSource]="dataSource">
                 </fusioncharts>
 			        </div>
@@ -120,9 +120,24 @@
     </div>
   </div>
   <div class="info-container panel panel-default" *ngIf="detalle">
-    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
-      <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle Alerta</h3>
-    </div>
+    <div class="row panel-heading mb-2" style="background-color: #D9D9D9; padding: 10px">
+      <div class="mr-auto ml-4">
+          <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle Alerta</h3>
+      </div>
+      <div class="ml-auto" style="margin-top: 25px; margin-right: 60px;">
+          <div class="btn-group btn-group-toggle ml-4" data-toggle="buttons">
+            <label class="btn btn-outline-dark" (click)="excelDetalle()">
+              <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+            </label>
+            <label class="btn btn-outline-dark" (click)="pdfDetalle()">
+              <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+            </label>
+            <label class="btn btn-outline-dark" (click)="printDetalle()">
+              <input type="radio" name="options" id="option3" autocomplete="off"> Print
+            </label>
+          </div>
+      </div>
+  </div>
     <div class="panel-body mt-2">          
           <div class="table-container container">
             <form  role="form">

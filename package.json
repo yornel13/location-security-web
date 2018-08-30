@@ -41,6 +41,7 @@
     "firebase": "^5.4.0",
     "fusioncharts": "^3.13.1",
     "geolib": "^2.0.24",
+    "html2canvas": "^1.0.0-alpha.12",
     "igniteui-angular": "^6.1.4",
     "js-marker-clusterer": "^1.0.0",
     "jspdf": "^1.4.1",
