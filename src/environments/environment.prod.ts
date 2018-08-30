@@ -1,6 +1,8 @@
 export const environment = {
     production: false,
-    BASIC_URL: 'http://icsseseguridad.com/location-security/public',
+    BASIC_URL: 'http://icsseseguridad.com/api/public',
+    //BASIC_URL: './api/public',
+    //BASIC_URL: 'http://icsseseguridad.com/test/public',
     firebase: {
         apiKey: 'AIzaSyAzFM4z3GoUE3pFiwpcUBSMm-6PxMNxxaQ',
         authDomain: 'icsseseguridad-6f751.firebaseapp.com',

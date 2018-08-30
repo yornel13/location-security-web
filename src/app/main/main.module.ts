@@ -37,6 +37,8 @@ import { FilterPipeModule } from 'ngx-filter-pipe';
 import {TabletService} from '../../model/tablet/tablet.service';
 import {ControlModule} from './control/control.module';
 import {CardAlertComponent} from './monitoring/aside/card.alert.component';
+import {ItemGuardComponent} from './messaging/item.guard.component';
+import {ChatComponent} from './chat/chat.component';
 
 const mainRoutes: Routes = [
     { path: '', component: MainComponent,
@@ -48,6 +50,7 @@ const mainRoutes: Routes = [
                     { path: 'monitoring', component: MonitoringComponent },
                     { path: 'control', loadChildren: () => ControlModule },
                     { path: 'messaging', component: MessagingComponent },
+                    { path: 'chat', component: ChatComponent },
                     { path: 'report', component: ReportComponent },
                     { path: '', redirectTo: '/u/dashboard', pathMatch: 'full' },
                 ]
@@ -76,12 +79,12 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
   providers: [
       VehiclesService, WatchesService, AsideService, TabletService ],
   entryComponents: [ PopupVehicleComponent, PopupWatchComponent, CardVehicleComponent,
-      CardTabletComponent ],
+      CardTabletComponent, ItemGuardComponent ],
   declarations: [
       MonitoringComponent, MapOsmComponent, PopupVehicleComponent, PopupWatchComponent,
       HeaderComponent, AsideComponent, MainComponent,
-      DashboardComponent, ReportComponent, MessagingComponent,
-      CardVehicleComponent, CardTabletComponent, FilterPipe, CardAlertComponent
+      DashboardComponent, ReportComponent, MessagingComponent, ChatComponent,
+      CardVehicleComponent, CardTabletComponent, FilterPipe, CardAlertComponent, ItemGuardComponent
   ],
   bootstrap: [ MainComponent ]
 })

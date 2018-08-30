@@ -1,76 +1,3 @@
-h1 {
-  margin: 0 auto;
-  width: 8em;
-  text-align: center;
-}
-li {
-  text-align: left;
-}
-
-.loader {
-  border: 8px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 8px solid #3498db;
-  width: 45px;
-  height: 45px;
-  -webkit-animation: spin 2s linear infinite; /* Safari */
-  animation: spin 2s linear infinite;
-  align-items: center;
-  margin: auto;
-  position: relative;
-  margin-top: 5%;
-}
-
-.dropdown{
-  height: 100%;
-  overflow: scroll;
-}
-
-.buttonContact{
-  border-color: transparent;
-  background-color: transparent;
-  width: auto;
-}
-
-.list{
-  border-bottom: 1px;
-  border-bottom-color: black;
-}
-
-.header-aside{
-    display: flex;
-    margin-bottom: 12px;
-    max-height: 47px;
-    color: #FFFFFF
-}
-
-a{
-  color:white;
-}
-
-a.active{
-  color: black;
-}
-
-html, body {
-height: 100%;
-}
-/* Styles go here */
-
-.nav-item {
-    height: 40px;
-    border-radius: 0;
-    padding-top: 0
-
-}
-
-
-
-
-
-
-
-
 .container{max-width:1170px; margin:auto;}
 img{ max-width:100%;}
 .inbox_people {
@@ -128,10 +55,12 @@ img{ max-width:100%;}
     border-bottom: 1px solid #c4c4c4;
     margin: 0;
     padding: 18px 16px 10px;
+    cursor: pointer;
 }
 .inbox_chat { height: 550px; overflow-y: scroll;}
 
-.active_chat{ background:#ebebeb;}
+.no-active_chat{ background:white;}
+.active_chat{ background:lightblue;}
 
 .incoming_msg_img {
     display: inline-block;
@@ -205,58 +134,4 @@ img{ max-width:100%;}
 .msg_history {
     height: 516px;
     overflow-y: auto;
-}
-
-
-
-app-messaging {
-    height: 100%;
-    width: 100%;
-}
-
-.chat-container {
-    position: absolute;
-    width: 100%;
-    top: 56px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: auto;
-    display: flex;
-}
-
-.chat-aside {
-    height: 100%;
-    width: 380px;
-    min-width: 380px;
-    display:flex;
-    flex-direction: column;
-    background: gray;
-}
-
-.tab-content {
-    height: 70%;
-}
-
-.tab-pane {
-    height: 70%;
-}
-
-.messages-container {
-    width: 100%;
-    height: 100%;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.write-container {
-    background-color: honeydew;
-    padding: 8px;
-    border-radius: 4px;
-}
-
-.chat-lines {
-    list-style-position: inside;
 }

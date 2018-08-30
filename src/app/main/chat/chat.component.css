@@ -1,85 +1,39 @@
-h1 {
-  margin: 0 auto;
-  width: 8em;
-  text-align: center;
+app-chat[ng-view] {
+    width: 100vw;
+    height: 100%;
+    background-color: #17a2b8;
 }
-li {
-  text-align: left;
+div[ng-view]{
+    height: 100%;
 }
-
-.loader {
-  border: 8px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 8px solid #3498db;
-  width: 45px;
-  height: 45px;
-  -webkit-animation: spin 2s linear infinite; /* Safari */
-  animation: spin 2s linear infinite;
-  align-items: center;
-  margin: auto;
-  position: relative;
-  margin-top: 5%;
+div.container[ng-view]{
+    width: 100vw;
+    height: 100%;
+    /*padding: 0;*/
+    /*margin: 0;*/
+    /*position: absolute;*/
+    /*top: 56px;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*bottom: 0;*/
+    background-color: #17a2b8;
 }
-
-.dropdown{
-  height: 100%;
-  overflow: scroll;
-}
-
-.buttonContact{
-  border-color: transparent;
-  background-color: transparent;
-  width: auto;
-}
-
-.list{
-  border-bottom: 1px;
-  border-bottom-color: black;
-}
-
-.header-aside{
-    display: flex;
-    margin-bottom: 12px;
-    max-height: 47px;
-    color: #FFFFFF
-}
-
-a{
-  color:white;
-}
-
-a.active{
-  color: black;
-}
-
-html, body {
-height: 100%;
-}
-/* Styles go here */
-
-.nav-item {
-    height: 40px;
-    border-radius: 0;
-    padding-top: 0
-
-}
-
-
-
-
-
-
-
-
-.container{max-width:1170px; margin:auto;}
 img{ max-width:100%;}
+
 .inbox_people {
     background: #f8f8f8 none repeat scroll 0 0;
     float: left;
     overflow: hidden;
-    width: 40%; border-right:1px solid #c4c4c4;
+    width: 400px;
+    border-right:1px solid #c4c4c4;
+
+    height: 100%;
 }
 .inbox_msg {
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
     border: 1px solid #c4c4c4;
     clear: both;
     overflow: hidden;
@@ -119,7 +73,7 @@ img{ max-width:100%;}
 }
 .chat_ib {
     float: left;
-    padding: 8px 0 0 15px;
+    padding: 0 0 0 15px;
     width: 88%;
 }
 
@@ -129,7 +83,9 @@ img{ max-width:100%;}
     margin: 0;
     padding: 18px 16px 10px;
 }
-.inbox_chat { height: 550px; overflow-y: scroll;}
+.inbox_chat {
+    height: 100%; overflow-y: scroll;
+}
 
 .active_chat{ background:#ebebeb;}
 
@@ -160,9 +116,11 @@ img{ max-width:100%;}
 }
 .received_withd_msg { width: 57%;}
 .mesgs {
+    width: auto;
     float: left;
     padding: 30px 15px 0 25px;
-    width: 60%;
+
+    height: 100%;
 }
 
 .sent_msg p {
@@ -201,62 +159,13 @@ img{ max-width:100%;}
     top: 11px;
     width: 33px;
 }
-.messaging { padding: 0 0 50px 0;}
+.messaging {
+    width: 100vw;
+    height: 100%;
+    padding: 0;
+}
+
 .msg_history {
     height: 516px;
     overflow-y: auto;
-}
-
-
-
-app-messaging {
-    height: 100%;
-    width: 100%;
-}
-
-.chat-container {
-    position: absolute;
-    width: 100%;
-    top: 56px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: auto;
-    display: flex;
-}
-
-.chat-aside {
-    height: 100%;
-    width: 380px;
-    min-width: 380px;
-    display:flex;
-    flex-direction: column;
-    background: gray;
-}
-
-.tab-content {
-    height: 70%;
-}
-
-.tab-pane {
-    height: 70%;
-}
-
-.messages-container {
-    width: 100%;
-    height: 100%;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.write-container {
-    background-color: honeydew;
-    padding: 8px;
-    border-radius: 4px;
-}
-
-.chat-lines {
-    list-style-position: inside;
 }

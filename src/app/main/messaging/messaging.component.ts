@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { first } from 'rxjs/operators';
@@ -13,7 +13,6 @@ import {Admin} from '../../../model/admin/admin';
 import {Chat} from '../../../model/chat/chat';
 import {Channel} from '../../../model/chat/channel';
 import {ChatLine} from '../../../model/chat/chat.line';
-import {Alerta} from '../../../model/alerta/alerta';
 import {NotificationService} from '../../shared/notification.service';
 
 @Component({
@@ -22,6 +21,7 @@ import {NotificationService} from '../../shared/notification.service';
     styleUrls: ['./messaging.component.css']
 })
 export class MessagingComponent implements OnInit {
+    @ViewChild('scrollMe') private myScrollContainer: ElementRef;
     user: Admin;
     loading = false;
     submitted = false;
@@ -93,7 +93,8 @@ export class MessagingComponent implements OnInit {
                         {id: this.guards[i].id},
                         {name: this.guards[i].name},
                         {lastname: this.guards[i].lastname},
-                        {type: 'GUARD'});
+                        {photo: this.guards[i].photo},
+                            {type: 'GUARD'});
                     this.listContactGuard.push(contact);
                 }
             }, error => {
@@ -113,6 +114,7 @@ export class MessagingComponent implements OnInit {
                         {id: this.admins[i].id},
                         {name: this.admins[i].name},
                         {lastname: this.admins[i].lastname},
+                        {photo: this.admins[i].photo},
                         {type: 'ADMIN'});
                     const list = this.listContactAdmin.push(contact);
                 }
@@ -177,6 +179,12 @@ export class MessagingComponent implements OnInit {
                 });
     }
 
+    scrollToBottom(): void {
+        try {
+            this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+        } catch (err) { }
+    }
+
     openChat(id, name, type) {
         this.chatService.chat(id, name, type)
             .subscribe(
@@ -203,6 +211,7 @@ export class MessagingComponent implements OnInit {
                         const messageOld = Object.assign({message: this.oldMessage[i].text}, {user: this.oldMessage[i].sender_name});
                         lastMessage = this.currentChat.push(messageOld);
                     }
+                    this.scrollToBottom();
                     return lastMessage;
                 },
                 error => {
