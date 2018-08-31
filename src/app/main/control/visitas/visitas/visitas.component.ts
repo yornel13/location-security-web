@@ -832,7 +832,7 @@ export class VisitasComponent {
         doc.setTextColor(100)
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
-        doc.text('Vigilancia Activa: #' + this.visi.id, 15, 27)
+        doc.text('Visita: #' + this.visi.id, 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34);
 
         //validar imagenes
@@ -1065,7 +1065,7 @@ export class VisitasComponent {
         doc.setTextColor(100)
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
-        doc.text('Vigilancia Activa: #' + this.visi.id, 15, 27)
+        doc.text('Visita: #' + this.visi.id, 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting visita
         doc.setTextColor(0);
