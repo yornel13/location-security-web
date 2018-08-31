@@ -65,4 +65,9 @@ app-cerco {
     font-size: 1.8rem
 }
 
+#map {
+    height: 500px;
+    width: 100%;
+}
+
 

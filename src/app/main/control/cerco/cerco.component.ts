@@ -17,7 +17,7 @@ import {Vehicle} from '../../../../model/vehicle/vehicle';
 import {CheckboxControlValueAccessor} from '@angular/forms';
 import {ListBounds} from '../../../../model/cerco/list.bounds';
 import {Bounds} from '../../../../model/cerco/bounds';
-import {GlobalOsm} from "../../../global.osm";
+import {GlobalOsm} from '../../../global.osm';
 
 
 export class VechicleS {
@@ -76,7 +76,9 @@ export class CercoComponent implements OnInit {
     drawing: boolean;
     polygon = L.polygon([]);
     onArea;
-    private map;
+    map;
+    drawPluginOptions;
+    editableLayers;
 
     message: string;
     alertError: boolean;
@@ -102,6 +104,9 @@ export class CercoComponent implements OnInit {
     baseLayers;
     options;
     drawOptions;
+    drawControl;
+    figure;
+    selectedBounds: Cerco = undefined;
 
     constructor (
             public router: Router,
@@ -137,8 +142,6 @@ export class CercoComponent implements OnInit {
         };
     }
 
-    // Values to bind to Leaflet Directive
-
 
     saveNewBound() {
         const nameBound = this.nameBoundField.nativeElement.value;
@@ -155,7 +158,7 @@ export class CercoComponent implements OnInit {
                         }
                     }
 
-                    const  coords =  JSON.stringify(this.polyCoords);
+                    const coords = JSON.stringify(this.polyCoords);
                     console.log(coords);
                     const bound: Cerco = {
                         name: this.nameBound,
@@ -202,13 +205,13 @@ export class CercoComponent implements OnInit {
                 }
             }
         );
-
     }
 
-    getVehiclesInBound(id, name) {
-        this.cercoId = id;
-        this.nameBound = name;
-        this.cercoServise.getVehiclesInBound(id).then(
+    getVehiclesInBound(cerco: Cerco) {
+        this.selectedBounds = cerco;
+        this.cercoId = cerco.id;
+        this.nameBound = cerco.name;
+        this.cercoServise.getVehiclesInBound(cerco.id).then(
             (success: ListBounds) => {
                 this.bounds = success.data;
                 this.loadVehicleListModal();
@@ -225,7 +228,7 @@ export class CercoComponent implements OnInit {
             }
         );
 
-        this.cercoServise.getId(id).then(
+        this.cercoServise.getId(cerco.id).then(
             success => {
                 const cercoToEdit: Cerco = success;
                 const coords = JSON.parse(cercoToEdit.points);
@@ -235,7 +238,8 @@ export class CercoComponent implements OnInit {
                 for (let i = 0; i < coords.latitude.length; i++) {
                     coordinates.push([ coords.latitude[i], coords.longitude[i]]);
                 }
-                this.toEditPolygon = L.polygon([[]]).setLatLngs(coordinates).addTo(this.map);
+
+                //this.toEditPolygon = L.polygon([[]]).setLatLngs(coordinates).addTo(this.map);
 
             }, error => {
                 if (error.status === 422) {
@@ -293,7 +297,7 @@ export class CercoComponent implements OnInit {
 
         this.cercoServise.addVehiclesToBound(id, JSON.stringify(array))
             .then( sucess => {
-            this.getVehiclesInBound(this.cercoId, this.nameBound);
+            this.getVehiclesInBound(this.selectedBounds);
         },  error => {
             if (error.status === 422) {
                 // on some data incorrect
@@ -457,30 +461,87 @@ export class CercoComponent implements OnInit {
 
     onMapReady(map: L.Map) {
         this.map =  map;
-
+        //this.map.setCenter(this.center);
+        //this.map = L.map('map').setView(this.center, 6);
         L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 20,
             detectRetina: true,
             attribution: 'Open Street Map'
-        }).addTo(map);
-        this.drawBounds();
-        this.actionControls();
+        }).addTo(this.map);
 
-        if (this.editPolygon) {
-            this.map.addLayer(this.toEditPolygon);
+        if (this.createBoundView) {
+            this.editableLayers = new L.FeatureGroup();
+            map.addLayer(this.editableLayers);
+            this.drawPluginOptions = {
+                position: 'topright',
+                draw: {
+                    polygon: {
+                        allowIntersection: false, // Restricts shapes to simple polygons
+                        drawError: {
+                            color: '#e1e100', // Color the shape will turn when intersects
+                            message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
+                        },
+                        shapeOptions: {
+                            color: '#97009c'
+                        }
+                    },
+                    // disable toolbar item by setting it to false
+                    polyline: false,
+                    circle: false, // Turns off this drawing tool
+                    rectangle: false,
+                    marker: false,
+                    circlemarker: false,
+                },
+                edit: {
+                    featureGroup: this.editableLayers,
+                    remove: false
+                }
+            };
+            this.drawControl = new L.Control.Draw(this.drawPluginOptions);
+            this.map.addControl(this.drawControl);
+            this.map.on('draw:created', e => {
+                this.figure = e.layer;
+                this.editableLayers.addLayer(e.layer);
+            });
+            this.actionControls();
+            this.drawBounds();
         }
 
-        this.toEditPolygon.on('click', e => {
-            e.target.editing.enable();
-            const drawnItems = new L.FeatureGroup().getBounds();
-            this.map.addLayer(drawnItems);
-            console.log('diooo');
-        });
+        if (this.vehiclesBoundView) {
+            const coords = JSON.parse(this.selectedBounds.points);
+            const coordinates = [];
+            for (let i = 0; i < coords.latitude.length; i++) {
+                coordinates.push([ coords.latitude[i], coords.longitude[i]]);
+                console.log('lat: ', coords.latitude[i], '  lng: ', coords.longitude[i]);
+            }
+            this.editableLayers = new L.FeatureGroup();
+            map.addLayer(this.editableLayers);
+            this.toEditPolygon = L.polygon([[]]).setLatLngs(coordinates);
+            this.editableLayers.addLayer(this.toEditPolygon);
+        }
+
+        // L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        //     maxZoom: 20,
+        //     detectRetina: true,
+        //     attribution: 'Open Street Map'
+        // }).addTo(map);
+        // this.drawBounds();
+        // this.actionControls();
+        //
+        // if (this.editPolygon) {
+        //     this.map.addLayer(this.toEditPolygon);
+        // }
+        //
+        // this.toEditPolygon.on('click', e => {
+        //     e.target.editing.enable();
+        //     const drawnItems = new L.FeatureGroup().getBounds();
+        //     this.map.addLayer(drawnItems);
+        //     console.log('diooo');
+        // });
 
     }
 
     actionControls() {
-        this.marker.addTo(this.map);
         this.map.on('draw:drawstart ', e => {
             this.polygon = L.polygon([]);
             this.polygonDrawed = false;
@@ -488,6 +549,10 @@ export class CercoComponent implements OnInit {
 
             this.alertError = false;
             this.alertSuccess = false;
+
+            if (this.figure != undefined) {
+                this.figure.remove(this.map);
+            }
         });
         this.map.on('draw:drawstop ', e => {
             this.onArea = this.polygon.getBounds().contains(this.marker.getLatLng());
@@ -514,7 +579,7 @@ export class CercoComponent implements OnInit {
                 this.polyCoords.latitude[i] = lat ;
                 this.polyCoords.longitude[i] = lng ;
                 i++;
-                // console.log('lat: ', lat, '  lng: ', lng);
+                console.log('lat: ', lat, '  lng: ', lng);
             }
 
         });

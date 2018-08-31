@@ -38,7 +38,7 @@
                 <td>
                     <a class="btn btn-info" *ngIf="cerco.active == 0" (click)="activarAdmin(cerco.id)" style="display: inline-block; margin-right: 10px; width: 100px">Activar</a>
                     <a class="btn btn-secondary" *ngIf="cerco.active == 1" (click)="desactivarAdmin(cerco.id)" style="display: inline-block; margin-right: 10px;  width: 100px">Desactivar</a>
-                    <a class="btn btn-primary btn-xs" (click)="getVehiclesInBound(cerco.id, cerco.name)" style="display: inline-block; margin-right: 10px;" title="Map"><span class="far fa-eye"></span></a>
+                    <a class="btn btn-primary btn-xs" (click)="getVehiclesInBound(cerco)" style="display: inline-block; margin-right: 10px;" title="Map"><span class="far fa-eye"></span></a>
                     <!--<a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editBound(cerco.id)" title="Editar"><span class="fas fa-edit"></span></a>-->
                     <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{cerco.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
                 </td>
@@ -106,15 +106,11 @@
                 </div>
 
                 <div class="form-group row">
-                    <div class="map-bounds"
+                    <div id="map"
                          leaflet
-                         leafletDraw
-                         [leafletDrawOptions]="drawOptions"
                          [leafletOptions]="options"
                          [(leafletZoom)]="zoom"
                          [(leafletCenter)]="center"
-                         [leafletBaseLayers]="baseLayers"
-                         [leafletLayersControlOptions]="layersControlOptions"
                          (leafletMapReady)="onMapReady($event)">
                     </div>
                 </div>
@@ -193,13 +189,9 @@
                 <div class="form-group row" >
                     <div class="map-bounds"
                          leaflet
-                         leafletDraw
-                         [leafletDrawOptions]="drawOptions"
                          [leafletOptions]="options"
                          [(leafletZoom)]="zoom"
                          [(leafletCenter)]="center"
-                         [leafletBaseLayers]="baseLayers"
-                         [leafletLayersControlOptions]="layersControlOptions"
                          (leafletMapReady)="onMapReady($event)">
                     </div>
                 </div>
