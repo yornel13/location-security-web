@@ -17,6 +17,7 @@ import {Vehicle} from '../../../../model/vehicle/vehicle';
 import {CheckboxControlValueAccessor} from '@angular/forms';
 import {ListBounds} from '../../../../model/cerco/list.bounds';
 import {Bounds} from '../../../../model/cerco/bounds';
+import {GlobalOsm} from "../../../global.osm";
 
 
 export class VechicleS {
@@ -95,83 +96,49 @@ export class CercoComponent implements OnInit {
     cercoId;
     vehiclesInBound: Bounds[] = [];
 
-    constructor (public router: Router, private adminService: AdminService, private storage: AngularFireStorage, private cercoServise: CercoService, private vehiculoServise: VehiclesService) {
+    zoom: 12;
+    center = L.latLng(([ -2.071522, -79.607105 ]));
+    layersControlOptions;
+    baseLayers;
+    options;
+    drawOptions;
+
+    constructor (
+            public router: Router,
+            private adminService: AdminService,
+            private storage: AngularFireStorage,
+            private cercoServise: CercoService,
+            private vehiculoServise: VehiclesService,
+            private globalOSM: GlobalOsm) {
         this.getAllBounds();
         this.lista = true;
         this.vehiclesBoundView = false;
         this.createBoundView = false;
         this.editBoundView = false;
+        this.layersControlOptions = this.globalOSM.layersOptions;
+        this.baseLayers = this.globalOSM.baseLayers;
+        this.options = {
+            zoom: 8,
+            center: L.latLng(([ -2.071522, -79.607105 ])),
+            editable: true
+        };
+        this.drawOptions = {
+            position: 'topleft',
+            draw: {
+                marker: false,
+                circlemarker: false,
+                circle: false,
+                polyline: false,
+                rectangle: false,
+            },
+            edit: {
+
+            }
+        };
     }
 
-    zoom: 12;
-    center = L.latLng(([ -2.071522, -79.607105 ]));
-    LAYER_OSM = {
-        id: 'openstreetmap',
-        name: 'Open Street Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
-            detectRetina: true,
-            attribution: 'Open Street Map'
-        })
-    };
-    LAYER_GOOGLE_STREET = {
-        id: 'googlestreets',
-        name: 'Google Street Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=marker&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Street Map'
-        })
-    };
-    LAYER_GOOGLE_SATELLITE = {
-        id: 'googlesatellite',
-        name: 'Google Satellite Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Satellite Map'
-        })
-    };
-    LAYER_GOOGLE_TERRAIN = {
-        id: 'googletarrain',
-        name: 'Google Terrain Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Terrain Map'
-        })
-    };
-
     // Values to bind to Leaflet Directive
-    layersControlOptions = { position: 'bottomright' };
-    baseLayers = {
-        'Open Street Map': this.LAYER_OSM.layer,
-        'Google Street Map': this.LAYER_GOOGLE_STREET.layer,
-        'Google Satellite Map': this.LAYER_GOOGLE_SATELLITE.layer,
-        'Google Terrain Map': this.LAYER_GOOGLE_TERRAIN.layer
-    };
-    options = {
-        zoom: 8,
-        center: L.latLng(([ -2.071522, -79.607105 ])),
-        editable: true
-    };
-    drawOptions = {
-        position: 'topleft',
-        draw: {
-            marker: false,
-            circlemarker: false,
-            circle: false,
-            polyline: false,
-            rectangle: false,
-        },
-        edit: {
 
-        }
-    };
 
     saveNewBound() {
         const nameBound = this.nameBoundField.nativeElement.value;

@@ -44,8 +44,6 @@ export class MapOsmComponent implements OnChanges {
     layersControlOptions;
     baseLayers;
     options;
-    bounds: L.LatLngBounds;
-    results: any;
 
     constructor(private resolver: ComponentFactoryResolver,
                 private asideService: AsideService,
@@ -108,7 +106,6 @@ export class MapOsmComponent implements OnChanges {
                     component.changeDetectorRef.detectChanges();
                     m.bindPopup(popupContent).openPopup();
                     data.push(m);
-                    //this.bounds.extend(m.getLatLng());
                 }
             }
             if (showMarker.bombas) {
