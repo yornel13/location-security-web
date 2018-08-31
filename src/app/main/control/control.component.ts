@@ -14,5 +14,5 @@ import { Router } from '@angular/router';
     styleUrls: ['./control.component.css']
 })
 export class ControlComponent {
-  constructor(private router: Router) { }
+  constructor(public router: Router) { }
 }

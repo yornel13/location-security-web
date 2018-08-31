@@ -50,6 +50,7 @@ export class MessagingComponent implements OnInit {
     private adminsData;
     private refreshInterval = interval(1000);
     myForm: FormGroup;
+    nameChannel: any;
 
     constructor(
         private authService: AuthenticationService,

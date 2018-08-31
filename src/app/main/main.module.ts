@@ -17,7 +17,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { ChartsModule } from 'ng2-charts';
 import { FusionChartsModule } from 'angular-fusioncharts';
 import FusionCharts from 'fusioncharts/core';
-import Doughnut2D from 'fusioncharts/viz/doughnut2d';
 import Column2d from 'fusioncharts/viz/column2d';
 FusionChartsModule.fcRoot(FusionCharts, Column2d);
 
@@ -41,7 +40,11 @@ import {CardAlertComponent} from './monitoring/aside/card.alert.component';
 import {ItemGuardComponent} from './messaging/item.guard.component';
 import {ChatComponent} from './chat/chat.component';
 
-const mainRoutes: Routes = [
+export function controlModuleLoader() {
+    return ControlModule;
+}
+
+export const mainRoutes: Routes = [
     { path: '', component: MainComponent,
         children: [
             {
@@ -49,7 +52,7 @@ const mainRoutes: Routes = [
                 children: [
                     { path: 'dashboard', component: DashboardComponent },
                     { path: 'monitoring', component: MonitoringComponent },
-                    { path: 'control', loadChildren: () => ControlModule },
+                    { path: 'control', loadChildren: './control/control.module#ControlModule' },
                     { path: 'messaging', component: MessagingComponent },
                     { path: 'chat', component: ChatComponent },
                     { path: 'report', component: ReportComponent },

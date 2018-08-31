@@ -3,9 +3,13 @@ import {LoginComponent} from './login/login.component';
 import {NgModule} from '@angular/core';
 import {MainModule} from './main/main.module';
 
-const routes: Routes = [
+export function mainModuleLoader() {
+    return MainModule;
+}
+
+export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full'},
-    { path: 'u', loadChildren: () => MainModule },
+    { path: 'u', loadChildren: './main/main.module#MainModule' },
     { path: 'login', component: LoginComponent },
     { path: '**', redirectTo: '/login', pathMatch: 'full' },
 ];
