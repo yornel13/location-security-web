@@ -207,7 +207,7 @@ export class IncidenciasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Incidencias', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
@@ -234,7 +234,7 @@ export class IncidenciasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Incidencias', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({

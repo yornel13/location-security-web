@@ -428,7 +428,7 @@ export class VisitasactivasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Visitas activas', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
@@ -457,7 +457,7 @@ export class VisitasactivasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Visitas activas', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
@@ -489,7 +489,7 @@ export class VisitasactivasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Visita: #' + this.visi.id, 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34);
 
@@ -722,7 +722,7 @@ export class VisitasactivasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Visita: #' + this.visi.id, 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting visita
