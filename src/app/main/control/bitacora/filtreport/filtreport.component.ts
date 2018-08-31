@@ -1005,7 +1005,7 @@ export class FiltreportComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Todos los Reportes', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
             head: [['#', 'Título', 'Observación', 'Fecha', 'Status']],
             body: this.contpdf,
@@ -1034,7 +1034,7 @@ export class FiltreportComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Todos los Reportes', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
             head: [['#', 'Título', 'Observación', 'Fecha', 'Status']],
             body: this.contpdf,
@@ -1078,7 +1078,7 @@ export class FiltreportComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Reporte Abierto', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34);
+        doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data
         doc.setTextColor(0);
         doc.setFontType("bold");
@@ -1089,51 +1089,53 @@ export class FiltreportComponent {
         doc.setFontType("bold");
         doc.text('Observación: ', 15, 57);
         doc.setFontType("normal");
-        doc.text(this.report.observation, 50, 57);        
+        var splitTitle = doc.splitTextToSize(this.report.observation, 120);
+        //doc.text(15, 20, splitTitle);
+        doc.text(splitTitle, 50, 57);        
 
         doc.setFontType("bold");
-        doc.text('Latitud: ', 15, 64);
+        doc.text('Latitud: ', 15, 71);
         doc.setFontType("normal");
-        doc.text(this.report.latitude.toString(), 36, 64);
+        doc.text(this.report.latitude.toString(), 36, 71);
         doc.setFontType("bold");
-        doc.text('Longitud: ', 100, 64);
+        doc.text('Longitud: ', 100, 71);
         doc.setFontType("normal");
-        doc.text(this.report.longitude.toString(), 123, 64);
+        doc.text(this.report.longitude.toString(), 123, 71);
 
         //guardia
-        doc.line(10, 70, 200, 70);
+        doc.line(10, 77, 200, 77);
 
         doc.setFontType("bold");
-        doc.text('Guardia', 15, 77);
+        doc.text('Guardia', 15, 84);
 
         doc.setFontType("bold");
-        doc.text('Nombre: ', 15, 84);
+        doc.text('Nombre: ', 15, 91);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_name, 34, 84);
+        doc.text(this.report.watch.guard_name, 34, 91);
         doc.setFontType("bold");
-        doc.text('Apellido: ', 100, 84);
+        doc.text('Apellido: ', 100, 91);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_lastname, 123, 84);
+        doc.text(this.report.watch.guard_lastname, 123, 91);
 
         doc.setFontType("bold");
-        doc.text('Cédula: ', 15, 91);
+        doc.text('Cédula: ', 15, 98);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_dni, 34, 91);
+        doc.text(this.report.watch.guard_dni, 34, 98);
         doc.setFontType("bold");
-        doc.text('Correo: ', 100, 91);
+        doc.text('Correo: ', 100, 98);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_email, 119, 91);
+        doc.text(this.report.watch.guard_email, 119, 98);
 
-        doc.line(10, 98, 200, 98);
+        doc.line(10, 105, 200, 105);
         for(var i=0; i < this.coment.length; i++){
           doc.setFontType("bold");
-          doc.text('Comentario: #'+(i+1)+' ', 15, 105+i*(14));
+          doc.text('Comentario: #'+(i+1)+' ', 15, 112+i*(14));
           doc.setFontType("normal");
-          doc.text(this.coment[i].text, 50, 105+i*(14));
+          doc.text(this.coment[i].text, 50, 112+i*(14));
           doc.setFontType("bold");
-          doc.text('Usuario: ', 100, 105+i*(14));
+          doc.text('Usuario: ', 100, 112+i*(14));
           doc.setFontType("normal");
-          doc.text(this.coment[i].user_name, 119, 105+i*(14));
+          doc.text(this.coment[i].user_name, 119, 112+i*(14));
         }
 
         doc.save('reporteabiertoDetail.pdf');
@@ -1149,7 +1151,7 @@ export class FiltreportComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Reporte Abierto', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34);
+        doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data
         doc.setTextColor(0);
         doc.setFontType("bold");
@@ -1160,51 +1162,53 @@ export class FiltreportComponent {
         doc.setFontType("bold");
         doc.text('Observación: ', 15, 57);
         doc.setFontType("normal");
-        doc.text(this.report.observation, 50, 57);        
+        var splitTitle = doc.splitTextToSize(this.report.observation, 120);
+        //doc.text(15, 20, splitTitle);
+        doc.text(splitTitle, 50, 57);        
 
         doc.setFontType("bold");
-        doc.text('Latitud: ', 15, 64);
+        doc.text('Latitud: ', 15, 71);
         doc.setFontType("normal");
-        doc.text(this.report.latitude.toString(), 36, 64);
+        doc.text(this.report.latitude.toString(), 36, 71);
         doc.setFontType("bold");
-        doc.text('Longitud: ', 100, 64);
+        doc.text('Longitud: ', 100, 71);
         doc.setFontType("normal");
-        doc.text(this.report.longitude.toString(), 123, 64);
+        doc.text(this.report.longitude.toString(), 123, 71);
 
         //guardia
-        doc.line(10, 70, 200, 70);
+        doc.line(10, 77, 200, 77);
 
         doc.setFontType("bold");
-        doc.text('Guardia', 15, 77);
+        doc.text('Guardia', 15, 84);
 
         doc.setFontType("bold");
-        doc.text('Nombre: ', 15, 84);
+        doc.text('Nombre: ', 15, 91);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_name, 34, 84);
+        doc.text(this.report.watch.guard_name, 34, 91);
         doc.setFontType("bold");
-        doc.text('Apellido: ', 100, 84);
+        doc.text('Apellido: ', 100, 91);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_lastname, 123, 84);
+        doc.text(this.report.watch.guard_lastname, 123, 91);
 
         doc.setFontType("bold");
-        doc.text('Cédula: ', 15, 91);
+        doc.text('Cédula: ', 15, 98);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_dni, 34, 91);
+        doc.text(this.report.watch.guard_dni, 34, 98);
         doc.setFontType("bold");
-        doc.text('Correo: ', 100, 91);
+        doc.text('Correo: ', 100, 98);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_email, 119, 91);
+        doc.text(this.report.watch.guard_email, 119, 98);
 
-        doc.line(10, 98, 200, 98);
+        doc.line(10, 105, 200, 105);
         for(var i=0; i < this.coment.length; i++){
           doc.setFontType("bold");
-          doc.text('Comentario: #'+(i+1)+' ', 15, 105+i*(14));
+          doc.text('Comentario: #'+(i+1)+' ', 15, 112+i*(14));
           doc.setFontType("normal");
-          doc.text(this.coment[i].text, 50, 105+i*(14));
+          doc.text(this.coment[i].text, 50, 112+i*(14));
           doc.setFontType("bold");
-          doc.text('Usuario: ', 100, 105+i*(14));
+          doc.text('Usuario: ', 100, 112+i*(14));
           doc.setFontType("normal");
-          doc.text(this.coment[i].user_name, 119, 105+i*(14));
+          doc.text(this.coment[i].user_name, 119, 112+i*(14));
         }
 
         doc.autoPrint();

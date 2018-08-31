@@ -65,7 +65,7 @@ export class VehiculosComponent {
           var excel = [];
           for(var i=0; i<this.data.length; i++){
               this.data[i].id = Number(this.data[i].id);
-              excel.push({'#' : this.data[i].id, 'Placa': this.data[i].plate, 'Vehiculo':this.data[i].vehicle, 'Modelo':this.data[i].model, 'Tipo':this.data[i].type})
+              excel.push({'#' : this.data[i].id, 'Placa': this.data[i].plate, 'Vehiculo':this.data[i].vehicle, 'Modelo':this.data[i].model, 'Color':this.data[i].type})
               body.push([this.data[i].id, this.data[i].plate, this.data[i].vehicle, this.data[i].model, this.data[i].type])
           }
           this.contpdf = body;
@@ -193,9 +193,9 @@ export class VehiculosComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Vehículos Visitantes', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
-            head: [['#', 'Placa', 'Vehiculo', 'Modelo', 'Tipo']],
+            head: [['#', 'Placa', 'Vehiculo', 'Modelo', 'Color']],
             body: this.contpdf,
             startY: 41,
             columnStyles: {
@@ -222,9 +222,9 @@ export class VehiculosComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Vehículos Visitantes', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
-            head: [['#', 'Placa', 'Vehiculo', 'Modelo', 'Tipo']],
+            head: [['#', 'Placa', 'Vehiculo', 'Modelo', 'Color']],
             body: this.contpdf,
             startY: 41,
             columnStyles: {
@@ -248,7 +248,7 @@ export class VehiculosComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Vehículo Visitante', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34);
+        doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data
         doc.setTextColor(0);
         doc.setFontType("bold");
@@ -265,7 +265,7 @@ export class VehiculosComponent {
         doc.setFontType("normal");
         doc.text(this.vehi.model, 34, 107);
         doc.setFontType("bold");
-        doc.text('Tipo: ', 100, 107);
+        doc.text('Color: ', 100, 107);
         doc.setFontType("normal");
         doc.text(this.vehi.type, 115, 107);
 
@@ -304,7 +304,7 @@ export class VehiculosComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Vehículo Visitante', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34);
+        doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data
         doc.setTextColor(0);
         doc.setFontType("bold");
@@ -321,7 +321,7 @@ export class VehiculosComponent {
         doc.setFontType("normal");
         doc.text(this.vehi.model, 34, 107);
         doc.setFontType("bold");
-        doc.text('Tipo: ', 100, 107);
+        doc.text('Color: ', 100, 107);
         doc.setFontType("normal");
         doc.text(this.vehi.type, 115, 107);
 
@@ -345,7 +345,7 @@ export class VehiculosComponent {
 
     excelDetalle() {
         var excel = [];
-        excel = [{'#' : this.vehi.id, 'Placa': this.vehi.plate, 'Vehículo':this.vehi.vehicle, 'Modelo':this.vehi.model, 'Tipo':this.vehi.type, 'Fecha de creación':this.vehi.create_date, 'Última actualización':this.vehi.update_date}];
+        excel = [{'#' : this.vehi.id, 'Placa': this.vehi.plate, 'Vehículo':this.vehi.vehicle, 'Modelo':this.vehi.model, 'Color':this.vehi.type, 'Fecha de creación':this.vehi.create_date, 'Última actualización':this.vehi.update_date}];
         this.excelService.exportAsExcelFile(excel, 'vehiculDetail');
     }
 

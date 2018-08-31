@@ -233,7 +233,7 @@ export class WactivasComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Guardias Activas', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
             head: [['#', 'Nombre del Guardia', 'Cédula del Guardia', 'Hora de inicio', 'Status']],
             body: this.contpdf,
@@ -262,7 +262,7 @@ export class WactivasComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Guardias Activas', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
             head: [['#', 'Nombre del Guardia', 'Cédula del Guardia', 'Hora de inicio', 'Status']],
             body: this.contpdf,
@@ -294,7 +294,7 @@ export class WactivasComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Guardia', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34);
+        doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data
         doc.setTextColor(0);
         doc.setFontType("bold");
@@ -348,7 +348,7 @@ export class WactivasComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Guardia', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34);
+        doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data
         doc.setTextColor(0);
         doc.setFontType("bold");

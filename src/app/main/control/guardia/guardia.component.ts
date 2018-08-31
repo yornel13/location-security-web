@@ -336,7 +336,7 @@ export class GuardiaComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Usuarios Guardias del sistema', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
             head: [['#', 'Cédula', 'Nombre', 'Apellido', 'Correo']],
             body: this.contpdf,
@@ -365,7 +365,7 @@ export class GuardiaComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Usuarios Guardias del sistema', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
             head: [['#', 'Cédula', 'Nombre', 'Apellido', 'Correo']],
             body: this.contpdf,
@@ -391,7 +391,7 @@ export class GuardiaComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Usuario Guardia del sistema', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34);
+        doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data
         doc.setTextColor(0);
         doc.setFontType("bold");
@@ -447,7 +447,7 @@ export class GuardiaComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Usuario Guardia del sistema', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34);
+        doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data
         doc.setTextColor(0);
         doc.setFontType("bold");
