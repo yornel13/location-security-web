@@ -128,6 +128,7 @@ export class IncidenciasComponent {
           this.errorEditData = false;
           this.errorEdit = false;
             }, error => {
+            console.log(error);
                 if (error.status === 422) {
                     // on some data incorrect
                     if(error.error.errors.name){

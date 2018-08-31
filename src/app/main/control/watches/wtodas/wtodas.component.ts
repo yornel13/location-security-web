@@ -444,20 +444,20 @@ export class WtodasComponent {
         doc.setFontType("bold");
         doc.text('Nombre: ', 15, 77);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard.name, 34, 77);
+        doc.text(this.guardia.guard_name, 34, 77);
         doc.setFontType("bold");
         doc.text('Apellido: ', 100, 77);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard.lastname, 123, 77);
+        doc.text(this.guardia.guard_lastname, 123, 77);
 
         doc.setFontType("bold");
         doc.text('Cédula: ', 15, 84);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard.dni, 34, 84);
+        doc.text(this.guardia.guard_dni, 34, 84);
         doc.setFontType("bold");
         doc.text('Correo: ', 100, 84);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard.email, 119, 84);
+        doc.text(this.guardia.guard_email, 119, 84);
 
         doc.save('guardiaDetail.pdf');
 
@@ -508,20 +508,20 @@ export class WtodasComponent {
         doc.setFontType("bold");
         doc.text('Nombre: ', 15, 77);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard.name, 34, 77);
+        doc.text(this.guardia.guard_name, 34, 77);
         doc.setFontType("bold");
         doc.text('Apellido: ', 100, 77);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard.lastname, 123, 77);
+        doc.text(this.guardia.guard_lastname, 123, 77);
 
         doc.setFontType("bold");
         doc.text('Cédula: ', 15, 84);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard.dni, 34, 84);
+        doc.text(this.guardia.guard_dni, 34, 84);
         doc.setFontType("bold");
         doc.text('Correo: ', 100, 84);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard.email, 119, 84);
+        doc.text(this.guardia.guard_email, 119, 84);
 
         doc.autoPrint();
         window.open(doc.output('bloburl'), '_blank');
@@ -539,7 +539,7 @@ export class WtodasComponent {
         excel = [{'Hora de inicio' : this.guardia.create_date, 'Hora de finalización' : time, 'Latitud': this.guardia.latitude.toString(), 'Longitud':this.guardia.longitude.toString()}];
         excel.push({'Hora de inicio':'Guardia'});
         excel.push({'Hora de inicio':'Nombre', 'Hora de finalización':'Apellido', 'Latitud':'Cédula', 'Longitud':'Correo'});
-        excel.push({'Hora de inicio':this.guardia.guard.name, 'Hora de finalización':this.guardia.guard.lastname, 'Latitud':this.guardia.guard.dni, 'Longitud':this.guardia.guard.email});
+        excel.push({'Hora de inicio':this.guardia.guard_name, 'Hora de finalización':this.guardia.guard_lastname, 'Latitud':this.guardia.guard_dni, 'Longitud':this.guardia.guard_email});
         this.excelService.exportAsExcelFile(excel, 'guardiadetail');
     }
 

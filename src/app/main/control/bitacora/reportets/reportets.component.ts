@@ -840,20 +840,20 @@ export class ReportetsComponent {
         doc.setFontType("bold");
         doc.text('Nombre: ', 15, 84);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard.name, 34, 84);
+        doc.text(this.report.watch.guard_name, 34, 84);
         doc.setFontType("bold");
         doc.text('Apellido: ', 100, 84);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard.lastname, 123, 84);
+        doc.text(this.report.watch.guard_lastname, 123, 84);
 
         doc.setFontType("bold");
         doc.text('Cédula: ', 15, 91);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard.dni, 34, 91);
+        doc.text(this.report.watch.guard_dni, 34, 91);
         doc.setFontType("bold");
         doc.text('Correo: ', 100, 91);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard.email, 119, 91);
+        doc.text(this.report.watch.guard_email, 119, 91);
 
         doc.line(10, 98, 200, 98);
         for(var i=0; i < this.coment.length; i++){
@@ -891,7 +891,7 @@ export class ReportetsComponent {
         doc.setFontType("bold");
         doc.text('Observación: ', 15, 57);
         doc.setFontType("normal");
-        doc.text(this.report.observation, 50, 57);        
+        doc.text(this.report.observation, 50, 57);
 
         doc.setFontType("bold");
         doc.text('Latitud: ', 15, 64);
@@ -911,20 +911,20 @@ export class ReportetsComponent {
         doc.setFontType("bold");
         doc.text('Nombre: ', 15, 84);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard.name, 34, 84);
+        doc.text(this.report.watch.guard_name, 34, 84);
         doc.setFontType("bold");
         doc.text('Apellido: ', 100, 84);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard.lastname, 123, 84);
+        doc.text(this.report.watch.guard_lastname, 123, 84);
 
         doc.setFontType("bold");
         doc.text('Cédula: ', 15, 91);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard.dni, 34, 91);
+        doc.text(this.report.watch.guard_dni, 34, 91);
         doc.setFontType("bold");
         doc.text('Correo: ', 100, 91);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard.email, 119, 91);
+        doc.text(this.report.watch.guard_email, 119, 91);
 
         doc.line(10, 98, 200, 98);
         for(var i=0; i < this.coment.length; i++){
@@ -948,7 +948,7 @@ export class ReportetsComponent {
         excel = [{'Incidencia' : this.report.title, 'Observacion' : this.report.observation, 'Latitud': this.report.latitude.toString(), 'Longitud':this.report.longitude.toString()}];
         excel.push({'Incidencia':'Guardia'});
         excel.push({'Incidencia':'Nombre', 'Observacion':'Apellido', 'Latitud':'Cédula', 'Longitud':'Correo'});
-        excel.push({'Incidencia':this.report.watch.guard.name, 'Observacion':this.report.watch.guard.lastname, 'Latitud':this.report.watch.guard.dni, 'Longitud':this.report.watch.guard.email});
+        excel.push({'Incidencia':this.report.watch.guard_name, 'Observacion':this.report.watch.guard_lastname, 'Latitud':this.report.watch.guard_dni, 'Longitud':this.report.watch.guard_email});
         excel.push({'Incidencia':'Comentarios'});
         for(var i=0; i < this.coment.length; i++){
           excel.push({'Incidencia':this.coment[i].text, 'Observacion':this.coment[i].user_name});
