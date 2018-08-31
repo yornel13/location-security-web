@@ -56,7 +56,7 @@ import {CercoComponent} from './cerco/cerco.component';
 import { AlertasComponent } from './alertas/alertas.component';
 import {CercoService} from '../../../model/cerco/cerco.service';
 
-const controlRoutes: Routes = [
+export const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
         children: [
             {
