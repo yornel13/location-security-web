@@ -65,6 +65,11 @@ export class VisitasComponent {
   lng:number = -79.0000;
   viewmap:boolean = false;
 
+  //fechas
+  desde:any = "";
+  hasta:any = "";
+  rangeday:boolean=true;
+
   zoom: 12;
   center = L.latLng(([ this.lat, this.lng ]));
   marker = L.marker([this.lat, this.lng], {draggable: false});
@@ -209,239 +214,41 @@ export class VisitasComponent {
       );
   }
 
-  getByVehiculo(id){
-  	var fecha = String(this.dateSelect);
-	this.valueDate = fecha.split('-');
-	var year = this.valueDate[0];
-	var month = this.valueDate[1];
-	var day = this.valueDate[2];
+  selectRange(id){
+	  if(id == 1){
+	    this.rangeday = true;
+	    this.desde = "";
+	    this.hasta = "";
+	    this.getSearch();
+	  }else{
+	    this.rangeday = false;
+	    this.desde = "";
+	    this.hasta = "";
+	    this.getSearch();
+	  }
+	}
+  
+  getSearch(){
+  	var fecha1 = String(this.desde);
+	var valuesdate1 = fecha1.split('-');
+	var year1 = valuesdate1[0];
+	var month1 = valuesdate1[1];
+	var day1 = valuesdate1[2];
 
-  	if(this.dateSelect == ''){
-  		if(id == 0){
-  			this.getAll();
-  		}else{
-  			this.visitasService.getByVehiculo(id, 'all').then(
-		      success => {
-		        this.visitas = success;
-		        this.data = this.visitas.data;
-		          }, error => {
-		              if (error.status === 422) {
-		                  // on some data incorrect
-		              } else {
-		                  // on general error
-		              }
-		          }
-		    );
-  		}
-  	}else{
-  		if(id ==0){
-  			this.visitasService.getByDate(year, month, day, 'all').then(
-		      success => {
-		        this.visitas = success;
-		        this.data = this.visitas.data;
-		          }, error => {
-		              if (error.status === 422) {
-		                  // on some data incorrect
-		              } else {
-		                  // on general error
-		              }
-		          }
-		    );
-  		}else{
-  			this.visitasService.getByVehiculoDate(id, year, month, day, 'all').then(
-		      success => {
-		        this.visitas = success;
-		        this.data = this.visitas.data;
-		          }, error => {
-		              if (error.status === 422) {
-		                  // on some data incorrect
-		              } else {
-		                  // on general error
-		              }
-		          }
-		    );
-  		}
-  	}
-  }
+	var fecha2 = String(this.hasta);
+	var valuesdate2 = fecha2.split('-');
+	var year2 = valuesdate2[0];
+	var month2 = valuesdate2[1];
+	var day2 = valuesdate2[2];
 
-  getByGuardia(id){
-  	var fecha = String(this.dateSelect);
-	this.valueDate = fecha.split('-');
-	var year = this.valueDate[0];
-	var month = this.valueDate[1];
-	var day = this.valueDate[2];
-
-  	if(this.dateSelect == ''){
-  		if(id == 0){
-  			this.getAll();
-  		}else{
-  			this.visitasService.getByGuard(id, 'all').then(
-		      success => {
-		        this.visitas = success;
-		        this.data = this.visitas.data;
-		          }, error => {
-		              if (error.status === 422) {
-		                  // on some data incorrect
-		              } else {
-		                  // on general error
-		              }
-		          }
-		    );
-  		}
-  	}else{
-  		if(id ==0){
-  			this.visitasService.getByDate(year, month, day, 'all').then(
-		      success => {
-		        this.visitas = success;
-		        this.data = this.visitas.data;
-		          }, error => {
-		              if (error.status === 422) {
-		                  // on some data incorrect
-		              } else {
-		                  // on general error
-		              }
-		          }
-		    );
-  		}else{
-  			this.visitasService.getByGuardDate(id, year, month, day, 'all').then(
-		      success => {
-		        this.visitas = success;
-		        this.data = this.visitas.data;
-		          }, error => {
-		              if (error.status === 422) {
-		                  // on some data incorrect
-		              } else {
-		                  // on general error
-		              }
-		          }
-		    );
-  		}
-  	}
-  }
-
-  getByVisitante(id){
-  	var fecha = String(this.dateSelect);
-	this.valueDate = fecha.split('-');
-	var year = this.valueDate[0];
-	var month = this.valueDate[1];
-	var day = this.valueDate[2];
-
-  	if(this.dateSelect == ''){
-  		if(id == 0){
-  			this.getAll();
-  		}else{
-  			this.visitasService.getByVisitante(id, 'all').then(
-		      success => {
-		        this.visitas = success;
-		        this.data = this.visitas.data;
-		          }, error => {
-		              if (error.status === 422) {
-		                  // on some data incorrect
-		              } else {
-		                  // on general error
-		              }
-		          }
-		    );
-  		}
-  	}else{
-  		if(id ==0){
-  			this.visitasService.getByDate(year, month, day, 'all').then(
-		      success => {
-		        this.visitas = success;
-		        this.data = this.visitas.data;
-		          }, error => {
-		              if (error.status === 422) {
-		                  // on some data incorrect
-		              } else {
-		                  // on general error
-		              }
-		          }
-		    );
-  		}else{
-  			this.visitasService.getByVisitanteDate(id, year, month, day, 'all').then(
-		      success => {
-		        this.visitas = success;
-		        this.data = this.visitas.data;
-		          }, error => {
-		              if (error.status === 422) {
-		                  // on some data incorrect
-		              } else {
-		                  // on general error
-		              }
-		          }
-		    );
-  		}
-  	}
-  }
-
-  getByFuncionario(id){
-  	var fecha = String(this.dateSelect);
-	this.valueDate = fecha.split('-');
-	var year = this.valueDate[0];
-	var month = this.valueDate[1];
-	var day = this.valueDate[2];
-
-  	if(this.dateSelect == ''){
-  		if(id == 0){
-  			this.getAll();
-  		}else{
-  			this.visitasService.getByFuncionario(id, 'all').then(
-		      success => {
-		        this.visitas = success;
-		        this.data = this.visitas.data;
-		          }, error => {
-		              if (error.status === 422) {
-		                  // on some data incorrect
-		              } else {
-		                  // on general error
-		              }
-		          }
-		    );
-  		}
-  	}else{
-  		if(id ==0){
-  			this.visitasService.getByDate(year, month, day, 'all').then(
-		      success => {
-		        this.visitas = success;
-		        this.data = this.visitas.data;
-		          }, error => {
-		              if (error.status === 422) {
-		                  // on some data incorrect
-		              } else {
-		                  // on general error
-		              }
-		          }
-		    );
-  		}else{
-  			this.visitasService.getByFuncionarioDate(id, year, month, day, 'all').then(
-		      success => {
-		        this.visitas = success;
-		        this.data = this.visitas.data;
-		          }, error => {
-		              if (error.status === 422) {
-		                  // on some data incorrect
-		              } else {
-		                  // on general error
-		              }
-		          }
-		    );
-  		}
-  	}
-  }
-
-  getByDate(date){
-  	var fecha = String(date);
-	this.valueDate = fecha.split('-');
-	var year = this.valueDate[0];
-	var month = this.valueDate[1];
-	var day = this.valueDate[2];
 	//Vehiculo
-  	if(this.filtroSelect == 0){
-  		if(date == ''){
-  			if(this.vehiculoSelect ==0 ){
-  				this.getAll();
-  			}else{
-  				this.visitasService.getByVehiculo(this.vehiculoSelect, 'all').then(
+	if(this.filtroSelect == 0){
+		if(this.desde == ""){
+			if(this.vehiculoSelect ==0){
+				this.getAll();
+			}else{
+				console.log("Debe entrar aca");
+				this.visitasService.getByVehiculo(this.vehiculoSelect, 'all').then(
 			      success => {
 			        this.visitas = success;
 			        this.data = this.visitas.data;
@@ -453,40 +260,70 @@ export class VisitasComponent {
 			              }
 			          }
 			    );
-  			}
-  		}else{
-  			if(this.vehiculoSelect == 0){
-  				this.visitasService.getByDate(year, month, day, 'all').then(
-			      success => {
-			        this.visitas = success;
-			        this.data = this.visitas.data;
-			          }, error => {
-			              if (error.status === 422) {
-			                  // on some data incorrect
-			              } else {
-			                  // on general error
-			              }
-			          }
-			    );
-  			}else{
-  				this.visitasService.getByVehiculoDate(this.vehiculoSelect, year, month, day, 'all').then(
-			      success => {
-			        this.visitas = success;
-			        this.data = this.visitas.data;
-			          }, error => {
-			              if (error.status === 422) {
-			                  // on some data incorrect
-			              } else {
-			                  // on general error
-			              }
-			          }
-			    );
-  			}
-  		}
-  	}
-  	//Guardia
-  	if(this.filtroSelect == 1){
-  		if(date == ''){
+			}
+		}else{
+			if(this.rangeday){
+				if(this.vehiculoSelect == 0){
+	  				this.visitasService.getByDate(year1, month1, day1, 'all', year1, month1, day1).then(
+				      success => {
+				        this.visitas = success;
+				        this.data = this.visitas.data;
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+	  			}else{
+	  				this.visitasService.getByVehiculoDate(this.vehiculoSelect, year1, month1, day1, 'all', year1, month1, day1).then(
+				      success => {
+				        this.visitas = success;
+				        this.data = this.visitas.data;
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+	  			}
+			}else{
+				if(this.vehiculoSelect == 0){
+	  				this.visitasService.getByDate(year1, month1, day1, 'all', year2, month2, day2).then(
+				      success => {
+				        this.visitas = success;
+				        this.data = this.visitas.data;
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+	  			}else{
+	  				this.visitasService.getByVehiculoDate(this.vehiculoSelect, year1, month1, day1, 'all', year2, month2, day2).then(
+				      success => {
+				        this.visitas = success;
+				        this.data = this.visitas.data;
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+	  			}
+			}
+		}
+	}
+	//Guardia
+	if(this.filtroSelect == 1){
+		if(this.desde == ''){
   			if(this.guardiaSelect ==0 ){
   				this.getAll();
   			}else{
@@ -504,38 +341,68 @@ export class VisitasComponent {
 			    );
   			}
   		}else{
-  			if(this.guardiaSelect == 0){
-  				this.visitasService.getByDate(year, month, day, 'all').then(
-			      success => {
-			        this.visitas = success;
-			        this.data = this.visitas.data;
-			          }, error => {
-			              if (error.status === 422) {
-			                  // on some data incorrect
-			              } else {
-			                  // on general error
-			              }
-			          }
-			    );
+  			if(this.rangeday){
+  				if(this.guardiaSelect == 0){
+	  				this.visitasService.getByDate(year1, month1, day1, 'all', year1, month1, day1).then(
+				      success => {
+				        this.visitas = success;
+				        this.data = this.visitas.data;
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+	  			}else{
+	  				this.visitasService.getByGuardDate(this.guardiaSelect, year1, month1, day1, 'all', year1, month1, day1).then(
+				      success => {
+				        this.visitas = success;
+				        this.data = this.visitas.data;
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+	  			}
   			}else{
-  				this.visitasService.getByGuardDate(this.guardiaSelect, year, month, day, 'all').then(
-			      success => {
-			        this.visitas = success;
-			        this.data = this.visitas.data;
-			          }, error => {
-			              if (error.status === 422) {
-			                  // on some data incorrect
-			              } else {
-			                  // on general error
-			              }
-			          }
-			    );
+  				if(this.guardiaSelect == 0){
+	  				this.visitasService.getByDate(year1, month1, day1, 'all', year2, month2, day2).then(
+				      success => {
+				        this.visitas = success;
+				        this.data = this.visitas.data;
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+	  			}else{
+	  				this.visitasService.getByGuardDate(this.guardiaSelect, year1, month1, day1, 'all', year2, month2, day2).then(
+				      success => {
+				        this.visitas = success;
+				        this.data = this.visitas.data;
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+	  			}
   			}
   		}
-  	}
-  	//Visitantes
-  	if(this.filtroSelect == 2){
-  		if(date == ''){
+	}
+	//visitante
+	if(this.filtroSelect == 2){
+		if(this.desde == ''){
   			if(this.visitanteSelect ==0 ){
   				this.getAll();
   			}else{
@@ -553,38 +420,68 @@ export class VisitasComponent {
 			    );
   			}
   		}else{
-  			if(this.visitanteSelect == 0){
-  				this.visitasService.getByDate(year, month, day, 'all').then(
-			      success => {
-			        this.visitas = success;
-			        this.data = this.visitas.data;
-			          }, error => {
-			              if (error.status === 422) {
-			                  // on some data incorrect
-			              } else {
-			                  // on general error
-			              }
-			          }
-			    );
+  			if(this.rangeday){
+  				if(this.visitanteSelect == 0){
+	  				this.visitasService.getByDate(year1, month1, day1, 'all', year1, month1, day1).then(
+				      success => {
+				        this.visitas = success;
+				        this.data = this.visitas.data;
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+	  			}else{
+	  				this.visitasService.getByVisitanteDate(this.visitanteSelect, year1, month1, day1, 'all', year1, month1, day1).then(
+				      success => {
+				        this.visitas = success;
+				        this.data = this.visitas.data;
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+	  			}
   			}else{
-  				this.visitasService.getByVisitanteDate(this.visitanteSelect, year, month, day, 'all').then(
-			      success => {
-			        this.visitas = success;
-			        this.data = this.visitas.data;
-			          }, error => {
-			              if (error.status === 422) {
-			                  // on some data incorrect
-			              } else {
-			                  // on general error
-			              }
-			          }
-			    );
+  				if(this.visitanteSelect == 0){
+	  				this.visitasService.getByDate(year1, month1, day1, 'all', year2, month2, day2).then(
+				      success => {
+				        this.visitas = success;
+				        this.data = this.visitas.data;
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+	  			}else{
+	  				this.visitasService.getByVisitanteDate(this.visitanteSelect, year1, month1, day1, 'all', year2, month2, day2).then(
+				      success => {
+				        this.visitas = success;
+				        this.data = this.visitas.data;
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+	  			}
   			}
   		}
-  	}
-  	//Funcionario
-  	if(this.filtroSelect == 3){
-  		if(date == ''){
+	}
+	//Funcionario
+	if(this.filtroSelect == 3){
+		if(this.desde == ''){
   			if(this.funcionarioSelect ==0 ){
   				this.getAll();
   			}else{
@@ -602,35 +499,65 @@ export class VisitasComponent {
 			    );
   			}
   		}else{
-  			if(this.funcionarioSelect == 0){
-  				this.visitasService.getByDate(year, month, day, 'all').then(
-			      success => {
-			        this.visitas = success;
-			        this.data = this.visitas.data;
-			          }, error => {
-			              if (error.status === 422) {
-			                  // on some data incorrect
-			              } else {
-			                  // on general error
-			              }
-			          }
-			    );
+  			if(this.rangeday){
+  				if(this.funcionarioSelect == 0){
+	  				this.visitasService.getByDate(year1, month1, day1, 'all', year1, month1, day1).then(
+				      success => {
+				        this.visitas = success;
+				        this.data = this.visitas.data;
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+	  			}else{
+	  				this.visitasService.getByFuncionarioDate(this.funcionarioSelect, year1, month1, day1, 'all', year1, month1, day1).then(
+				      success => {
+				        this.visitas = success;
+				        this.data = this.visitas.data;
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+	  			}
   			}else{
-  				this.visitasService.getByFuncionarioDate(this.funcionarioSelect, year, month, day, 'all').then(
-			      success => {
-			        this.visitas = success;
-			        this.data = this.visitas.data;
-			          }, error => {
-			              if (error.status === 422) {
-			                  // on some data incorrect
-			              } else {
-			                  // on general error
-			              }
-			          }
-			    );
+  				if(this.funcionarioSelect == 0){
+	  				this.visitasService.getByDate(year1, month1, day1, 'all', year2, month2, day2).then(
+				      success => {
+				        this.visitas = success;
+				        this.data = this.visitas.data;
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+	  			}else{
+	  				this.visitasService.getByFuncionarioDate(this.funcionarioSelect, year1, month1, day1, 'all', year2, month2, day2).then(
+				      success => {
+				        this.visitas = success;
+				        this.data = this.visitas.data;
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+	  			}
   			}
   		}
-  	}
+	}
   }
 
   viewDetail(id) {
@@ -679,25 +606,25 @@ export class VisitasComponent {
   		this.guardiaSelect = 0;
   		this.visitanteSelect = 0;
   		this.funcionarioSelect = 0;
-  		this.getByVehiculo(this.vehiculoSelect);
+  		this.getSearch();
   	}else if(id == 1){
   		this.filtro = 2;
   		this.vehiculoSelect = 0;
   		this.visitanteSelect = 0;
   		this.funcionarioSelect = 0;
-  		this.getByGuardia(this.guardiaSelect);
+  		this.getSearch();
   	}else if(id == 2){
   		this.filtro = 3;
   		this.vehiculoSelect = 0;
   		this.guardiaSelect = 0;
   		this.funcionarioSelect = 0;
-  		this.getByVisitante(this.visitanteSelect);
+  		this.getSearch();
   	}else if(id == 3){
   		this.filtro = 4;
   		this.vehiculoSelect = 0;
   		this.guardiaSelect = 0;
   		this.funcionarioSelect = 0;
-  		this.getByFuncionario(this.funcionarioSelect);
+  		this.getSearch();
   	}
   }
 
