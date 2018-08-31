@@ -141,10 +141,10 @@ export class WactivasComponent {
                 }else if(this.data[i].status == 1){
                   status = "Activa";
                 }
-                excel.push({'#' : this.data[i].id, 'Nombre del Guardia': this.data[i].guard.name+' '+this.data[i].guard.lastname, 'Cédula del Guardia':this.data[i].guard.dni, 'Hora de inicio':this.data[i].create_date, 'Status':status})
-                body.push([this.data[i].id, this.data[i].guard.name+' '+this.data[i].guard.lastname, this.data[i].guard.dni, this.data[i].create_date, status]);
+                excel.push({'#' : this.data[i].id, 'Nombre del Guardia': this.data[i].guard_name+' '+this.data[i].guard_lastname, 'Cédula del Guardia':this.data[i].guard_dni, 'Hora de inicio':this.data[i].create_date, 'Status':status})
+                body.push([this.data[i].id, this.data[i].guard_name+' '+this.data[i].guard_lastname, this.data[i].guard_dni, this.data[i].create_date, status]);
                 this.data[i].id = Number(this.data[i].id);
-                this.data[i].guard.dni = Number(this.data[i].guard.dni);
+                this.data[i].guard_dni = Number(this.data[i].guard_dni);
             }
             this.contpdf = body;
             this.info = excel;
@@ -231,7 +231,7 @@ export class WactivasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Guardias Activas', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
@@ -260,7 +260,7 @@ export class WactivasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Guardias Activas', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
@@ -292,7 +292,7 @@ export class WactivasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Guardia', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data
@@ -346,7 +346,7 @@ export class WactivasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Guardia', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data

@@ -695,7 +695,7 @@ export class VisitasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Todas las visitas', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
@@ -725,7 +725,7 @@ export class VisitasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Todas las visitas', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
@@ -758,7 +758,7 @@ export class VisitasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Visita: #' + this.visi.id, 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34);
 
@@ -991,9 +991,18 @@ export class VisitasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Visita: #' + this.visi.id, 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34);
+
+        //validar imagenes
+        var padding = 0;
+        if(this.visi.image_1 ){
+          padding = 0;
+        }else{
+          padding = 40;
+        }
+
         //inserting visita
         doc.setTextColor(0);
         doc.setFontType("bold");
@@ -1018,103 +1027,104 @@ export class VisitasComponent {
           for (var i=0; i<this.visi.observation.length; i++){
             var matel = matel + " "+this.visi.observation[i]+",";
           }
-          doc.text(matel, 42, 64);
+          var splitTitle = doc.splitTextToSize(matel, 120);
+          doc.text(splitTitle, 42, 64);
         }else{
           doc.text('Sin materiales', 42, 64);
         }
 
         doc.setFontType("bold");
-        doc.text('Imagenes: ', 15, 71);
+        doc.text('Imagenes: ', 15, 76);
         //vehiculo
-        doc.line(10, 125, 200, 125);
+        doc.line(10, 125-padding, 200, 125-padding);
 
-        doc.text('Vehículo ', 15, 133);
+        doc.text('Vehículo ', 15, 133-padding);
   
         doc.setFontType("bold");
-        doc.text('Nombre: ', 15, 140);
+        doc.text('Nombre: ', 15, 140-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.vehicle.vehicle, 34, 140);
+        doc.text(this.visi.vehicle.vehicle, 34, 140-padding);
         doc.setFontType("bold");
-        doc.text('Placa: ', 100, 140);
+        doc.text('Placa: ', 100, 140-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.vehicle.plate, 117, 140);  
+        doc.text(this.visi.vehicle.plate, 117, 140-padding);  
 
         doc.setFontType("bold");
-        doc.text('Modelo: ', 15, 147);
+        doc.text('Modelo: ', 15, 147-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.vehicle.model, 34, 147);
+        doc.text(this.visi.vehicle.model, 34, 147-padding);
         doc.setFontType("bold");
-        doc.text('Color: ', 100, 147);
+        doc.text('Color: ', 100, 147-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.vehicle.type, 115, 147);   
+        doc.text(this.visi.vehicle.type, 115, 147-padding);   
         //funionario
-        doc.line(10, 200, 200, 200);
+        doc.line(10, 200-padding, 200, 200-padding);
 
         doc.setFontType("bold");
-        doc.text('Funcionario', 15, 208);
+        doc.text('Funcionario', 15, 208-padding);
   
-        doc.text('Nombre: ', 15, 215);
+        doc.text('Nombre: ', 15, 215-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.visited.name, 34, 215);
+        doc.text(this.visi.visited.name, 34, 215-padding);
         doc.setFontType("bold");
-        doc.text('Apellido: ', 100, 215);
+        doc.text('Apellido: ', 100, 215-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.visited.lastname, 123, 215);  
+        doc.text(this.visi.visited.lastname, 123, 215-padding);  
 
         doc.setFontType("bold");
-        doc.text('Dirección: ', 15, 222);
+        doc.text('Dirección: ', 15, 222-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.visited.address, 40, 222);
+        doc.text(this.visi.visited.address, 40, 222-padding);
         doc.setFontType("bold");
-        doc.text('Cédula: ', 100, 222);
+        doc.text('Cédula: ', 100, 222-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.visited.dni, 119, 222);  
+        doc.text(this.visi.visited.dni, 119, 222-padding);  
 
         //visitante
-        doc.line(10, 230, 200, 230);
+        doc.line(10, 230-padding, 200, 230-padding);
 
         doc.setFontType("bold");
-        doc.text('Visitante', 15, 238);
+        doc.text('Visitante', 15, 238-padding);
  
-        doc.text('Nombre: ', 15, 245);
+        doc.text('Nombre: ', 15, 245-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.visitor.name, 34, 245);
+        doc.text(this.visi.visitor.name, 34, 245-padding);
         doc.setFontType("bold");
-        doc.text('Apellido: ', 100, 245);
+        doc.text('Apellido: ', 100, 245-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.visitor.lastname, 123, 245);  
+        doc.text(this.visi.visitor.lastname, 123, 245-padding);  
 
         doc.setFontType("bold");
-        doc.text('Compañia: ', 15, 252);
+        doc.text('Compañia: ', 15, 252-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.visitor.company, 38, 252);
+        doc.text(this.visi.visitor.company, 38, 252-padding);
         doc.setFontType("bold");
-        doc.text('Cédula: ', 100, 252);
+        doc.text('Cédula: ', 100, 252-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.visitor.dni, 119, 252);
+        doc.text(this.visi.visitor.dni, 119, 252-padding);
 
         //registrado por
-        doc.line(10, 260, 200, 260);
+        doc.line(10, 260-padding, 200, 260-padding);
 
         doc.setFontType("bold");
-        doc.text('Registrado por', 15, 268);
+        doc.text('Registrado por', 15, 268-padding);
  
-        doc.text('Nombre: ', 15, 275);
+        doc.text('Nombre: ', 15, 275-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.guard.name, 34, 275);
+        doc.text(this.visi.guard.name, 34, 275-padding);
         doc.setFontType("bold");
-        doc.text('Apellido: ', 100, 275);
+        doc.text('Apellido: ', 100, 275-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.guard.lastname, 123, 275); 
+        doc.text(this.visi.guard.lastname, 123, 275-padding); 
 
         doc.setFontType("bold");
-        doc.text('Correo: ', 15, 282);
+        doc.text('Correo: ', 15, 282-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.guard.email, 36, 282);
+        doc.text(this.visi.guard.email, 36, 282-padding);
         doc.setFontType("bold");
-        doc.text('Cédula: ', 100, 282);
+        doc.text('Cédula: ', 100, 282-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.guard.dni, 119, 282);  
+        doc.text(this.visi.guard.dni, 119, 282-padding);    
 
         if(this.visi.image_1){
           this.toDataURL(this.visi.image_1).then(dataUrl => {
@@ -1139,7 +1149,7 @@ export class VisitasComponent {
                             if(this.visi.vehicle.photo){
                               this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                                 var imgData = dataUrl;
-                                doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                                doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
                                 doc.autoPrint();
                                 window.open(doc.output('bloburl'), '_blank');
                               });
@@ -1152,7 +1162,7 @@ export class VisitasComponent {
                           if(this.visi.vehicle.photo){
                               this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                                 var imgData = dataUrl;
-                                doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                                doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
                                 doc.autoPrint();
                                 window.open(doc.output('bloburl'), '_blank');
                               });
@@ -1166,7 +1176,7 @@ export class VisitasComponent {
                       if(this.visi.vehicle.photo){
                           this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                             var imgData = dataUrl;
-                            doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                            doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
                             doc.autoPrint();
                             window.open(doc.output('bloburl'), '_blank');
                           });
@@ -1180,7 +1190,7 @@ export class VisitasComponent {
                   if(this.visi.vehicle.photo){
                     this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                       var imgData = dataUrl;
-                      doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                      doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
                       doc.autoPrint();
                       window.open(doc.output('bloburl'), '_blank');
                     });
@@ -1194,7 +1204,7 @@ export class VisitasComponent {
               if(this.visi.vehicle.photo){
                 this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                   var imgData = dataUrl;
-                  doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                  doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
                   doc.autoPrint();
                   window.open(doc.output('bloburl'), '_blank');
                 });
@@ -1208,7 +1218,7 @@ export class VisitasComponent {
           if(this.visi.vehicle.photo){
             this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
               var imgData = dataUrl;
-              doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+              doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
               doc.autoPrint();
               window.open(doc.output('bloburl'), '_blank');
             });

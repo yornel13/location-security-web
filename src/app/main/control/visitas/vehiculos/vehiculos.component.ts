@@ -191,7 +191,7 @@ export class VehiculosComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Vehículos Visitantes', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
@@ -220,7 +220,7 @@ export class VehiculosComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Vehículos Visitantes', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
@@ -246,7 +246,7 @@ export class VehiculosComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Vehículo Visitante', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data
@@ -302,7 +302,7 @@ export class VehiculosComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Vehículo Visitante', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data

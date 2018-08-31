@@ -36,7 +36,7 @@ export class AlertaService {
     }
 
     getByGuard(id:number) {
-        return this.http.get(this.ALERT_URL + '/cause/all/guard/' + id + '/date/').toPromise()
+        return this.http.get(this.ALERT_URL + '/cause/all/guard/' + id).toPromise()
             .then((response) => response);
     }
 
@@ -45,18 +45,18 @@ export class AlertaService {
             .then((response) => response);
     }
 
-    getByCauseDate(causa, year, month, day) {
-        return this.http.get(this.ALERT_URL + '/cause/'+ causa +'/date/'+year+'/'+month+'/'+day).toPromise()
+    getByCauseDate(causa, year, month, day, year1, month1, day1) {
+        return this.http.get(this.ALERT_URL + '/cause/'+ causa +'/date/'+year+'/'+month+'/'+day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
             .then((response) => response);
     }
 
-    getByGuardDate(id, year, month, day) {
-        return this.http.get(this.ALERT_URL + '/cause/all/guard/' + id + '/date/'+year+'/'+month+'/'+day).toPromise()
+    getByGuardDate(id, year, month, day, year1, month1, day1) {
+        return this.http.get(this.ALERT_URL + '/cause/all/guard/' + id + '/date/'+year+'/'+month+'/'+day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
             .then((response) => response);
     }
 
-    getByGuardCaseDate(id, cause, year, month, day) {
-        return this.http.get(this.ALERT_URL + '/cause/'+cause+'/guard/' + id + '/date/'+year+'/'+month+'/'+day).toPromise()
+    getByGuardCaseDate(id, cause, year, month, day, year1, month1, day1) {
+        return this.http.get(this.ALERT_URL + '/cause/'+cause+'/guard/' + id + '/date/'+year+'/'+month+'/'+day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
             .then((response) => response);
     }
 

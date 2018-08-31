@@ -39,13 +39,13 @@ export class WatchesService {
             .then((response) => response);
     }
 
-    getByDate(year, month, day) {
-        return this.http.get(this.WATCH_URL + '/date/' + year + '/' + month + '/' + day).toPromise()
+    getByDate(year, month, day, year1, month1, day1) {
+        return this.http.get(this.WATCH_URL + '/date/' + year + '/' + month + '/' + day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
             .then((response) => response);
     }
 
-    getByGuardDate(id, year, month, day) {
-        return this.http.get(this.WATCH_URL + '/guard/' + id +'/date/' + year + '/' + month + '/' + day).toPromise()
+    getByGuardDate(id, year, month, day, year1, month1, day1) {
+        return this.http.get(this.WATCH_URL + '/guard/' + id +'/date/' + year + '/' + month + '/' + day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
             .then((response) => response);
     }
 

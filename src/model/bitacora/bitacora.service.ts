@@ -34,20 +34,20 @@ export class BitacoraService {
             .then((response) => response);
     }
 
-    getByDate(year, month, day) {
-        return this.http.get(this.BITAC_URL+'/resolved/all/date/'+year+'/'+month+'/'+day).toPromise()
+    getByDate(year, month, day, year1, month1, day1) {
+        return this.http.get(this.BITAC_URL+'/resolved/all/date/'+year+'/'+month+'/'+day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
             .then((response) => response);
     }
 
 //------------------------ Status en Incidencia ------------------------------------------------------
 
-    getOpenDate(year, month, day) {
-        return this.http.get(this.BITAC_URL+'/resolved/open/date/'+year+'/'+month+'/'+day).toPromise()
+    getOpenDate(year, month, day, year1, month1, day1) {
+        return this.http.get(this.BITAC_URL+'/resolved/open/date/'+year+'/'+month+'/'+day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
             .then((response) => response);
     }
 
-    getCloseDate(year, month, day) {
-        return this.http.get(this.BITAC_URL+'/resolved/0/date/'+year+'/'+month+'/'+day).toPromise()
+    getCloseDate(year, month, day, year1, month1, day1) {
+        return this.http.get(this.BITAC_URL+'/resolved/0/date/'+year+'/'+month+'/'+day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
             .then((response) => response);
     }
 
@@ -76,18 +76,18 @@ export class BitacoraService {
             .then((response) => response);
     }
 
-    getByIncidenciaDate(id, year, month, day) {
-        return this.http.get(this.BITAC_URL+'/resolved/all/incidence/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
+    getByIncidenciaDate(id, year, month, day, year1, month1, day1) {
+        return this.http.get(this.BITAC_URL+'/resolved/all/incidence/'+id+'/date/'+year+'/'+month+'/'+day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
             .then((response) => response);
     }
 
-    getByIncidenciaOpenDate(id, year, month, day) {
-        return this.http.get(this.BITAC_URL+'/resolved/open/incidence/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
+    getByIncidenciaOpenDate(id, year, month, day, year1, month1, day1) {
+        return this.http.get(this.BITAC_URL+'/resolved/open/incidence/'+id+'/date/'+year+'/'+month+'/'+day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
             .then((response) => response);
     }
 
-    getByIncidenciaCloseDate(id, year, month, day) {
-        return this.http.get(this.BITAC_URL+'/resolved/0/incidence/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
+    getByIncidenciaCloseDate(id, year, month, day, year1, month1, day1) {
+        return this.http.get(this.BITAC_URL+'/resolved/0/incidence/'+id+'/date/'+year+'/'+month+'/'+day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
             .then((response) => response);
     }
 
@@ -98,8 +98,8 @@ export class BitacoraService {
             .then((response) => response);
     }
 
-    getByGuardiaDate(id, year, month, day) {
-        return this.http.get(this.BITAC_URL+'/resolved/all/guard/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
+    getByGuardiaDate(id, year, month, day, year1, month1, day1) {
+        return this.http.get(this.BITAC_URL+'/resolved/all/guard/'+id+'/date/'+year+'/'+month+'/'+day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
             .then((response) => response);
     }
 
@@ -108,8 +108,8 @@ export class BitacoraService {
             .then((response) => response);
     }
 
-    getByGuardiaOpenDate(id, year, month, day) {
-        return this.http.get(this.BITAC_URL+'/resolved/open/guard/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
+    getByGuardiaOpenDate(id, year, month, day, year1, month1, day1) {
+        return this.http.get(this.BITAC_URL+'/resolved/open/guard/'+id+'/date/'+year+'/'+month+'/'+day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
             .then((response) => response);
     }
 
@@ -118,8 +118,8 @@ export class BitacoraService {
             .then((response) => response);
     }
 
-    getByGuardiaCloseDate(id, year, month, day) {
-        return this.http.get(this.BITAC_URL+'/resolved/0/guard/'+id+'/date/'+year+'/'+month+'/'+day).toPromise()
+    getByGuardiaCloseDate(id, year, month, day, year1, month1, day1) {
+        return this.http.get(this.BITAC_URL+'/resolved/0/guard/'+id+'/date/'+year+'/'+month+'/'+day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
             .then((response) => response);
     }
 
