@@ -350,7 +350,7 @@ export class AdminComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Usuarios Administradores del sistema', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
             head: [['#', 'Cédula', 'Nombre', 'Apellido', 'Correo']],
             body: this.contpdf,
@@ -379,7 +379,7 @@ export class AdminComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Usuarios Administradores del sistema', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
             head: [['#', 'Cédula', 'Nombre', 'Apellido', 'Correo']],
             body: this.contpdf,
@@ -405,7 +405,7 @@ export class AdminComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Usuario Administrador del sistema', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34);
+        doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data
         doc.setTextColor(0);
         doc.setFontType("bold");
@@ -461,7 +461,7 @@ export class AdminComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Usuario Administrador del sistema', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34);
+        doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data
         doc.setTextColor(0);
         doc.setFontType("bold");

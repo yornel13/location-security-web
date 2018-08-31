@@ -561,7 +561,7 @@ export class VisitasactivasComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Visitas activas', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
             head: [['#', 'Placa del Vehículo', 'Visitante', 'Cédula del visitante', 'Entrada']],
             body: this.contpdf,
@@ -590,7 +590,7 @@ export class VisitasactivasComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Visitas activas', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
             head: [['#', 'Placa del Vehículo', 'Visitante', 'Cédula del visitante', 'Entrada']],
             body: this.contpdf,
@@ -622,7 +622,7 @@ export class VisitasactivasComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Vigilancia Activa: #' + this.visi.id, 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34);
+        doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting visita
         doc.setTextColor(0);
         doc.setFontType("bold");
@@ -669,7 +669,7 @@ export class VisitasactivasComponent {
         doc.setFontType("normal");
         doc.text(this.visi.vehicle.model, 34, 147);
         doc.setFontType("bold");
-        doc.text('Tipo: ', 100, 147);
+        doc.text('Color: ', 100, 147);
         doc.setFontType("normal");
         doc.text(this.visi.vehicle.type, 115, 147);   
         //funionario
@@ -841,7 +841,7 @@ export class VisitasactivasComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Vigilancia Activa: #' + this.visi.id, 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34);
+        doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting visita
         doc.setTextColor(0);
         doc.setFontType("bold");
@@ -888,7 +888,7 @@ export class VisitasactivasComponent {
         doc.setFontType("normal");
         doc.text(this.visi.vehicle.model, 34, 147);
         doc.setFontType("bold");
-        doc.text('Tipo: ', 100, 147);
+        doc.text('Color: ', 100, 147);
         doc.setFontType("normal");
         doc.text(this.visi.vehicle.type, 115, 147);   
         //funionario
@@ -1076,7 +1076,7 @@ export class VisitasactivasComponent {
         var excel = [];
         excel = [{'Entrada':this.visi.create_date, 'Latitud':this.visi.latitude, 'Longitude':this.visi.longitude, '':''},{'Entrada':'Materiales'},{'Entrada':this.visi.observation[0]}];
         excel.push({'Entrada':'Vehiculo'});
-        excel.push({'Entrada':'Nombre', 'Latitud':'Placa', 'Longitude':'Modelo', '':'Tipo'});
+        excel.push({'Entrada':'Nombre', 'Latitud':'Placa', 'Longitude':'Modelo', '':'Color'});
         excel.push({'Entrada':this.visi.vehicle.vehicle, 'Latitud':this.visi.vehicle.plate, 'Longitude':this.visi.vehicle.model, '':this.visi.vehicle.type});
         excel.push({'Entrada':'Funcionario'});
         excel.push({'Entrada':'Nombre', 'Latitud':'Apellido', 'Longitude':'Dirección', '':'Cédula'});

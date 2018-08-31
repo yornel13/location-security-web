@@ -770,7 +770,7 @@ export class VisitasComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Todas las visitas', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
             head: [['#', 'Placa del Vehículo', 'Visitante', 'Cédula del visitante', 'Entrada', 'Salida']],
             body: this.contpdf,
@@ -800,7 +800,7 @@ export class VisitasComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Todas las visitas', 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
             head: [['#', 'Placa del Vehículo', 'Visitante', 'Cédula del visitante', 'Entrada', 'Salida']],
             body: this.contpdf,
@@ -833,7 +833,16 @@ export class VisitasComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Vigilancia Activa: #' + this.visi.id, 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34);
+        doc.text('Hora de impresión: '+ fecha, 15, 34);
+
+        //validar imagenes
+        var padding = 0;
+        if(this.visi.image_1 ){
+          padding = 0;
+        }else{
+          padding = 40;
+        }
+
         //inserting visita
         doc.setTextColor(0);
         doc.setFontType("bold");
@@ -853,129 +862,134 @@ export class VisitasComponent {
         doc.setFontType("bold");
         doc.text('Materiales: ', 15, 64);
         doc.setFontType("normal");
+        var matel = "";
         if(this.visi.observation.length != 0){
-          doc.text(this.visi.observation[0], 42, 64);
+          for (var i=0; i<this.visi.observation.length; i++){
+            var matel = matel + " "+this.visi.observation[i]+",";
+          }
+          var splitTitle = doc.splitTextToSize(matel, 120);
+          doc.text(splitTitle, 42, 64);
         }else{
           doc.text('Sin materiales', 42, 64);
         }
 
         doc.setFontType("bold");
-        doc.text('Imagenes: ', 15, 71);
+        doc.text('Imagenes: ', 15, 76);
         //vehiculo
-        doc.line(10, 125, 200, 125);
+        doc.line(10, 125-padding, 200, 125-padding);
 
-        doc.text('Vehículo ', 15, 133);
+        doc.text('Vehículo ', 15, 133-padding);
   
         doc.setFontType("bold");
-        doc.text('Nombre: ', 15, 140);
+        doc.text('Nombre: ', 15, 140-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.vehicle.vehicle, 34, 140);
+        doc.text(this.visi.vehicle.vehicle, 34, 140-padding);
         doc.setFontType("bold");
-        doc.text('Placa: ', 100, 140);
+        doc.text('Placa: ', 100, 140-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.vehicle.plate, 117, 140);  
+        doc.text(this.visi.vehicle.plate, 117, 140-padding);  
 
         doc.setFontType("bold");
-        doc.text('Modelo: ', 15, 147);
+        doc.text('Modelo: ', 15, 147-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.vehicle.model, 34, 147);
+        doc.text(this.visi.vehicle.model, 34, 147-padding);
         doc.setFontType("bold");
-        doc.text('Tipo: ', 100, 147);
+        doc.text('Color: ', 100, 147-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.vehicle.type, 115, 147);   
+        doc.text(this.visi.vehicle.type, 115, 147-padding);   
         //funionario
-        doc.line(10, 200, 200, 200);
+        doc.line(10, 200-padding, 200, 200-padding);
 
         doc.setFontType("bold");
-        doc.text('Funcionario', 15, 208);
+        doc.text('Funcionario', 15, 208-padding);
   
-        doc.text('Nombre: ', 15, 215);
+        doc.text('Nombre: ', 15, 215-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.visited.name, 34, 215);
+        doc.text(this.visi.visited.name, 34, 215-padding);
         doc.setFontType("bold");
-        doc.text('Apellido: ', 100, 215);
+        doc.text('Apellido: ', 100, 215-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.visited.lastname, 123, 215);  
+        doc.text(this.visi.visited.lastname, 123, 215-padding);  
 
         doc.setFontType("bold");
-        doc.text('Dirección: ', 15, 222);
+        doc.text('Dirección: ', 15, 222-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.visited.address, 40, 222);
+        doc.text(this.visi.visited.address, 40, 222-padding);
         doc.setFontType("bold");
-        doc.text('Cédula: ', 100, 222);
+        doc.text('Cédula: ', 100, 222-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.visited.dni, 119, 222);  
+        doc.text(this.visi.visited.dni, 119, 222-padding);  
 
         //visitante
-        doc.line(10, 230, 200, 230);
+        doc.line(10, 230-padding, 200, 230-padding);
 
         doc.setFontType("bold");
-        doc.text('Visitante', 15, 238);
+        doc.text('Visitante', 15, 238-padding);
  
-        doc.text('Nombre: ', 15, 245);
+        doc.text('Nombre: ', 15, 245-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.visitor.name, 34, 245);
+        doc.text(this.visi.visitor.name, 34, 245-padding);
         doc.setFontType("bold");
-        doc.text('Apellido: ', 100, 245);
+        doc.text('Apellido: ', 100, 245-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.visitor.lastname, 123, 245);  
+        doc.text(this.visi.visitor.lastname, 123, 245-padding);  
 
         doc.setFontType("bold");
-        doc.text('Compañia: ', 15, 252);
+        doc.text('Compañia: ', 15, 252-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.visitor.company, 38, 252);
+        doc.text(this.visi.visitor.company, 38, 252-padding);
         doc.setFontType("bold");
-        doc.text('Cédula: ', 100, 252);
+        doc.text('Cédula: ', 100, 252-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.visitor.dni, 119, 252);
+        doc.text(this.visi.visitor.dni, 119, 252-padding);
 
         //registrado por
-        doc.line(10, 260, 200, 260);
+        doc.line(10, 260-padding, 200, 260-padding);
 
         doc.setFontType("bold");
-        doc.text('Registrado por', 15, 268);
+        doc.text('Registrado por', 15, 268-padding);
  
-        doc.text('Nombre: ', 15, 275);
+        doc.text('Nombre: ', 15, 275-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.guard.name, 34, 275);
+        doc.text(this.visi.guard.name, 34, 275-padding);
         doc.setFontType("bold");
-        doc.text('Apellido: ', 100, 275);
+        doc.text('Apellido: ', 100, 275-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.guard.lastname, 123, 275); 
+        doc.text(this.visi.guard.lastname, 123, 275-padding); 
 
         doc.setFontType("bold");
-        doc.text('Correo: ', 15, 282);
+        doc.text('Correo: ', 15, 282-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.guard.email, 36, 282);
+        doc.text(this.visi.guard.email, 36, 282-padding);
         doc.setFontType("bold");
-        doc.text('Cédula: ', 100, 282);
+        doc.text('Cédula: ', 100, 282-padding);
         doc.setFontType("normal");
-        doc.text(this.visi.guard.dni, 119, 282);  
+        doc.text(this.visi.guard.dni, 119, 282-padding);  
 
         if(this.visi.image_1){
           this.toDataURL(this.visi.image_1).then(dataUrl => {
             var imgData = dataUrl;
-            doc.addImage(imgData, 'JPEG', 15, 78, 40, 40);
+            doc.addImage(imgData, 'JPEG', 15, 80, 40, 40);
             if(this.visi.image_2){
               this.toDataURL(this.visi.image_2).then(dataUrl => {
                 var imgData = dataUrl;
-                doc.addImage(imgData, 'JPEG', 65, 78, 40, 40);
+                doc.addImage(imgData, 'JPEG', 65, 80, 40, 40);
                 if(this.visi.image_3){
                   this.toDataURL(this.visi.image_3).then(dataUrl => {
                     var imgData = dataUrl;
-                    doc.addImage(imgData, 'JPEG', 115, 78, 40, 40);
+                    doc.addImage(imgData, 'JPEG', 115, 80, 40, 40);
                      if(this.visi.image_4){
                       this.toDataURL(this.visi.image_4).then(dataUrl => {
                         var imgData = dataUrl;
-                        doc.addImage(imgData, 'JPEG', 165, 78, 40, 40);
+                        doc.addImage(imgData, 'JPEG', 165, 80, 40, 40);
                         if(this.visi.image_5){
                           this.toDataURL(this.visi.image_5).then(dataUrl => {
                             var imgData = dataUrl;
-                            doc.addImage(imgData, 'JPEG', 215, 78, 40, 40);
+                            doc.addImage(imgData, 'JPEG', 215, 80, 40, 40);
                             if(this.visi.vehicle.photo){
                               this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                                 var imgData = dataUrl;
-                                doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                                doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
                                 doc.save('visitaactivadetalle.pdf');
                               });
                             }else{
@@ -986,7 +1000,7 @@ export class VisitasComponent {
                           if(this.visi.vehicle.photo){
                               this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                                 var imgData = dataUrl;
-                                doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                                doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
                                 doc.save('visitaactivadetalle.pdf');
                               });
                             }else{
@@ -998,7 +1012,7 @@ export class VisitasComponent {
                       if(this.visi.vehicle.photo){
                           this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                             var imgData = dataUrl;
-                            doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                            doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
                             doc.save('visitaactivadetalle.pdf');
                           });
                         }else{
@@ -1010,7 +1024,7 @@ export class VisitasComponent {
                   if(this.visi.vehicle.photo){
                     this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                       var imgData = dataUrl;
-                      doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                      doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
                       doc.save('visitaactivadetalle.pdf');
                     });
                   }else{
@@ -1022,7 +1036,7 @@ export class VisitasComponent {
               if(this.visi.vehicle.photo){
                 this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                   var imgData = dataUrl;
-                  doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+                  doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
                   doc.save('visitaactivadetalle.pdf');
                 });
               }else{
@@ -1034,7 +1048,7 @@ export class VisitasComponent {
           if(this.visi.vehicle.photo){
             this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
               var imgData = dataUrl;
-              doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
+              doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
               doc.save('visitaactivadetalle.pdf');
             });
           }else{
@@ -1052,7 +1066,7 @@ export class VisitasComponent {
         var d = new Date();
         var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Vigilancia Activa: #' + this.visi.id, 15, 27)
-        doc.text('Fecha: '+ fecha, 15, 34);
+        doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting visita
         doc.setTextColor(0);
         doc.setFontType("bold");
@@ -1072,8 +1086,12 @@ export class VisitasComponent {
         doc.setFontType("bold");
         doc.text('Materiales: ', 15, 64);
         doc.setFontType("normal");
+        var matel = "";
         if(this.visi.observation.length != 0){
-          doc.text(this.visi.observation[0], 42, 64);
+          for (var i=0; i<this.visi.observation.length; i++){
+            var matel = matel + " "+this.visi.observation[i]+",";
+          }
+          doc.text(matel, 42, 64);
         }else{
           doc.text('Sin materiales', 42, 64);
         }
@@ -1099,7 +1117,7 @@ export class VisitasComponent {
         doc.setFontType("normal");
         doc.text(this.visi.vehicle.model, 34, 147);
         doc.setFontType("bold");
-        doc.text('Tipo: ', 100, 147);
+        doc.text('Color: ', 100, 147);
         doc.setFontType("normal");
         doc.text(this.visi.vehicle.type, 115, 147);   
         //funionario
@@ -1287,7 +1305,7 @@ export class VisitasComponent {
         var excel = [];
         excel = [{'Entrada':this.visi.create_date, 'Latitud':this.visi.latitude, 'Longitude':this.visi.longitude, '':''},{'Entrada':'Materiales'},{'Entrada':this.visi.observation[0]}];
         excel.push({'Entrada':'Vehiculo'});
-        excel.push({'Entrada':'Nombre', 'Latitud':'Placa', 'Longitude':'Modelo', '':'Tipo'});
+        excel.push({'Entrada':'Nombre', 'Latitud':'Placa', 'Longitude':'Modelo', '':'Color'});
         excel.push({'Entrada':this.visi.vehicle.vehicle, 'Latitud':this.visi.vehicle.plate, 'Longitude':this.visi.vehicle.model, '':this.visi.vehicle.type});
         excel.push({'Entrada':'Funcionario'});
         excel.push({'Entrada':'Nombre', 'Latitud':'Apellido', 'Longitude':'Dirección', '':'Cédula'});
