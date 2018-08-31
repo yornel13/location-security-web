@@ -244,11 +244,7 @@ export class VisitasactivasComponent {
   }
 
   getByVehiculo(id){
-    var fecha = String(this.dateSelect);
-    this.valueDate = fecha.split('-');
-    var year = this.valueDate[0];
-    var month = this.valueDate[1];
-    var day = this.valueDate[2];
+
 
     if(this.dateSelect == ''){
       if(id == 0){
@@ -267,43 +263,10 @@ export class VisitasactivasComponent {
               }
         );
       }
-    }else{
-      if(id ==0){
-        this.visitasService.getByDate(year, month, day, '1').then(
-          success => {
-            this.visitas = success;
-            this.data = this.visitas.data;
-              }, error => {
-                  if (error.status === 422) {
-                      // on some data incorrect
-                  } else {
-                      // on general error
-                  }
-              }
-        );
-      }else{
-        this.visitasService.getByVehiculoDate(id, year, month, day, '1').then(
-          success => {
-            this.visitas = success;
-            this.data = this.visitas.data;
-              }, error => {
-                  if (error.status === 422) {
-                      // on some data incorrect
-                  } else {
-                      // on general error
-                  }
-              }
-        );
-      }
     }
   }
 
   getByGuardia(id){
-    var fecha = String(this.dateSelect);
-  this.valueDate = fecha.split('-');
-  var year = this.valueDate[0];
-  var month = this.valueDate[1];
-  var day = this.valueDate[2];
 
     if(this.dateSelect == ''){
       if(id == 0){
@@ -322,43 +285,10 @@ export class VisitasactivasComponent {
               }
         );
       }
-    }else{
-      if(id ==0){
-        this.visitasService.getByDate(year, month, day, '1').then(
-          success => {
-            this.visitas = success;
-            this.data = this.visitas.data;
-              }, error => {
-                  if (error.status === 422) {
-                      // on some data incorrect
-                  } else {
-                      // on general error
-                  }
-              }
-        );
-      }else{
-        this.visitasService.getByGuardDate(id, year, month, day, '1').then(
-          success => {
-            this.visitas = success;
-            this.data = this.visitas.data;
-              }, error => {
-                  if (error.status === 422) {
-                      // on some data incorrect
-                  } else {
-                      // on general error
-                  }
-              }
-        );
-      }
     }
   }
 
   getByVisitante(id){
-    var fecha = String(this.dateSelect);
-  this.valueDate = fecha.split('-');
-  var year = this.valueDate[0];
-  var month = this.valueDate[1];
-  var day = this.valueDate[2];
 
     if(this.dateSelect == ''){
       if(id == 0){
@@ -377,77 +307,16 @@ export class VisitasactivasComponent {
               }
         );
       }
-    }else{
-      if(id ==0){
-        this.visitasService.getByDate(year, month, day, '1').then(
-          success => {
-            this.visitas = success;
-            this.data = this.visitas.data;
-              }, error => {
-                  if (error.status === 422) {
-                      // on some data incorrect
-                  } else {
-                      // on general error
-                  }
-              }
-        );
-      }else{
-        this.visitasService.getByVisitanteDate(id, year, month, day, '1').then(
-          success => {
-            this.visitas = success;
-            this.data = this.visitas.data;
-              }, error => {
-                  if (error.status === 422) {
-                      // on some data incorrect
-                  } else {
-                      // on general error
-                  }
-              }
-        );
-      }
     }
   }
 
   getByFuncionario(id){
-    var fecha = String(this.dateSelect);
-  this.valueDate = fecha.split('-');
-  var year = this.valueDate[0];
-  var month = this.valueDate[1];
-  var day = this.valueDate[2];
 
     if(this.dateSelect == ''){
       if(id == 0){
         this.getActives();
       }else{
         this.visitasService.getByFuncionario(id, '1').then(
-          success => {
-            this.visitas = success;
-            this.data = this.visitas.data;
-              }, error => {
-                  if (error.status === 422) {
-                      // on some data incorrect
-                  } else {
-                      // on general error
-                  }
-              }
-        );
-      }
-    }else{
-      if(id ==0){
-        this.visitasService.getByDate(year, month, day, '1').then(
-          success => {
-            this.visitas = success;
-            this.data = this.visitas.data;
-              }, error => {
-                  if (error.status === 422) {
-                      // on some data incorrect
-                  } else {
-                      // on general error
-                  }
-              }
-        );
-      }else{
-        this.visitasService.getByFuncionarioDate(id, year, month, day, '1').then(
           success => {
             this.visitas = success;
             this.data = this.visitas.data;
