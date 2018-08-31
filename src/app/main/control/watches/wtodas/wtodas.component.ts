@@ -42,6 +42,11 @@ export class WtodasComponent {
   lng:number = -79.0000;
   viewmap:boolean = false;
 
+  //fechas
+  desde:any = "";
+  hasta:any = "";
+  rangeday:boolean=true;
+
   zoom: 12;
   center = L.latLng(([ this.lat, this.lng ]));
   marker = L.marker([this.lat, this.lng], {draggable: false});
@@ -161,6 +166,8 @@ export class WtodasComponent {
         success => {
             this.watches = success;
             this.data = this.watches.data;
+            console.log(this.data);
+            console.log(this.watches.total);
             var body = [];
             var excel = [];
             var status = "";
@@ -188,6 +195,20 @@ export class WtodasComponent {
     );
   }
 
+  selectRange(id){
+    if(id == 1){
+      this.rangeday = true;
+      this.desde = "";
+      this.hasta = "";
+      this.getSearch();
+    }else{
+      this.rangeday = false;
+      this.desde = "";
+      this.hasta = "";
+      this.getSearch();
+    }
+  }
+
   regresar() {
   	this.lista = true;
   	this.detalle = false;
@@ -209,113 +230,97 @@ export class WtodasComponent {
     );
   }
 
-  guardFilert(id) {
-  	var fecha = String(this.dateSelect);
-	this.valueDate = fecha.split('-');
-	var year = this.valueDate[0];
-	var month = this.valueDate[1];
-	var day = this.valueDate[2];
-  	if (id == 0){
-  		if (this.dateSelect == ''){
-  			this.getAll();
-  		}else{
-  			this.watchesService.getByDate(year, month, day).then(
-		        success => {
-		            this.watches = success;
-		            this.data = this.watches.data;
-		        }, error => {
-		            if (error.status === 422) {
-		                // on some data incorrect
-		            } else {
-		                // on general error
-		            }
-		        }
-		    );
-  		}
-  	}else{
-  		if(this.dateSelect == ''){
-  			this.watchesService.getByGuard(id).then(
-		        success => {
-		            this.watches = success;
-		            this.data = this.watches.data;
-		        }, error => {
-		            if (error.status === 422) {
-		                // on some data incorrect
-		            } else {
-		                // on general error
-		            }
-		        }
-		    );
-  		}else{
-  			this.watchesService.getByGuardDate(id, year, month, day).then(
-		        success => {
-		            this.watches = success;
-		            this.data = this.watches.data;
-		        }, error => {
-		            if (error.status === 422) {
-		                // on some data incorrect
-		            } else {
-		                // on general error
-		            }
-		        }
-		    );
-  		}
-  	}
+  getSearch(){
+    var fecha1 = String(this.desde);
+    var valuesdate1 = fecha1.split('-');
+    var year1 = valuesdate1[0];
+    var month1 = valuesdate1[1];
+    var day1 = valuesdate1[2];
+
+    var fecha2 = String(this.hasta);
+    var valuesdate2 = fecha2.split('-');
+    var year2 = valuesdate2[0];
+    var month2 = valuesdate2[1];
+    var day2 = valuesdate2[2];
+
+    if(this.desde == ""){
+      if(this.guardiaSelect == 0){
+        this.getAll();
+      }else{
+        this.watchesService.getByGuard(this.guardiaSelect).then(
+            success => {
+                this.watches = success;
+                this.data = this.watches.data;
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+      }
+    }else{
+      if(this.rangeday){
+        if(this.guardiaSelect == 0){
+          this.watchesService.getByDate(year1, month1, day1, year1, month1, day1).then(
+              success => {
+                  this.watches = success;
+                  this.data = this.watches.data;
+              }, error => {
+                  if (error.status === 422) {
+                      // on some data incorrect
+                  } else {
+                      // on general error
+                  }
+              }
+          );
+        }else{
+          this.watchesService.getByGuardDate(this.guardiaSelect, year1, month1, day1, year1, month1, day1).then(
+              success => {
+                  this.watches = success;
+                  this.data = this.watches.data;
+              }, error => {
+                  if (error.status === 422) {
+                      // on some data incorrect
+                  } else {
+                      // on general error
+                  }
+              }
+          );
+        }
+      }else{
+        if(this.guardiaSelect == 0){
+          this.watchesService.getByDate(year1, month1, day1, year2, month2, day2).then(
+              success => {
+                  this.watches = success;
+                  this.data = this.watches.data;
+              }, error => {
+                  if (error.status === 422) {
+                      // on some data incorrect
+                  } else {
+                      // on general error
+                  }
+              }
+          );
+        }else{
+          this.watchesService.getByGuardDate(this.guardiaSelect, year1, month1, day1, year2, month2, day2).then(
+              success => {
+                  this.watches = success;
+                  this.data = this.watches.data;
+              }, error => {
+                  if (error.status === 422) {
+                      // on some data incorrect
+                  } else {
+                      // on general error
+                  }
+              }
+          );
+        }
+      }
+    }
   }
 
-  getByDate(date) {
-  	var fecha = String(date);
-	this.valueDate = fecha.split('-');
-	var year = this.valueDate[0];
-	var month = this.valueDate[1];
-	var day = this.valueDate[2];
-	if (this.guardiaSelect == 0){
-  		if (this.dateSelect == ''){
-  			this.getAll();
-  		}else{
-  			this.watchesService.getByDate(year, month, day).then(
-		        success => {
-		            this.watches = success;
-		            this.data = this.watches.data;
-		        }, error => {
-		            if (error.status === 422) {
-		                // on some data incorrect
-		            } else {
-		                // on general error
-		            }
-		        }
-		    );
-  		}
-  	}else{
-  		if(this.dateSelect == ''){
-  			this.watchesService.getByGuard(this.guardiaSelect).then(
-		        success => {
-		            this.watches = success;
-		            this.data = this.watches.data;
-		        }, error => {
-		            if (error.status === 422) {
-		                // on some data incorrect
-		            } else {
-		                // on general error
-		            }
-		        }
-		    );
-  		}else{
-  			this.watchesService.getByGuardDate(this.guardiaSelect, year, month, day).then(
-		        success => {
-		            this.watches = success;
-		            this.data = this.watches.data;
-		        }, error => {
-		            if (error.status === 422) {
-		                // on some data incorrect
-		            } else {
-		                // on general error
-		            }
-		        }
-		    );
-  		}
-  	}
-  }
 
   viewDetail(id){
   	this.watchesService.getById(id).then(
@@ -343,7 +348,7 @@ export class WtodasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Todas las Guardias', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
@@ -373,7 +378,7 @@ export class WtodasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Todas las Guardias', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
@@ -406,7 +411,7 @@ export class WtodasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Guardia', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data
@@ -470,7 +475,7 @@ export class WtodasComponent {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Guardia', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data

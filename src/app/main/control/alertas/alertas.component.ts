@@ -53,6 +53,11 @@ export class AlertasComponent  {
   lng:number = -79.0000;
   viewmap:boolean = false;
 
+  //fechas
+  desde:any = "";
+  hasta:any = "";
+  rangeday:boolean=true;
+
   zoom: 12;
   center = L.latLng(([ this.lat, this.lng ]));
   marker = L.marker([this.lat, this.lng], {draggable: false});
@@ -318,6 +323,20 @@ export class AlertasComponent  {
 	    );
 	}
 
+  selectRange(id){
+    if(id == 1){
+      this.rangeday = true;
+      this.desde = "";
+      this.hasta = "";
+      this.getAlerts();
+    }else{
+      this.rangeday = false;
+      this.desde = "";
+      this.hasta = "";
+      this.getAlerts();
+    }
+  }
+
 	getAlerts() {
 		//formateo de causas
 		var cause = "all";
@@ -333,16 +352,22 @@ export class AlertasComponent  {
 			cause = "GENERAL";
 		}
 		//formateo de fecha
-		var fecha = String(this.dateSelect);
-        var valueDate = fecha.split('-');
-        var year = valueDate[0];
-        var month = valueDate[1];
-        var day = valueDate[2];
+		var fecha1 = String(this.desde);
+    var valuesdate1 = fecha1.split('-');
+    var year1 = valuesdate1[0];
+    var month1 = valuesdate1[1];
+    var day1 = valuesdate1[2];
+
+    var fecha2 = String(this.hasta);
+    var valuesdate2 = fecha2.split('-');
+    var year2 = valuesdate2[0];
+    var month2 = valuesdate2[1];
+    var day2 = valuesdate2[2];
         //formateo de guardias
         var guardia = this.guardiaSelect;
 
         //Iniciar búsqueda
-		if(fecha == ""){
+		if(this.desde == ""){
 			if(cause == "all"){
 				if(guardia == 0){
 					this.getAll();
@@ -390,63 +415,123 @@ export class AlertasComponent  {
 				}
 			}
 		}else{
-			if(cause == "all"){
-				if(guardia == 0){
-					this.alertaService.getByCauseDate(cause, year, month, day).then(
-				    success => {
-				      this.alertas = success;
-			          this.data = this.alertas.data;
-				        }, error => {
-				            if (error.status === 422) {
-				                // on some data incorrect
-				            } else {
-				                // on general error
-				            }
-				        }
-				    );
-				}else{
-					this.alertaService.getByGuardDate(guardia, year, month, day).then(
-				    success => {
-				      this.alertas = success;
-			          this.data = this.alertas.data;
-				        }, error => {
-				            if (error.status === 422) {
-				                // on some data incorrect
-				            } else {
-				                // on general error
-				            }
-				        }
-				    );
-				}
-			}else{
-				if(guardia == 0){
-					this.alertaService.getByCauseDate(cause, year, month, day).then(
-				    success => {
-				      this.alertas = success;
-			          this.data = this.alertas.data;
-				        }, error => {
-				            if (error.status === 422) {
-				                // on some data incorrect
-				            } else {
-				                // on general error
-				            }
-				        }
-				    );
-				}else{
-					this.alertaService.getByGuardCaseDate(guardia, cause, year, month, day).then(
-				    success => {
-				      this.alertas = success;
-			          this.data = this.alertas.data;
-				        }, error => {
-				            if (error.status === 422) {
-				                // on some data incorrect
-				            } else {
-				                // on general error
-				            }
-				        }
-				    );
-				}
-			}
+			if(this.rangeday){
+        if(cause == "all"){
+          if(guardia == 0){
+            this.alertaService.getByCauseDate(cause, year1, month1, day1, year1, month1, day1).then(
+              success => {
+                this.alertas = success;
+                  this.data = this.alertas.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }else{
+            this.alertaService.getByGuardDate(guardia, year1, month1, day1, year1, month1, day1).then(
+              success => {
+                this.alertas = success;
+                  this.data = this.alertas.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }
+        }else{
+          if(guardia == 0){
+            this.alertaService.getByCauseDate(cause, year1, month1, day1, year1, month1, day1).then(
+              success => {
+                this.alertas = success;
+                  this.data = this.alertas.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }else{
+            this.alertaService.getByGuardCaseDate(guardia, cause, year1, month1, day1, year1, month1, day1).then(
+              success => {
+                this.alertas = success;
+                  this.data = this.alertas.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }
+        }
+      }else{
+        if(cause == "all"){
+          if(guardia == 0){
+            this.alertaService.getByCauseDate(cause, year1, month1, day1, year2, month2, day2).then(
+              success => {
+                this.alertas = success;
+                  this.data = this.alertas.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }else{
+            this.alertaService.getByGuardDate(guardia, year1, month1, day1, year2, month2, day2).then(
+              success => {
+                this.alertas = success;
+                  this.data = this.alertas.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }
+        }else{
+          if(guardia == 0){
+            this.alertaService.getByCauseDate(cause, year1, month1, day1, year2, month2, day2).then(
+              success => {
+                this.alertas = success;
+                  this.data = this.alertas.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }else{
+            this.alertaService.getByGuardCaseDate(guardia, cause, year1, month1, day1, year2, month2, day2).then(
+              success => {
+                this.alertas = success;
+                  this.data = this.alertas.data;
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }
+        }
+      }
 		}
 	}
 
@@ -457,7 +542,7 @@ export class AlertasComponent  {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Alertas', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
@@ -487,7 +572,7 @@ export class AlertasComponent  {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Alertas', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
@@ -520,7 +605,7 @@ export class AlertasComponent  {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Alertas del sistema', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data
@@ -568,7 +653,7 @@ export class AlertasComponent  {
         doc.setFontSize(12)
         doc.setTextColor(100)
         var d = new Date();
-        var fecha = d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Alertas del sistema', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34);
         //inserting data

@@ -141,10 +141,10 @@ export class WactivasComponent {
                 }else if(this.data[i].status == 1){
                   status = "Activa";
                 }
-                excel.push({'#' : this.data[i].id, 'Nombre del Guardia': this.data[i].guard.name+' '+this.data[i].guard.lastname, 'Cédula del Guardia':this.data[i].guard.dni, 'Hora de inicio':this.data[i].create_date, 'Status':status})
-                body.push([this.data[i].id, this.data[i].guard.name+' '+this.data[i].guard.lastname, this.data[i].guard.dni, this.data[i].create_date, status]);
+                excel.push({'#' : this.data[i].id, 'Nombre del Guardia': this.data[i].guard_name+' '+this.data[i].guard_lastname, 'Cédula del Guardia':this.data[i].guard_dni, 'Hora de inicio':this.data[i].create_date, 'Status':status})
+                body.push([this.data[i].id, this.data[i].guard_name+' '+this.data[i].guard_lastname, this.data[i].guard_dni, this.data[i].create_date, status]);
                 this.data[i].id = Number(this.data[i].id);
-                this.data[i].guard.dni = Number(this.data[i].guard.dni);
+                this.data[i].guard_dni = Number(this.data[i].guard_dni);
             }
             this.contpdf = body;
             this.info = excel;

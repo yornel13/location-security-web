@@ -56,8 +56,8 @@
              <tbody>
               <tr *ngFor="let d of data | filter:filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
                 <td>{{d.id}}</td>
-                <td>{{d.guard.name}} {{d.guard.lastname}}</td>
-                <td>{{d.guard.dni}}</td>
+                <td>{{d.guard_name}} {{d.guard_lastname}}</td>
+                <td>{{d.guard_dni}}</td>
                 <td>{{d.create_date}}</td>
                 <td><span *ngIf="d.status == 1" class="text-danger">Activa</span><span *ngIf="d.status == 0" class="text-success">Finalizada</span></td>
                 <td>
