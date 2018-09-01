@@ -34,7 +34,7 @@
                     <a class="btn btn-info" *ngIf="cerco.active == 0" (click)="activarAdmin(cerco.id)" style="display: inline-block; margin-right: 10px; width: 100px">Activar</a>
                     <a class="btn btn-secondary" *ngIf="cerco.active == 1" (click)="desactivarAdmin(cerco.id)" style="display: inline-block; margin-right: 10px;  width: 100px">Desactivar</a>
                     <a class="btn btn-primary btn-xs" (click)="getVehiclesInBound(cerco)" style="display: inline-block; margin-right: 10px;" title="Map"><span class="far fa-eye"></span></a>
-                    <!--<a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editBound(cerco.id)" title="Editar"><span class="fas fa-edit"></span></a>-->
+                    <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editBound(cerco)" title="Editar"><span class="fas fa-edit"></span></a>
                     <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{cerco.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
                 </td>
                 <div class="modal" tabindex="-1" role="dialog" id="modal{{cerco.id}}">
@@ -98,8 +98,8 @@
                     </div>
                     <div class="col-sm-7 ml-auto">
                         <label class="mr-2">Color</label>
-                        <input [(colorPicker)]="colorpoli" [style.background]="colorpoli">
-                        <button class="btn btn-info" (click)="seleColorPoli()"><i class="fas fa-save"></i></button>
+                        <input [(colorPicker)]="colorSelected" [style.background]="colorSelected">
+                        <button class="btn btn-info" (click)="selectColor()"><i class="fas fa-save"></i></button>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -108,6 +108,8 @@
                          [leafletOptions]="options"
                          [(leafletZoom)]="zoom"
                          [(leafletCenter)]="center"
+                         [leafletBaseLayers]="baseLayers"
+                         [leafletLayersControlOptions]="layersControlOptions"
                          (leafletMapReady)="onMapReady($event)">
                     </div>
                 </div>
@@ -118,7 +120,7 @@
                     {{message}}
                 </div>
                 <div class="row mt-4 back-save-btn">
-                    <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="regresar()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
+                    <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="returnList()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
                     <button type="button" class="btn btn-success btn-block col-md-3 mr-auto" (click)="saveNewBound()"  style=" margin: 0px 0px 0px 20px"><i class="fas fa-plus-circle" style="margin-right: 10px;"></i>Guardar Cerco</button>
                 </div>
             </div>
@@ -140,10 +142,8 @@
                     </div>
                 </div>
                 <div class="form-group row" >
-                    <div id="editPoly" class="map-bounds"
+                    <div class="map-bounds"
                          leaflet
-                         leafletDraw
-                         [leafletDrawOptions]="drawOptions"
                          [leafletOptions]="options"
                          [(leafletZoom)]="zoom"
                          [(leafletCenter)]="center"
@@ -159,7 +159,7 @@
                     {{message}}
                 </div>
                 <div class="row mt-4 back-save-btn">
-                    <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="regresar()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
+                    <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="returnList()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
                     <button type="button" class="btn btn-success btn-block col-md-3 mr-auto" (click)="saveEditedBound()" style=" margin: 0px 0px 0px 20px"><i class="fas fa-plus-circle" style="margin-right: 10px;"></i>Guardar Cerco</button>
                 </div>
             </div>
@@ -181,6 +181,8 @@
                          [leafletOptions]="options"
                          [(leafletZoom)]="zoom"
                          [(leafletCenter)]="center"
+                         [leafletBaseLayers]="baseLayers"
+                         [leafletLayersControlOptions]="layersControlOptions"
                          (leafletMapReady)="onMapReady($event)">
                     </div>
                 </div>
@@ -260,7 +262,7 @@
                         </tbody>
                     </table>
                     <div class="row mt-4 back-save-btn">
-                        <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="regresar()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
+                        <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="returnList()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
                     </div>
                 </div>
             </div>

@@ -89,7 +89,6 @@ export class CercoComponent implements OnInit {
 
     bounds: Bounds[];
     cercos: any = undefined;
-    polyCoords = {latitude: [], longitude: []};
     toEditPolygon =  L.polygon([]);
     editPolygon = false;
     vehiclesList;
@@ -103,26 +102,21 @@ export class CercoComponent implements OnInit {
     layersControlOptions;
     baseLayers;
     options;
-    drawOptions;
     drawControl;
     figure;
     selectedBounds: Cerco = undefined;
-
-    //poligono
-    colorpoli = '#97009c';
+    colorSelected;
+    defaultColor = '#97009c';
+    pointsToSave;
 
     constructor (
             public router: Router,
             private adminService: AdminService,
             private storage: AngularFireStorage,
-            private cercoServise: CercoService,
-            private vehiculoServise: VehiclesService,
+            private cercoService: CercoService,
+            private vehiclesService: VehiclesService,
             private globalOSM: GlobalOsm) {
-        this.getAllBounds();
-        this.lista = true;
-        this.vehiclesBoundView = false;
-        this.createBoundView = false;
-        this.editBoundView = false;
+        /* Map default options */
         this.layersControlOptions = this.globalOSM.layersOptions;
         this.baseLayers = this.globalOSM.baseLayers;
         this.options = {
@@ -130,21 +124,27 @@ export class CercoComponent implements OnInit {
             center: L.latLng(([ -2.071522, -79.607105 ])),
             editable: true
         };
-        this.drawOptions = {
-            position: 'topleft',
-            draw: {
-                marker: false,
-                circlemarker: false,
-                circle: false,
-                polyline: false,
-                rectangle: false,
-            },
-            edit: {
-
-            }
-        };
     }
 
+    ngOnInit() {
+        this.returnList();
+        this.getAllBounds();
+    }
+
+    getAllBounds() {
+        this.cercoService.getAll().then(
+            success => {
+                this.cercos = success;
+                this.data = this.cercos.data;
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
 
     saveNewBound() {
         const nameBound = this.nameBoundField.nativeElement.value;
@@ -161,18 +161,18 @@ export class CercoComponent implements OnInit {
                         }
                     }
 
-                    const coords = JSON.stringify(this.polyCoords);
+                    const coords = JSON.stringify(this.pointsToSave);
                     console.log(coords);
                     const bound: Cerco = {
                         name: this.nameBound,
                         points: coords,
-                        color: this.colorpoli,
+                        color: this.colorSelected,
                         status:  true
                     };
 
-                    this.cercoServise.add(bound).then(sucess => {
+                    this.cercoService.add(bound).then(sucess => {
                         this.getAllBounds();
-                        this.regresar();
+                        this.returnList();
                         this.nameBound = '';
                     });
                     this.message = 'Guardado con exito!';
@@ -196,26 +196,11 @@ export class CercoComponent implements OnInit {
         }
     }
 
-    getAllBounds() { /*------------------------------------------------------------------------------------------*/
-        this.cercoServise.getAll().then(
-            success => {
-                this.cercos = success;
-                this.data = this.cercos.data;
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
-    }
-
     getVehiclesInBound(cerco: Cerco) {
         this.selectedBounds = cerco;
         this.cercoId = cerco.id;
         this.nameBound = cerco.name;
-        this.cercoServise.getVehiclesInBound(cerco.id).then(
+        this.cercoService.getVehiclesInBound(cerco.id).then(
             (success: ListBounds) => {
                 this.bounds = success.data;
                 this.loadVehicleListModal();
@@ -232,19 +217,9 @@ export class CercoComponent implements OnInit {
             }
         );
 
-        this.cercoServise.getId(cerco.id).then(
+        this.cercoService.getId(cerco.id).then(
             success => {
-                const cercoToEdit: Cerco = success;
-                const coords = JSON.parse(cercoToEdit.points);
-
-
-                const coordinates = [];
-                for (let i = 0; i < coords.latitude.length; i++) {
-                    coordinates.push([ coords.latitude[i], coords.longitude[i]]);
-                }
-
-                //this.toEditPolygon = L.polygon([[]]).setLatLngs(coordinates).addTo(this.map);
-
+                this.selectedBounds = success;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -256,15 +231,15 @@ export class CercoComponent implements OnInit {
     }
 
     loadVehicleListModal() {
-        this.vehiculoServise.getVehiclesList().then(
+        this.vehiclesService.getVehiclesList().then(
             success => {
                 this.vehiclesList = success.data;
                 this.bounds.forEach(vBounds => {
-                   this.vehiclesList.forEach(vehicle => {
-                       if (vehicle.imei == vBounds.imei) {
-                           vBounds.alias = vehicle.alias;
-                       }
-                   });
+                    this.vehiclesList.forEach(vehicle => {
+                        if (vehicle.imei == vBounds.imei) {
+                            vBounds.alias = vehicle.alias;
+                        }
+                    });
                 });
                 this.vehiclesInBound = this.bounds;
             });
@@ -273,21 +248,21 @@ export class CercoComponent implements OnInit {
 
 
     getVehicleByChecked(vehicle) {
-           const index = this.vehicles.imei.indexOf(vehicle.imei);
-           if  (index > -1) {
-               this.vehicles.imei.splice(index, 1);
-               this.vehicles.alias.splice(index, 1);
+        const index = this.vehicles.imei.indexOf(vehicle.imei);
+        if  (index > -1) {
+            this.vehicles.imei.splice(index, 1);
+            this.vehicles.alias.splice(index, 1);
 
-               console.log('se borro', vehicle.imei);
+            console.log('se borro', vehicle.imei);
 
-           } else {
-               this.vehicles.imei.push(vehicle.imei);
-               this.vehicles.alias.push(vehicle.alias);
-               console.log('se agrego!', this.vehicles.imei);
-           }
-           this.vehicles.imei.forEach( data => {
-               console.log('vehiculos-> ', data);
-           });
+        } else {
+            this.vehicles.imei.push(vehicle.imei);
+            this.vehicles.alias.push(vehicle.alias);
+            console.log('se agrego!', this.vehicles.imei);
+        }
+        this.vehicles.imei.forEach( data => {
+            console.log('vehiculos-> ', data);
+        });
     }
 
     addVehiclesToBound(id) {
@@ -299,19 +274,19 @@ export class CercoComponent implements OnInit {
             array.push(vehicler);
         });
 
-        this.cercoServise.addVehiclesToBound(id, JSON.stringify(array))
+        this.cercoService.addVehiclesToBound(id, JSON.stringify(array))
             .then( sucess => {
-            this.getVehiclesInBound(this.selectedBounds);
-        },  error => {
-            if (error.status === 422) {
-                // on some data incorrect
-            } else {
-                // on general error
-            }
-        });
+                this.getVehiclesInBound(this.selectedBounds);
+            },  error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            });
     }
 
-    regresar() {
+    returnList() {
         this.lista = true;
         this.vehiclesBoundView = false;
         this.createBoundView = false;
@@ -321,32 +296,18 @@ export class CercoComponent implements OnInit {
         this.message = '';
         this.alertError = false;
         this.alertSuccess = false;
+        this.selectedBounds = null;
     }
 
-    editBound(id) {
+    editBound(cerco: Cerco) {
+        this.selectedBounds = cerco;
         this.editPolygon = true;
-        this.cercoServise.getId(id).then(
+        this.cercoService.getId(cerco.id).then(
             success => {
-                const cercoToEdit: Cerco = success;
-                const coords = JSON.parse(cercoToEdit.points);
-
-
-                const coordinates = [];
-                for (let i = 0; i < coords.latitude.length; i++) {
-                    coordinates.push([ coords.latitude[i], coords.longitude[i]]);
-                }
-                this.toEditPolygon = L.polygon([[]]).setLatLngs(coordinates);
-                // const latLngs = [];
-                // L.polygon([]).setLatLngs(latLngs);
-                // this.nombre = this.admin.name;
-                // this.apellido = this.admin.lastname;
-                // this.correo = this.admin.email;
-                // this.photo = this.admin.photo;
-                // this.identificacion = this.admin.dni;
-                // this.idEdit = this.admin.id;
+                this.selectedBounds = success;
+                const coords = JSON.parse(this.selectedBounds.points);
+                this.toEditPolygon = L.polygon([[]]).setLatLngs(coords);
                 this.lista = false;
-                // this.vehiclesBoundView = false;
-                // this.createBoundView = false;
                 this.editBoundView = true;
             }, error => {
                 if (error.status === 422) {
@@ -389,7 +350,7 @@ export class CercoComponent implements OnInit {
         this.adminService.set(valores).then(
             success => {
                 this.getAllBounds();
-                this.regresar();
+                this.returnList();
                 this.photo = '';
                 this.errorEditData = false;
                 this.errorEdit = false;
@@ -418,6 +379,7 @@ export class CercoComponent implements OnInit {
     }
 
     createBounds() {
+        this.colorSelected = this.defaultColor;
         this.createBoundView = true;
         this.editPolygon = false;
         this.lista = false;
@@ -426,7 +388,7 @@ export class CercoComponent implements OnInit {
     }
 
     deleteBound(id) {
-        this.cercoServise.delete(id).then(
+        this.cercoService.delete(id).then(
             success => {
                 this.getAllBounds();
                 this.errorDeleteData = false;
@@ -444,13 +406,13 @@ export class CercoComponent implements OnInit {
     }
 
     deleteVehicleFromBound(vehicle) {
-        this.cercoServise.deleteVehicleFromBound(vehicle.id)
+        this.cercoService.deleteVehicleFromBound(vehicle.id)
             .then(success => {
                 const index = this.vehiclesInBound.indexOf(vehicle, 0);
                 if (index > -1) {
                     this.vehiclesInBound.splice(index, 1);
                 }
-        }, error => {
+            }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
                     this.errorDeleteData = true;
@@ -461,147 +423,74 @@ export class CercoComponent implements OnInit {
             });
     }
 
-    seleColorPoli(){
-        console.log(this.drawPluginOptions.draw.polygon.shapeOptions.color);
-        this.drawPluginOptions.draw.polygon.shapeOptions.color = this.colorpoli;
+    selectColor() {
+        this.drawPluginOptions.draw.polygon.shapeOptions.color = this.colorSelected;
     }
 
 //    ------------------------------------------------------------------------------------
 
     onMapReady(map: L.Map) {
         this.map =  map;
-        //this.map.setCenter(this.center);
-        //this.map = L.map('map').setView(this.center, 6);
-        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
-            detectRetina: true,
-            attribution: 'Open Street Map'
-        }).addTo(this.map);
-
-        //this.drawPluginOptions.draw.polygon.shapeOptions.color = this.colorpoli;
-
+        this.globalOSM.setupLayer(map);
+        /***************** On Create new bounds *****************/
         if (this.createBoundView) {
+            this.figure = undefined;
             this.editableLayers = new L.FeatureGroup();
-            map.addLayer(this.editableLayers);
-            this.drawPluginOptions = {
-                position: 'topright',
-                draw: {
-                    polygon: {
-                        allowIntersection: false, // Restricts shapes to simple polygons
-                        drawError: {
-                            color: '#e1e100', // Color the shape will turn when intersects
-                            message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
-                        },
-                        shapeOptions: {
-                            color: this.colorpoli
-                        }
-                    },
-                    // disable toolbar item by setting it to false
-                    polyline: false,
-                    circle: false, // Turns off this drawing tool
-                    rectangle: false,
-                    marker: false,
-                    circlemarker: false,
-                },
-                edit: {
-                    featureGroup: this.editableLayers,
-                    remove: false
-                }
-            };
+            this.map.addLayer(this.editableLayers);
+            this.drawPluginOptions = this.globalOSM.drawPlugin(this.editableLayers);
             this.drawControl = new L.Control.Draw(this.drawPluginOptions);
             this.map.addControl(this.drawControl);
-            this.map.on('draw:created', e => {
-                this.figure = e.layer;
-                this.editableLayers.addLayer(e.layer);
-            });
             this.actionControls();
-            this.drawBounds();
         }
 
+        /***************** On Show a bounds *****************/
         if (this.vehiclesBoundView) {
             const coords = JSON.parse(this.selectedBounds.points);
-            const coordinates = [];
-            for (let i = 0; i < coords.latitude.length; i++) {
-                coordinates.push([ coords.latitude[i], coords.longitude[i]]);
-                console.log('lat: ', coords.latitude[i], '  lng: ', coords.longitude[i]);
-            }
             this.editableLayers = new L.FeatureGroup();
-            map.addLayer(this.editableLayers);
-            this.toEditPolygon = L.polygon([[]]).setLatLngs(coordinates);
+            this.map.addLayer(this.editableLayers);
+            this.toEditPolygon = L.polygon([[]]).setLatLngs(coords);
+            this.toEditPolygon.options.color = this.selectedBounds.color;
             this.editableLayers.addLayer(this.toEditPolygon);
         }
-
-        // L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        //     maxZoom: 20,
-        //     detectRetina: true,
-        //     attribution: 'Open Street Map'
-        // }).addTo(map);
-        // this.drawBounds();
-        // this.actionControls();
-        //
-        // if (this.editPolygon) {
-        //     this.map.addLayer(this.toEditPolygon);
-        // }
-        //
-        // this.toEditPolygon.on('click', e => {
-        //     e.target.editing.enable();
-        //     const drawnItems = new L.FeatureGroup().getBounds();
-        //     this.map.addLayer(drawnItems);
-        //     console.log('diooo');
-        // });
+        /***************** On Edit a bounds *****************/
+        if (this.editPolygon) {
+            const coords = JSON.parse(this.selectedBounds.points);
+            this.editableLayers = new L.FeatureGroup();
+            this.map.addLayer(this.editableLayers);
+            this.toEditPolygon = L.polygon([[]]).setLatLngs(coords);
+            this.toEditPolygon.options.color = this.selectedBounds.color;
+            this.editableLayers.addLayer(this.toEditPolygon);
+            this.map.addLayer(this.editableLayers);
+        }
 
     }
 
     actionControls() {
+        this.map.on('draw:created', e => {
+            console.log(e.layerType);
+            this.figure = e.layer;
+            this.editableLayers.addLayer(e.layer);
+        });
         this.map.on('draw:drawstart ', e => {
             this.polygon = L.polygon([]);
             this.polygonDrawed = false;
             this.drawing = true;
-
             this.alertError = false;
             this.alertSuccess = false;
-
             if (this.figure != undefined) {
                 this.figure.remove(this.map);
             }
         });
         this.map.on('draw:drawstop ', e => {
-            this.onArea = this.polygon.getBounds().contains(this.marker.getLatLng());
             this.polygonDrawed = true;
             this.drawing = false;
-
+            this.pointsToSave = this.figure.editing.latlngs[0][0];
+            console.log(JSON.stringify(this.pointsToSave));
         });
         this.map.on('draw:deleted', e => {
             console.log('deleted');
-            // this.polygon = L.polygon([]);
         });
     }
-
-
-
-    drawBounds() {
-        let  i = 0;
-        this.map.on('click', ev => {
-            if (this.drawing) {
-                const lat = ev.latlng.lat;
-                const lng  = ev.latlng.lng;
-                this.polygon.addLatLng([lat, lng]);
-
-                this.polyCoords.latitude[i] = lat ;
-                this.polyCoords.longitude[i] = lng ;
-                i++;
-                console.log('lat: ', lat, '  lng: ', lng);
-            }
-
-        });
-    }
-
-    ngOnInit() {
-
-    }
-
-
-
 }
 
 

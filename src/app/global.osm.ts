@@ -52,6 +52,35 @@ export class GlobalOsm {
 
     readonly layersOptions = { position: 'bottomright' };
 
+    drawPlugin(editableLayers): any {
+        const drawPluginOptions = {
+            position: 'topright',
+            draw: {
+                polygon: {
+                    allowIntersection: false, // Restricts shapes to simple polygons
+                    drawError: {
+                        color: '#e1e100', // Color the shape will turn when intersects
+                        message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
+                    },
+                    shapeOptions: {
+                        color: '#97009c'
+                    }
+                },
+                // disable toolbar item by setting it to false
+                polyline: false,
+                circle: false, // Turns off this drawing tool
+                rectangle: false,
+                marker: false,
+                circlemarker: false,
+            },
+            edit: {
+                featureGroup: editableLayers,
+                remove: false
+            }
+        };
+        return drawPluginOptions;
+    }
+
     setupLayer(map: L.Map) {
         L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 20,
