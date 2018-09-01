@@ -6,6 +6,13 @@ import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference 
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
+import Map from 'ol/Map';
+import {View} from 'ol/View';
+import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
+import {OSM, Vector as VectorSource} from 'ol/source';
+import Draw from 'ol/interaction/Draw';
+
+
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet-draw';
@@ -14,9 +21,10 @@ import {Cerco} from '../../../../model/cerco/cerco';
 import {forEach} from '@angular/router/src/utils/collection';
 import {VehiclesService} from '../../../../model/vehicle/vehicle.service';
 import {Vehicle} from '../../../../model/vehicle/vehicle';
-import {CheckboxControlValueAccessor} from '@angular/forms';
 import {ListBounds} from '../../../../model/cerco/list.bounds';
 import {Bounds} from '../../../../model/cerco/bounds';
+import {Polygon} from 'leaflet';
+
 
 
 export class VechicleS {
@@ -76,13 +84,13 @@ export class CercoComponent implements OnInit {
     polygon = L.polygon([]);
     onArea;
     private map;
+    draw;
 
     message: string;
     alertError: boolean;
     alertSuccess: boolean;
     @ViewChild('nameBoundField') nameBoundField: any;
     @ViewChild('vehicleChecked') vehicleChecked: any;
-
 
     bounds: Bounds[];
     cercos: any = undefined;
@@ -159,19 +167,44 @@ export class CercoComponent implements OnInit {
         center: L.latLng(([ -2.071522, -79.607105 ])),
         editable: true
     };
+
     drawOptions = {
+
         position: 'topleft',
         draw: {
+            polygon: {
+                // shapeOptions: {
+                //     color: 'purple'
+                // },
+                allowIntersection: false,
+                drawError: {
+                    color: 'orange',
+                    timeout: 1000
+                },
+            },
+            allowIntersection: false,
             marker: false,
             circlemarker: false,
             circle: false,
             polyline: false,
             rectangle: false,
+            edit: false
         },
         edit: {
+            remove: false,
+            edit: false
 
         }
     };
+
+    coords = [];
+
+    onChangeColor(color) {
+        if (this.polygonDrawed !== undefined) {
+            this.polygon.setStyle({color: color});
+            this.polygon.addTo(this.map);
+        }
+    }
 
     saveNewBound() {
         const nameBound = this.nameBoundField.nativeElement.value;
@@ -189,7 +222,7 @@ export class CercoComponent implements OnInit {
                     }
 
                     const  coords =  JSON.stringify(this.polyCoords);
-                    console.log(coords);
+
                     const bound: Cerco = {
                         name: this.nameBound,
                         points: coords,
@@ -257,7 +290,6 @@ export class CercoComponent implements OnInit {
                 }
             }
         );
-
         this.cercoServise.getId(id).then(
             success => {
                 const cercoToEdit: Cerco = success;
@@ -269,6 +301,7 @@ export class CercoComponent implements OnInit {
                     coordinates.push([ coords.latitude[i], coords.longitude[i]]);
                 }
                 this.toEditPolygon = L.polygon([[]]).setLatLngs(coordinates).addTo(this.map);
+                // this.toEditPolygon.setStyle({color: '#2ea934', });
 
             }, error => {
                 if (error.status === 422) {
@@ -302,17 +335,10 @@ export class CercoComponent implements OnInit {
            if  (index > -1) {
                this.vehicles.imei.splice(index, 1);
                this.vehicles.alias.splice(index, 1);
-
-               console.log('se borro', vehicle.imei);
-
            } else {
                this.vehicles.imei.push(vehicle.imei);
                this.vehicles.alias.push(vehicle.alias);
-               console.log('se agrego!', this.vehicles.imei);
            }
-           this.vehicles.imei.forEach( data => {
-               console.log('vehiculos-> ', data);
-           });
     }
 
     addVehiclesToBound(id) {
@@ -350,6 +376,11 @@ export class CercoComponent implements OnInit {
 
     editBound(id) {
         this.editPolygon = true;
+
+        this.lista = false;
+        this.vehiclesBoundView = false;
+        this.createBoundView = false;
+        this.editBoundView = true;
         this.cercoServise.getId(id).then(
             success => {
                 const cercoToEdit: Cerco = success;
@@ -361,18 +392,7 @@ export class CercoComponent implements OnInit {
                     coordinates.push([ coords.latitude[i], coords.longitude[i]]);
                 }
                 this.toEditPolygon = L.polygon([[]]).setLatLngs(coordinates);
-                // const latLngs = [];
-                // L.polygon([]).setLatLngs(latLngs);
-                // this.nombre = this.admin.name;
-                // this.apellido = this.admin.lastname;
-                // this.correo = this.admin.email;
-                // this.photo = this.admin.photo;
-                // this.identificacion = this.admin.dni;
-                // this.idEdit = this.admin.id;
-                this.lista = false;
-                // this.vehiclesBoundView = false;
-                // this.createBoundView = false;
-                this.editBoundView = true;
+
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -409,7 +429,6 @@ export class CercoComponent implements OnInit {
     }
 
     saveEditedBound() {
-
         const valores = this.getValueEdit();
         this.adminService.set(valores).then(
             success => {
@@ -443,11 +462,36 @@ export class CercoComponent implements OnInit {
     }
 
     createBounds() {
+        // this.polygon.removeFrom(this.map);
         this.createBoundView = true;
         this.editPolygon = false;
         this.lista = false;
         this.vehiclesBoundView = false;
         this.editBoundView = false;
+
+        const defaulLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            detectRetina: true,
+            attribution: 'Open Street Map'
+        });
+
+        const raster = new TileLayer({
+            source: defaulLayer
+        });
+
+
+        const source = new VectorSource({wrapX: false});
+
+        const vector = new VectorLayer({
+            source: source
+        });
+
+        this.map = new Map({
+            layers: [raster, vector],
+            target: 'map',
+        });
+
+        this.addInteraction();
     }
 
     deleteBound(id) {
@@ -486,18 +530,28 @@ export class CercoComponent implements OnInit {
             });
     }
 
+    deleteBoundDrawed() {
+        console.log('deleted');
+        this.polygon.removeFrom(this.map);
+    }
+
 //    ------------------------------------------------------------------------------------
 
     onMapReady(map: L.Map) {
-        this.map =  map;
 
-        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        const defaulLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 20,
             detectRetina: true,
             attribution: 'Open Street Map'
-        }).addTo(map);
-        this.drawBounds();
-        this.actionControls();
+        });
+
+        this.map =  map;
+
+        this.addInteraction();
+
+        if (typeof this.polygon !== undefined ) {
+            this.polygon.removeFrom(this.map);
+        }
 
         if (this.editPolygon) {
             this.map.addLayer(this.toEditPolygon);
@@ -505,36 +559,67 @@ export class CercoComponent implements OnInit {
 
         this.toEditPolygon.on('click', e => {
             e.target.editing.enable();
-            const drawnItems = new L.FeatureGroup().getBounds();
-            this.map.addLayer(drawnItems);
-            console.log('diooo');
+            const drawnItem = new L.FeatureGroup().getBounds();
+            this.map.addLayer(drawnItem);
+        });
+
+        this.drawBounds();
+        this.actionControls();
+    }
+
+    addInteraction() {
+        const source = new VectorSource({wrapX: false});
+
+        this.draw = new Draw({
+            source: source,
+            type: 'Polygon'
         });
 
     }
 
+
+    drawPolygon() {
+        console.log('lets draw');
+        const source = new VectorSource({wrapX: false});
+
+            this.draw = new Draw({
+                source: source,
+                type: 'Polygon'
+            });
+            this.map.addLayer(this.draw);
+            // map.addInteraction(draw);
+
+    }
+
     actionControls() {
-        this.marker.addTo(this.map);
-        this.map.on('draw:drawstart ', e => {
-            this.polygon = L.polygon([]);
+        this.map.on('draw:drawstart', e => {
+            this.polyCoords = {latitude: [], longitude: []};
+            this.polygon.removeFrom(this.map);
+            // this.polygon = new Polygon([]);
             this.polygonDrawed = false;
             this.drawing = true;
 
             this.alertError = false;
             this.alertSuccess = false;
         });
-        this.map.on('draw:drawstop ', e => {
-            this.onArea = this.polygon.getBounds().contains(this.marker.getLatLng());
+        this.map.on('draw:drawstop', e => {
+            // const coordinates = [];
+            // for (let i = 0; i < this.polyCoords.latitude.length; i++) {
+            //     coordinates.push([ this.polyCoords.latitude[i], this.polyCoords.longitude[i]]);
+            // }
+            // this.polygon = L.polygon([[]]).setLatLngs(coordinates);
+            // this.polygon.removeFrom(this.map);
+            // this.polygon.addTo(this.map);
+            this.map.addLayer(this.polygon);
+            // this.polygon.bringToFront();
+
             this.polygonDrawed = true;
             this.drawing = false;
-
         });
+
         this.map.on('draw:deleted', e => {
-            console.log('deleted');
-            // this.polygon = L.polygon([]);
         });
     }
-
-
 
     drawBounds() {
         let  i = 0;
@@ -542,19 +627,18 @@ export class CercoComponent implements OnInit {
             if (this.drawing) {
                 const lat = ev.latlng.lat;
                 const lng  = ev.latlng.lng;
+
+
                 this.polygon.addLatLng([lat, lng]);
 
                 this.polyCoords.latitude[i] = lat ;
                 this.polyCoords.longitude[i] = lng ;
                 i++;
-                // console.log('lat: ', lat, '  lng: ', lng);
             }
-
         });
     }
 
     ngOnInit() {
-
     }
 
 

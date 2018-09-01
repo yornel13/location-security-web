@@ -18,6 +18,7 @@ import { ChartsModule } from 'ng2-charts';
 import { FusionChartsModule } from 'angular-fusioncharts';
 import FusionCharts from 'fusioncharts/core';
 import Doughnut2D from 'fusioncharts/viz/doughnut2d';
+
 FusionChartsModule.fcRoot(FusionCharts, Doughnut2D);
 
 // My Modulus

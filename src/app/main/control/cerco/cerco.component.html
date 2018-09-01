@@ -86,7 +86,6 @@
 
             </tr>
             </tbody>
-
         </table>
     </div>
 </div>
@@ -104,20 +103,24 @@
                         <input #nameBoundField type="text" class="form-control" id="namea" placeholder="Nombre del cerco" [(ngModel)]="nameBound" [ngModelOptions]="{standalone: true}">
                     </div>
                 </div>
-
+               
                 <div class="form-group row">
-                    <div class="map-bounds"
+                    <div id="map" class="map-bounds"
                          leaflet
-                         leafletDraw
-                         [leafletDrawOptions]="drawOptions"
                          [leafletOptions]="options"
                          [(leafletZoom)]="zoom"
                          [(leafletCenter)]="center"
                          [leafletBaseLayers]="baseLayers"
                          [leafletLayersControlOptions]="layersControlOptions"
                          (leafletMapReady)="onMapReady($event)">
+                        
+                        <button (click)="drawPolygon()"  type="input" class="draw-polygon"><i class="fa fa-square"></i></button>
+                        <button (click)="deleteBoundDrawed()"  type="input" class="delete-btn"><i class="fa fa-trash"></i></button>
+                        <button  type="input" class="c-picker" [(colorPicker)]="hex" [style.background]="color" (colorPickerChange)="onChangeColor($event)"><i class="fa fa-tint"></i></button>
                     </div>
                 </div>
+    
+    
                 <div *ngIf="alertError" class="alert alert-danger" role="alert">
                     {{message}}
                 </div>
@@ -188,7 +191,6 @@
     <form role="form">
         <div class="panel-body mt-2">
             <div class="table-container container">
-              
                 
                 <div class="form-group row" >
                     <div class="map-bounds"
@@ -218,7 +220,7 @@
                     <a class="btn btn-secondary" data-toggle="modal" href="#modal{{7}}" style="background-color: #28a745; border: none; color: #fff" ><i class="fas fa-plus-circle"> </i>  Agregar vehiculo</a>
                 </div>
     
-                <div class="table mt-2">
+git
                     <table class="table table-striped">
                         <thead>
                             <th>IMEI</th>

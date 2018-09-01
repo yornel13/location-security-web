@@ -66,3 +66,47 @@ app-cerco {
 }
 
 
+
+
+
+.draw-polygon {
+    position: absolute;
+    top: 18%;
+    left: 1.5%;
+    border: 2px solid rgba(0, 72, 110, 0.34);
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    height: 34px;
+    width: 34px;
+    z-index: 500;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 27%;
+    left: 1.5%;
+    border: 2px solid rgba(0, 72, 110, 0.34);
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    height: 34px;
+    width: 34px;
+    z-index: 500;
+}
+
+.c-picker {
+    position: absolute;
+    top: 41%;
+    left: 1.5%;
+    border: 2px solid rgba(0, 72, 110, 0.34);
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    height: 34px;
+    width: 34px;
+    z-index: 500;
+}
+
+
+
+
+
+

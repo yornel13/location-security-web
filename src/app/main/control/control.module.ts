@@ -21,7 +21,11 @@ import { ChartsModule } from 'ng2-charts';
 import { FusionChartsModule } from 'angular-fusioncharts';
 import FusionCharts from 'fusioncharts/core';
 import Doughnut2D from 'fusioncharts/viz/doughnut2d';
+import { ColorPickerModule } from 'ngx-color-picker';
 FusionChartsModule.fcRoot(FusionCharts, Doughnut2D);
+
+import * as ol from 'ol';
+
 
 import { IgxSnackbarModule } from 'igniteui-angular';
 import { ControlComponent } from './control.component';
@@ -106,6 +110,8 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         LeafletMarkerClusterModule.forRoot(),
         IgxSnackbarModule,
         NgxPaginationModule,
+        ColorPickerModule,
+
     ],
     providers: [
         GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService, ExcelService,
