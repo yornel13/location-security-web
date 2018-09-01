@@ -19,6 +19,7 @@ import {ListBounds} from '../../../../model/cerco/list.bounds';
 import {Bounds} from '../../../../model/cerco/bounds';
 import {GlobalOsm} from '../../../global.osm';
 import { ColorPickerModule } from 'ngx-color-picker';
+import * as geolib from "geolib";
 
 export class VechicleS {
     imei: string;
@@ -119,11 +120,7 @@ export class CercoComponent implements OnInit {
         /* Map default options */
         this.layersControlOptions = this.globalOSM.layersOptions;
         this.baseLayers = this.globalOSM.baseLayers;
-        this.options = {
-            zoom: 8,
-            center: L.latLng(([ -2.071522, -79.607105 ])),
-            editable: true
-        };
+        this.options = this.globalOSM.defaultOptions;
     }
 
     ngOnInit() {
@@ -345,7 +342,6 @@ export class CercoComponent implements OnInit {
     }
 
     saveEditedBound() {
-
         const valores = this.getValueEdit();
         this.adminService.set(valores).then(
             success => {
@@ -431,7 +427,7 @@ export class CercoComponent implements OnInit {
 
     onMapReady(map: L.Map) {
         this.map =  map;
-        this.globalOSM.setupLayer(map);
+        this.globalOSM.setupLayer(this.map);
         /***************** On Create new bounds *****************/
         if (this.createBoundView) {
             this.figure = undefined;
@@ -441,6 +437,8 @@ export class CercoComponent implements OnInit {
             this.drawControl = new L.Control.Draw(this.drawPluginOptions);
             this.map.addControl(this.drawControl);
             this.actionControls();
+            this.center = this.globalOSM.center;
+            this.zoom = this.globalOSM.zoom;
         }
 
         /***************** On Show a bounds *****************/
@@ -451,6 +449,11 @@ export class CercoComponent implements OnInit {
             this.toEditPolygon = L.polygon([[]]).setLatLngs(coords);
             this.toEditPolygon.options.color = this.selectedBounds.color;
             this.editableLayers.addLayer(this.toEditPolygon);
+            const centerPoint = geolib.getCenter(coords);
+            this.center = L.latLng(([ centerPoint.latitude, centerPoint.longitude ]));
+            this.zoom = this.globalOSM.zoom;
+            this.map.fitBounds(this.toEditPolygon.getBounds());
+            this.map.zoom = 20;
         }
         /***************** On Edit a bounds *****************/
         if (this.editPolygon) {
@@ -461,6 +464,10 @@ export class CercoComponent implements OnInit {
             this.toEditPolygon.options.color = this.selectedBounds.color;
             this.editableLayers.addLayer(this.toEditPolygon);
             this.map.addLayer(this.editableLayers);
+            const centerPoint = geolib.getCenter(coords);
+            this.center = L.latLng(([ centerPoint.latitude, centerPoint.longitude ]));
+            this.zoom = this.globalOSM.zoom;
+            this.map.fitBounds(this.toEditPolygon.getBounds());
         }
 
     }

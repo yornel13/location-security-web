@@ -153,7 +153,7 @@ export class ReportetsComponent {
         this.marker.addTo(this.map);
     }
 
-    onMapReadyChart(map:L.Map){
+    onMapReadyChart(map: L.Map) {
       console.log("vamos a ver si entra");
       this.mapchart = map;
       this.zoom = 12;

@@ -52,6 +52,16 @@ export class GlobalOsm {
 
     readonly layersOptions = { position: 'bottomright' };
 
+    readonly zoom = 12;
+
+    readonly center = L.latLng(([ -2.134040, -79.594146 ]));
+
+    readonly defaultOptions = {
+        zoom: 12,
+        center: L.latLng(([ -2.134040, -79.594146 ])),
+        editable: true
+    };
+
     drawPlugin(editableLayers): any {
         const drawPluginOptions = {
             position: 'topright',
