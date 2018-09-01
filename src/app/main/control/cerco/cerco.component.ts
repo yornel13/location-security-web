@@ -18,7 +18,7 @@ import {CheckboxControlValueAccessor} from '@angular/forms';
 import {ListBounds} from '../../../../model/cerco/list.bounds';
 import {Bounds} from '../../../../model/cerco/bounds';
 import {GlobalOsm} from '../../../global.osm';
-
+import { ColorPickerModule } from 'ngx-color-picker';
 
 export class VechicleS {
     imei: string;
@@ -108,6 +108,9 @@ export class CercoComponent implements OnInit {
     figure;
     selectedBounds: Cerco = undefined;
 
+    //poligono
+    colorpoli = '#97009c';
+
     constructor (
             public router: Router,
             private adminService: AdminService,
@@ -163,6 +166,7 @@ export class CercoComponent implements OnInit {
                     const bound: Cerco = {
                         name: this.nameBound,
                         points: coords,
+                        color: this.colorpoli,
                         status:  true
                     };
 
@@ -457,6 +461,11 @@ export class CercoComponent implements OnInit {
             });
     }
 
+    seleColorPoli(){
+        console.log(this.drawPluginOptions.draw.polygon.shapeOptions.color);
+        this.drawPluginOptions.draw.polygon.shapeOptions.color = this.colorpoli;
+    }
+
 //    ------------------------------------------------------------------------------------
 
     onMapReady(map: L.Map) {
@@ -468,6 +477,8 @@ export class CercoComponent implements OnInit {
             detectRetina: true,
             attribution: 'Open Street Map'
         }).addTo(this.map);
+
+        //this.drawPluginOptions.draw.polygon.shapeOptions.color = this.colorpoli;
 
         if (this.createBoundView) {
             this.editableLayers = new L.FeatureGroup();
@@ -482,7 +493,7 @@ export class CercoComponent implements OnInit {
                             message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
                         },
                         shapeOptions: {
-                            color: '#97009c'
+                            color: this.colorpoli
                         }
                     },
                     // disable toolbar item by setting it to false

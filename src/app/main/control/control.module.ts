@@ -16,6 +16,7 @@ import { AlertaService } from '../../../model/alerta/alerta.service';
 import { ExcelService } from '../../../model/excel/excel.services';
 
 import { HttpClientModule } from '@angular/common/http';
+import { ColorPickerModule } from 'ngx-color-picker';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { ChartsModule } from 'ng2-charts';
 import { FusionChartsModule } from 'angular-fusioncharts';
@@ -99,6 +100,7 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         ChartsModule,
         FusionChartsModule,
         FilterPipeModule,
+        ColorPickerModule,
         OrderModule,
         Ng2SearchPipeModule,
         LeafletModule.forRoot(),
