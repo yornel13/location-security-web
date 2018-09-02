@@ -51,6 +51,7 @@ export class MessagingComponent implements OnInit {
     private refreshInterval = interval(1000);
     myForm: FormGroup;
     nameChannel: any;
+    chat_id;
 
     constructor(
         private authService: AuthenticationService,
@@ -131,7 +132,8 @@ export class MessagingComponent implements OnInit {
             if (this.idChat == chatLine.chat_id) {
                 const newMessage = Object.assign(
                     {message: chatLine.text},
-                    {user: chatLine.sender_name}
+                    {user: chatLine.sender_name},
+                    {created_at: chatLine.create_at}
                     );
                 this.currentChat.push(newMessage);
             }
@@ -143,11 +145,11 @@ export class MessagingComponent implements OnInit {
         console.log(this.idChat);
         this.submitted = true;
         this.loading = true;
-        const newMessage = Object.assign(formValue, { user: this.user.name});
+        const newMessage = Object.assign(formValue, { user: this.user.name, id: this.user.id});
         const sender_type = 'ADMIN';
         this.loading = true;
         console.log('channel.ts: ' + this.isChannel);
-        this.chatService.sendMessage(formValue.message, this.user.id, this.idChat, sender_type, this.user.name, this.isChannel)
+        this.chatService.sendMessage(formValue.message, this.user.id, this.idChat, sender_type, this.user.name, this.isChannel )
             .pipe(first())
             .subscribe(
                 data => {
@@ -201,6 +203,7 @@ export class MessagingComponent implements OnInit {
     }
 
     openOldMessage(chat_id) {
+        this.chat_id = chat_id;
           this.chatService.listOldMessage(chat_id)
             .subscribe(
                 data => {
@@ -209,7 +212,7 @@ export class MessagingComponent implements OnInit {
                     console.log(this.oldMessage.reverse());
                     let lastMessage;
                     for (let i = 0; i < this.oldMessage.length; i++) {
-                        const messageOld = Object.assign({message: this.oldMessage[i].text}, {user: this.oldMessage[i].sender_name});
+                        const messageOld = Object.assign({message: this.oldMessage[i].text}, {user: this.oldMessage[i].sender_name}, {user: this.oldMessage[i].create_at});
                         lastMessage = this.currentChat.push(messageOld);
                     }
                     this.scrollToBottom();
@@ -282,7 +285,7 @@ export class MessagingComponent implements OnInit {
                         this.isChannel = true;
                         const messageOld = Object.assign(
                             {message: this.channelMessage[i].text},
-                            {user: this.channelMessage[i].sender_name});
+                            {user: this.channelMessage[i].sender_name, userId: this.channelMessage[i].sender_id});
                         list = this.currentChat.push(messageOld);
                     }
               return list;
