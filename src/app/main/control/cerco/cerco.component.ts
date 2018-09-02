@@ -110,6 +110,10 @@ export class CercoComponent implements OnInit {
     defaultColor = '#97009c';
     pointsToSave;
 
+    nameBoundEdit:any = "";
+    colorEdit;
+    filter:string;
+
     constructor (
             public router: Router,
             private adminService: AdminService,
@@ -249,7 +253,6 @@ export class CercoComponent implements OnInit {
         if  (index > -1) {
             this.vehicles.imei.splice(index, 1);
             this.vehicles.alias.splice(index, 1);
-
             console.log('se borro', vehicle.imei);
 
         } else {
@@ -297,15 +300,18 @@ export class CercoComponent implements OnInit {
     }
 
     editBound(cerco: Cerco) {
+        console.log("Entra aqui");
         this.selectedBounds = cerco;
         this.editPolygon = true;
         this.cercoService.getId(cerco.id).then(
             success => {
                 this.selectedBounds = success;
+                this.colorEdit = this.selectedBounds.color;
                 const coords = JSON.parse(this.selectedBounds.points);
                 this.toEditPolygon = L.polygon([[]]).setLatLngs(coords);
                 this.lista = false;
                 this.editBoundView = true;
+                this.nameBoundEdit = this.selectedBounds.name;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -316,59 +322,23 @@ export class CercoComponent implements OnInit {
         );
     }
 
-    getValueEdit() {
-        if (this.contrasena === 'password') {
-            const editadmin: Admin = {
-                id: this.idEdit,
-                dni: this.identificacion,
-                name: this.nombre,
-                lastname: this.apellido,
-                email: this.correo,
-                photo: this.photo
-            };
-            return editadmin;
-        } else {
-            const editadmin: Admin = {
-                id: this.idEdit,
-                dni: this.identificacion,
-                name: this.nombre,
-                lastname: this.apellido,
-                email: this.correo,
-                password: this.contrasena,
-                photo: this.photo
-            };
-            return editadmin;
-        }
-    }
-
     saveEditedBound() {
-        const valores = this.getValueEdit();
-        this.adminService.set(valores).then(
+        const bound: Cerco = {
+            id: this.selectedBounds.id,
+            name: this.nameBoundEdit,
+            points: this.selectedBounds.points,
+            color: this.colorEdit
+        }
+        this.cercoService.set(bound).then(
             success => {
                 this.getAllBounds();
                 this.returnList();
-                this.photo = '';
-                this.errorEditData = false;
-                this.errorEdit = false;
+                this.nameBound = '';
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
-                    if (error.error.errors.name) {
-                        this.errorEditMsg = error.error.errors.name[0];
-                    }
-                    if (error.error.errors.lastname) {
-                        this.errorEditMsg = error.error.errors.lastname[0];
-                    }
-                    if (error.error.errors.email) {
-                        this.errorEditMsg = error.error.errors.email[0];
-                    }
-                    if (error.error.errors.dni) {
-                        this.errorEditMsg = error.error.errors.dni[0];
-                    }
-                    this.errorEditData = true;
                 } else {
                     // on general error
-                    this.errorEdit = true;
                 }
             }
         );

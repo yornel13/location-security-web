@@ -93,11 +93,11 @@
             <div class="table-container container">
                 <div class="form-group row name-bounds-f">
                     <div class="col-sm-5 form-inline">
-                        <label class="mr-2">Nombre</label>
+                        <label class="mr-2"><b>Nombre</b></label>
                         <input #nameBoundField type="text" class="form-control-sm" id="namea" placeholder="Introduzca nombre" [(ngModel)]="nameBound" [ngModelOptions]="{standalone: true}" style="width: 300px">
                     </div>
                     <div class="col-sm-7 ml-auto">
-                        <label class="mr-2">Color</label>
+                        <label class="mr-2"><b>Color</b></label>
                         <input [(colorPicker)]="colorSelected" [style.background]="colorSelected">
                         <button class="btn btn-info" (click)="selectColor()"><i class="fas fa-save"></i></button>
                     </div>
@@ -137,8 +137,14 @@
         <div class="panel-body mt-2">
             <div class="table-container container">
                 <div class="form-group row name-bounds-f">
-                    <div class="col-sm-5">
-                        <input #nameBoundField type="text" class="form-control"  placeholder="Nombre del cerco" [(ngModel)]="nameBound" [ngModelOptions]="{standalone: true}">
+                    <div class="col-sm-5 form-inline">
+                        <label class="mr-2"><b>Nombre</b></label>
+                        <input #nameBoundField type="text" class="form-control-sm" id="namea" placeholder="Introduzca nombre" [(ngModel)]="nameBoundEdit" [ngModelOptions]="{standalone: true}" style="width: 300px">
+                    </div>
+                    <div class="col-sm-7 ml-auto">
+                        <label class="mr-2"><b>Color</b></label>
+                        <input [(colorPicker)]="colorEdit" [style.background]="colorEdit">
+                        <button class="btn btn-info"><i class="fas fa-save"></i></button>
                     </div>
                 </div>
                 <div class="form-group row" >
@@ -188,7 +194,7 @@
                 </div>
                 <div class="form-group col " style="display: flex; justify-content: space-between">
                     <div class="col-sm-5">
-                        <input  type="text" class="form-control"  placeholder="Buscar vehiculo"  >
+                        <input type="text" name="searchString" class="form-control" placeholder="Buscar Vehículo" name="search" [(ngModel)]="filter">
                     </div>
                     <a class="btn btn-secondary" data-toggle="modal" href="#algo" style="background-color: #28a745; border: none; color: #fff" ><i class="fas fa-plus-circle mr-2"></i>Agregar vehiculo</a>
                      <!--ADD VEHICLE MODAL -->
@@ -224,15 +230,15 @@
                                 </div>
                             </div>  
                 </div>
-                <div class="table mt-2">
-                    <table class="table table-striped">
-                        <thead>
+                <div class="table mt-2 container-fluid">
+                    <table class="table table-bordered">
+                        <thead  class="thead-light">
                             <th>IMEI</th>
                             <th>Alias</th>
                             <th>Eliminar</th>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let vehicle of vehiclesInBound ">
+                        <tr *ngFor="let vehicle of vehiclesInBound  | filter:filter">
                             <td>{{vehicle.imei}}</td>
                             <td>{{vehicle.alias}}</td>
                             <td>
