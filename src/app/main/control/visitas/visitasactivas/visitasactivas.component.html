@@ -234,41 +234,43 @@
                     </div>
                 </div>
               <hr>
-              <div class="form-group row">
-                <label for="creation" class="col-sm-12 col-form-label"><b>Vehiculo</b></label>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.vehicle.vehicle}}">
-                </div>
-                <label for="dni" class="col-sm-2 col-form-label">Placa</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.vehicle.plate}}">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Modelo</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.vehicle.model}}">
-                </div>
-                <label for="dni" class="col-sm-2 col-form-label">Color</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.vehicle.type}}">
-                </div>
-              </div>
-                <div [hidden]="!visi.vehicle.photo" class="form-group row">
-                    <label class="col-sm-2 col-form-label">Imagen</label>
-                    <a data-toggle="modal" href="#vehiphoto"><img src="{{visi.vehicle.photo}}" class="image-detail-photo"></a>
-                </div>
-                <!--Modal: modalVM-->
-                <div class="modal fade" id="vehiphoto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <!--Content-->
-                        <div class="modal-content">
-                            <!--Body-->
-                            <div class="modal-body mb-0 p-0">
-                                <img src="{{visi.vehicle.photo}}" class="image-detail-photo-full">
+                <div *ngIf="visi.vehicle">
+                    <div class="form-group row">
+                        <label for="creation" class="col-sm-12 col-form-label"><b>Vehiculo</b></label>
+                    </div>
+                    <div class="form-group row">
+                        <label for="dni" class="col-sm-2 col-form-label">Tipo</label>
+                        <div class="col-sm-4">
+                            <input type="text" readonly class="form-control" id="dni" value="{{visi.vehicle.vehicle}}">
+                        </div>
+                        <label for="dni" class="col-sm-2 col-form-label">Placa</label>
+                        <div class="col-sm-4">
+                            <input type="text" readonly class="form-control" id="dni" value="{{visi.vehicle.plate}}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="dni" class="col-sm-2 col-form-label">Modelo</label>
+                        <div class="col-sm-4">
+                            <input type="text" readonly class="form-control" id="dni" value="{{visi.vehicle.model}}">
+                        </div>
+                        <label for="dni" class="col-sm-2 col-form-label">Color</label>
+                        <div class="col-sm-4">
+                            <input type="text" readonly class="form-control" id="dni" value="{{visi.vehicle.type}}">
+                        </div>
+                    </div>
+                    <div [hidden]="!visi.vehicle.photo" class="form-group row">
+                        <label class="col-sm-2 col-form-label">Imagen</label>
+                        <a data-toggle="modal" href="#vehiphoto"><img src="{{visi.vehicle.photo}}" class="image-detail-photo"></a>
+                    </div>
+                    <!--Modal: modalVM-->
+                    <div class="modal fade" id="vehiphoto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <!--Content-->
+                            <div class="modal-content">
+                                <!--Body-->
+                                <div class="modal-body mb-0 p-0">
+                                    <img src="{{visi.vehicle.photo}}" class="image-detail-photo-full">
+                                </div>
                             </div>
                         </div>
                     </div>

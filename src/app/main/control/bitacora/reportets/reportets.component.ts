@@ -11,6 +11,8 @@ import { ExcelService } from '../../../../../model/excel/excel.services';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import * as geolib from 'geolib';
+import {Admin} from '../../../../../model/admin/admin';
+import {AuthenticationService} from '../../../../_services';
 
 @Component({
   selector: 'app-reportets',
@@ -116,13 +118,18 @@ export class ReportetsComponent {
     };
 
 
-  constructor(public router:Router, private bitacoraService:BitacoraService, private guardiaService:GuardService, 
-    private incidenciaService:IncidenciasService, private excelService:ExcelService ) { 
-  	this.getOpenAll();
-    this.getIncidencias();
-    this.getGuardias();
-    this.lista = true;
-    this.detalle = false;
+  constructor(
+        public router: Router,
+        private bitacoraService: BitacoraService,
+        private guardiaService: GuardService,
+        private incidenciaService: IncidenciasService,
+        private excelService: ExcelService,
+        private authService: AuthenticationService) {
+      this.getOpenAll();
+      this.getIncidencias();
+      this.getGuardias();
+      this.lista = true;
+      this.detalle = false;
   }
 
   // Values to bind to Leaflet Directive
@@ -534,18 +541,19 @@ export class ReportetsComponent {
         this.addcomment = true;
     }
 
-    guardarComentario(report_id){
-      var useradmin = "Usuario Admin";
-      var idAdmin = "1";
-      var report = report_id;
-      var comentario = this.newcoment;
-      const nuevocom : Bitacora = {
-        report_id: report,
-        text: comentario,
-        admin_id: idAdmin,
-        user_name: useradmin,
-      };
-      this.bitacoraService.addCommetario(nuevocom).then(
+    guardarComentario(report_id) {
+        const admin: Admin = this.authService.getUser();
+        const useradmin = admin.name + ' ' + admin.lastname;
+        const idAdmin = admin.id;
+        const report = report_id;
+        const comentario = this.newcoment;
+        const nuevocom: Bitacora = {
+            report_id: report,
+            text: comentario,
+            admin_id: idAdmin,
+            user_name: useradmin,
+        };
+        this.bitacoraService.addCommetario(nuevocom).then(
         success => {
           this.viewDetail(report_id);
           this.addcomment = false;

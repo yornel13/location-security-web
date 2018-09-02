@@ -3,6 +3,7 @@ export interface Alerta {
     guard_id?: string;
     imei?: string;
     cause?: string;
+    type?: string;
     message?: string;
     extra?: string;
     latitude?: string;

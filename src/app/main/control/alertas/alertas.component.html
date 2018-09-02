@@ -59,11 +59,12 @@
         <div class="form-group row">
           <label class="mr-2"><b>Tipo:</b></label>
           <select id="inputState" class="form-control-sm mr-2 filtros" [(ngModel)]="causaSelect" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
-            <option [ngValue]="0">Todas</option>
-            <option [ngValue]="1">SOS</option>
-            <option [ngValue]="2">Caída</option>
-            <option [ngValue]="3">Salida del Cerco</option>
-            <option [ngValue]="4">General</option>
+              <option [ngValue]="0">Todas</option>
+              <option [ngValue]="1">SOS</option>
+              <option [ngValue]="2">Caída</option>
+              <option [ngValue]="5">Incidencia</option>
+              <option [ngValue]="3">Salida del Cerco</option>
+              <option [ngValue]="4">General</option>
           </select>
           <label class="mr-2"><b>Guardia:</b></label>
           <select id="inputState" class="form-control-sm mr-2 filtros" [(ngModel)]="guardiaSelect" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
@@ -110,7 +111,13 @@
              <tbody>
               <tr *ngFor="let d of data | orderBy: key : reverse  | paginate: { itemsPerPage: numElement, currentPage: p }">
                 <td>{{d.id}}</td>
-                <td><span *ngIf="d.cause == 'SOS1'">SOS</span><span *ngIf="d.cause == 'DROP'">Caída</span><span *ngIf="d.cause == 'OUT_BOUNDS'">Salida del cerco</span><span *ngIf="d.cause == 'GENERAL'">General</span></td>
+                <td>
+                    <span *ngIf="d.cause == 'SOS1'">SOS</span>
+                    <span *ngIf="d.cause == 'DROP'">Caída</span>
+                    <span *ngIf="d.cause == 'OUT_BOUNDS'">Salida del cerco</span>
+                    <span *ngIf="d.cause == 'GENERAL'">General</span>
+                    <span *ngIf="d.cause == 'INCIDENCE'">Incidencia</span>
+                </td>
                 <td>{{d.message}}</td>
                 <td>{{d.guard_name}} {{d.guard_lastname}}</td>
                 <td>{{d.create_date}}</td>
@@ -153,24 +160,30 @@
           <div class="table-container container">
             <form  role="form">
               <div class="form-group row">
-                <label for="causa" class="col-sm-2 col-form-label">Causa</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="causa" value="{{detailcause.cause}}">
-                </div>
-                <label for="descrip" class="col-sm-2 col-form-label">Descripción</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="descrip" value="{{detailcause.message}}">
+                <label class="col-sm-2 col-form-label">Causa</label>
+                <div class="col-sm-10">
+                    <input *ngIf="detailcause.cause == 'SOS1'" type="text" readonly class="form-control" value="SOS">
+                    <input *ngIf="detailcause.cause == 'DROP'" type="text" readonly class="form-control" value="Caida">
+                    <input *ngIf="detailcause.cause == 'OUT_BOUNDS'" type="text" readonly class="form-control" value="Salida del cerco">
+                    <input *ngIf="detailcause.cause == 'GENERAL'" type="text" readonly class="form-control" value="General">
+                    <input *ngIf="detailcause.cause == 'INCIDENCE'" type="text" readonly class="form-control" value="Reporte de Incidencia">
                 </div>
               </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Descripción</label>
+                    <div class="col-sm-10">
+                        <textarea rows="5" cols="10" readonly class="form-control input">{{detailcause.message}}</textarea>
+                    </div>
+                </div>
               <div class="form-group row">
                 <label for="fecha" class="col-sm-2 col-form-label">Fecha</label>
                 <div class="col-sm-4">
                   <input type="text" readonly class="form-control" id="fecha" value="{{detailcause.create_date}}">
                 </div>
-                <label for="descrip" class="col-sm-2 col-form-label">Status</label>
+                <label for="descrip" class="col-sm-2 col-form-label">Estado</label>
                 <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="descrip" value="Finalizado" *ngIf="detailcause.status == 0">
-                  <input type="text" readonly class="form-control" id="descrip" value="Activa" *ngIf="detailcause.status == 1">
+                  <input type="text" readonly class="form-control" id="descrip" value="Aceptada" *ngIf="detailcause.status == 0">
+                  <input type="text" readonly class="form-control" id="descrip" value="Sin aceptar" *ngIf="detailcause.status == 1">
                 </div>
               </div>
               <div class="form-group row">

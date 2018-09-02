@@ -533,28 +533,30 @@ export class VisitasactivasComponent {
 
         doc.setFontType("bold");
         doc.text('Imagenes: ', 15, 76);
-        //vehiculo
-        doc.line(10, 125-padding, 200, 125-padding);
+        /* vehiculo */
+        if (this.visi.vehicle != null) {
+            doc.line(10, 125-padding, 200, 125-padding);
 
-        doc.text('Vehículo ', 15, 133-padding);
-  
-        doc.setFontType("bold");
-        doc.text('Nombre: ', 15, 140-padding);
-        doc.setFontType("normal");
-        doc.text(this.visi.vehicle.vehicle, 34, 140-padding);
-        doc.setFontType("bold");
-        doc.text('Placa: ', 100, 140-padding);
-        doc.setFontType("normal");
-        doc.text(this.visi.vehicle.plate, 117, 140-padding);  
+            doc.text('Vehículo ', 15, 133-padding);
 
-        doc.setFontType("bold");
-        doc.text('Modelo: ', 15, 147-padding);
-        doc.setFontType("normal");
-        doc.text(this.visi.vehicle.model, 34, 147-padding);
-        doc.setFontType("bold");
-        doc.text('Color: ', 100, 147-padding);
-        doc.setFontType("normal");
-        doc.text(this.visi.vehicle.type, 115, 147-padding);   
+            doc.setFontType("bold");
+            doc.text('Nombre: ', 15, 140-padding);
+            doc.setFontType("normal");
+            doc.text(this.visi.vehicle.vehicle, 34, 140-padding);
+            doc.setFontType("bold");
+            doc.text('Placa: ', 100, 140-padding);
+            doc.setFontType("normal");
+            doc.text(this.visi.vehicle.plate, 117, 140-padding);
+
+            doc.setFontType("bold");
+            doc.text('Modelo: ', 15, 147-padding);
+            doc.setFontType("normal");
+            doc.text(this.visi.vehicle.model, 34, 147-padding);
+            doc.setFontType("bold");
+            doc.text('Color: ', 100, 147-padding);
+            doc.setFontType("normal");
+            doc.text(this.visi.vehicle.type, 115, 147-padding);
+        }
         //funionario
         doc.line(10, 200-padding, 200, 200-padding);
 
@@ -644,7 +646,7 @@ export class VisitasactivasComponent {
                           this.toDataURL(this.visi.image_5).then(dataUrl => {
                             var imgData = dataUrl;
                             doc.addImage(imgData, 'JPEG', 215, 80, 40, 40);
-                            if(this.visi.vehicle.photo){
+                            if(this.visi.vehicle && this.visi.vehicle.photo){
                               this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                                 var imgData = dataUrl;
                                 doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -655,7 +657,7 @@ export class VisitasactivasComponent {
                             }
                           });
                         }else{
-                          if(this.visi.vehicle.photo){
+                          if(this.visi.vehicle && this.visi.vehicle.photo){
                               this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                                 var imgData = dataUrl;
                                 doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -667,7 +669,7 @@ export class VisitasactivasComponent {
                         }
                       });
                     }else{
-                      if(this.visi.vehicle.photo){
+                      if(this.visi.vehicle && this.visi.vehicle.photo){
                           this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                             var imgData = dataUrl;
                             doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -679,7 +681,7 @@ export class VisitasactivasComponent {
                     }
                   });
                 }else{
-                  if(this.visi.vehicle.photo){
+                  if(this.visi.vehicle && this.visi.vehicle.photo){
                     this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                       var imgData = dataUrl;
                       doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -691,7 +693,7 @@ export class VisitasactivasComponent {
                 }
               });
             }else{
-              if(this.visi.vehicle.photo){
+              if(this.visi.vehicle && this.visi.vehicle.photo){
                 this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                   var imgData = dataUrl;
                   doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -703,7 +705,7 @@ export class VisitasactivasComponent {
             }
           });
         }else{
-          if(this.visi.vehicle.photo){
+          if(this.visi.vehicle && this.visi.vehicle.photo){
             this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
               var imgData = dataUrl;
               doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -756,28 +758,30 @@ export class VisitasactivasComponent {
 
         doc.setFontType("bold");
         doc.text('Imagenes: ', 15, 71);
-        //vehiculo
-        doc.line(10, 125, 200, 125);
+        /* vehiculo */
+        if (this.visi.vehicle != null) {
+            doc.line(10, 125, 200, 125);
 
-        doc.text('Vehículo ', 15, 133);
-  
-        doc.setFontType("bold");
-        doc.text('Nombre: ', 15, 140);
-        doc.setFontType("normal");
-        doc.text(this.visi.vehicle.vehicle, 34, 140);
-        doc.setFontType("bold");
-        doc.text('Placa: ', 100, 140);
-        doc.setFontType("normal");
-        doc.text(this.visi.vehicle.plate, 117, 140);  
+            doc.text('Vehículo ', 15, 133);
 
-        doc.setFontType("bold");
-        doc.text('Modelo: ', 15, 147);
-        doc.setFontType("normal");
-        doc.text(this.visi.vehicle.model, 34, 147);
-        doc.setFontType("bold");
-        doc.text('Color: ', 100, 147);
-        doc.setFontType("normal");
-        doc.text(this.visi.vehicle.type, 115, 147);   
+            doc.setFontType("bold");
+            doc.text('Nombre: ', 15, 140);
+            doc.setFontType("normal");
+            doc.text(this.visi.vehicle.vehicle, 34, 140);
+            doc.setFontType("bold");
+            doc.text('Placa: ', 100, 140);
+            doc.setFontType("normal");
+            doc.text(this.visi.vehicle.plate, 117, 140);
+
+            doc.setFontType("bold");
+            doc.text('Modelo: ', 15, 147);
+            doc.setFontType("normal");
+            doc.text(this.visi.vehicle.model, 34, 147);
+            doc.setFontType("bold");
+            doc.text('Color: ', 100, 147);
+            doc.setFontType("normal");
+            doc.text(this.visi.vehicle.type, 115, 147);
+        }
         //funionario
         doc.line(10, 200, 200, 200);
 
@@ -867,7 +871,7 @@ export class VisitasactivasComponent {
                           this.toDataURL(this.visi.image_5).then(dataUrl => {
                             var imgData = dataUrl;
                             doc.addImage(imgData, 'JPEG', 215, 78, 40, 40);
-                            if(this.visi.vehicle.photo){
+                            if(this.visi.vehicle && this.visi.vehicle.photo){
                               this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                                 var imgData = dataUrl;
                                 doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
@@ -880,7 +884,7 @@ export class VisitasactivasComponent {
                             }
                           });
                         }else{
-                          if(this.visi.vehicle.photo){
+                          if(this.visi.vehicle && this.visi.vehicle.photo){
                               this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                                 var imgData = dataUrl;
                                 doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
@@ -894,7 +898,7 @@ export class VisitasactivasComponent {
                         }
                       });
                     }else{
-                      if(this.visi.vehicle.photo){
+                      if(this.visi.vehicle && this.visi.vehicle.photo){
                           this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                             var imgData = dataUrl;
                             doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
@@ -908,7 +912,7 @@ export class VisitasactivasComponent {
                     }
                   });
                 }else{
-                  if(this.visi.vehicle.photo){
+                  if(this.visi.vehicle && this.visi.vehicle.photo){
                     this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                       var imgData = dataUrl;
                       doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
@@ -922,7 +926,7 @@ export class VisitasactivasComponent {
                 }
               });
             }else{
-              if(this.visi.vehicle.photo){
+              if(this.visi.vehicle && this.visi.vehicle.photo){
                 this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                   var imgData = dataUrl;
                   doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
@@ -936,7 +940,7 @@ export class VisitasactivasComponent {
             }
           });
         }else{
-          if(this.visi.vehicle.photo){
+          if(this.visi.vehicle && this.visi.vehicle.photo){
             this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
               var imgData = dataUrl;
               doc.addImage(imgData, 'JPEG', 15, 152, 40, 40);
@@ -961,10 +965,16 @@ export class VisitasactivasComponent {
 
     excelDetalle() {
         var excel = [];
-        excel = [{'Entrada':this.visi.create_date, 'Latitud':this.visi.latitude, 'Longitude':this.visi.longitude, '':''},{'Entrada':'Materiales'},{'Entrada':this.visi.observation[0]}];
-        excel.push({'Entrada':'Vehiculo'});
-        excel.push({'Entrada':'Nombre', 'Latitud':'Placa', 'Longitude':'Modelo', '':'Color'});
-        excel.push({'Entrada':this.visi.vehicle.vehicle, 'Latitud':this.visi.vehicle.plate, 'Longitude':this.visi.vehicle.model, '':this.visi.vehicle.type});
+        excel = [
+            {'Entrada': this.visi.create_date, 'Latitud': this.visi.latitude, 'Longitude': this.visi.longitude, '': ''},
+            {'Entrada': 'Materiales'},
+            {'Entrada': this.visi.observation[0]}
+        ];
+        if (this.visi.vehicle) {
+            excel.push({'Entrada':'Vehiculo'});
+            excel.push({'Entrada':'Tipo', 'Latitud':'Placa', 'Longitude':'Modelo', '':'Color'});
+            excel.push({'Entrada':this.visi.vehicle.vehicle, 'Latitud':this.visi.vehicle.plate, 'Longitude':this.visi.vehicle.model, '':this.visi.vehicle.type});
+        }
         excel.push({'Entrada':'Funcionario'});
         excel.push({'Entrada':'Nombre', 'Latitud':'Apellido', 'Longitude':'Dirección', '':'Cédula'});
         excel.push({'Entrada':this.visi.visited.name, 'Latitud':this.visi.visited.lastname, 'Longitude':this.visi.visited.address, '':this.visi.visited.dni});

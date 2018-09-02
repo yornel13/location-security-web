@@ -12,6 +12,7 @@ import { ExcelService } from '../../../../../model/excel/excel.services';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import * as geolib from 'geolib';
+import {visit} from "../../../../../../node_modules/@angular/compiler-cli/src/ngtsc/util/src/visitor";
 
 @Component({
   selector: 'app-visitas',
@@ -802,29 +803,31 @@ export class VisitasComponent {
 
         doc.setFontType("bold");
         doc.text('Imagenes: ', 15, 76);
-        //vehiculo
-        doc.line(10, 125-padding, 200, 125-padding);
+        /* vehiculo */
+		if (this.visi.vehicle != null) {
+            doc.line(10, 125-padding, 200, 125-padding);
 
-        doc.text('Vehículo ', 15, 133-padding);
-  
-        doc.setFontType("bold");
-        doc.text('Nombre: ', 15, 140-padding);
-        doc.setFontType("normal");
-        doc.text(this.visi.vehicle.vehicle, 34, 140-padding);
-        doc.setFontType("bold");
-        doc.text('Placa: ', 100, 140-padding);
-        doc.setFontType("normal");
-        doc.text(this.visi.vehicle.plate, 117, 140-padding);  
+            doc.text('Vehículo ', 15, 133-padding);
 
-        doc.setFontType("bold");
-        doc.text('Modelo: ', 15, 147-padding);
-        doc.setFontType("normal");
-        doc.text(this.visi.vehicle.model, 34, 147-padding);
-        doc.setFontType("bold");
-        doc.text('Color: ', 100, 147-padding);
-        doc.setFontType("normal");
-        doc.text(this.visi.vehicle.type, 115, 147-padding);   
-        //funionario
+            doc.setFontType("bold");
+            doc.text('Tipo: ', 15, 140-padding);
+            doc.setFontType("normal");
+            doc.text(this.visi.vehicle.vehicle, 34, 140-padding);
+            doc.setFontType("bold");
+            doc.text('Placa: ', 100, 140-padding);
+            doc.setFontType("normal");
+            doc.text(this.visi.vehicle.plate, 117, 140-padding);
+
+            doc.setFontType("bold");
+            doc.text('Modelo: ', 15, 147-padding);
+            doc.setFontType("normal");
+            doc.text(this.visi.vehicle.model, 34, 147-padding);
+            doc.setFontType("bold");
+            doc.text('Color: ', 100, 147-padding);
+            doc.setFontType("normal");
+            doc.text(this.visi.vehicle.type, 115, 147-padding);
+        }
+        /* funionario */
         doc.line(10, 200-padding, 200, 200-padding);
 
         doc.setFontType("bold");
@@ -913,7 +916,7 @@ export class VisitasComponent {
                           this.toDataURL(this.visi.image_5).then(dataUrl => {
                             var imgData = dataUrl;
                             doc.addImage(imgData, 'JPEG', 215, 80, 40, 40);
-                            if(this.visi.vehicle.photo){
+                            if(this.visi.vehicle && this.visi.vehicle.photo){
                               this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                                 var imgData = dataUrl;
                                 doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -924,7 +927,7 @@ export class VisitasComponent {
                             }
                           });
                         }else{
-                          if(this.visi.vehicle.photo){
+                          if(this.visi.vehicle && this.visi.vehicle.photo){
                               this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                                 var imgData = dataUrl;
                                 doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -936,7 +939,7 @@ export class VisitasComponent {
                         }
                       });
                     }else{
-                      if(this.visi.vehicle.photo){
+                      if(this.visi.vehicle && this.visi.vehicle.photo){
                           this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                             var imgData = dataUrl;
                             doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -948,7 +951,7 @@ export class VisitasComponent {
                     }
                   });
                 }else{
-                  if(this.visi.vehicle.photo){
+                  if(this.visi.vehicle && this.visi.vehicle.photo){
                     this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                       var imgData = dataUrl;
                       doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -960,7 +963,7 @@ export class VisitasComponent {
                 }
               });
             }else{
-              if(this.visi.vehicle.photo){
+              if(this.visi.vehicle && this.visi.vehicle.photo){
                 this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                   var imgData = dataUrl;
                   doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -972,7 +975,7 @@ export class VisitasComponent {
             }
           });
         }else{
-          if(this.visi.vehicle.photo){
+          if(this.visi.vehicle && this.visi.vehicle.photo){
             this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
               var imgData = dataUrl;
               doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -1035,28 +1038,30 @@ export class VisitasComponent {
 
         doc.setFontType("bold");
         doc.text('Imagenes: ', 15, 76);
-        //vehiculo
-        doc.line(10, 125-padding, 200, 125-padding);
+        /* vehiculo */
+        if (this.visi.vehicle != null) {
+            doc.line(10, 125-padding, 200, 125-padding);
 
-        doc.text('Vehículo ', 15, 133-padding);
-  
-        doc.setFontType("bold");
-        doc.text('Nombre: ', 15, 140-padding);
-        doc.setFontType("normal");
-        doc.text(this.visi.vehicle.vehicle, 34, 140-padding);
-        doc.setFontType("bold");
-        doc.text('Placa: ', 100, 140-padding);
-        doc.setFontType("normal");
-        doc.text(this.visi.vehicle.plate, 117, 140-padding);  
+            doc.text('Vehículo ', 15, 133-padding);
 
-        doc.setFontType("bold");
-        doc.text('Modelo: ', 15, 147-padding);
-        doc.setFontType("normal");
-        doc.text(this.visi.vehicle.model, 34, 147-padding);
-        doc.setFontType("bold");
-        doc.text('Color: ', 100, 147-padding);
-        doc.setFontType("normal");
-        doc.text(this.visi.vehicle.type, 115, 147-padding);   
+            doc.setFontType("bold");
+            doc.text('Tipo: ', 15, 140-padding);
+            doc.setFontType("normal");
+            doc.text(this.visi.vehicle.vehicle, 34, 140-padding);
+            doc.setFontType("bold");
+            doc.text('Placa: ', 100, 140-padding);
+            doc.setFontType("normal");
+            doc.text(this.visi.vehicle.plate, 117, 140-padding);
+
+            doc.setFontType("bold");
+            doc.text('Modelo: ', 15, 147-padding);
+            doc.setFontType("normal");
+            doc.text(this.visi.vehicle.model, 34, 147-padding);
+            doc.setFontType("bold");
+            doc.text('Color: ', 100, 147-padding);
+            doc.setFontType("normal");
+            doc.text(this.visi.vehicle.type, 115, 147-padding);
+        }
         //funionario
         doc.line(10, 200-padding, 200, 200-padding);
 
@@ -1146,7 +1151,7 @@ export class VisitasComponent {
                           this.toDataURL(this.visi.image_5).then(dataUrl => {
                             var imgData = dataUrl;
                             doc.addImage(imgData, 'JPEG', 215, 78, 40, 40);
-                            if(this.visi.vehicle.photo){
+                            if(this.visi.vehicle && this.visi.vehicle.photo){
                               this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                                 var imgData = dataUrl;
                                 doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -1159,7 +1164,7 @@ export class VisitasComponent {
                             }
                           });
                         }else{
-                          if(this.visi.vehicle.photo){
+                          if(this.visi.vehicle && this.visi.vehicle.photo){
                               this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                                 var imgData = dataUrl;
                                 doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -1173,7 +1178,7 @@ export class VisitasComponent {
                         }
                       });
                     }else{
-                      if(this.visi.vehicle.photo){
+                      if(this.visi.vehicle && this.visi.vehicle.photo){
                           this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                             var imgData = dataUrl;
                             doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -1187,7 +1192,7 @@ export class VisitasComponent {
                     }
                   });
                 }else{
-                  if(this.visi.vehicle.photo){
+                  if(this.visi.vehicle && this.visi.vehicle.photo){
                     this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                       var imgData = dataUrl;
                       doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -1201,7 +1206,7 @@ export class VisitasComponent {
                 }
               });
             }else{
-              if(this.visi.vehicle.photo){
+              if(this.visi.vehicle && this.visi.vehicle.photo){
                 this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
                   var imgData = dataUrl;
                   doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -1215,7 +1220,7 @@ export class VisitasComponent {
             }
           });
         }else{
-          if(this.visi.vehicle.photo){
+          if(this.visi.vehicle && this.visi.vehicle.photo){
             this.toDataURL(this.visi.vehicle.photo).then(dataUrl => {
               var imgData = dataUrl;
               doc.addImage(imgData, 'JPEG', 15, 152-padding, 40, 40);
@@ -1240,10 +1245,16 @@ export class VisitasComponent {
 
     excelDetalle() {
         var excel = [];
-        excel = [{'Entrada':this.visi.create_date, 'Latitud':this.visi.latitude, 'Longitude':this.visi.longitude, '':''},{'Entrada':'Materiales'},{'Entrada':this.visi.observation[0]}];
-        excel.push({'Entrada':'Vehiculo'});
-        excel.push({'Entrada':'Nombre', 'Latitud':'Placa', 'Longitude':'Modelo', '':'Color'});
-        excel.push({'Entrada':this.visi.vehicle.vehicle, 'Latitud':this.visi.vehicle.plate, 'Longitude':this.visi.vehicle.model, '':this.visi.vehicle.type});
+        excel = [
+        	{'Entrada': this.visi.create_date, 'Latitud': this.visi.latitude, 'Longitude': this.visi.longitude, '': ''},
+			{'Entrada': 'Materiales'},
+			{'Entrada': this.visi.observation[0]}
+		];
+        if (this.visi.vehicle) {
+            excel.push({'Entrada':'Vehiculo'});
+            excel.push({'Entrada':'Tipo', 'Latitud':'Placa', 'Longitude':'Modelo', '':'Color'});
+            excel.push({'Entrada':this.visi.vehicle.vehicle, 'Latitud':this.visi.vehicle.plate, 'Longitude':this.visi.vehicle.model, '':this.visi.vehicle.type});
+		}
         excel.push({'Entrada':'Funcionario'});
         excel.push({'Entrada':'Nombre', 'Latitud':'Apellido', 'Longitude':'Dirección', '':'Cédula'});
         excel.push({'Entrada':this.visi.visited.name, 'Latitud':this.visi.visited.lastname, 'Longitude':this.visi.visited.address, '':this.visi.visited.dni});

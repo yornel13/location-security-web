@@ -136,6 +136,7 @@ export class BitacoraService {
     }
 
     addCommetario(comentario: Bitacora) {
+        console.log(comentario);
         return this.http.post(this.BITAC_URL+'-reply', comentario, httpOptions).toPromise()
             .then((response) => response);
     }

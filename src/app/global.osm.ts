@@ -3,6 +3,21 @@ import * as L from 'leaflet';
 
 @Injectable()
 export class GlobalOsm {
+
+  readonly OUT_BOUNDS = 'OUT_BOUNDS';
+  readonly IN_BOUNDS = 'IN_BOUNDS';
+  readonly IGNITION_ON = 'IGNITION_ON';
+  readonly IGNITION_OFF = 'IGNITION_OFF';
+  readonly SPEED_MAX = 'SPEED_MAX';
+  readonly GENERAL = 'GENERAL';
+  readonly INIT_WATCH = 'INIT_WATCH';
+  readonly FINISH_WATCH = 'FINISH_WATCH';
+  readonly INCIDENCE = 'INCIDENCE';
+  readonly DROP = 'DROP';
+  readonly SOS1 = 'SOS1';
+  readonly INCIDENCE_LEVEL_1 = 'INCIDENCE_LEVEL_1';
+  readonly INCIDENCE_LEVEL_2 = 'INCIDENCE_LEVEL_2';
+
     readonly LAYER_OSM = {
         id: 'openstreetmap',
         name: 'Open Street Map',

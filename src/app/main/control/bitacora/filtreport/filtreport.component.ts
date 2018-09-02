@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { BitacoraService } from '../../../../../model/bitacora/bitacora.service';
 import { Bitacora } from '../../../../../model/bitacora/bitacora';
 import { GuardService } from '../../../../../model/guard/guard.service';
@@ -10,58 +10,61 @@ import { ExcelService } from '../../../../../model/excel/excel.services';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import * as geolib from 'geolib';
+import {isNumber} from 'util';
+import {AuthenticationService} from '../../../../_services';
+import {Admin} from '../../../../../model/admin/admin';
 
 @Component({
   selector: 'app-filtreport',
   templateUrl: './filtreport.component.html',
   styleUrls: ['./filtreport.component.css']
 })
-export class FiltreportComponent {
-  //general
-  reportes:any = [];
-  data:any = [];
-  open:any = [];
-  reopen:any = [];
-  report:any = [];
-  comentarios:any = [];
-  coment:any = [];
-  resolved:number = 0;
-  change:any = [];
-  incidencias:any = [];
-  inciden:any = [];
-  incidenSelect:number = 0;
-  haycomentarios:boolean = false;
-  valueDate:any = [];
-  dateSelect:any = '';
-  filtro:boolean = true;
-  guardiaSelect:number = 0;
-  filtroSelect:number = 0;
-  guardias:any = [];
-  guard:any = [];
-  //vistas
-  lista:boolean;
-  detalle:boolean;
-  //comentario
-  newcoment:string = '';
-  addcomment:boolean = false;
-  //status
-  status:number = 0;
-  numElement:number = 10;
-  //new chart
-  dataSource:any = {};
-  valores:number[] = [2,2];
-  names:string[] = ["Robo", "Incendio"];
-  datos:any = [{"label": "Robo",
+export class FiltreportComponent implements OnInit {
+  /* general */
+  reportes: any = [];
+  data: any = [];
+  open: any = [];
+  reopen: any = [];
+  report: any = [];
+  comentarios: any = [];
+  coment: any = [];
+  resolved: number = 0;
+  change: any = [];
+  incidencias: any = [];
+  inciden: any = [];
+  incidenSelect: number = 0;
+  haycomentarios: boolean = false;
+  valueDate: any = [];
+  dateSelect: any = '';
+  filtro: boolean = true;
+  guardiaSelect: number = 0;
+  filtroSelect: number = 0;
+  guardias: any = [];
+  guard: any = [];
+  /* vistas */
+  lista: boolean;
+  detalle: boolean;
+  /* comentario */
+  newcoment: string = '';
+  addcomment: boolean = false;
+  /* status */
+  status: number = 0;
+  numElement: number = 10;
+  /* new chart */
+  dataSource: any = {};
+  valores: number[] = [2,2];
+  names: string[] = ["Robo", "Incendio"];
+  datos: any = [{"label": "Robo",
                 "value": 2},
                 {"label": "Incendio",
                 "value": 2}];
-  //exportaciones
+  /* exportaciones */
   contpdf:any = [];
   info: any = [];
-  //order table
+  /* order table */
   key: string = 'id';
   reverse: boolean = true;
-  //filter chart
+  /* filter chart */
   rangeday:boolean = true;
   desde:string = "";
   hasta:string = "";
@@ -125,14 +128,20 @@ export class FiltreportComponent {
         })
     };
 
-  constructor(public router:Router, private bitacoraService:BitacoraService, private guardiaService:GuardService, 
-    private incidenciaService:IncidenciasService, private excelService:ExcelService) { 
-  	this.getIncidencias();
-    this.getAll();
-  	this.getGuardias();
-    this.lista = true;
-    this.detalle = false;
-    this.dataSource = {
+    constructor(
+            public router: Router,
+            private bitacoraService: BitacoraService,
+            private guardiaService: GuardService,
+            private incidenciaService: IncidenciasService,
+            private excelService: ExcelService,
+            private route: ActivatedRoute,
+            private authService: AuthenticationService) {
+        this.getIncidencias();
+        this.getAll();
+        this.getGuardias();
+        this.lista = true;
+        this.detalle = false;
+        this.dataSource = {
             chart: {
                 "yAxisName": "Cantidad de reportes",
                 "yAxisMaxValue": 5
@@ -176,7 +185,7 @@ export class FiltreportComponent {
       this.zoom = 12;
       this.layersControlOptions = { position: 'bottomright' };
       var southWest = new L.LatLng(-2.100599,-79.560921);
-      var northEast = new L.LatLng(-2.030906,-79.568947);            
+      var northEast = new L.LatLng(-2.030906,-79.568947);
       var bounds = new L.LatLngBounds(southWest, northEast);
       if(this.data.length){
         var coord = [];
@@ -268,7 +277,7 @@ export class FiltreportComponent {
                   }
               }
           );
-          
+
           for(var i = 0; i < this.data.length; i++){
             if(this.data[i].resolved == 0){
               this.change[i] = 0;
@@ -299,7 +308,7 @@ export class FiltreportComponent {
                 hola++;
               }
             }
-          value[j] = hola; 
+          value[j] = hola;
       }
       return value;
     }
@@ -323,7 +332,7 @@ export class FiltreportComponent {
         var date1 = fecha1.replace('-','');
         var date11 = Number(date1.replace('-',''));
         var date2 = fecha2.replace('-','');
-        var date22 = Number(date2.replace('-',''));        
+        var date22 = Number(date2.replace('-',''));
 
         if(data.length == 0){
           value = [];
@@ -345,9 +354,9 @@ export class FiltreportComponent {
                   if(data[i].incidence_id == this.inciden[j].id){
                     hola++;
                   }
-                }                
+                }
               }
-            value[j] = hola; 
+            value[j] = hola;
         }
         return value;
       }
@@ -475,7 +484,7 @@ export class FiltreportComponent {
               valores = this.countIncidenDate(this.chartdata);
               for(var i=0; i<this.incidencias.total; i++){
                 if(nombres[i] != "General"){
-                  hola.push({"label":nombres[i], "value":valores[i]})                
+                  hola.push({"label":nombres[i], "value":valores[i]})
                 }
               }
               console.log(hola);
@@ -1136,20 +1145,21 @@ export class FiltreportComponent {
 
     }
 
-    agregarComentario(){
+    agregarComentario() {
         this.addcomment = true;
     }
 
-    guardarComentario(report_id){
-      var useradmin = "Usuario Admin";
-      var idAdmin = "1";
-      var report = report_id;
-      var comentario = this.newcoment;
-      const nuevocom : Bitacora = {
-        report_id: report,
-        text: comentario,
-        admin_id: idAdmin,
-        user_name: useradmin,
+    guardarComentario(report_id) {
+        const admin: Admin = this.authService.getUser();
+        const useradmin = admin.name + ' ' + admin.lastname;
+        const idAdmin = admin.id;
+        const report = report_id;
+        const comentario = this.newcoment;
+        const nuevocom: Bitacora = {
+            report_id: report,
+            text: comentario,
+            admin_id: idAdmin,
+            user_name: useradmin,
       };
       this.bitacoraService.addCommetario(nuevocom).then(
         success => {
@@ -1187,7 +1197,7 @@ export class FiltreportComponent {
               3: {columnWidth: 'auto'},
               4: {columnWidth: 20}
             }
-        });   
+        });
         doc.save('reportes.pdf');
     }
 
@@ -1216,7 +1226,7 @@ export class FiltreportComponent {
               3: {columnWidth: 'auto'},
               4: {columnWidth: 20}
             }
-        });   
+        });
         doc.autoPrint();
         window.open(doc.output('bloburl'), '_blank');
     }
@@ -1249,7 +1259,7 @@ export class FiltreportComponent {
         doc.setFontType("normal");
         var splitTitle = doc.splitTextToSize(this.report.observation, 120);
         //doc.text(15, 20, splitTitle);
-        doc.text(splitTitle, 50, 57);        
+        doc.text(splitTitle, 50, 57);
 
         doc.setFontType("bold");
         doc.text('Latitud: ', 15, 71);
@@ -1322,7 +1332,7 @@ export class FiltreportComponent {
         doc.setFontType("normal");
         var splitTitle = doc.splitTextToSize(this.report.observation, 120);
         //doc.text(15, 20, splitTitle);
-        doc.text(splitTitle, 50, 57);        
+        doc.text(splitTitle, 50, 57);
 
         doc.setFontType("bold");
         doc.text('Latitud: ', 15, 71);
@@ -1390,4 +1400,12 @@ export class FiltreportComponent {
     public doughnutChartType:string = 'doughnut';
     public doughnutColors:any[] = [{ backgroundColor: ['#dc3545', '#ffc107'] }]
 
+    ngOnInit() {
+        this.route.url.subscribe(value => {
+            const reportId = value[value.length - 1].path;
+            if (Number(reportId)) {
+                this.viewDetail(reportId);
+            }
+        });
+    }
 }

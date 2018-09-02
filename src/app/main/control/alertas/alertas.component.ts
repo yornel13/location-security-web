@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { AlertaService } from '../../../../model/alerta/alerta.service';
 import { Alerta } from '../../../../model/alerta/alerta';
 import { GuardService } from '../../../../model/guard/guard.service';
@@ -17,7 +17,7 @@ import * as geolib from 'geolib';
   templateUrl: './alertas.component.html',
   styleUrls: ['./alertas.component.css']
 })
-export class AlertasComponent  {
+export class AlertasComponent implements OnInit {
   alertas:any = undefined;
   data:any = undefined;
   guardias:any = undefined;
@@ -104,7 +104,11 @@ export class AlertasComponent  {
     };
 
 
-  constructor(private alertaService:AlertaService, private guardiaService:GuardService, private excelService:ExcelService) { 
+  constructor(
+        private alertaService:AlertaService,
+        private guardiaService:GuardService,
+        private excelService:ExcelService,
+        private route: ActivatedRoute) {
   	this.getAll();
   	this.getGuardias();
   	this.doughnutChartData = [3, 3, 0];
@@ -167,7 +171,7 @@ export class AlertasComponent  {
     	this.zoom = 12;
     	this.layersControlOptions = { position: 'bottomright' };
       var southWest = new L.LatLng(-2.100599,-79.560921);
-      var northEast = new L.LatLng(-2.030906,-79.568947);            
+      var northEast = new L.LatLng(-2.030906,-79.568947);
       var bounds = new L.LatLngBounds(southWest, northEast);
     	if(this.data.length){
     		var coord = [];
@@ -214,7 +218,7 @@ export class AlertasComponent  {
 		        var cause = "";
 		        for(var i=0; i<this.data.length; i++){
 		        	this.data[i].id = Number(this.data[i].id);
-		        	
+
 		        	if(this.data[i].status == 1){
 		        		status = "Activa"
 		        	}else{
@@ -340,17 +344,19 @@ export class AlertasComponent  {
 	getAlerts() {
 		//formateo de causas
 		var cause = "all";
-		if(this.causaSelect == 0){
+		if (this.causaSelect == 0){
 			cause = "all";
-		}else if(this.causaSelect == 1){
+		} else if(this.causaSelect == 1){
 			cause = "SOS1";
-		}else if(this.causaSelect == 2){
+		} else if(this.causaSelect == 2){
 			cause = "DROP";
-		}else if(this.causaSelect == 3){
+		} else if(this.causaSelect == 3){
 			cause = "OUT_BOUNDS";
-		}else if(this.causaSelect == 4){
-			cause = "GENERAL";
-		}
+        } else if(this.causaSelect == 4){
+            cause = "GENERAL";
+        } else if(this.causaSelect == 5){
+            cause = "INCIDENCE";
+        }
 		//formateo de fecha
 		var fecha1 = String(this.desde);
     var valuesdate1 = fecha1.split('-');
@@ -557,7 +563,7 @@ export class AlertasComponent  {
 			    4: {columnWidth: 'auto'},
 			    5: {columnWidth: 20},
             }
-        });   
+        });
         doc.save('alertas.pdf');
     }
 
@@ -587,7 +593,7 @@ export class AlertasComponent  {
 			    4: {columnWidth: 'auto'},
 			    5: {columnWidth: 20},
             }
-        });   
+        });
         doc.autoPrint();
         window.open(doc.output('bloburl'), '_blank');
     }
@@ -643,7 +649,7 @@ export class AlertasComponent  {
         doc.setFontType("normal");
         doc.text(this.detailcause.longitude.toString(), 123, 64);
 
-        doc.save('alertaDetail.pdf');        
+        doc.save('alertaDetail.pdf');
     }
 
     printDetalle() {
@@ -693,7 +699,7 @@ export class AlertasComponent  {
 
         doc.autoPrint();
         window.open(doc.output('bloburl'), '_blank');
-        
+
     }
 
     excelDetalle() {
@@ -706,6 +712,15 @@ export class AlertasComponent  {
         }
         excel = [{'Causa': this.detailcause.cause, 'Descripción':this.detailcause.message, 'Fecha':this.detailcause.create_date, 'Status':status, 'Longitud':this.detailcause.longitude.toString(), 'Latitud':this.detailcause.latitude.toString()}];
         this.excelService.exportAsExcelFile(excel, 'admindetail');
+    }
+
+    ngOnInit() {
+      this.route.url.subscribe(value => {
+        const alertId = value[value.length - 1].path;
+        if (Number(alertId)) {
+          this.viewDetail(alertId);
+        }
+      });
     }
 
 }
