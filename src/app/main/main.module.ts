@@ -39,6 +39,7 @@ import {ControlModule} from './control/control.module';
 import {CardAlertComponent} from './monitoring/aside/card.alert.component';
 import {ItemGuardComponent} from './messaging/item.guard.component';
 import {ChatComponent} from './chat/chat.component';
+import {PopupAlertComponent} from './monitoring/map/popup.alert.component';
 
 export function controlModuleLoader() {
     return ControlModule;
@@ -82,10 +83,10 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
   ],
   providers: [
       VehiclesService, WatchesService, AsideService, TabletService ],
-  entryComponents: [ PopupVehicleComponent, PopupWatchComponent, CardVehicleComponent,
+  entryComponents: [ PopupVehicleComponent, PopupWatchComponent, PopupAlertComponent, CardVehicleComponent,
       CardTabletComponent, ItemGuardComponent ],
   declarations: [
-      MonitoringComponent, MapOsmComponent, PopupVehicleComponent, PopupWatchComponent,
+      MonitoringComponent, MapOsmComponent, PopupVehicleComponent, PopupWatchComponent, PopupAlertComponent,
       HeaderComponent, AsideComponent, MainComponent,
       DashboardComponent, ReportComponent, MessagingComponent, ChatComponent,
       CardVehicleComponent, CardTabletComponent, FilterPipe, CardAlertComponent, ItemGuardComponent

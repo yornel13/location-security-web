@@ -1,10 +1,11 @@
 import {
-    Component,
-    ComponentFactoryResolver,
-    Injector,
-    Input,
-    OnChanges,
-    SimpleChanges } from '@angular/core';
+  Component,
+  ComponentFactoryResolver,
+  Injector,
+  Input,
+  OnChanges, OnInit,
+  SimpleChanges
+} from '@angular/core';
 import { Vehicle } from '../../../../model/vehicle/vehicle';
 import { PopupVehicleComponent } from './popup.vehicle.component';
 import * as L from 'leaflet';
@@ -15,13 +16,14 @@ import {AsideService} from '../aside/aside.service';
 import {GlobalOsm} from '../../../global.osm';
 import {Alerta} from '../../../../model/alerta/alerta';
 import {AngularFirestore} from 'angularfire2/firestore';
+import {PopupAlertComponent} from './popup.alert.component';
 
 @Component({
     selector : 'app-map-osm',
     templateUrl : './map.osm.html',
     styleUrls: ['./map.osm.css']
 })
-export class MapOsmComponent implements OnChanges {
+export class MapOsmComponent implements OnChanges, OnInit {
     @Input()
     vehicles: Vehicle[] = [];
     @Input()
@@ -36,10 +38,11 @@ export class MapOsmComponent implements OnChanges {
     markerChanged;
     @Input()
     markersData: any[] = [];
-    @Input() showMarker = {vehicles: true , watches: true , bombas: true, noGroup: true, message: ''};
+    @Input()
+    showMarker;
     markerClusterGroup: L.MarkerClusterGroup;
     markerClusterData: any[] = [];
-    alertsData: any[] = [];
+    alertsMarketData: any[] = [];
     markerClusterOptions: L.MarkerClusterGroupOptions;
     center = L.latLng(([ this.lat, this.lng ]));
     map: any;
@@ -71,8 +74,52 @@ export class MapOsmComponent implements OnChanges {
         this.globalOSM.setupLayer(this.map);
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnInit() {
+      this.db.collection<Alerta>('alerts').valueChanges()
+        .subscribe((alerts: Alerta[]) => {
+          const data: any[] = [];
+          alerts.forEach((alert: Alerta) => {
+            let imageIcon;
+            if (alert.type === this.globalOSM.DROP) {
+              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/falldown.png'})};
+            } else if (alert.type === this.globalOSM.SOS1) {
+              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/sos.png'})};
+            } else if (alert.type === this.globalOSM.IGNITION_ON) {
+              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/on.png'})};
+            } else if (alert.type === this.globalOSM.IGNITION_OFF) {
+              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/off.png'})};
+            } else if (alert.type === this.globalOSM.SPEED_MAX) {
+              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/speed.png'})};
+            } else if (alert.type === this.globalOSM.INIT_WATCH) {
+              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/watch_start.png'})};
+            } else if (alert.type === this.globalOSM.FINISH_WATCH) {
+              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/watch_end.png'})};
+            } else if (alert.type === this.globalOSM.OUT_BOUNDS) {
+              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/outside.png'})};
+            } else if (alert.type === this.globalOSM.IN_BOUNDS) {
+              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/inside.png'})};
+            } else {
+              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/report.png'})};
+            }
+            if (Number(alert.latitude) && Number(alert.longitude)) {
+              const m = L.marker([+alert.latitude, +alert.longitude], imageIcon);
+              const factory = this.resolver.resolveComponentFactory(PopupAlertComponent);
+              const component = factory.create(this.injector);
+              const popupContent = component.location.nativeElement;
+              component.instance.alert = alert;
+              component.changeDetectorRef.detectChanges();
+              m.bindPopup(popupContent).openPopup();
+              data.push(m);
+            }
+          });
+          this.alertsMarketData = data;
+          if (this.showMarker.alerts) {
+            this.markerClusterData = this.alertsMarketData;
+          }
+        });
+    }
 
+    ngOnChanges(changes: SimpleChanges) {
         this.setupMarkers(this.showMarker);
 
         if (changes[this.lat]) {
@@ -81,45 +128,6 @@ export class MapOsmComponent implements OnChanges {
         if (changes['lat']) {
             this.setCenter();
         }
-
-        this.db.collection<Alerta>('alerts').valueChanges()
-          .subscribe((alerts: Alerta[]) => {
-            const data: any[] = [];
-            this.alertsData = alerts.sort((n1, n2) => {
-              if (n1.create_date > n2.create_date) { return -1; }
-              if (n1.create_date < n2.create_date) {return 1; }
-              return 0;
-            });
-            this.alertsData.forEach(alert => {
-              let imageIcon;
-              if (alert.type == this.globalOSM.DROP) {
-                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/falldown.png'})};
-              } else if (alert.type == this.globalOSM.SOS1) {
-                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/sos.png'})};
-              } else if (alert.type == this.globalOSM.IGNITION_ON) {
-                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/on.png'})};
-              } else if (alert.type == this.globalOSM.IGNITION_OFF) {
-                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/off.png'})};
-              } else if (alert.type == this.globalOSM.SPEED_MAX) {
-                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/speed.png'})};
-              } else if (alert.type == this.globalOSM.INIT_WATCH) {
-                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/watch_start.png'})};
-              } else if (alert.type == this.globalOSM.FINISH_WATCH) {
-                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/watch_end.png'})};
-              } else if (alert.type == this.globalOSM.OUT_BOUNDS) {
-                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/outside.png'})};
-              } else if (alert.type == this.globalOSM.IN_BOUNDS) {
-                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/inside.png'})};
-              } else {
-                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/report.png'})};
-              }
-              if (Number(alert.latitude) && Number(alert.longitude)) {
-                const m = L.marker([alert.latitude, alert.longitude], imageIcon);
-                data.push(m);
-              }
-            });
-            this.markerClusterData = data;
-          });
     }
 
     markerClusterReady(group: L.MarkerClusterGroup) {
@@ -192,7 +200,11 @@ export class MapOsmComponent implements OnChanges {
                 }
             }
         });
-        //this.markerClusterData = data;
+        if (!this.showMarker.alerts) {
+          this.markerClusterData = data;
+        } else {
+          this.markerClusterData = this.alertsMarketData;
+        }
     }
 
     setCenter() {

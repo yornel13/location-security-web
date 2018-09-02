@@ -32,17 +32,17 @@ export class AsideComponent implements OnInit, OnChanges {
 
     alerts0: Alerta[] = [];
     alerts1: Alerta[] = [];
-    isShow = false;
     @Input() vehicles: Vehicle[] = [];
     @Input() watches: Watch[] = [];
     @Input() markersData: any[] = [];
-    @Output() showMarker = {vehicles: true , watches: true , bombas: true, noGroups: true, message: ''};
+    @Output() showMarker = {alerts: true, vehicles: true , watches: true , bombas: true, noGroups: true, message: ''};
     @Output() markerChanged = new EventEmitter();
     @Output() markerFocused = new EventEmitter();
     @Output() vehiclesCheck = true;
     @Output() watchesCheck = true;
     @Output() bombasCheck = true;
     @Output() noGroupCheck = true;
+    @Output() isShow = false;
     noCards = false;
     showCardContainer = true;
     search: any;
@@ -119,23 +119,38 @@ export class AsideComponent implements OnInit, OnChanges {
         );
     }
 
+    selectTab(tab) {
+      if (tab.match('alerts')) {
+        this.isShow = false;
+        this.showMarker.alerts = true;
+        this.showMarker.message = tab;
+        this.markerChanged.emit(this.showMarker);
+      }
+      if (tab.match('devices')) {
+        this.isShow = true;
+        this.showMarker.alerts = false;
+        this.showMarker.message = tab;
+        this.markerChanged.emit(this.showMarker);
+      }
+    }
+
     selectMarkersOpts(message) {
         if (message.match('showVehicles')) {
             this.vehiclesCheck = !this.vehiclesCheck;
-            this.showMarker.vehicles =  this.vehiclesCheck;
-            this.showMarker.message =  message;
+            this.showMarker.vehicles = this.vehiclesCheck;
+            this.showMarker.message = message;
             this.markerChanged.emit(this.showMarker);
         }
         if (message.match('showBombas')) {
             this.bombasCheck = !this.bombasCheck;
             this.showMarker.bombas = this.bombasCheck;
-            this.showMarker.message =  message;
+            this.showMarker.message = message;
             this.markerChanged.emit(this.showMarker);
         }
         if (message.match('showTablets')) {
             this.watchesCheck = !this.watchesCheck;
             this.showMarker.watches = this.watchesCheck;
-            this.showMarker.message =  message;
+            this.showMarker.message = message;
             this.markerChanged.emit(this.showMarker);
         }
         if (!this.vehiclesCheck && !this.bombasCheck && !this.watchesCheck) {

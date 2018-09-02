@@ -21,10 +21,10 @@
   <div class="container">
     <ul class="nav nav-tabs" id="myTab" role="tablist" style="height: 40px">
       <li class="nav-item">
-        <a (click)="isShow = false" class="nav-link active" data-toggle="tab" role="tab" aria-selected="true" href="#alerts" style="height: 40px; border-radius: 0; padding-top: 0"><p style="margin: 5px;">Alertas</p></a>
+        <a (click)="selectTab('alerts')" class="nav-link active" data-toggle="tab" role="tab" aria-selected="true" href="#alerts" style="height: 40px; border-radius: 0; padding-top: 0"><p style="margin: 5px;">Alertas</p></a>
       </li>
       <li class="nav-item">
-        <a (click)="isShow = true" class="nav-link" data-toggle="tab" role="tab" aria-selected="false" href="#devices" style="height: 40px; border-radius: 0; padding-top: 0"><p style="margin: 5px;">Dispositivos</p></a>
+        <a (click)="selectTab('devices')" class="nav-link" data-toggle="tab" role="tab" aria-selected="false" href="#devices" style="height: 40px; border-radius: 0; padding-top: 0"><p style="margin: 5px;">Dispositivos</p></a>
       </li>
       <li class="nav-item dropdown" id="dropdown" *ngIf="isShow" style="background-color: white">
         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" style="height: 40px; border-radius: 0; padding-top: 16px"></a>

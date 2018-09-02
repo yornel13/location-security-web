@@ -35,7 +35,7 @@ export class MonitoringComponent implements OnInit {
     markersData: any[] = [];
     error: string;
     @Input() markerChanged: boolean;
-    @Input() showMarker = {vehicles: true , watches: true , bombas: true, noGroup: true, message: ''};
+    @Input() showMarker = {alerts: true, vehicles: true , watches: true , bombas: true, noGroup: true, message: ''};
     @Input() latlng = {lat: null , lng: null};
 
     constructor(private vehiclesService: VehiclesService, private tabletService: TabletService) {}
@@ -97,16 +97,24 @@ export class MonitoringComponent implements OnInit {
     }
 
     setMarkerChanged(showMarker) {
+      if (showMarker.message === 'alerts') {
+        this.markerChanged = !this.markerChanged;
+        this.showMarker = showMarker;
+      }
+      if (showMarker.message === 'devices') {
+        this.markerChanged = !this.markerChanged;
+        this.showMarker = showMarker;
+      }
       if (showMarker.message === 'showVehicles') {
-          this.markerChanged = showMarker.vehicles;
+          this.markerChanged = !this.markerChanged;
           this.showMarker = showMarker;
       }
       if (showMarker.message === 'showBombas') {
-          this.markerChanged = showMarker.bombas;
+          this.markerChanged = !this.markerChanged;
           this.showMarker = showMarker;
       }
       if (showMarker.message === 'showTablets') {
-          this.markerChanged = showMarker.watches;
+          this.markerChanged = !this.markerChanged;
           this.showMarker = showMarker;
       }
     }
