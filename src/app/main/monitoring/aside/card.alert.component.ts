@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Alerta} from '../../../../model/alerta/alerta';
+import {AsideService} from './aside.service';
 
 @Component({
     selector: 'app-card-alert',
@@ -9,9 +10,12 @@ import {Alerta} from '../../../../model/alerta/alerta';
 export class CardAlertComponent implements OnInit {
 
     @Output() solveAlert = new EventEmitter<Alerta>();
+    @Output() latlng = {lat: null , lng: null};
     @Input() alert: Alerta;
     title: string;
     date: Date;
+
+    constructor(private asideService: AsideService) {}
 
     ngOnInit() {
         if (this.alert.cause === 'SOS1') {
@@ -33,4 +37,11 @@ export class CardAlertComponent implements OnInit {
     callParent(alert: any) {
         this.solveAlert.emit(alert);
     }
+
+    focusMarker(lat, lng) {
+      console.log('lat: ', lat, 'lng: ', lng);
+      this.latlng.lat = lat;
+      this.latlng.lng = lng;
+      this.asideService.marker.emit(this.latlng);
+  }
 }

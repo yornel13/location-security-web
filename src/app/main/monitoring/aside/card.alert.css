@@ -8,6 +8,7 @@
     margin-bottom: 10px;
     padding: 9px 10px;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .ps{
@@ -42,4 +43,5 @@
 
 .btn-success {
     float: right;
+  z-index: 9;
 }

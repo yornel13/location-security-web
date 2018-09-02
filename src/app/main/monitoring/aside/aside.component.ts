@@ -8,19 +8,7 @@ import {AlertaList} from '../../../../model/alerta/alerta.list';
 import {NotificationService} from '../../../shared/notification.service';
 import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
 import {Router} from '@angular/router';
-
-export const OUT_BOUNDS = 'OUT_BOUNDS';
-export const IGNITION_ON = 'IGNITION_ON';
-export const IGNITION_OFF = 'IGNITION_OFF';
-export const SPEED_MAX = 'SPEED_MAX';
-export const GENERAL = 'GENERAL';
-export const INIT_WATCH = 'INIT_WATCH';
-export const FINISH_WATCH = 'FINISH_WATCH';
-export const INCIDENCE = 'INCIDENCE';
-export const DROP = 'DROP';
-export const SOS1 = 'SOS1';
-export const INCIDENCE_LEVEL_1 = 'INCIDENCE_LEVEL_1';
-export const INCIDENCE_LEVEL_2 = 'INCIDENCE_LEVEL_2';
+import {GlobalOsm} from '../../../global.osm';
 
 @Component({
   selector: 'app-aside',
@@ -55,7 +43,8 @@ export class AsideComponent implements OnInit, OnChanges {
         public alertService: AlertaService,
         private router: Router,
         private notificationService: NotificationService,
-        private db: AngularFirestore) {
+        private db: AngularFirestore,
+        private mapService: GlobalOsm) {
         this.alertCollection0 = db.collection<Alerta>('alerts', ref => ref.where('status', '==', 0))
         this.alertCollection0.valueChanges()
             .subscribe((alerts: Alerta[]) => {
@@ -101,12 +90,12 @@ export class AsideComponent implements OnInit, OnChanges {
         this.alertService.solveAlert(alert.id).then(
             success => {
                 this.alertCollection1.doc(String(alert.id)).update({'status': 0});
-                if (alert.cause == INCIDENCE) {
+                if (alert.cause === this.mapService.INCIDENCE) {
                     const report = JSON.parse(alert.extra);
                     this.router.navigate(['/u/control/bitacora/reportfilter/' + report.id]);
-                } else if (alert.cause == DROP) {
+                } else if (alert.cause === this.mapService.DROP) {
                     this.router.navigate(['/u/control/alertas/' + alert.id]);
-                } else if (alert.cause == SOS1) {
+                } else if (alert.cause === this.mapService.SOS1) {
                     this.router.navigate(['/u/control/alertas/' + alert.id]);
                 }
             }, error => {

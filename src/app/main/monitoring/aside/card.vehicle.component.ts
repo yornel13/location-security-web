@@ -17,7 +17,7 @@ export class CardVehicleComponent {
 
     constructor(private asideService: AsideService) {}
 
-        focusMarker(lat, lng) {
+    focusMarker(lat, lng) {
         console.log('lat: ', lat, 'lng: ', lng);
         this.latlng.lat = lat;
         this.latlng.lng = lng;
