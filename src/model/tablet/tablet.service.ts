@@ -19,6 +19,21 @@ export class TabletService {
         return this.http.get<TabletList>(this.TABLET_URL).pipe(repeatWhen(() => interval(10000)));
     }
 
+    getAll() {
+        return this.http.get(this.TABLET_URL+'/active/all').toPromise()
+            .then((response) => response);
+    }
+
+    setStatus(id:number, status:number){
+        return this.http.put(this.TABLET_URL + '/' + id + '/active/'+ status, httpOptions).toPromise()
+            .then((response) => response);
+    }
+
+    delete(id: number) {
+        return this.http.delete(this.TABLET_URL + '/' + id).toPromise()
+            .then((response) => response);
+    }
+
     private handleError<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             console.error(error);

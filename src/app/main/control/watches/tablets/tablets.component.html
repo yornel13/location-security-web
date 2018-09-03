@@ -1,0 +1,56 @@
+<div class="info-container panel panel-default" *ngIf="lista">
+    <div class="container-fluid row mx-auto mt-2">
+        <div class="mr-auto row ml-1">
+            <a routerLink="/u/control/home/vigilancia" title="Atrás" style="color: var(--secondary-color)">
+                <i class="fas fa-reply icon-return"></i>
+            </a>
+            <h3 class="list-title">Tablets</h3>
+        </div>
+        <div class="ml-auto form-inline">
+            <div class="form-group row">
+                <input type="text" name="searchString" class="form-control mr-4" placeholder="Buscar Tablet" [(ngModel)]="filter">
+            </div>
+        </div>
+    </div>
+    <div class="table mt-2 container-fluid">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <th style="width: 20%">ID</th>
+            <th style="width: 30%">IMEI</th>
+            <th style="width: 20%">Status</th>
+            <th style="width: 30%">Acción</th>
+            </thead>
+            <tbody>
+            <tr *ngFor="let tab of data | filter:filter ">
+                <td>{{tab.id}}</td>
+                <td>{{tab.imei}}</td>
+                <td><span *ngIf="tab.status == 0" class="text-danger">Desactivado</span><span *ngIf="tab.status == 1" class="text-success">Activo</span></td>
+                <td>
+                    <a class="btn btn-info" *ngIf="tab.status == 0" (click)="activarTablet(tab.id)" style="display: inline-block; margin-right: 10px; width: 100px">Activar</a>
+                    <a class="btn btn-secondary"  *ngIf="tab.status == 1" (click)="desactivarTablet(tab.id)" style="display: inline-block; margin-right: 10px;  width: 100px">Desactivar</a>
+                    <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{tab.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
+                </td>
+                <div class="modal" tabindex="-1" role="dialog" id="modal{{tab.id}}">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #c82333; color: white;">
+                                <h5 class="modal-title">Eliminar Tablet</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>¿Está seguro que desea eliminar la tablet {{tab.imei}}?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" (click)="deleteTablet(tab.id)" data-dismiss="modal">Eliminar</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
