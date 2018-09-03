@@ -1,0 +1,26 @@
+<div class="home" [ngStyle]="{background: 'url(./assets/img/background-control.jpg)'}">
+	<div class="container-fluid row mx-auto" style="background-color: white">
+	<div class="mr-auto row ml-1 mt-2">
+		<a routerLink="/u/control/home" [routerLinkActive]="['active']" title="Atrás" style="color: var(--secondary-color)">
+			<i class="fas fa-reply icon-return"></i>
+		</a>
+		<h3 class="list-title">Cercos</h3>
+	</div>
+	</div>
+<div>
+	<div class="row mx-auto">
+		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/cerco/virtual" [routerLinkActive]="['active']">
+			<div class="mx-auto content-control pb-2 pt-3">
+				<i class="fas fa-map icono" style="background-color: #ffc107; padding: 12px !important"></i>
+				<p class="enlace">Cerco Virtual</p>
+			</div>
+		</a>
+		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/cerco/grupos" [routerLinkActive]="['active']">
+			<div class="mx-auto content-control pb-2 pt-3">
+				<i class="fas fa-globe-americas icono" style="background-color: #007bff; padding: 12px !important"></i>
+				<p class="enlace">Bounds Groups</p>
+			</div>
+		</a>
+	</div>
+</div>
+</div>

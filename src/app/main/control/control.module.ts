@@ -53,9 +53,12 @@ import { MvisitasComponent } from './subhome/mvisitas/mvisitas.component';
 import { MbitacoraComponent } from './subhome/mbitacora/mbitacora.component';
 import { MvigilanciaComponent } from './subhome/mvigilancia/mvigilancia.component';
 import {LeafletModule} from '@asymmetrik/ngx-leaflet';
-import {CercoComponent} from './cerco/cerco.component';
+import {CercoComponent} from './cerco/cercovirtual/cerco.component';
 import { AlertasComponent } from './alertas/alertas.component';
 import {CercoService} from '../../../model/cerco/cerco.service';
+import {GrupoService} from '../../../model/grupos/grupo.service';
+import { CercogrupoComponent } from './cerco/cercogrupo/cercogrupo.component';
+import { McercoComponent } from './subhome/mcerco/mcerco.component';
 
 export const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
@@ -83,7 +86,9 @@ export const controlRoutes: Routes = [
                     { path: 'home/visitas', component: MvisitasComponent },
                     { path: 'home/bitacora', component: MbitacoraComponent },
                     { path: 'home/vigilancia', component: MvigilanciaComponent },
-                    { path: 'cerco', component: CercoComponent },
+                    { path: 'home/cerco', component: McercoComponent },
+                    { path: 'cerco/virtual', component: CercoComponent },
+                    { path: 'cerco/grupos', component: CercogrupoComponent },
                     { path: '', redirectTo: '/u/control/home', pathMatch: 'full' },
                 ]
             }
@@ -113,7 +118,7 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
     ],
     providers: [
         GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService, ExcelService,
-        IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService, AlertaService, CercoService ],
+        IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService, AlertaService, CercoService, GrupoService ],
     entryComponents: [ ],
     declarations: [
         GuardiaComponent, AdminComponent, ControlComponent,
@@ -128,7 +133,9 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         MbitacoraComponent,
         MvigilanciaComponent,
         CercoComponent,
-        AlertasComponent ],
+        AlertasComponent,
+        CercogrupoComponent,
+        McercoComponent ],
     bootstrap: [ ControlComponent ]
 })
 export class ControlModule {}

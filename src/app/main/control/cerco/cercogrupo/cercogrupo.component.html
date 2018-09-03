@@ -1,0 +1,190 @@
+<div class="info-container panel panel-default" *ngIf="lista">
+    <div class="container-fluid row mx-auto mt-2">
+        <div class="mr-auto row ml-1">
+            <a routerLink="/u/control/home/cerco" title="Atrás" style="color: var(--secondary-color)">
+                <i class="fas fa-reply icon-return"></i>
+            </a>
+            <h3 class="list-title">Grupos</h3>
+        </div>
+        <div class="ml-auto form-inline">
+            <div class="btn-group" style="margin-right: 20px;">
+                <a class="btn btn-success" style="color: white" data-toggle="modal" href="#modalnew"><i class="fas fa-plus-circle"></i>
+                    Añadir Grupo
+                </a>
+            </div>
+            <div class="form-group row">
+                <input type="text" name="searchString" class="form-control mr-4" placeholder="Buscar Grupo" [(ngModel)]="filter">
+            </div>
+            <div class="modal" tabindex="-1" role="dialog" id="modalnew">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color: #28a745; color: white;">
+                            <h5 class="modal-title">Agregar Grupo</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="form-group mt-4 mb-4">
+                        	<label for="newname" class="ml-1 mr-2"><b>Nombre del grupo</b></label>
+			                <input type="text" name="newname" class="form-control" placeholder="Inserte nombre" [(ngModel)]="newname" style="width: 70%">
+			            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" (click)="guardarGrupo()" data-dismiss="modal">Guardar</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table mt-3 container">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <th style="width: 20%">ID</th>
+            <th style="width: 60%">Nombre</th>
+            <th style="width: 20%">Acción</th>
+            </thead>
+            <tbody>
+            <tr *ngFor="let grupo of data | filter:filter">
+                <td>{{grupo.id}}</td>
+                <td>{{grupo.name}}</td>
+                <td >
+                    <a class="btn btn-primary btn-xs" (click)="getGrupo(grupo)" style="display: inline-block; margin-right: 10px;" title="Map"><span class="far fa-eye"></span></a>
+                    <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" data-toggle="modal" href="#edit{{grupo.id}}" (click)="setName(grupo.name)" title="Editar"><span class="fas fa-edit"></span></a>
+                    <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{grupo.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
+                </td>
+                <div class="modal" tabindex="-1" role="dialog" id="modal{{grupo.id}}">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #c82333; color: white;">
+                                <h5 class="modal-title">Eliminar Cerco Virtual</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>¿Está seguro que desea eliminar el grupo '{{grupo.name}}' ?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" (click)="deleteGrupo(grupo.id)" data-dismiss="modal">Eliminar</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal" tabindex="-1" role="dialog" id="edit{{grupo.id}}">
+	                <div class="modal-dialog" role="document">
+	                    <div class="modal-content">
+	                        <div class="modal-header" style="background-color: #ffc107; color: white;">
+	                            <h5 class="modal-title">Editar Grupo</h5>
+	                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                                <span aria-hidden="true">&times;</span>
+	                            </button>
+	                        </div>
+	                        <div class="form-group form-inline mt-4 mb-4">
+	                        	<label for="newname" class="ml-1 mr-2"><b>Nombre del grupo</b></label>
+				                <input type="text" name="newname" class="form-control" placeholder="Inserte nombre" [(ngModel)]="editname" style="width: 70%">
+				            </div>
+	                        <div class="modal-footer">
+	                            <button type="button" class="btn btn-warning" (click)="editGrupo(grupo)" data-dismiss="modal">Guardar</button>
+	                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+              </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="info-container panel panel-default map-panel" *ngIf="detalle">
+    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
+        <h3 class="panel-title"><i class="fas fa-plus-circle" style="margin-right: 20px;"></i>Grupo - {{editname}}</h3>
+    </div>
+    <form role="form">
+        <div class="panel-body mt-2">
+            <div class="table-container container">
+                <div class="form-group col " style="display: flex; justify-content: space-between">
+                    <div class="col-sm-5">
+                        <input type="text" name="searchString" class="form-control" placeholder="Buscar Cerco" name="search" [(ngModel)]="filter">
+                    </div>
+                    <a class="btn btn-secondary" data-toggle="modal" href="#algo" style="background-color: #28a745; border: none; color: #fff" ><i class="fas fa-plus-circle mr-2"></i>Agregar Cerco</a>
+                     <!--ADD VEHICLE MODAL -->
+                    <div class="modal"  tabindex="-1"  role="dialog" id="algo">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #c82333; color: white;">
+                                    <h5 class="modal-title">Añadir Cercos Virtuales</h5>
+                                </div>
+                                <div class="modal-body scrolled">
+                                        <div style="display: flex; overflow: hidden">
+                                            <h6 style="margin-left: 1%; margin-bottom: 10px">ID</h6>
+                                            <h6 style="margin-left: 29%; margin-bottom: 10px">Nombre</h6>
+                                            <h6 style="margin-left: 49%; margin-bottom: 10px">Agregar</h6>
+                                        </div>
+                                    <div class="add-vehicle-cont">
+                                        <table style="width: 100%">
+                                            <tbody>
+                                                <tr *ngFor="let cerco of cercosList" >
+                                                    <td>{{cerco.id}}</td>
+                                                    <td>{{cerco.name}}</td>
+                                                    <td class="checkbox-vehicle"><input  #vehicleChecked type="checkbox" id="che" value="{{cerco.id}}" (click)="getCercosByChecked(cerco)"  /></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-success" (click)="addCercosToGrupo(editid)" data-dismiss="modal">Guardar</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+                <div class="table mt-2 container-fluid">
+                    <table class="table table-bordered">
+                        <thead  class="thead-light">
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Eliminar</th>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let cercosb of cercosbuound  | filter:filter">
+                            <td>{{cercosb.id}}</td>
+                            <td>{{cercosb.name}}</td>
+                            <td>
+                                <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{cercosb.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
+                            </td>
+                            <div class="modal" tabindex="-1" role="dialog" id="modal{{cercosb.id}}">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color: #c82333; color: white;">
+                                            <h5 class="modal-title">Eliminar Cerco Virtual</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>¿Está seguro que desea eliminar el cerco  ?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" (click)="deleteCerco(cercosb.id)" data-dismiss="modal">Eliminar</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="row mt-4 back-save-btn">
+                        <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="regresar()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
