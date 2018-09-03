@@ -41,6 +41,7 @@ import {ItemGuardComponent} from './messaging/item.guard.component';
 import {ChatComponent} from './chat/chat.component';
 import {PopupAlertComponent} from './monitoring/map/popup.alert.component';
 import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 export function controlModuleLoader() {
     return ControlModule;
@@ -86,7 +87,8 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
       customClass: 'modal-content',
       confirmButtonClass: 'btn btn-primary',
       cancelButtonClass: 'btn'
-    })
+    }),
+    NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
       VehiclesService, WatchesService, AsideService, TabletService ],

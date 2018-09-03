@@ -17,6 +17,9 @@ import {GlobalOsm} from '../../../global.osm';
 import {Alerta} from '../../../../model/alerta/alerta';
 import {AngularFirestore} from 'angularfire2/firestore';
 import {PopupAlertComponent} from './popup.alert.component';
+import {GrupoService} from '../../../../model/grupos/grupo.service';
+import {Grupos} from '../../../../model/grupos/grupos';
+import {Cerco} from '../../../../model/cerco/cerco';
 
 @Component({
     selector : 'app-map-osm',
@@ -50,12 +53,22 @@ export class MapOsmComponent implements OnChanges, OnInit {
     layersControlOptions;
     baseLayers;
     options;
+    /* Bounds */
+    groupsBounds: Grupos[] = [];
+    bounds: Cerco[] = [];
+    groupsPolygons: any = [];
+    // editableLayers;
+
+    dropdownList = [];
+    selectedItems = [];
+    dropdownSettings = {};
 
     constructor(private resolver: ComponentFactoryResolver,
                 private asideService: AsideService,
                 private injector: Injector,
                 private globalOSM: GlobalOsm,
-                private db: AngularFirestore) {
+                private db: AngularFirestore,
+                private groupService: GrupoService) {
         this.baseLayers = this.globalOSM.baseLayers;
         this.layersControlOptions = this.globalOSM.layersOptions;
         this.options = {
@@ -75,6 +88,43 @@ export class MapOsmComponent implements OnChanges, OnInit {
     }
 
     ngOnInit() {
+      this.subscribeToAlerts();
+      this.getGroups();
+      this.setupDropdown();
+    }
+
+    setupDropdown() {
+      this.dropdownList = [];
+      this.selectedItems = [];
+      this.dropdownSettings = {
+        singleSelection: false,
+        idField: 'item_id',
+        textField: 'item_text',
+        selectAllText: 'Seleccionar todo',
+        unSelectAllText: 'Deseleccionar todo',
+        searchPlaceholderText: 'Buscar...',
+        itemsShowLimit: 5,
+        allowSearchFilter: true
+      };
+    }
+
+    onItemSelect(item: any) {
+      this.selectBounds(item.item_id);
+    }
+
+    onItemDeSelect(item: any) {
+      this.deselectBounds(item.item_id);
+    }
+
+    onSelectAll(items: any) {
+      this.selectAll();
+    }
+
+    onDeSelectAll(items: any) {
+      this.deselectAll();
+    }
+
+    subscribeToAlerts() {
       this.db.collection<Alerta>('alerts').valueChanges()
         .subscribe((alerts: Alerta[]) => {
           const data: any[] = [];
@@ -117,6 +167,61 @@ export class MapOsmComponent implements OnChanges, OnInit {
             this.markerClusterData = this.alertsMarketData;
           }
         });
+    }
+
+    getGroups() {
+      this.groupService.getAll().then(
+          (success: any) => {
+        this.groupsBounds = success.data;
+        const data = [];
+        this.groupsBounds.forEach(group => {
+          data.push({ item_id: group.id, item_text: group.name });
+        });
+        this.dropdownList = data;
+      });
+    }
+
+    selectBounds(id: number) {
+      if (id > 0) {
+        this.groupService.getCercoGrupo(id).then(
+          (success: any) => {
+            const polygons = [];
+            const editableLayers = new L.FeatureGroup();
+            this.bounds = success.data;
+              console.log(this.bounds);
+              this.bounds.forEach(cerco => {
+                const coors = JSON.parse(cerco.points);
+                this.map.addLayer(editableLayers);
+                const polygon = L.polygon([[]]).setLatLngs(coors);
+                polygon.options.color = cerco.color;
+                editableLayers.addLayer(polygon);
+                polygons.push(polygon);
+            });
+            this.groupsPolygons.push({ id: id, editableLayers: editableLayers});
+          });
+      }
+    }
+
+    selectAll() {
+      this.groupsBounds.forEach(group => {
+        this.selectBounds(group.id);
+      });
+    }
+
+    deselectBounds(id: number) {
+      let removePolygon: any = {};
+      this.groupsPolygons.forEach(groupPolygon => {
+        if (groupPolygon.id === id) {
+          removePolygon = groupPolygon;
+        }
+      });
+      removePolygon.editableLayers.remove(this.map);
+    }
+
+    deselectAll() {
+      this.groupsPolygons.forEach(groupPolygon => {
+          groupPolygon.editableLayers.remove(this.map);
+      });
     }
 
     ngOnChanges(changes: SimpleChanges) {

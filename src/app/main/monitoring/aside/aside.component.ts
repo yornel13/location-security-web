@@ -68,13 +68,24 @@ export class AsideComponent implements OnInit, OnChanges {
           if (data.length === 1) {
               if (data[0].type === 'added') {
                   const alert = data[0].payload.doc.data() as Alerta;
+                  let title = alert.type;
                   if (alert.status === 1) {
-                    console.log(alert);
+                    if (alert.cause === this.mapService.INCIDENCE) {
+                      title = 'Incidencia';
+                    } else if (alert.cause === this.mapService.DROP) {
+                      title = 'Caida';
+                    } else if (alert.cause === this.mapService.SOS1) {
+                      title = 'SOS';
+                    }
                     swal({
-                      title: 'Error!',
-                      text: 'Do you want to continue',
+                      title: title,
+                      text: alert.message,
                       type: 'warning',
-                      confirmButtonText: 'Cool'
+                      confirmButtonText: 'Ir a'
+                    }).then(result => {
+                      if (result.value) {
+                        this.solveAlert(alert);
+                      }
                     });
                   }
               }
