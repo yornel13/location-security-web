@@ -23,7 +23,7 @@ export class GlobalOsm {
         name: 'Open Street Map',
         enabled: false,
         layer: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
+            maxZoom: 19,
             detectRetina: true,
             attribution: 'Open Street Map'
         })
@@ -33,7 +33,7 @@ export class GlobalOsm {
         name: 'Google Street Map',
         enabled: false,
         layer: L.tileLayer('http://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
+            maxZoom: 19,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
             attribution: 'Google Street Map'
         })
@@ -43,7 +43,7 @@ export class GlobalOsm {
         name: 'Google Satellite Map',
         enabled: false,
         layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
+            maxZoom: 19,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
             attribution: 'Google Satellite Map'
         })
@@ -53,7 +53,7 @@ export class GlobalOsm {
         name: 'Google Terrain Map',
         enabled: false,
         layer: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
+            maxZoom: 19,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
             attribution: 'Google Terrain Map'
         })
@@ -108,7 +108,7 @@ export class GlobalOsm {
 
     setupLayer(map: L.Map) {
         L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
+            maxZoom: 19,
             detectRetina: true,
             attribution: 'Open Street Map'
         }).addTo(map);

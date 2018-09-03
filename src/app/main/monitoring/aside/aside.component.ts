@@ -9,6 +9,7 @@ import {NotificationService} from '../../../shared/notification.service';
 import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
 import {Router} from '@angular/router';
 import {GlobalOsm} from '../../../global.osm';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-aside',
@@ -63,6 +64,22 @@ export class AsideComponent implements OnInit, OnChanges {
                     return 0;
                 });
             });
+      db.collection<Alerta>('alerts').stateChanges().subscribe(data => {
+          if (data.length === 1) {
+              if (data[0].type === 'added') {
+                  const alert = data[0].payload.doc.data() as Alerta;
+                  if (alert.status === 1) {
+                    console.log(alert);
+                    swal({
+                      title: 'Error!',
+                      text: 'Do you want to continue',
+                      type: 'warning',
+                      confirmButtonText: 'Cool'
+                    });
+                  }
+              }
+          }
+      });
     }
 
     ngOnInit() {

@@ -1,12 +1,10 @@
 ///<reference path="../../../model/admin/admin.service.ts"/>
-import {Component, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Vehicle} from '../../../model/vehicle/vehicle';
 import {VehiclesService} from '../../../model/vehicle/vehicle.service';
 import {UtilsVehicles} from '../../../model/vehicle/vehicle.utils';
 import {HttpErrorResponse} from '@angular/common/http';
-import {WatchesService} from '../../../model/watch/watch.service';
 import {Watch} from '../../../model/watch/watch';
-import {WatchUtils} from '../../../model/watch/watch.utils';
 import {TabletService} from '../../../model/tablet/tablet.service';
 import {Tablet} from '../../../model/tablet/tablet';
 import {TabletUtils} from '../../../model/tablet/tablet.utils';
@@ -37,6 +35,8 @@ export class MonitoringComponent implements OnInit {
     @Input() markerChanged: boolean;
     @Input() showMarker = {alerts: true, vehicles: true , watches: true , bombas: true, noGroup: true, message: ''};
     @Input() latlng = {lat: null , lng: null};
+
+    @ViewChild('deleteSwal') private deleteSwal;
 
     constructor(private vehiclesService: VehiclesService, private tabletService: TabletService) {}
 

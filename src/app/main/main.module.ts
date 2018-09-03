@@ -40,6 +40,7 @@ import {CardAlertComponent} from './monitoring/aside/card.alert.component';
 import {ItemGuardComponent} from './messaging/item.guard.component';
 import {ChatComponent} from './chat/chat.component';
 import {PopupAlertComponent} from './monitoring/map/popup.alert.component';
+import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
 
 export function controlModuleLoader() {
     return ControlModule;
@@ -80,6 +81,12 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     LeafletMarkerClusterModule.forRoot(),
     LeafletDrawModule.forRoot(),
     ControlModule,
+    SweetAlert2Module.forRoot({
+      buttonsStyling: false,
+      customClass: 'modal-content',
+      confirmButtonClass: 'btn btn-primary',
+      cancelButtonClass: 'btn'
+    })
   ],
   providers: [
       VehiclesService, WatchesService, AsideService, TabletService ],

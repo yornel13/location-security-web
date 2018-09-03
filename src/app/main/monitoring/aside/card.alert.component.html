@@ -5,7 +5,7 @@
         <p class="alert-title ps" *ngIf="alert.cause != 'GENERAL'">{{title}}</p>
         <p class="alert-text ps">{{alert.message}}</p>
         <p class="alert-date ps">{{date | date : "medium"}}</p>
-        <button class="btn btn-success" *ngIf="alert.status == 1" (click)="callParent(alert)"><span class="fas fa-check"></span></button>
+        <button class="btn btn-success" *ngIf="alert.status == 1" (click)="callParent(alert);$event.stopPropagation()"><span class="fas fa-check"></span></button>
     </div>
     <div *ngIf="alert.imei">
         <p class="alert-text ps">{{alert.message}}</p>
