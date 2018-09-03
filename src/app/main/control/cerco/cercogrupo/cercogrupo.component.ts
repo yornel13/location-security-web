@@ -128,7 +128,6 @@ export class CercogrupoComponent {
   }
 
     getCercosInBound(id){
-    	console.log(id);
     	this.grupoService.getCercoGrupo(id).then(
         success => {
             this.cercosb = success;

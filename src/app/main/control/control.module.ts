@@ -57,8 +57,11 @@ import {CercoComponent} from './cerco/cercovirtual/cerco.component';
 import { AlertasComponent } from './alertas/alertas.component';
 import {CercoService} from '../../../model/cerco/cerco.service';
 import {GrupoService} from '../../../model/grupos/grupo.service';
+import { PuestoService } from '../../../model/puestos/puestos.service';
 import { CercogrupoComponent } from './cerco/cercogrupo/cercogrupo.component';
 import { McercoComponent } from './subhome/mcerco/mcerco.component';
+import { TabletsComponent } from './watches/tablets/tablets.component';
+import { PuestosComponent } from './watches/puestos/puestos.component';
 
 export const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
@@ -81,6 +84,8 @@ export const controlRoutes: Routes = [
                     { path: 'bitacora/reportfilter', component: FiltreportComponent },
                     { path: 'guardias/activas', component: WactivasComponent },
                     { path: 'guardias/todas', component: WtodasComponent },
+                    { path: 'guardias/tablets', component: TabletsComponent },
+                    { path: 'guardias/puestos', component: PuestosComponent },
                     { path: 'configuracion', component: ConfiguracionComponent },
                     { path: 'home', component: HomeComponent },
                     { path: 'home/visitas', component: MvisitasComponent },
@@ -117,7 +122,7 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         NgxPaginationModule,
     ],
     providers: [
-        GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService, ExcelService,
+        GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService, ExcelService, PuestoService,
         IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService, AlertaService, CercoService, GrupoService ],
     entryComponents: [ ],
     declarations: [
@@ -135,7 +140,9 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         CercoComponent,
         AlertasComponent,
         CercogrupoComponent,
-        McercoComponent ],
+        McercoComponent,
+        TabletsComponent,
+        PuestosComponent ],
     bootstrap: [ ControlComponent ]
 })
 export class ControlModule {}
