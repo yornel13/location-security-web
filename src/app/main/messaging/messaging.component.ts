@@ -54,6 +54,7 @@ export class MessagingComponent implements OnInit {
     chat_id;
     noMessages = false;
     lastMessageData;
+    chanel_id;
     @ViewChild('messageField') messageField: any;
 
 
@@ -167,8 +168,7 @@ export class MessagingComponent implements OnInit {
             .pipe(first())
             .subscribe(
                 data => {
-
-                    this.currentChat.push(newMessage);
+                    this.currentChat.push(this.openChannel(this.chanel_id));
                     this.loading = false;
                     this.scrollToBottom();
                 },
@@ -292,7 +292,7 @@ export class MessagingComponent implements OnInit {
                         const channel = Object.assign(
                             {id: this.allChannel[i].channel_id},
                             {name: this.allChannel[i].channel_name});
-                        console.log(this.allChannel[i]);
+                        console.log('kkkkkkk', this.allChannel[i]);
                         const list = this.listChannelAdmin.push(channel);
                     }
             },
@@ -302,7 +302,8 @@ export class MessagingComponent implements OnInit {
             });
     }
 
-    openChannel(id) {
+    openChannel(id): any {
+        this.chanel_id = id;
         this.messageField.nativeElement.value = '';
         this.chatService.listOldMessageChannel(id)
             .subscribe(
@@ -331,6 +332,7 @@ export class MessagingComponent implements OnInit {
           }
         );
         this.scrollToBottom();
+
     }
 
     add(channel_id, tags) {
