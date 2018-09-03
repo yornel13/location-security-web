@@ -1,4 +1,5 @@
 <div class="tablet-card" (click)="focusMarker(alert.latitude, alert.longitude)">
+  <p class="alert-imei ps">{{alert.id}}</p>
     <div *ngIf="alert.guard_id">
         <p class="alert-import ps" *ngIf="alert.status == 1">Importante!</p>
         <p class="alert-title ps" *ngIf="alert.cause != 'GENERAL'">{{title}}</p>

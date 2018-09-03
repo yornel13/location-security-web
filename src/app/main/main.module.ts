@@ -29,7 +29,7 @@ import { MainComponent } from './main.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReportComponent } from './report/report.component';
 import {RouterModule, Routes} from '@angular/router';
-import {AsideService} from './monitoring/aside/aside.service';
+import {MainService} from './main.service';
 import { MessagingComponent } from './messaging/messaging.component';
 
 import { FilterPipe } from './monitoring/aside/filter.pipe';
@@ -91,7 +91,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
-      VehiclesService, WatchesService, AsideService, TabletService ],
+      VehiclesService, WatchesService, MainService, TabletService ],
   entryComponents: [ PopupVehicleComponent, PopupWatchComponent, PopupAlertComponent, CardVehicleComponent,
       CardTabletComponent, ItemGuardComponent ],
   declarations: [

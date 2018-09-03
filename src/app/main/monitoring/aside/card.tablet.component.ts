@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Tablet} from '../../../../model/tablet/tablet';
-import {AsideService} from './aside.service';
+import {MainService} from '../../main.service';
 
 @Component({
     selector: 'app-card-tablet',
@@ -15,7 +15,7 @@ export class CardTabletComponent {
     devices_status = 'ONLINE';
 
 
-    constructor(private asideService: AsideService) {}
+    constructor(private asideService: MainService) {}
 
     focusMarker(lat, lng) {
         console.log('lat: ', lat, 'lng: ', lng);

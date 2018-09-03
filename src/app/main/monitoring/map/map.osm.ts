@@ -12,7 +12,7 @@ import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import {Watch} from '../../../../model/watch/watch';
 import {PopupWatchComponent} from './popup.watch.component';
-import {AsideService} from '../aside/aside.service';
+import {MainService} from '../../main.service';
 import {GlobalOsm} from '../../../global.osm';
 import {Alerta} from '../../../../model/alerta/alerta';
 import {AngularFirestore} from 'angularfire2/firestore';
@@ -45,7 +45,6 @@ export class MapOsmComponent implements OnChanges, OnInit {
     showMarker;
     markerClusterGroup: L.MarkerClusterGroup;
     markerClusterData: any[] = [];
-    alertsMarketData: any[] = [];
     markerClusterOptions: L.MarkerClusterGroupOptions;
     center = L.latLng(([ this.lat, this.lng ]));
     map: any;
@@ -57,17 +56,18 @@ export class MapOsmComponent implements OnChanges, OnInit {
     groupsBounds: Grupos[] = [];
     bounds: Cerco[] = [];
     groupsPolygons: any = [];
-    // editableLayers;
-
+    /* drop down bounds */
     dropdownList = [];
     selectedItems = [];
     dropdownSettings = {};
+    /* Alerts */
+    alerts: Alerta[] = [];
+    alertsMarketData: any[] = [];
 
     constructor(private resolver: ComponentFactoryResolver,
-                private asideService: AsideService,
+                private mainService: MainService,
                 private injector: Injector,
                 private globalOSM: GlobalOsm,
-                private db: AngularFirestore,
                 private groupService: GrupoService) {
         this.baseLayers = this.globalOSM.baseLayers;
         this.layersControlOptions = this.globalOSM.layersOptions;
@@ -75,11 +75,6 @@ export class MapOsmComponent implements OnChanges, OnInit {
             zoom: this.zoom,
             center: this.center
         };
-        asideService.marker.subscribe(
-            (data: any) => {
-                this.zoom = 18;
-                this.center = data;
-            });
     }
 
     onMapReady(map: L.Map) {
@@ -89,8 +84,17 @@ export class MapOsmComponent implements OnChanges, OnInit {
 
     ngOnInit() {
       this.subscribeToAlerts();
+      this.subscribeToClick();
       this.getGroups();
       this.setupDropdown();
+    }
+
+    subscribeToClick() {
+      this.mainService.marker.subscribe(
+        (data: any) => {
+          this.zoom = 18;
+          this.center = data;
+        });
     }
 
     setupDropdown() {
@@ -125,48 +129,54 @@ export class MapOsmComponent implements OnChanges, OnInit {
     }
 
     subscribeToAlerts() {
-      this.db.collection<Alerta>('alerts').valueChanges()
-        .subscribe((alerts: Alerta[]) => {
-          const data: any[] = [];
-          alerts.forEach((alert: Alerta) => {
-            let imageIcon;
-            if (alert.type === this.globalOSM.DROP) {
-              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/falldown.png'})};
-            } else if (alert.type === this.globalOSM.SOS1) {
-              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/sos.png'})};
-            } else if (alert.type === this.globalOSM.IGNITION_ON) {
-              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/on.png'})};
-            } else if (alert.type === this.globalOSM.IGNITION_OFF) {
-              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/off.png'})};
-            } else if (alert.type === this.globalOSM.SPEED_MAX) {
-              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/speed.png'})};
-            } else if (alert.type === this.globalOSM.INIT_WATCH) {
-              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/watch_start.png'})};
-            } else if (alert.type === this.globalOSM.FINISH_WATCH) {
-              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/watch_end.png'})};
-            } else if (alert.type === this.globalOSM.OUT_BOUNDS) {
-              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/outside.png'})};
-            } else if (alert.type === this.globalOSM.IN_BOUNDS) {
-              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/inside.png'})};
-            } else {
-              imageIcon = {icon: L.icon({iconUrl: './assets/alerts/report.png'})};
-            }
-            if (Number(alert.latitude) && Number(alert.longitude)) {
-              const m = L.marker([+alert.latitude, +alert.longitude], imageIcon);
-              const factory = this.resolver.resolveComponentFactory(PopupAlertComponent);
-              const component = factory.create(this.injector);
-              const popupContent = component.location.nativeElement;
-              component.instance.alert = alert;
-              component.changeDetectorRef.detectChanges();
-              m.bindPopup(popupContent).openPopup();
-              data.push(m);
-            }
-          });
-          this.alertsMarketData = data;
-          if (this.showMarker.alerts) {
-            this.markerClusterData = this.alertsMarketData;
-          }
-        });
+      this.alerts = this.mainService.alerts;
+      this.setupAlerts();
+      this.mainService.alertsEmitter.subscribe((alerts: Alerta[]) => {
+        this.alerts = alerts;
+        this.setupAlerts();
+      });
+    }
+
+    setupAlerts() {
+      const data: any[] = [];
+      this.alerts.forEach((alert: Alerta) => {
+        let imageIcon;
+        if (alert.type === this.globalOSM.DROP) {
+          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/falldown.png'})};
+        } else if (alert.type === this.globalOSM.SOS1) {
+          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/sos.png'})};
+        } else if (alert.type === this.globalOSM.IGNITION_ON) {
+          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/on.png'})};
+        } else if (alert.type === this.globalOSM.IGNITION_OFF) {
+          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/off.png'})};
+        } else if (alert.type === this.globalOSM.SPEED_MAX) {
+          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/speed.png'})};
+        } else if (alert.type === this.globalOSM.INIT_WATCH) {
+          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/watch_start.png'})};
+        } else if (alert.type === this.globalOSM.FINISH_WATCH) {
+          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/watch_end.png'})};
+        } else if (alert.type === this.globalOSM.OUT_BOUNDS) {
+          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/outside.png'})};
+        } else if (alert.type === this.globalOSM.IN_BOUNDS) {
+          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/inside.png'})};
+        } else {
+          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/report.png'})};
+        }
+        if (Number(alert.latitude) && Number(alert.longitude)) {
+          const m = L.marker([+alert.latitude, +alert.longitude], imageIcon);
+          const factory = this.resolver.resolveComponentFactory(PopupAlertComponent);
+          const component = factory.create(this.injector);
+          const popupContent = component.location.nativeElement;
+          component.instance.alert = alert;
+          component.changeDetectorRef.detectChanges();
+          m.bindPopup(popupContent).openPopup();
+          data.push(m);
+        }
+      });
+      this.alertsMarketData = data;
+      if (this.showMarker.alerts) {
+        this.markerClusterData = this.alertsMarketData;
+      }
     }
 
     getGroups() {

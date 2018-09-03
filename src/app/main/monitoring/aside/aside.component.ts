@@ -1,15 +1,13 @@
 import {Component, Input, OnChanges, OnInit, Output, SimpleChanges, EventEmitter, Injectable} from '@angular/core';
 import {Vehicle} from '../../../../model/vehicle/vehicle';
 import {Watch} from '../../../../model/watch/watch';
-import {AsideService} from './aside.service';
+import {MainService} from '../../main.service';
 import {AlertaService} from '../../../../model/alerta/alerta.service';
 import {Alerta} from '../../../../model/alerta/alerta';
-import {AlertaList} from '../../../../model/alerta/alerta.list';
 import {NotificationService} from '../../../shared/notification.service';
 import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
 import {Router} from '@angular/router';
 import {GlobalOsm} from '../../../global.osm';
-import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-aside',
@@ -19,207 +17,131 @@ import swal from 'sweetalert2';
 
 export class AsideComponent implements OnInit, OnChanges {
 
-    alerts: Alerta[] = [];
-    alerts0: Alerta[] = [];
-    alerts1: Alerta[] = [];
-    @Input() vehicles: Vehicle[] = [];
-    @Input() watches: Watch[] = [];
-    @Input() markersData: any[] = [];
-    @Output() showMarker = {alerts: true, vehicles: true , watches: true , bombas: true, noGroups: true, message: ''};
-    @Output() markerChanged = new EventEmitter();
-    @Output() markerFocused = new EventEmitter();
-    @Output() vehiclesCheck = true;
-    @Output() watchesCheck = true;
-    @Output() bombasCheck = true;
-    @Output() noGroupCheck = true;
-    @Output() isShow = false;
-    noCards = false;
-    showCardContainer = true;
-    search: any;
-    CHECK_ICON_URL = './assets/aside-menu/checked.png';
-    readonly alertCollection: AngularFirestoreCollection<Alerta>;
+  alerts0: Alerta[] = [];
+  alerts1: Alerta[] = [];
 
-    constructor(
-        private asideService: AsideService,
-        public alertService: AlertaService,
-        private router: Router,
-        private notificationService: NotificationService,
-        private db: AngularFirestore,
-        private mapService: GlobalOsm) {
-        // this.alertCollection0 = db.collection<Alerta>('alerts', ref => ref.where('status', '==', 0))
-        // this.alertCollection0.valueChanges()
-        //     .subscribe((alerts: Alerta[]) => {
-        //         this.alerts0 = alerts.sort((n1, n2) => {
-        //             if (n1.create_date > n2.create_date) { return -1; }
-        //             if (n1.create_date < n2.create_date) {return 1; }
-        //             return 0;
-        //         });
-        //     });
-        // this.alertCollection1 = db.collection<Alerta>('alerts', ref => ref.where('status', '==', 1))
-        // this.alertCollection1.valueChanges()
-        //     .subscribe((alerts: Alerta[]) => {
-        //         this.alerts1 = alerts.sort((n1, n2) => {
-        //             if (n1.create_date > n2.create_date) { return -1; }
-        //             if (n1.create_date < n2.create_date) {return 1; }
-        //             return 0;
-        //         });
-        //     });
-      this.alertCollection = db.collection<Alerta>('alerts',
-          ref => ref.orderBy('id', 'desc').limit(500));
+  @Input() vehicles: Vehicle[] = [];
+  @Input() watches: Watch[] = [];
+  @Input() markersData: any[] = [];
+  @Output() showMarker = {alerts: true, vehicles: true , watches: true , bombas: true, noGroups: true, message: ''};
+  @Output() markerChanged = new EventEmitter();
+  @Output() markerFocused = new EventEmitter();
+  @Output() vehiclesCheck = true;
+  @Output() watchesCheck = true;
+  @Output() bombasCheck = true;
+  @Output() noGroupCheck = true;
+  @Output() isShow = false;
+  noCards = false;
+  showCardContainer = true;
+  search: any;
+  CHECK_ICON_URL = './assets/aside-menu/checked.png';
+  alertCollection: AngularFirestoreCollection<Alerta>;
+
+  constructor(
+    private mainService: MainService,
+    public alertService: AlertaService,
+    private router: Router,
+    private notificationService: NotificationService,
+    private db: AngularFirestore,
+    private mapService: GlobalOsm) {
+    this.alertCollection = db.collection<Alerta>('alerts');
+  }
+
+  ngOnInit() {
+    /* Getting alerts allow in service */
+    this.alerts0 = this.mainService.alerts0;
+    this.alerts1 = this.mainService.alerts1;
+    /* subscribing to changes on alerts */
+    this.mainService.alerts0Emitter.subscribe((data: Alerta[]) => {
+      this.alerts0 = data;
+    });
+    this.mainService.alerts1Emitter.subscribe((data: Alerta[]) => {
+      this.alerts1 = data;
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['vehicles']) {
+      // Use if necessary
     }
-
-    ngOnInit() {
-        this.getAlerts();
+    if (changes['watches']) {
+      // Use if necessary
     }
+  }
 
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes['vehicles']) {
-            // Use if necessary
+  solveAlert(alert: Alerta) {
+    this.alertService.solveAlert(alert.id).then(
+      success => {
+        this.alertCollection.doc(String(alert.id)).update({'status': 0});
+        if (alert.cause === this.mapService.INCIDENCE) {
+          const report = JSON.parse(alert.extra);
+          this.router.navigate(['/u/control/bitacora/reportfilter/' + report.id]);
+        } else if (alert.cause === this.mapService.DROP) {
+          this.router.navigate(['/u/control/alertas/' + alert.id]);
+        } else if (alert.cause === this.mapService.SOS1) {
+          this.router.navigate(['/u/control/alertas/' + alert.id]);
         }
-        if (changes['watches']) {
-            // Use if necessary
-        }
-    }
-
-    solveAlert(alert: Alerta) {
-        this.alertService.solveAlert(alert.id).then(
-            success => {
-                this.alertCollection.doc(String(alert.id)).update({'status': 0});
-                if (alert.cause === this.mapService.INCIDENCE) {
-                    const report = JSON.parse(alert.extra);
-                    this.router.navigate(['/u/control/bitacora/reportfilter/' + report.id]);
-                } else if (alert.cause === this.mapService.DROP) {
-                    this.router.navigate(['/u/control/alertas/' + alert.id]);
-                } else if (alert.cause === this.mapService.SOS1) {
-                    this.router.navigate(['/u/control/alertas/' + alert.id]);
-                }
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
-    }
-
-    selectTab(tab) {
-      if (tab.match('alerts')) {
-        this.isShow = false;
-        this.showMarker.alerts = true;
-        this.showMarker.message = tab;
-        this.markerChanged.emit(this.showMarker);
-      }
-      if (tab.match('devices')) {
-        this.isShow = true;
-        this.showMarker.alerts = false;
-        this.showMarker.message = tab;
-        this.markerChanged.emit(this.showMarker);
-      }
-    }
-
-    selectMarkersOpts(message) {
-        if (message.match('showVehicles')) {
-            this.vehiclesCheck = !this.vehiclesCheck;
-            this.showMarker.vehicles = this.vehiclesCheck;
-            this.showMarker.message = message;
-            this.markerChanged.emit(this.showMarker);
-        }
-        if (message.match('showBombas')) {
-            this.bombasCheck = !this.bombasCheck;
-            this.showMarker.bombas = this.bombasCheck;
-            this.showMarker.message = message;
-            this.markerChanged.emit(this.showMarker);
-        }
-        if (message.match('showTablets')) {
-            this.watchesCheck = !this.watchesCheck;
-            this.showMarker.watches = this.watchesCheck;
-            this.showMarker.message = message;
-            this.markerChanged.emit(this.showMarker);
-        }
-        if (!this.vehiclesCheck && !this.bombasCheck && !this.watchesCheck) {
-            this.noCards = true;
-            this.showCardContainer = false;
+      }, error => {
+        if (error.status === 422) {
+          // on some data incorrect
         } else {
-            this.noCards = false;
-            this.showCardContainer = true;
+          // on general error
         }
-    }
+      }
+    );
+  }
 
-    find(newSearch) {
-        console.log(newSearch.value);
-        this.vehicles.forEach( vehicle => {
-           if (vehicle.imei.match(newSearch.value)) {
-               console.log('imei es', vehicle.imei );
-           } else {
-               console.log('no match');
-           }
-        });
+  selectTab(tab) {
+    if (tab.match('alerts')) {
+      this.isShow = false;
+      this.showMarker.alerts = true;
+      this.showMarker.message = tab;
+      this.markerChanged.emit(this.showMarker);
     }
-
-    getAlerts() {
-      this.alertCollection.stateChanges().subscribe(data => {
-        if (data.length === 1) {
-          if (data[0].type === 'added') {
-            const alert = data[0].payload.doc.data() as Alerta;
-            let title = alert.type;
-            if (alert.status === 1) {
-              if (alert.cause === this.mapService.INCIDENCE) {
-                title = 'Incidencia';
-              } else if (alert.cause === this.mapService.DROP) {
-                title = 'Caida';
-              } else if (alert.cause === this.mapService.SOS1) {
-                title = 'SOS';
-              }
-              swal({
-                title: title,
-                text: alert.message,
-                type: 'warning',
-                confirmButtonText: 'Ir a'
-              }).then(result => {
-                if (result.value) {
-                  this.solveAlert(alert);
-                }
-              });
-            }
-          }
-        }
-        data.forEach(single => {
-          const alert = single.payload.doc.data() as Alerta;
-          if (single.type === 'added') {
-            if (alert.status === 0) {
-              this.alerts0.push(alert);
-            } else {
-              this.alerts1.push(alert);
-            }
-            this.alerts.push(alert);
-          }
-          if (single.type === 'modified') {
-            let alertMod = null;
-            this.alerts1.forEach(alert1 => {
-              if (alert1.id === alert.id) {
-                alertMod = alert1;
-              }
-            });
-            if (alertMod != null) {
-              this.alerts1.splice(this.alerts1.indexOf(alertMod, 0), 1);
-              this.alerts0.push(alert);
-
-              this.alerts.splice(this.alerts.indexOf(alertMod, 0), 1);
-              this.alerts.push(alert);
-            }
-          }
-        });
-        this.alerts1 = this.alerts1.sort((n1, n2) => {
-          if (n1.create_date > n2.create_date) { return -1; }
-          if (n1.create_date < n2.create_date) {return 1; }
-          return 0;
-        });
-        this.alerts0 = this.alerts0.sort((n1, n2) => {
-          if (n1.create_date > n2.create_date) { return -1; }
-          if (n1.create_date < n2.create_date) {return 1; }
-          return 0;
-        });
-      });
+    if (tab.match('devices')) {
+      this.isShow = true;
+      this.showMarker.alerts = false;
+      this.showMarker.message = tab;
+      this.markerChanged.emit(this.showMarker);
     }
+  }
+
+  selectMarkersOpts(message) {
+    if (message.match('showVehicles')) {
+      this.vehiclesCheck = !this.vehiclesCheck;
+      this.showMarker.vehicles = this.vehiclesCheck;
+      this.showMarker.message = message;
+      this.markerChanged.emit(this.showMarker);
+    }
+    if (message.match('showBombas')) {
+      this.bombasCheck = !this.bombasCheck;
+      this.showMarker.bombas = this.bombasCheck;
+      this.showMarker.message = message;
+      this.markerChanged.emit(this.showMarker);
+    }
+    if (message.match('showTablets')) {
+      this.watchesCheck = !this.watchesCheck;
+      this.showMarker.watches = this.watchesCheck;
+      this.showMarker.message = message;
+      this.markerChanged.emit(this.showMarker);
+    }
+    if (!this.vehiclesCheck && !this.bombasCheck && !this.watchesCheck) {
+      this.noCards = true;
+      this.showCardContainer = false;
+    } else {
+      this.noCards = false;
+      this.showCardContainer = true;
+    }
+  }
+
+  find(newSearch) {
+    console.log(newSearch.value);
+    this.vehicles.forEach( vehicle => {
+      if (vehicle.imei.match(newSearch.value)) {
+        console.log('imei es', vehicle.imei );
+      } else {
+        console.log('no match');
+      }
+    });
+  }
 }
