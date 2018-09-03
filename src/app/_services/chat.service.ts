@@ -75,26 +75,29 @@ export class ChatService {
             }));
     }
 
-    sendMessage(text: string, sender_id: number, chat_id: number, sender_type: string, sender_name: string, isChannel: boolean) {
+    sendMessage(text: string, chat_id: number, isChannel: boolean) {
         if (!isChannel) {
-            return this.http.post<any>(`${environment.BASIC_URL}/messenger/send`, { text, sender_id, chat_id, sender_type, sender_name})
+            return this.http.post<any>(`${environment.BASIC_URL}/messenger/send`, {
+              text,
+              chat_id,
+              sender_id: this.user_1_id,
+              sender_type: this.user_1_type,
+              sender_name: this.user_1_name})
                 .pipe(map(mess => {
                     if (mess.result != null) {
-                        console.log(mess.result);
-                        return mess.result.id;
+                        return mess.result;
                     }
                 }));
         } else {
             return this.http.post<any>(`${environment.BASIC_URL}/messenger/send`, {
-                text,
-                sender_id,
-                channel_id: chat_id,
-                sender_type,
-                sender_name
-            }).pipe(map(mess => {
+              text,
+              channel_id: chat_id,
+              sender_id: this.user_1_id,
+              sender_type: this.user_1_type,
+              sender_name: this.user_1_name})
+                .pipe(map(mess => {
                     if (mess.result != null) {
-                        console.log(mess.result);
-                        return mess.result.id;
+                        return mess.result;
                     }
                 }));
         }

@@ -8,7 +8,6 @@ import {Guard} from '../../../model/guard/guard';
 })
 export class ItemGuardComponent implements OnInit {
 
-    //@Output() clickGuard = new EventEmitter<Guard>();
     @Input() guard: any;
     title: string;
     photo: string;

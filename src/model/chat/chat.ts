@@ -9,4 +9,5 @@ export interface Chat {
     create_at: string;
     update_at: string;
     state: number;
+    old?: boolean;
 }
