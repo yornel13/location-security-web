@@ -1,100 +1,129 @@
-<div class="chat-container">
-	<aside class="chat-aside">
-		<div class="container-fluid col-md-12 col-md-offset-12" style="height:100% !important"> <!--DIV COLMD -->
-			<br>
-			<ul class="nav nav-tabs header-aside" style="height: 30px">
+<div class="chat-container" >
+	<aside class="chat-aside" >
+		<div class="container-fluid col-md-12 col-md-offset-12" style="height:100% !important; padding: 0; margin: 0;"> <!--DIV COLMD -->
+		
+			
+			<ul class="nav nav-tabs header-aside" style="height: 40px; padding: 0; margin: 0; ">
 				<li class="nav-item">
-					<a class="nav-link active show" data-toggle="tab" href="#guard" style="height: 30px; border-radius: 0; padding-top: 0"><p style="margin: 2px">Guardias</p></a>
+					<a class="nav-link active show" data-toggle="tab" href="#guard" style="height: 100%; border-radius: 0; padding-top: 0"><p style="padding-top: 5px; margin: 2px; color: #6c757d">Guardias</p></a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" href="#admin" style="height: 30px; border-radius: 0; padding-top: 0"><p style="margin: 2px">Administradores</p></a>
+					<a class="nav-link" data-toggle="tab" href="#admin" style="height: 100%; border-radius: 0; padding-top: 0"><p style=" height: 100%;padding-top: 5px; margin: 2px; color: #6c757d">Administradores</p></a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" href="#channel" style="height: 30px; border-radius: 0; padding-top: 0"><p style="margin: 2px">Grupos</p></a>
+					<a class="nav-link" data-toggle="tab" href="#channel" style="height: 100%; border-radius: 0; padding-top: 0"><p style="height: 100%; padding-top: 5px; margin: 2px; color: #6c757d">Grupos</p></a>
 				</li>
 			</ul>
-			<div id="myTabContent" class="tab-content"> <!--  MY TAB CONTENT -->
-				<div class="tab-pane fade active show" id="guard"> <!-- ID GUARD -->
-					<ul class="list-group">
+			<div id="myTabContent" class="tab-content" style=""> <!--  MY TAB CONTENT -->
+				<div class="tab-pane scroll-content fade active show" id="guard"> <!-- ID GUARD -->
+					<ul class="list-group"  >
 						<div *ngFor="let guard of listContactGuard">
 							<app-item-guard [guard]="guard" (click)="listAllChat(guard.id,guard.name,guard.type)"></app-item-guard>
 						</div>
 					</ul>
 				</div> <!-- ID GUARD -->
-					<div class="tab-pane fade" id="admin"> <!-- ID ADMIN -->
+					<div class="tab-pane scroll-content fade"  id="admin"> <!-- ID ADMIN -->
 						<ul class="list-group">
 							<div *ngFor="let guard of listContactAdmin">
 								<app-item-guard [guard]="guard" (click)="listAllChat(guard.id,guard.name,guard.type)"></app-item-guard>
 							</div>
 						</ul>
 					</div> <!-- ID ADMIN -->
-					<div class="tab-pane fade" id="channel"> <!-- ID CHANNEL -->
-						<ul class="list-group">
-						<form #channelForm="ngForm" (ngSubmit)="newChannel(channelForm.value)" autocomplete="off" style="background-color: #656565; padding: 8px">
-							<div class="form-group">
-								<label for="nameChannel" style="color: white">Nuevo grupo</label>
-								<br>
-								<input [(ngModel)]="nameChannel" type="text" class="form-control" id="nameChannel" name="nameChannel" placeholder="Nombre del grupo...">
-							</div>
-							<button type="submit" class="btn btn-primary" [disabled]="loading" *ngIf="!loading disable" >Crear</button>
-							<div class="loader" *ngIf="loading"></div>
-						</form>
-						</ul>
-						<br>
-						<ul class="list-group" *ngFor="let chit of listChannelAdmin">
-							<li class="list-group-item">
-								<a class="btn buttonContact " (click)="openChannel(chit.id,chit.name)"><span> {{chit.name}} </span></a>
-								<a class="btn btn-danger fas fa-user-plus" data-toggle="modal" href="#add{{chit.id}}" title="Add" style="float: right; padding: 12px"></a>
-							</li>
-							<div class="modal" id="add{{chit.id}}">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-										<div class="modal-header">
-											<h5 class="modal-title">Agregar Participantes </h5>
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-												<span aria-hidden="true">&times;</span>
-											</button>
-										</div>
-										<div class="modal-body">
-											<form [formGroup]="myForm">
-												<li class="list-group-item list" style="border: 0; align-items: left; max-height:400px;" *ngFor="let chit of listContactGuard">
-													<input type="checkbox" (change)="onChange(chit.id,chit.name,chit.type,$event.target.checked)">
-													<a> {{chit.name}} {{chit.lastname}} </a>
-												</li>
-												<li class="list-group-item" style="border: 0" *ngFor="let chit of listContactAdmin">
-													<input type="checkbox" (change)="onChange(chit.id,chit.name,chit.type,$event.target.checked)">
-													<a> {{chit.name}} {{chit.lastname}} </a>
-												</li>
-											</form>
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-primary" (click)="add(chit.id,addUsers)" data-dismiss="modal">Save changes</button>
-											<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<div class="tab-pane fade tab-content-groups" id="channel"> <!-- ID CHANNEL -->
+						<div class="create-group" style="padding: 5px 14px 0 5px; margin-bottom: 35px">
+							<ul class="list-group">
+								<form #channelForm="ngForm" (ngSubmit)="newChannel(channelForm.value)" autocomplete="off" style="background-color: #fff; border: 1px #d8d8d8 solid; border-radius: 4px; padding: 8px 15px ">
+									<div class="form-group " >
+										<label for="nameChannel" style="color: #707070; margin-bottom: 5px ">Nuevo grupo</label>
+										<br>
+										<input [(ngModel)]="nameChannel" type="text" class="form-control" id="nameChannel" name="nameChannel" placeholder="Nombre del grupo...">
+									</div>
+									<button type="submit" class="btn btn-primary" [disabled]="loading" *ngIf="!loading disable" style="position: relative;" >Crear</button>
+									<div class="loader" *ngIf="loading"></div>
+								</form>
+							</ul>
+						</div>
+						
+						<div class="tab-content-groups">
+							
+							<div class=" scroll-content">
+							<ul class="list-group" *ngFor="let chit of listChannelAdmin">
+								<li class="list-group-item group-card" (click)="openChannel(chit.id,chit.name)">
+									<a class="btn buttonContact " ><span> {{chit.name}} </span></a>
+									<a class="btn btn-danger fas fa-user-plus" data-toggle="modal" href="#add{{chit.id}}" title="Add" style="float: right; padding: 12px"></a>
+								</li>
+								
+								<div class="modal" id="add{{chit.id}}">
+									<div class="modal-dialog" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title">Agregar Participantes </h5>
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<form [formGroup]="myForm">
+													<li class="list-group-item list" style="border: 0; align-items: left; max-height:400px;" *ngFor="let chit of listContactGuard">
+														<input type="checkbox" (change)="onChange(chit.id,chit.name,chit.type,$event.target.checked)">
+														<a> {{chit.name}} {{chit.lastname}} </a>
+													</li>
+													<li class="list-group-item" style="border: 0" *ngFor="let chit of listContactAdmin">
+														<input type="checkbox" (change)="onChange(chit.id,chit.name,chit.type,$event.target.checked)">
+														<a> {{chit.name}} {{chit.lastname}} </a>
+													</li>
+												</form>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-primary" (click)="add(chit.id,addUsers)" data-dismiss="modal">Save changes</button>
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						</ul>
+							</ul>
+						</div>
+						</div>
 					</div> <!-- ID CHANNEL -->
 				</div> <!-- MY TAB CONTENT -->
 			</div>
 	</aside>
-	<div class="messages-container">
-		<div style="overflow-y: auto" #scrollMe [scrollTop]="scrollMe.scrollHeight">
-			<ul class="list-group chat-lines">
-				<li class="list-group-item" *ngFor="let chit of currentChat">
-					{{chit.user}}: {{chit.message}}
-				</li>
-			</ul>
-		</div>
-		<form class="write-container" #chatForm="ngForm" (ngSubmit)="newMessage(chatForm.value)" autocomplete="off">
-			<div class="form-group">
-				<label for="message">Escribir Mensaje</label>
-				<br>
-				<input [(ngModel)]="message" type="text" class="form-control" id="message" name="message" placeholder="message...">
+	
+		<div class="messages-container">
+			<!--BUBBLE MESSAGE-->
+			<div class="scroll-content bubbles-container" #scrollMe [scrollTop]="scrollMe.scrollHeight" >
+				<div style="padding: 8px" class="{{chit.changeBubble}}" [ngClass]="user.id === chit.sender_id ? 'bubble-emitter':  'bubble-sender'"  *ngFor="let chit of currentChat">
+					<p   style=" margin: 0; font-size: 13px; font-weight: bold" >
+						{{chit.user}}:
+					</p>
+					<p  style=" margin: 0 0 0 0; padding: 0 ; font-size: 12px; line-height: 15px" >
+						{{chit.message}}
+					</p>
+					<div style="display: flex; margin: 0">
+						<p  style=" margin: 0 0 0 75%; padding: 0 ; font-size: 9px; color: grey; line-height: 8px" >
+							{{chit.created_at | date: "longDate"}}
+						</p>
+						<p style=" margin: 0 0 0 5px; padding: 0; font-size: 9px; color: grey; line-height: 8px">
+							{{chit.created_at | date: "hh:mm a"}}
+						</p>
+					</div>
+					
+					</div>
 			</div>
-			<button type="submit" class="btn btn-primary" [disabled]="loading" *ngIf="!loading disable" >Enviar</button>
-			<div class="loader" *ngIf="loading"></div>
+			
+			<!--WRITE MESSAGE-->
+			<div class="loader"  *ngIf="loading"></div>
+			<p style="margin: 0 auto; color: grey" *ngIf="noMessages && !loading">No hay Mensajes</p>
+			<form class="write-container" style="background-color: whitesmoke; margin-left: 12px" #chatForm="ngForm"  (ngSubmit)="newMessage(chatForm.value)" autocomplete="off">
+			<div style="display: flex">
+				<div class="form-group col-lg-11">
+					<label for="message">Escribir Mensaje</label>
+					<br>
+					<input   [(ngModel)]="message" type="text" class="form-control" #messageField id="message" name="message" placeholder="...">
+				</div>
+				<button type="submit" style=" align-self: center; margin-top: 5px;" class="btn btn-primary" [disabled]="loading" *ngIf="!loading disable" ><i class="fa">&#xf1d8;</i></button>
+			</div>
 		</form>
 	</div>
+
 </div>
