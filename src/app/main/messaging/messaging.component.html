@@ -45,13 +45,11 @@
 						</div>
 						
 						<div class="tab-content-groups">
-			
-
 							
 							<div class=" scroll-content">
 							<ul class="list-group" *ngFor="let chit of listChannelAdmin">
-								<li class="list-group-item">
-									<a class="btn buttonContact " (click)="openChannel(chit.id,chit.name)"><span> {{chit.name}} </span></a>
+								<li class="list-group-item group-card" (click)="openChannel(chit.id,chit.name)">
+									<a class="btn buttonContact " ><span> {{chit.name}} </span></a>
 									<a class="btn btn-danger fas fa-user-plus" data-toggle="modal" href="#add{{chit.id}}" title="Add" style="float: right; padding: 12px"></a>
 								</li>
 								
@@ -90,31 +88,38 @@
 				</div> <!-- MY TAB CONTENT -->
 			</div>
 	</aside>
-
+	
 		<div class="messages-container">
 			<!--BUBBLE MESSAGE-->
-			<div class="scroll-content bubbles-container"  #scrollMe [scrollTop]="scrollMe.scrollHeight">
-				<div style="padding: 8px" class="bubble-sender" [ngClass]="{'bubble-emitter': user.id === chit.userId}"  *ngFor="let chit of currentChat">
-					<p   style=" margin: 0; font-size: 13px;" >
+			<div class="scroll-content bubbles-container" #scrollMe [scrollTop]="scrollMe.scrollHeight" >
+				<div style="padding: 8px" class="{{chit.changeBubble}}" [ngClass]="user.id === chit.sender_id ? 'bubble-emitter':  'bubble-sender'"  *ngFor="let chit of currentChat">
+					<p   style=" margin: 0; font-size: 13px; font-weight: bold" >
 						{{chit.user}}:
 					</p>
-					<p  style=" margin: 0 0 0 0; padding: 0 ; font-size: 12px; font-style: oblique" >
+					<p  style=" margin: 0 0 0 0; padding: 0 ; font-size: 12px; line-height: 15px" >
 						{{chit.message}}
 					</p>
-					<p  style=" margin: 0 0 0 0; padding: 0 ; font-size: 12px" >
-						{{chit.created_at}}
-					</p>
-				</div>
+					<div style="display: flex; margin: 0">
+						<p  style=" margin: 0 0 0 75%; padding: 0 ; font-size: 9px; color: grey; line-height: 8px" >
+							{{chit.created_at | date: "longDate"}}
+						</p>
+						<p style=" margin: 0 0 0 5px; padding: 0; font-size: 9px; color: grey; line-height: 8px">
+							{{chit.created_at | date: "hh:mm a"}}
+						</p>
+					</div>
+					
+					</div>
 			</div>
 			
 			<!--WRITE MESSAGE-->
 			<div class="loader"  *ngIf="loading"></div>
-			<form class="write-container" style="background-color: whitesmoke; margin-left: 12px" #chatForm="ngForm" (ngSubmit)="newMessage(chatForm.value)" autocomplete="off">
+			<p style="margin: 0 auto; color: grey" *ngIf="noMessages && !loading">No hay Mensajes</p>
+			<form class="write-container" style="background-color: whitesmoke; margin-left: 12px" #chatForm="ngForm"  (ngSubmit)="newMessage(chatForm.value)" autocomplete="off">
 			<div style="display: flex">
 				<div class="form-group col-lg-11">
 					<label for="message">Escribir Mensaje</label>
 					<br>
-					<input  [(ngModel)]="message" type="text" class="form-control" id="message" name="message" placeholder="...">
+					<input   [(ngModel)]="message" type="text" class="form-control" #messageField id="message" name="message" placeholder="...">
 				</div>
 				<button type="submit" style=" align-self: center; margin-top: 5px;" class="btn btn-primary" [disabled]="loading" *ngIf="!loading disable" ><i class="fa">&#xf1d8;</i></button>
 			</div>

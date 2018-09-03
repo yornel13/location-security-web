@@ -10,20 +10,39 @@ li {
 
 
 .loader {
-  border: 8px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 8px solid #3498db;
-  width: 20px;
-  height: 20px;
-  -webkit-animation: spin 2s linear infinite; /* Safari */
-  animation: spin 2s linear infinite;
-  align-items: center;
-  margin: 10px auto 5px;
+  display: inline-block;
+  width: 25px;
+  height: 25px;
 
-  position: absolute;
-    left: 50%;
-  bottom: 100px;
 }
+
+.loader:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    border: 8px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 8px solid #3498db;
+    -webkit-animation: loader 1s linear infinite;
+    animation: loader 1s linear infinite;
+    align-items: center;
+    margin: 10px auto 5px;
+
+    left: 50%;
+    bottom: 100px;
+}
+
+@keyframes loader {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+
 
 .dropdown{
   height: 100%;
@@ -221,7 +240,8 @@ app-messaging {
 }
 
 .chat-container {
-    background-color: #D9D9D9;
+    background-color: #d7d6d3;
+    /*background-color: #D9D9D9;*/
     position: absolute;
     width: 100%;
     top: 56px;
@@ -230,6 +250,10 @@ app-messaging {
     bottom: 0;
     height: auto;
     display: flex;
+}
+
+.group-card:hover {
+    cursor: pointer;
 }
 
 .scroll-content::-webkit-scrollbar{
@@ -291,13 +315,13 @@ app-messaging {
 }
 
 .bubbles-container {
-    margin-bottom: 10px;
+    margin-bottom: 25px;
 }
 
 .bubble-sender {
     /*overflow-y: auto;*/
     position: relative;
-    background-color: #fff;
+    background-color: #e3ffdc;
     min-height: 45px;
     border-radius: 5px;
     margin: 30px 45% 30px 15px;
@@ -311,7 +335,7 @@ app-messaging {
     width: 0;
     height: 0;
     border: 17px solid transparent;
-    border-top-color: #fff;
+    border-top-color: #e3ffdc;
     border-bottom: 0;
     border-left: 0;
     margin-left: -9px;
@@ -321,7 +345,7 @@ app-messaging {
 .bubble-emitter {
     /*overflow-y: auto;*/
     position: relative;
-    background-color: #eaf6ff;
+    background-color: #D6EAFF;
     min-height: 45px;
     border-radius: 5px;
     margin: 30px 15px 30px 45%;
@@ -338,7 +362,7 @@ app-messaging {
     width: 0;
     height: 0;
     border: 17px solid transparent;
-    border-top-color: #EAF6FF;
+    border-top-color: #d6eaff;
     border-bottom: 0;
     border-right: 0;
     margin-left: -9px;
