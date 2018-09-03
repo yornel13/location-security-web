@@ -188,7 +188,6 @@ export class MapOsmComponent implements OnChanges, OnInit {
             const polygons = [];
             const editableLayers = new L.FeatureGroup();
             this.bounds = success.data;
-              console.log(this.bounds);
               this.bounds.forEach(cerco => {
                 const coors = JSON.parse(cerco.points);
                 this.map.addLayer(editableLayers);
@@ -253,11 +252,7 @@ export class MapOsmComponent implements OnChanges, OnInit {
                     const factory = this.resolver.resolveComponentFactory(PopupVehicleComponent);
                     const component = factory.create(this.injector);
                     const popupContent = component.location.nativeElement;
-                    component.instance.imei = mData.imei;
-                    component.instance.alias = mData.alias;
-                    component.instance.speed = mData.speed;
-                    component.instance.generated_time = mData.generated_time;
-                    component.instance.model_name = mData.model_name;
+                    component.instance.vehicle = mData;
                     component.changeDetectorRef.detectChanges();
                     m.bindPopup(popupContent).openPopup();
                     data.push(m);
@@ -274,11 +269,7 @@ export class MapOsmComponent implements OnChanges, OnInit {
                 const factory = this.resolver.resolveComponentFactory(PopupVehicleComponent);
                 const component = factory.create(this.injector);
                 const popupContent = component.location.nativeElement;
-                component.instance.imei = mData.imei;
-                component.instance.alias = mData.alias;
-                component.instance.speed = mData.speed;
-                component.instance.generated_time = mData.generated_time;
-                component.instance.model_name = mData.model_name;
+                component.instance.vehicle = mData;
                 component.changeDetectorRef.detectChanges();
                 m.bindPopup(popupContent).openPopup();
                 data.push(m);

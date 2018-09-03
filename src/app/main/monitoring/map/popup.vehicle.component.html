@@ -1,7 +1,9 @@
 
-    <h6 class="ppp">{{imei }}</h6>
-    <p class="p-popup"><b>{{alias }}</b></p>
-    <p class="p-popup"><b>Velocidad: </b>{{speed }} km/h</p>
-    <p class="p-popup"><b>Última transmisión: </b> {{generated_time }}</p>
-    <p class="p-popup"><b>Model:</b> {{model_name }}</p>
+    <p class="ppp ps" style="font-size: 0.85rem"><b>{{vehicle.alias}}</b></p>
+    <p class="ppp ps">{{vehicle.imei}}</p>
+    <p class="ppp ps"><b>Velocidad: </b>{{vehicle.speed}} km/h</p>
+    <p class="ppp ps"><b>Placa:</b> {{vehicle.automotor_plate}}</p>
+    <p class="ppp ps"><b>Kilometraje:</b> {{vehicle.odometer}}</p>
+    <p class="ppp ps"><b>Última transmisión: </b> {{vehicle.generated_time}}</p>
+    <p class="ppp ps"><b>Posición valida: </b> {{vehicle.message_time}}</p>
 

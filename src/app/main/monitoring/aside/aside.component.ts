@@ -19,6 +19,7 @@ import swal from 'sweetalert2';
 
 export class AsideComponent implements OnInit, OnChanges {
 
+    alerts: Alerta[] = [];
     alerts0: Alerta[] = [];
     alerts1: Alerta[] = [];
     @Input() vehicles: Vehicle[] = [];
@@ -36,8 +37,7 @@ export class AsideComponent implements OnInit, OnChanges {
     showCardContainer = true;
     search: any;
     CHECK_ICON_URL = './assets/aside-menu/checked.png';
-    readonly alertCollection0: AngularFirestoreCollection<Alerta>;
-    readonly alertCollection1: AngularFirestoreCollection<Alerta>;
+    readonly alertCollection: AngularFirestoreCollection<Alerta>;
 
     constructor(
         private asideService: AsideService,
@@ -46,63 +46,30 @@ export class AsideComponent implements OnInit, OnChanges {
         private notificationService: NotificationService,
         private db: AngularFirestore,
         private mapService: GlobalOsm) {
-        this.alertCollection0 = db.collection<Alerta>('alerts', ref => ref.where('status', '==', 0))
-        this.alertCollection0.valueChanges()
-            .subscribe((alerts: Alerta[]) => {
-                this.alerts0 = alerts.sort((n1, n2) => {
-                    if (n1.create_date > n2.create_date) { return -1; }
-                    if (n1.create_date < n2.create_date) {return 1; }
-                    return 0;
-                });
-            });
-        this.alertCollection1 = db.collection<Alerta>('alerts', ref => ref.where('status', '==', 1))
-        this.alertCollection1.valueChanges()
-            .subscribe((alerts: Alerta[]) => {
-                this.alerts1 = alerts.sort((n1, n2) => {
-                    if (n1.create_date > n2.create_date) { return -1; }
-                    if (n1.create_date < n2.create_date) {return 1; }
-                    return 0;
-                });
-            });
-      db.collection<Alerta>('alerts').stateChanges().subscribe(data => {
-          if (data.length === 1) {
-              if (data[0].type === 'added') {
-                  const alert = data[0].payload.doc.data() as Alerta;
-                  let title = alert.type;
-                  if (alert.status === 1) {
-                    if (alert.cause === this.mapService.INCIDENCE) {
-                      title = 'Incidencia';
-                    } else if (alert.cause === this.mapService.DROP) {
-                      title = 'Caida';
-                    } else if (alert.cause === this.mapService.SOS1) {
-                      title = 'SOS';
-                    }
-                    swal({
-                      title: title,
-                      text: alert.message,
-                      type: 'warning',
-                      confirmButtonText: 'Ir a'
-                    }).then(result => {
-                      if (result.value) {
-                        this.solveAlert(alert);
-                      }
-                    });
-                  }
-              }
-          }
-      });
+        // this.alertCollection0 = db.collection<Alerta>('alerts', ref => ref.where('status', '==', 0))
+        // this.alertCollection0.valueChanges()
+        //     .subscribe((alerts: Alerta[]) => {
+        //         this.alerts0 = alerts.sort((n1, n2) => {
+        //             if (n1.create_date > n2.create_date) { return -1; }
+        //             if (n1.create_date < n2.create_date) {return 1; }
+        //             return 0;
+        //         });
+        //     });
+        // this.alertCollection1 = db.collection<Alerta>('alerts', ref => ref.where('status', '==', 1))
+        // this.alertCollection1.valueChanges()
+        //     .subscribe((alerts: Alerta[]) => {
+        //         this.alerts1 = alerts.sort((n1, n2) => {
+        //             if (n1.create_date > n2.create_date) { return -1; }
+        //             if (n1.create_date < n2.create_date) {return 1; }
+        //             return 0;
+        //         });
+        //     });
+      this.alertCollection = db.collection<Alerta>('alerts',
+          ref => ref.orderBy('id', 'desc').limit(500));
     }
 
     ngOnInit() {
         this.getAlerts();
-        this.notificationService.newNotification.subscribe(
-            (newAlert: Alerta) => {
-                if (newAlert.status == 1) {
-                    this.alerts1.unshift(newAlert);
-                } else {
-                    this.alerts0.unshift(newAlert);
-                }
-            });
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -117,7 +84,7 @@ export class AsideComponent implements OnInit, OnChanges {
     solveAlert(alert: Alerta) {
         this.alertService.solveAlert(alert.id).then(
             success => {
-                this.alertCollection1.doc(String(alert.id)).update({'status': 0});
+                this.alertCollection.doc(String(alert.id)).update({'status': 0});
                 if (alert.cause === this.mapService.INCIDENCE) {
                     const report = JSON.parse(alert.extra);
                     this.router.navigate(['/u/control/bitacora/reportfilter/' + report.id]);
@@ -191,16 +158,68 @@ export class AsideComponent implements OnInit, OnChanges {
     }
 
     getAlerts() {
-        this.alertService.getAll().then(
-            (success: AlertaList) => {
-                // if do something
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
+      this.alertCollection.stateChanges().subscribe(data => {
+        if (data.length === 1) {
+          if (data[0].type === 'added') {
+            const alert = data[0].payload.doc.data() as Alerta;
+            let title = alert.type;
+            if (alert.status === 1) {
+              if (alert.cause === this.mapService.INCIDENCE) {
+                title = 'Incidencia';
+              } else if (alert.cause === this.mapService.DROP) {
+                title = 'Caida';
+              } else if (alert.cause === this.mapService.SOS1) {
+                title = 'SOS';
+              }
+              swal({
+                title: title,
+                text: alert.message,
+                type: 'warning',
+                confirmButtonText: 'Ir a'
+              }).then(result => {
+                if (result.value) {
+                  this.solveAlert(alert);
                 }
+              });
             }
-        );
+          }
+        }
+        data.forEach(single => {
+          const alert = single.payload.doc.data() as Alerta;
+          if (single.type === 'added') {
+            if (alert.status === 0) {
+              this.alerts0.push(alert);
+            } else {
+              this.alerts1.push(alert);
+            }
+            this.alerts.push(alert);
+          }
+          if (single.type === 'modified') {
+            let alertMod = null;
+            this.alerts1.forEach(alert1 => {
+              if (alert1.id === alert.id) {
+                alertMod = alert1;
+              }
+            });
+            if (alertMod != null) {
+              this.alerts1.splice(this.alerts1.indexOf(alertMod, 0), 1);
+              this.alerts0.push(alert);
+
+              this.alerts.splice(this.alerts.indexOf(alertMod, 0), 1);
+              this.alerts.push(alert);
+            }
+          }
+        });
+        this.alerts1 = this.alerts1.sort((n1, n2) => {
+          if (n1.create_date > n2.create_date) { return -1; }
+          if (n1.create_date < n2.create_date) {return 1; }
+          return 0;
+        });
+        this.alerts0 = this.alerts0.sort((n1, n2) => {
+          if (n1.create_date > n2.create_date) { return -1; }
+          if (n1.create_date < n2.create_date) {return 1; }
+          return 0;
+        });
+      });
     }
 }
