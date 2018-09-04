@@ -42,20 +42,16 @@
             <thead class="thead-light">
             <th>ID</th>
             <th>IMEI</th>
-            <th>Mensaje</th>
-            <th>Nombre del Guardia</th>
-            <th>Cédula del Guardia</th>
-            <th>Fecha</th>
+            <th>Puesto</th>
+            <th>Dirección</th>
             <th>Ver Historial</th>
             </thead>
             <tbody>
 	            <tr *ngFor="let tab of data | filter:filter | paginate: { itemsPerPage: numElement, currentPage: p }">
 	                <td>{{tab.id}}</td>
 	                <td>{{tab.imei}}</td>
-	                <td><span *ngIf="tab.message == 'INIT_WATCH'">INICIO DE GUARDIA</span><span *ngIf="tab.message == 'FINISHED_WATCH'">FINALIZACIÓN DE GUARDIA</span><span *ngIf="tab.message == 'UPDATE'">ACTUALIZACIÓN DE POSICIÓN</span></td>
-	                <td>{{tab.guard_name}} {{tab.guard_lastname}}</td>
-	                <td>{{tab.guard_dni}}</td>
-	                <td>{{tab.generated_time}}</td>
+	                <td>{{tab.stand_name}}</td>
+	                <td>{{tab.stand_address}}</td>
 	                <td>
 	                    <a class="btn btn-warning btn-xs" (click)="verhistorial(tab)" title="Ver historial"><span class="fas fa-history"></span></a>
 	                </td>
@@ -119,16 +115,20 @@
 	          	<table class="table table-bordered">
 	                <thead  class="thead-light">
 	                    <th>IMEI</th>
-	                    <th>Fecha</th>
-	                    <th>Mensaje</th>
-	                    <th>Fecha del mensaje</th>
+                      <th>Nombre del Guardia</th>
+                      <th>Cédula del Guardia</th>
+                      <th>Mensaje</th>
+	                    <th>Hora de Transmisión</th>
+	                    <th>Última Pos. Valida</th>
 	                </thead>
 	                <tbody>
 	                <tr *ngFor="let tabh of history">
 	                    <td>{{tabh.imei}}</td>
-	                    <td>{{tabh.generated_time}}</td>
+                      <td>{{tabh.guard_name}} {{tabh.guard_lastname}}</td>
+                      <td>{{tabh.guard_dni}}</td>
 	                    <td><span *ngIf="tabh.message == 'INIT_WATCH'">INICIO DE GUARDIA</span><span *ngIf="tabh.message == 'FINISHED_WATCH'">FINALIZACIÓN DE GUARDIA</span><span *ngIf="tabh.message == 'UPDATE'">ACTUALIZACIÓN DE POSICIÓN</span></td>
-	                    <td>{{tabh.message_time}}</td>
+                      <td>{{tabh.generated_time}}</td>
+                      <td>{{tabh.message_time}}</td>
 	                </tr>
 	                </tbody>
 	            </table>

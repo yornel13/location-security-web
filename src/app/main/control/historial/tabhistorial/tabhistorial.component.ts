@@ -12,7 +12,7 @@ import * as geolib from 'geolib';
   templateUrl: './tabhistorial.component.html',
   styleUrls: ['./tabhistorial.component.css']
 })
-export class TabhistorialComponent{
+export class TabhistorialComponent {
   
   lista:boolean = true;
   historial:boolean = false;
@@ -90,7 +90,9 @@ export class TabhistorialComponent{
     };
 
 
-  constructor(private tabhistoryService:TabhistoryService, private excelService:ExcelService) { 
+  constructor(
+    private tabhistoryService: TabhistoryService,
+    private excelService: ExcelService) {
   	this.getAll();
   }
 
@@ -114,11 +116,9 @@ export class TabhistorialComponent{
             this.data = this.tablets.data;
             var body = [];
             var excel = [];
-            for(var i=0; i<this.data.length; i++){
-                //this.data[i].id = Number(this.data[i].id);
-                //this.data[i].dni = Number(this.data[i].dni);
-                excel.push({'#' : this.data[i].id, 'IMEI': this.data[i].imei, 'Mensaje':this.data[i].message, 'Nombre del Guardia':this.data[i].guard_name, 'Apellido del Guardia':this.data[i].guard_lastname, 'Fecha':this.data[i].generated_time})
-                body.push([this.data[i].id, this.data[i].imei, this.data[i].message, this.data[i].guard_name+" "+this.data[i].guard_lastname, this.data[i].guard_dni, this.data[i].generated_time])
+            for(var i=0; i<this.data.length; i++) {
+                excel.push({'#' : this.data[i].id, 'IMEI': this.data[i].imei, 'Puesto':this.data[i].stand_name, 'Dirección':this.data[i].stand_address});
+                body.push([this.data[i].id, this.data[i].imei, this.data[i].stand_name, this.data[i].stand_address]);
             }
             this.contpdf = body;
             this.info = excel;
@@ -132,7 +132,7 @@ export class TabhistorialComponent{
     );
   }
 
-  onMapReadyH(map: L.Map){
+  onMapReadyH(map: L.Map) {
   	/*
     	console.log("vamos a ver si entra");
     	this.mapchart = map;
@@ -304,7 +304,7 @@ export class TabhistorialComponent{
     doc.text('Historial de tablets', 15, 27)
     doc.text('Hora de impresión: '+ fecha, 15, 34)
     doc.autoTable({
-        head: [['#', 'IMEI', 'Mensaje', 'Nombre del Guardia', 'Cédula del Guardia', 'Fecha']],
+        head: [['#', 'IMEI', 'Puesto', 'Dirección']],
         body: this.contpdf,
         startY: 41,
         columnStyles: {
@@ -330,7 +330,7 @@ export class TabhistorialComponent{
     doc.text('Historial de tablets', 15, 27)
     doc.text('Hora de impresión: '+ fecha, 15, 34)
     doc.autoTable({
-        head: [['#', 'IMEI', 'Mensaje', 'Nombre del Guardia', 'Cédula del Guardia', 'Fecha']],
+        head: [['#', 'IMEI', 'Puesto', 'Dirección']],
         body: this.contpdf,
         startY: 41,
         columnStyles: {

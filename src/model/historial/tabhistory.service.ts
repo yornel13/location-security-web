@@ -13,7 +13,7 @@ export class TabhistoryService {
     constructor (private http: HttpClient) {}
 
     getAll() {
-        return this.http.get(this.TABHISTORY_URL).toPromise()
+        return this.http.get(this.TABHISTORY_URL + '/active/all').toPromise()
             .then((response) => response);
     }
 
