@@ -42,6 +42,7 @@ export class TabhistorialComponent{
   //fechas
   rangeday:boolean = true;
   hasta:string = "";
+  hayhistory:boolean = true;
 
   zoom: 12;
   center = L.latLng(([ this.lat, this.lng ]));
@@ -173,6 +174,8 @@ export class TabhistorialComponent{
   	this.loadh = false;
   	this.lista = false;
     this.historial = true;
+    this.date = "";
+    this.hasta = "";
 
   	var d = new Date();
   	var day = d.getDate();
@@ -199,6 +202,11 @@ export class TabhistorialComponent{
             this.htab = success;
             this.history = this.htab.data;
             console.log(this.history);
+            if(this.history.length == 0){
+              this.hayhistory = false;
+            }else{
+              this.hayhistory = true;
+            }
             this.loadh = true;           
         }, error => {
             if (error.status === 422) {
@@ -216,22 +224,27 @@ export class TabhistorialComponent{
   		this.verhistorial(this.objtab);
   	}else{
   		var fecha1 = String(this.date);
-		var valuesdate1 = fecha1.split('-');
-		var year1 = valuesdate1[0];
-		var month1 = valuesdate1[1];
-		var day1 = valuesdate1[2];
+  		var valuesdate1 = fecha1.split('-');
+  		var year1 = valuesdate1[0];
+  		var month1 = valuesdate1[1];
+  		var day1 = valuesdate1[2];
 
-		var fecha2 = String(this.hasta);
-		var valuesdate2 = fecha2.split('-');
-		var year2 = valuesdate2[0];
-		var month2 = valuesdate2[1];
-		var day2 = valuesdate2[2];
+  		var fecha2 = String(this.hasta);
+  		var valuesdate2 = fecha2.split('-');
+  		var year2 = valuesdate2[0];
+  		var month2 = valuesdate2[1];
+  		var day2 = valuesdate2[2];
   		if(this.rangeday){
   			this.tabhistoryService.getHistoryImeiDate(this.imei, year1, month1, day1, year1, month1, day1).then(
 		        success => {
 		            this.htab = success;
 		            this.history = this.htab.data;
 		            console.log(this.history);
+                if(this.history.length == 0){
+                  this.hayhistory = false;
+                }else{
+                  this.hayhistory = true;
+                }
 		            this.loadh = true;           
 		        }, error => {
 		            if (error.status === 422) {
@@ -247,6 +260,11 @@ export class TabhistorialComponent{
 		            this.htab = success;
 		            this.history = this.htab.data;
 		            console.log(this.history);
+                if(this.history.length == 0){
+                  this.hayhistory = false;
+                }else{
+                  this.hayhistory = true;
+                }
 		            this.loadh = true;           
 		        }, error => {
 		            if (error.status === 422) {
