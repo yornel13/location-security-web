@@ -1,0 +1,260 @@
+<div class="info-container panel panel-default" *ngIf="lista">
+    <div class="container-fluid row mx-auto mt-2">
+        <div class="mr-auto row ml-1">
+            <a routerLink="/u/control/home/historial" title="Atrás" style="color: var(--secondary-color)">
+                <i class="fas fa-reply icon-return"></i>
+            </a>
+            <h3 class="list-title">Historial Vehiculos</h3>
+        </div>
+        <div class="ml-auto form-inline">
+        	<div class="btn-group btn-group-toggle mr-2" data-toggle="buttons">
+              <label class="btn btn-outline-secondary" (click)="excelDownload()">
+                <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+              </label>
+              <label class="btn btn-outline-secondary" (click)="pdfDownload()">
+                <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+              </label>
+              <label class="btn btn-outline-secondary" (click)="print()">
+                <input type="radio" name="options" id="option3" autocomplete="off"> Print
+              </label>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid row mx-auto mt-2">
+            <div class="mr-auto row ml-2 form-inline">
+                <label class="mr-1"><b>Mostrar:</b></label>
+                <select id="inputState" class="form-control mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
+                  <option [ngValue]="10">10</option>
+                  <option [ngValue]="25">25</option>
+                  <option [ngValue]="50">50</option>
+                  <option [ngValue]="100">100</option>
+                </select>
+                <label>Elementos</label>
+            </div>
+            <div class="ml-auto form-inline">
+        	<div class="form-group row">
+		          <input type="text" name="searchString" class="form-control mr-4" placeholder="Buscar Vehiculo" [(ngModel)]="filter">
+	        </div>
+	      </div>
+        </div>
+    <div class="table mt-2 container-fluid">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <th>ID</th>
+            <th>IMEI</th>
+            <th>Alias</th>
+            <th>Placa</th>
+            <th>Grupo</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+            </thead>
+            <tbody>
+	            <tr *ngFor="let vehi of data | filter:filter | paginate: { itemsPerPage: numElement, currentPage: p }">
+	                <td>{{vehi.id}}</td>
+	                <td>{{vehi.imei}}</td>
+	                <td>{{vehi.alias}}</td>
+	                <td>{{vehi.automotor_plate}}</td>
+	                <td>{{vehi.group_name}}</td>
+	                <td>{{vehi.generated_time}}</td>
+	                <td>
+	                	<a class="btn btn-info btn-xs mr-2" (click)="verDetalle(vehi)" title="Ver detalle"><span class="fas fa-eye"></span></a>
+	                    <a class="btn btn-warning btn-xs" (click)="verhistorial(vehi)" title="Ver historial"><span class="fas fa-history"></span></a>
+	                </td>
+	            </tr>
+            </tbody>
+        </table>
+        <div style="text-align: center; padding-right: 40px;">
+            <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
+                  nextLabel="">
+            </pagination-controls>
+        </div>
+    </div>
+</div>
+
+<div class="info-container panel panel-default" *ngIf="detalle">
+    <div class="row panel-heading mb-2" style="background-color: #D9D9D9; padding: 10px">
+        <div class="mr-auto ml-4">
+            <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle Vehículo</h3>
+        </div>
+        <div class="ml-auto" style="margin-top: 25px; margin-right: 60px;">
+            <div class="btn-group btn-group-toggle ml-4" data-toggle="buttons">
+              <label class="btn btn-outline-dark" (click)="excelDetalle()">
+                <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+              </label>
+              <label class="btn btn-outline-dark" (click)="pdfDetalle()">
+                <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+              </label>
+              <label class="btn btn-outline-dark" (click)="printDetalle()">
+                <input type="radio" name="options" id="option3" autocomplete="off"> Print
+              </label>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body mt-2">          
+          <div class="table-container container">
+            <form  role="form">
+              <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">IMEI</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="name" value="{{vehiculo.imei}}">
+                </div>
+                <label for="lastname" class="col-sm-2 col-form-label">Alias</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="lastname" value="{{vehiculo.alias}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Placa</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{vehiculo.automotor_plate}}">
+                </div>
+                <label for="dni2" class="col-sm-2 col-form-label">Grupo</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni2" value="{{vehiculo.group_name}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni123" class="col-sm-2 col-form-label">Latitud</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni123" value="{{vehiculo.latitude}}%">
+                </div>
+                <label for="dni233" class="col-sm-2 col-form-label">Longitud</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni233" value="{{vehiculo.longitude}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Mapa</label>
+                <div class="col-sm-10">
+                  <div class="map"
+                       leaflet
+                       [leafletOptions]="options"
+                       [(leafletZoom)]="zoom"
+                       [(leafletCenter)]="center"
+                       [leafletBaseLayers]="baseLayers"
+                       [leafletLayersControlOptions]="layersControlOptions"
+                       (leafletMapReady)="onMapReady($event)">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni22" class="col-sm-2 col-form-label">Encendido</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni22" value="ON" *ngIf="vehiculo.ignition_state == 1">
+                  <input type="text" readonly class="form-control" id="dni22" value="OFF" *ngIf="vehiculo.ignition_state == 2">
+                  <input type="text" readonly class="form-control" id="dni22" value="--" *ngIf="vehiculo.ignition_state == 0">
+                </div>
+                <label for="dni21" class="col-sm-2 col-form-label">Movimiento</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni21" value="Si" *ngIf="vehiculo.movement_state == 1">
+                  <input type="text" readonly class="form-control" id="dni21" value="No" *ngIf="vehiculo.movement_state == 0">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Velocidad</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{vehiculo.speed}} Km/h">
+                </div>
+                <label for="dni2" class="col-sm-2 col-form-label">Status del dispositivo</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni2" value="{{vehiculo.device_status}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Fecha</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{vehiculo.generated_time}}">
+                </div>
+                <label for="dni2" class="col-sm-2 col-form-label">Fecha del mensaje</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni2" value="{{vehiculo.message_time}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Modelo del dispositivo</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{vehiculo.model_name}}">
+                </div>
+                <label for="dni2" class="col-sm-2 col-form-label">Tipo del dispositivo</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni2" value="{{vehiculo.device_type_name}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-2 col-form-label">Nivel de batería</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni" value="{{vehiculo.battery_level}}%">
+                </div>
+                <label for="dni2" class="col-sm-2 col-form-label">Odometer Kilometraje</label>
+                <div class="col-sm-4">
+                  <input type="text" readonly class="form-control" id="dni2" value="{{vehiculo.odometer}}">
+                </div>
+              </div>
+              <div class="row mt-4">
+                  <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
+              </div>
+            </form>
+          </div>
+        </div>
+  </div>
+
+<div class="info-container panel panel-default" *ngIf="historial">
+    <div class="row panel-heading mb-2" style="background-color: #D9D9D9; padding: 10px">
+        <div class="mr-auto ml-4">
+            <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Historial Vehículo</h3>
+        </div>
+    </div>
+    <div style="text-align: center;" *ngIf="!loadh">
+    	<h2>Cargando Historial</h2>
+    	<div class="loader mb-4 mx-auto"></div>
+    </div>
+    <div class="panel-body mt-2" *ngIf="loadh">          
+          <div class="table-container container">
+            <form  role="form">
+              <div>
+              	<div class="row form-inline mb-2">
+              		<b class="mr-auto ml-3">Historial</b> 
+              		<label for="start" class="mr-2">Fecha</label>
+	            	<input class="form-control mr-3" type="date" name="date" [(ngModel)]="date" (change)="getHistory(date)" [ngModelOptions]="{standalone: true}">
+              	</div>
+	          </div>
+	          <div style="height: 500px; overflow-y: scroll; margin-bottom: 30px;">
+	          	<table class="table table-bordered">
+	                <thead  class="thead-light">
+	                    <th>Dirección</th>
+	                    <th>Fecha</th>
+	                    <th>Hora</th>
+	                    <th>Nivel de batería</th>
+	                </thead>
+	                <tbody>
+	                <tr *ngFor="let veh of history">
+	                    <td>{{veh.address}}</td>
+	                    <td>{{veh.date}}</td>
+	                    <td>{{veh.time}}</td>
+	                    <td>{{veh.internal_battery_level}}</td>
+	                </tr>
+	                </tbody>
+	            </table>
+	          </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-1 col-form-label"><b>Mapa</b></label>
+                <div class="col-sm-11">
+                  <div class="mapchart"
+                       leaflet
+                       [leafletOptions]="options"
+                       [(leafletZoom)]="zoom"
+                       [(leafletCenter)]="center"
+                       [leafletBaseLayers]="baseLayers"
+                       [leafletLayersControlOptions]="layersControlOptions"
+                       (leafletMapReady)="onMapReadyH($event)">
+                  </div>
+                </div>
+              </div>
+ 
+              <div class="row mt-4">
+                  <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
+              </div>
+            </form>
+          </div>
+        </div>
+  </div>

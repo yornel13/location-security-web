@@ -41,6 +41,7 @@ export class PuestosComponent {
   guardpuesto:any = [];
   //edit
   editid:any;
+  editnombre:any;
   viewpuesto:string;
 
   tabl = {id: [], name: []};
@@ -136,6 +137,7 @@ export class PuestosComponent {
 	  	this.getGuardiaPuesto(puesto.id);
 	  	this.loadGuardiaListModal();
 	  	this.editid = puesto.id;
+      this.editnombre = puesto.name;
 	  }
 
 	getTabletPuesto(id){

@@ -14,6 +14,7 @@ import { ConfiguracionService } from '../../../model/configuracion/configuracion
 import { BannerService } from '../../../model/banner/banner.service';
 import { AlertaService } from '../../../model/alerta/alerta.service';
 import { ExcelService } from '../../../model/excel/excel.services';
+import { VehistorialService } from '../../../model/historial/vehistorial.service';
 
 import { HttpClientModule } from '@angular/common/http';
 import { ColorPickerModule } from 'ngx-color-picker';
@@ -62,6 +63,10 @@ import { CercogrupoComponent } from './cerco/cercogrupo/cercogrupo.component';
 import { McercoComponent } from './subhome/mcerco/mcerco.component';
 import { TabletsComponent } from './watches/tablets/tablets.component';
 import { PuestosComponent } from './watches/puestos/puestos.component';
+import { MhistorialComponent } from './subhome/mhistorial/mhistorial.component';
+import { VehistorialComponent } from './historial/vehistorial/vehistorial.component';
+import { TabhistorialComponent } from './historial/tabhistorial/tabhistorial.component';
+import { VehicercohistorialComponent } from './historial/vehicercohistorial/vehicercohistorial.component';
 
 export const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
@@ -86,12 +91,16 @@ export const controlRoutes: Routes = [
                     { path: 'guardias/todas', component: WtodasComponent },
                     { path: 'guardias/tablets', component: TabletsComponent },
                     { path: 'guardias/puestos', component: PuestosComponent },
+                    { path: 'historial/vehiculos', component: VehistorialComponent },
+                    { path: 'historial/tablets', component: TabhistorialComponent },
+                    { path: 'historial/vehiculocerco', component: VehicercohistorialComponent },
                     { path: 'configuracion', component: ConfiguracionComponent },
                     { path: 'home', component: HomeComponent },
                     { path: 'home/visitas', component: MvisitasComponent },
                     { path: 'home/bitacora', component: MbitacoraComponent },
                     { path: 'home/vigilancia', component: MvigilanciaComponent },
                     { path: 'home/cerco', component: McercoComponent },
+                    { path: 'home/historial', component: MhistorialComponent },
                     { path: 'cerco/virtual', component: CercoComponent },
                     { path: 'cerco/grupos', component: CercogrupoComponent },
                     { path: '', redirectTo: '/u/control/home', pathMatch: 'full' },
@@ -123,7 +132,8 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
     ],
     providers: [
         GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService, ExcelService, PuestoService,
-        IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService, AlertaService, CercoService, GrupoService ],
+        IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService, AlertaService, CercoService, GrupoService,
+        VehistorialService ],
     entryComponents: [ ],
     declarations: [
         GuardiaComponent, AdminComponent, ControlComponent,
@@ -138,11 +148,15 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         MbitacoraComponent,
         MvigilanciaComponent,
         CercoComponent,
+        VehicercohistorialComponent,
         AlertasComponent,
         CercogrupoComponent,
         McercoComponent,
         TabletsComponent,
-        PuestosComponent ],
+        PuestosComponent,
+        MhistorialComponent,
+        VehistorialComponent,
+        TabhistorialComponent ],
     bootstrap: [ ControlComponent ]
 })
 export class ControlModule {}

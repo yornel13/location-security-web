@@ -351,6 +351,7 @@ export class CercoComponent implements OnInit {
         this.lista = false;
         this.vehiclesBoundView = false;
         this.editBoundView = false;
+        this.nameBound = "";
     }
 
     deleteBound(id) {
