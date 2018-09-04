@@ -19,7 +19,7 @@ import {ListBounds} from '../../../../../model/cerco/list.bounds';
 import {Bounds} from '../../../../../model/cerco/bounds';
 import {GlobalOsm} from '../../../../global.osm';
 import { ColorPickerModule } from 'ngx-color-picker';
-import * as geolib from "geolib";
+import * as geolib from 'geolib';
 
 export class VechicleS {
     imei: string;

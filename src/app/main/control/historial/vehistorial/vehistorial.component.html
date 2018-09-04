@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.Default.css" />
+
 <div class="info-container panel panel-default" *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
         <div class="mr-auto row ml-1">
@@ -57,8 +60,8 @@
 	                <td>{{vehi.group_name}}</td>
 	                <td>{{vehi.generated_time}}</td>
 	                <td>
-	                	<a class="btn btn-info btn-xs mr-2" (click)="verDetalle(vehi)" title="Ver detalle"><span class="fas fa-eye"></span></a>
-	                    <a class="btn btn-warning btn-xs" (click)="verhistorial(vehi)" title="Ver historial"><span class="fas fa-history"></span></a>
+	                	<!--<a class="btn btn-info btn-xs mr-2" (click)="verDetalle(vehi)" title="Ver detalle"><span class="fas fa-eye"></span></a>-->
+                    <a class="btn btn-warning btn-xs" (click)="verhistorial(vehi)" title="Ver historial"><span class="fas fa-history"></span></a>
 	                </td>
 	            </tr>
             </tbody>
@@ -126,15 +129,15 @@
               <div class="form-group row">
                 <label for="dni" class="col-sm-2 col-form-label">Mapa</label>
                 <div class="col-sm-10">
-                  <div class="map"
-                       leaflet
-                       [leafletOptions]="options"
-                       [(leafletZoom)]="zoom"
-                       [(leafletCenter)]="center"
-                       [leafletBaseLayers]="baseLayers"
-                       [leafletLayersControlOptions]="layersControlOptions"
-                       (leafletMapReady)="onMapReady($event)">
-                  </div>
+                  <!--<div class="map"-->
+                       <!--leaflet-->
+                       <!--[leafletOptions]="options"-->
+                       <!--[(leafletZoom)]="zoom"-->
+                       <!--[(leafletCenter)]="center"-->
+                       <!--[leafletBaseLayers]="baseLayers"-->
+                       <!--[leafletLayersControlOptions]="layersControlOptions"-->
+                       <!--(leafletMapReady)="onMapReady($event)">-->
+                  <!--</div>-->
                 </div>
               </div>
               <div class="form-group row">
@@ -248,7 +251,7 @@
 	                    <td>{{veh.time}}</td>
                       <td>{{veh.alert_message}}</td>
 	                    <td>{{veh.internal_battery_level}}</td>
-                        <td><a class="btn btn-primary btn-xs" (click)="metodoYornel()" style="display: inline-block; margin-right: 10px;" title="Centrar"><span class="far fa-eye"></span></a>
+                        <td><a class="btn btn-primary btn-xs" (click)="centerMap(veh)" style="display: inline-block; margin-right: 10px;" title="Centrar"><span class="fas fa-globe-americas"></span></a>
                       </td>
 	                </tr>
 	                </tbody>
@@ -264,6 +267,8 @@
                        [(leafletCenter)]="center"
                        [leafletBaseLayers]="baseLayers"
                        [leafletLayersControlOptions]="layersControlOptions"
+                       [leafletMarkerCluster]="markerClusterData"
+                       [leafletMarkerClusterOptions]="markerClusterOptions"
                        (leafletMapReady)="onMapReadyH($event)">
                   </div>
                 </div>

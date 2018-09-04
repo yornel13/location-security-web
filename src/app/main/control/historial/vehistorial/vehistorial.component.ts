@@ -6,6 +6,8 @@ import { ExcelService } from '../../../../../model/excel/excel.services';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import * as geolib from 'geolib';
+import {GlobalOsm} from '../../../../global.osm';
+import {UtilsVehicles} from '../../../../../model/vehicle/vehicle.utils';
 
 @Component({
   selector: 'app-vehistorial',
@@ -28,7 +30,7 @@ export class VehistorialComponent {
   info: any = [];
   contpdf2:any = [];
   info2: any = [];
-  history:any = [];
+  history: any = [];
   imei:any;
   loadh:boolean = true;
 
@@ -44,115 +46,73 @@ export class VehistorialComponent {
   lng:number = -79.0000;
   viewmap:boolean = false;
 
-  zoom: 12;
+  zoom;
   center = L.latLng(([ this.lat, this.lng ]));
   marker = L.marker([this.lat, this.lng], {draggable: false});
 
-  LAYER_OSM = {
-        id: 'openstreetmap',
-        name: 'Open Street Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
-            detectRetina: true,
-            attribution: 'Open Street Map'
-        })
-    };
-    LAYER_GOOGLE_STREET = {
-        id: 'googlestreets',
-        name: 'Google Street Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=marker&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Street Map'
-        })
-    };
-    LAYER_GOOGLE_SATELLITE = {
-        id: 'googlesatellite',
-        name: 'Google Satellite Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Satellite Map'
-        })
-    };
-    LAYER_GOOGLE_TERRAIN = {
-        id: 'googletarrain',
-        name: 'Google Terrain Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Terrain Map'
-        })
-    };
+  markerClusterData: any[] = [];
+  markerClusterOptions: L.MarkerClusterGroupOptions;
+  layersControlOptions;
+  baseLayers;
+  options;
 
-
-
-  constructor(private vehistorialService:VehistorialService, private excelService:ExcelService) { 
-  	this.getAll();
+  constructor(
+      private vehistorialService: VehistorialService,
+      private excelService: ExcelService,
+      private globalOSM: GlobalOsm,
+      private utilVehicle: UtilsVehicles) {
+    this.layersControlOptions = this.globalOSM.layersOptions;
+    this.baseLayers = this.globalOSM.baseLayers;
+    this.options = this.globalOSM.defaultOptions;
+    this.getAll();
   }
 
-  // Values to bind to Leaflet Directive
-    layersControlOptions = { position: 'bottomright' };
-    baseLayers = {
-        'Open Street Map': this.LAYER_OSM.layer,
-        'Google Street Map': this.LAYER_GOOGLE_STREET.layer,
-        'Google Satellite Map': this.LAYER_GOOGLE_SATELLITE.layer,
-        'Google Terrain Map': this.LAYER_GOOGLE_TERRAIN.layer
-    };
-    options = {
-        zoom: 12,
-        center: L.latLng(([this.lat, this.lng ]))
-    };
+  onMapReady(map: L.Map) {
+    this.map =  map;
+    this.globalOSM.setupLayer(this.map);
+    this.center = this.globalOSM.center;
+    this.zoom = this.globalOSM.zoom;
+  }
 
-  	onMapReady(map: L.Map) {
-  		console.log("entra aqui");
-  		this.map =  map;
-        this.zoom = 12;
-        this.center = L.latLng(([ this.lat, this.lng ]));
-  		this.marker = L.marker([this.lat, this.lng], {draggable: false});
-  		this.layersControlOptions = { position: 'bottomright' };
-  		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
-            detectRetina: true,
-            attribution: 'Open Street Map'
-        }).addTo(this.map);
-        this.marker.addTo(this.map);
+  onMapReadyH(map: L.Map) {
+    this.mapchart =  map;
+    this.globalOSM.setupLayer(this.mapchart);
+    this.center = this.globalOSM.center;
+    this.zoom = this.globalOSM.zoom;
+    const southWest = new L.LatLng(-2.100599, -79.560921);
+    const northEast = new L.LatLng(-2.030906, -79.568947);
+    const bounds = new L.LatLngBounds(southWest, northEast);
+    const data: any[] = [];
+    if (this.history.length) {
+      const coors = [];
+      this.history.forEach(record => {
+        const lat = Number(record.latitude);
+        const lng = Number(record.longitude);
+        const maker = L.marker([lat, lng], this.getIcon(record));
+        data.push(maker);
+        coors.push({latitude: lat, longitude: lng});
+        bounds.extend(maker.getLatLng());
+      });
+      this.markerClusterData = data;
+      this.mapchart.fitBounds(bounds);
+      const geoCenter = geolib.getCenter(coors);
+      this.center = L.latLng([geoCenter.latitude, geoCenter.longitude]);
     }
+  }
 
-    onMapReadyH(map: L.Map){
-      /*
-    	console.log("vamos a ver si entra");
-    	this.mapchart = map;
-    	this.zoom = 12;
-    	this.layersControlOptions = { position: 'bottomright' };
-     	var southWest = new L.LatLng(-2.100599,-79.560921);
-        var northEast = new L.LatLng(-2.030906,-79.568947);            
-        var bounds = new L.LatLngBounds(southWest, northEast);
-    	if(this.history.length){
-    		var coord = [];
-    		for(var i=0; i<this.data.length; i++){
-    			var lat = Number(this.history[i].latitude);
-    			var lng = Number(this.history[i].longitude);
-    			var maker = L.marker([lat, lng]).addTo(this.mapchart);
-    			coord.push({latitude: lat, longitude: lng});
-            	bounds.extend(maker.getLatLng());
-    		}
-        this.mapchart.fitBounds(bounds);
-    		var centro = geolib.getCenter(coord);
-    	}
-    	console.log(centro);
-    	this.center = L.latLng([centro.latitude, centro.longitude]);
-    	L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
-            detectRetina: true,
-            attribution: 'Open Street Map'
-        }).addTo(this.mapchart);
-     */
+  getIcon(history: any): any {
+    let iconDefault = this.utilVehicle.processVehicle(this.objvehi).iconUrl;
+    const icon = this.utilVehicle.getHistoryIcon(history);
+    if (icon != null) {
+      iconDefault = icon;
     }
+    return {icon: L.icon({iconUrl: iconDefault})};
+  }
+
+  centerMap(history: any) {
+    this.zoom = 18;
+    this.center = L.latLng(([ history.latitude, history.longitude ]));
+  }
 
   getAll(){
   	this.vehistorialService.getAll().then(
@@ -234,9 +194,9 @@ export class VehistorialComponent {
   	this.date = year+"-"+this.month2+"-"+this.day2;
 
   	this.vehistorialService.getHistoryImeiDate(vehi.imei, year, month, day).then(
-        success => {
+      (success) => {
             this.history = success;
-            this.loadh = true;           
+            this.loadh = true;
         }, error => {
             if (error.status === 422) {
                 // on some data incorrect
