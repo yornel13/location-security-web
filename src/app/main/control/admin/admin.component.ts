@@ -84,6 +84,7 @@ export class AdminComponent {
             success => {
                 this.administradores = success;
                 this.data = this.administradores.data;
+                console.log(this.data);
                 var body = [];
                 var excel = [];
                 for(var i=0; i<this.data.length; i++){
@@ -165,7 +166,11 @@ export class AdminComponent {
                 this.nombre = this.admin.name;
                 this.apellido = this.admin.lastname;
                 this.correo = this.admin.email;
-                this.photo = this.admin.photo;
+                if(this.admin.photo == null){
+                    this.photo = './assets/img/user_empty.jpg';
+                }else{
+                    this.photo = this.admin.photo;
+                }              
                 this.identificacion = this.admin.dni;
                 this.idEdit = this.admin.id;
                 this.lista = false;
@@ -183,6 +188,9 @@ export class AdminComponent {
     }
 
     getValueEdit(){
+        if(this.photo == './assets/img/user_empty.jpg'){
+            this.photo = null;
+        }
         if(this.contrasena == "password"){
             const editadmin : Admin = {
                 id: this.idEdit,
@@ -222,16 +230,16 @@ export class AdminComponent {
                 if (error.status === 422) {
                     // on some data incorrect
                     if(error.error.errors.name){
-                        this.errorEditMsg = error.error.errors.name[0];
+                        this.errorEditMsg = "Nombres: " + error.error.errors.name[0];
                     }
                     if(error.error.errors.lastname){
-                        this.errorEditMsg = error.error.errors.lastname[0];
+                        this.errorEditMsg = "Apellidos "+error.error.errors.lastname[0];
                     }
                     if(error.error.errors.email){
-                        this.errorEditMsg = error.error.errors.email[0];
+                        this.errorEditMsg = "Correo: " + error.error.errors.email[0];
                     }
                     if(error.error.errors.dni){
-                        this.errorEditMsg = error.error.errors.dni[0];
+                        this.errorEditMsg = "Cedula: "+error.error.errors.dni[0];
                     }
                     this.errorEditData = true;
                 } else {
@@ -251,6 +259,9 @@ export class AdminComponent {
     }
 
     saveNewAdmin() {
+        if(this.photoa == './assets/img/user_empty.jpg'){
+            this.photoa = null;
+        }
         const createadmin : Admin = {
             dni: this.dnia,
             name: this.namea,
@@ -274,16 +285,16 @@ export class AdminComponent {
                 if (error.status === 422) {
                     // on some data incorrect
                     if(error.error.errors.name){
-                        this.errorNewMsg = error.error.errors.name[0];
+                        this.errorEditMsg = "Nombres: " + error.error.errors.name[0];
                     }
                     if(error.error.errors.lastname){
-                        this.errorNewMsg = error.error.errors.lastname[0];
+                        this.errorEditMsg = "Apellidos "+error.error.errors.lastname[0];
                     }
                     if(error.error.errors.email){
-                        this.errorNewMsg = error.error.errors.email[0];
+                        this.errorEditMsg = "Correo: " + error.error.errors.email[0];
                     }
                     if(error.error.errors.dni){
-                        this.errorNewMsg = error.error.errors.dni[0];
+                        this.errorEditMsg = "Cedula: "+error.error.errors.dni[0];
                     }
                     this.errorSaveData = true;
                 } else {

@@ -157,7 +157,11 @@ export class GuardiaComponent {
           this.correo = this.guardia.email;
           this.identificacion = this.guardia.dni;
           this.idEdit = this.guardia.id;
-          this.photo = this.guardia.photo;
+          if(this.guardia.photo == null){
+              this.photo = './assets/img/user_empty.jpg';
+          }else{
+              this.photo = this.guardia.photo;
+          } 
           this.lista = false;
           this.detalle = false;
           this.crear = false;
@@ -173,6 +177,9 @@ export class GuardiaComponent {
     }
 
     getValueEdit(){
+      if(this.photo == './assets/img/user_empty.jpg'){
+            this.photo = null;
+        }
       if(this.contrasena == "password"){
           console.log("Entra aquí");
           const editadmin : Guard = {
@@ -212,16 +219,16 @@ export class GuardiaComponent {
                 if (error.status === 422) {
                     // on some data incorrect
                     if(error.error.errors.name){
-                      this.errorEditMsg = "Su nombre "+error.error.errors.name[0];
+                      this.errorEditMsg = "Nombre: "+error.error.errors.name[0];
                     }
                     if(error.error.errors.lastname){
-                      this.errorEditMsg = "Su apellido "+error.error.errors.lastname[0];
+                      this.errorEditMsg = "Apellido: "+error.error.errors.lastname[0];
                     }
                     if(error.error.errors.email){
-                      this.errorEditMsg = "Su contraseña"+error.error.errors.email[0];
+                      this.errorEditMsg = "Correo: "+error.error.errors.email[0];
                     }
                     if(error.error.errors.dni){
-                      this.errorEditMsg = error.error.errors.dni[0];
+                      this.errorEditMsg = "Cédula: "+error.error.errors.dni[0];
                     }
                     this.errorEditData = true;
                 } else {
@@ -241,6 +248,9 @@ export class GuardiaComponent {
     }
 
     saveNewGuardia() {
+      if(this.photoa == './assets/img/user_empty.jpg'){
+          this.photoa = null;
+      }
       const createguard : Guard = {
         dni: this.dnia,
         name: this.namea,
@@ -260,16 +270,16 @@ export class GuardiaComponent {
                 if (error.status === 422) {
                     // on some data incorrect
                     if(error.error.errors.name){
-                      this.errorNewMsg = error.error.errors.name[0];
+                      this.errorEditMsg = "Nombre: "+error.error.errors.name[0];
                     }
                     if(error.error.errors.lastname){
-                      this.errorNewMsg = error.error.errors.lastname[0];
+                      this.errorEditMsg = "Apellido: "+error.error.errors.lastname[0];
                     }
                     if(error.error.errors.email){
-                      this.errorNewMsg = error.error.errors.email[0];
+                      this.errorEditMsg = "Correo: "+error.error.errors.email[0];
                     }
                     if(error.error.errors.dni){
-                      this.errorNewMsg = error.error.errors.dni[0];
+                      this.errorEditMsg = "Cédula: "+error.error.errors.dni[0];
                     }
                     this.errorSaveData = true;
                 } else {

@@ -46,10 +46,10 @@
                 </div>
                 <div class="ml-auto form-inline pr-4">
                   <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-outline-info btn-sm active" (click)="selectRange(1)">
+                    <label class="btn btn-outline-info btn-sm active" (click)="selectRange2(1)">
                       <input type="radio" name="options" id="option2" autocomplete="off"> Dia
                     </label>
-                    <label class="btn btn-outline-info btn-sm" (click)="selectRange(2)">
+                    <label class="btn btn-outline-info btn-sm" (click)="selectRange2(2)">
                       <input type="radio" name="options" id="option3" autocomplete="off" [attr.disabled]="rangeday == true ? true : null"> Rango
                     </label>
                   </div>
@@ -101,10 +101,10 @@
           <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta2" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="!rangeday2">
           <div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">
             <label class="btn btn-outline-secondary btn-sm active" (click)="selectRange(1)">
-              <input type="radio" name="options" id="option1" autocomplete="off" checked> Dia
+              <input type="radio" name="options" id="option4" autocomplete="off" checked> Dia
             </label>
             <label class="btn btn-outline-secondary btn-sm" (click)="selectRange(2)">
-              <input type="radio" name="options" id="option3" autocomplete="off"> Fechas
+              <input type="radio" name="options" id="option5" autocomplete="off"> Fechas
             </label>
           </div>
         </div>

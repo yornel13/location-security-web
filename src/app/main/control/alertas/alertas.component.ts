@@ -61,6 +61,9 @@ export class AlertasComponent implements OnInit {
   desde:any = "";
   hasta:any = "";
   rangeday:boolean=true;
+  date:any;
+  month2:any;
+  day2:any;
 
   zoom: 12;
   center = L.latLng(([ this.lat, this.lng ]));
@@ -114,8 +117,8 @@ export class AlertasComponent implements OnInit {
         private excelService: ExcelService,
         private db: AngularFirestore,
         private route: ActivatedRoute) {
-  	this.getAll();
   	this.getGuardias();
+    this.getToday();
   	this.doughnutChartData = [3, 3, 0];
   	this.regresar();
 
@@ -253,6 +256,42 @@ export class AlertasComponent implements OnInit {
                 }
             }
         );
+    }
+
+    getToday(){
+      var d = new Date();
+      var day = d.getDate();
+      var month = d.getMonth()+1;
+      var year = d.getFullYear();
+
+      if(day < 10){
+        this.day2 = "0"+day;
+      }else{
+        this.day2 = day;
+      }
+
+      if(month < 10){
+        this.month2 = "0"+month;
+      }else{
+        this.month2 = month;
+      }
+
+      this.date = year+"-"+this.month2+"-"+this.day2;
+      this.desde =this.date;
+
+      this.alertaService.getByCauseDate('all', year, this.month2, this.day2, year, this.month2, this.day2).then(
+        success => {
+          this.alertas = success;
+            this.data = this.alertas.data;
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+
     }
 
     viewDetail(id){
