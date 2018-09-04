@@ -70,6 +70,9 @@ export class VisitasComponent {
   desde:any = "";
   hasta:any = "";
   rangeday:boolean=true;
+  date:any;
+  month2:any;
+  day2:any;
 
   zoom: 12;
   center = L.latLng(([ this.lat, this.lng ]));
@@ -121,7 +124,7 @@ export class VisitasComponent {
   	private vehiculoService:VisitaVehiculoService, private visitanteService:VisitanteService, private funcionarioService:FuncionarioService) { 
   	this.lista = true;
     this.detalle = false;
-  	this.getAll();
+  	this.getToday();
   	this.getGuard();
   	this.getVehiculos();
   	this.getVisitantes();
@@ -214,6 +217,42 @@ export class VisitasComponent {
           }
       );
   }
+
+  getToday(){
+      var d = new Date();
+      var day = d.getDate();
+      var month = d.getMonth()+1;
+      var year = d.getFullYear();
+
+      if(day < 10){
+        this.day2 = "0"+day;
+      }else{
+        this.day2 = day;
+      }
+
+      if(month < 10){
+        this.month2 = "0"+month;
+      }else{
+        this.month2 = month;
+      }
+
+      this.date = year+"-"+this.month2+"-"+this.day2;
+      this.desde =this.date;
+
+      this.visitasService.getByDate(year, this.month2, this.day2, 'all', year, this.month2, this.day2).then(
+	      success => {
+	        this.visitas = success;
+	        this.data = this.visitas.data;
+	          }, error => {
+	              if (error.status === 422) {
+	                  // on some data incorrect
+	              } else {
+	                  // on general error
+	              }
+	          }
+	    );
+
+    }
 
   selectRange(id){
 	  if(id == 1){

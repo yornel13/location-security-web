@@ -157,16 +157,16 @@ export class FuncionariosComponent {
                 if (error.status === 422) {
                     // on some data incorrect
                     if(error.error.errors.name){
-                      this.errorEditMsg = "NOMBRE "+error.error.errors.name[0];
+                      this.errorEditMsg = "Nombre: "+error.error.errors.name[0];
                     }
                     if(error.error.errors.lastname){
-                      this.errorEditMsg = "APELLIDO "+error.error.errors.lastname[0];
+                      this.errorEditMsg = "Apellido: "+error.error.errors.lastname[0];
                     }
                     if(error.error.errors.address){
-                      this.errorEditMsg = "DIRECCIÓN "+error.error.errors.address[0];
+                      this.errorEditMsg = "Dirección: "+error.error.errors.address[0];
                     }
                     if(error.error.errors.dni){
-                      this.errorEditMsg = "DNI "+error.error.errors.dni[0];
+                      this.errorEditMsg = "Cédula: "+error.error.errors.dni[0];
                     }
                     this.errorEditData = true;
                 } else {
@@ -208,16 +208,16 @@ export class FuncionariosComponent {
                 if (error.status === 422) {
                     // on some data incorrect
                     if(error.error.errors.name){
-                      this.errorNewMsg = "NOMRBE "+error.error.errors.name[0];
+                      this.errorEditMsg = "Nombre: "+error.error.errors.name[0];
                     }
                     if(error.error.errors.lastname){
-                      this.errorNewMsg = "APELLIDO "+error.error.errors.lastname[0];
+                      this.errorEditMsg = "Apellido: "+error.error.errors.lastname[0];
                     }
                     if(error.error.errors.address){
-                      this.errorNewMsg = "DIRECCION "+error.error.errors.email[0];
+                      this.errorEditMsg = "Dirección: "+error.error.errors.address[0];
                     }
                     if(error.error.errors.dni){
-                      this.errorNewMsg = "DNI "+error.error.errors.dni[0];
+                      this.errorEditMsg = "Cédula: "+error.error.errors.dni[0];
                     }
                     this.errorSaveData = true;
                 } else {

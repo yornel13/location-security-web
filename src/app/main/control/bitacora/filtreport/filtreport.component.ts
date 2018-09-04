@@ -82,6 +82,9 @@ export class FiltreportComponent implements OnInit {
   desde2:any = "";
   hasta2:any = "";
   rangeday2:boolean=true;
+  date:any;
+  month2:any;
+  day2:any;
 
   zoom: 12;
   center = L.latLng(([ this.lat, this.lng ]));
@@ -137,7 +140,7 @@ export class FiltreportComponent implements OnInit {
             private route: ActivatedRoute,
             private authService: AuthenticationService) {
         this.getIncidencias();
-        this.getAll();
+        this.getToday();
         this.getGuardias();
         this.lista = true;
         this.detalle = false;
@@ -227,6 +230,20 @@ export class FiltreportComponent implements OnInit {
       }
     }
 
+    selectRange2(id){
+      if(id == 1){
+        this.rangeday = true;
+        this.desde = "";
+        this.hasta = "";
+        this.getChartDate();
+      }else{
+        this.rangeday = false;
+        this.desde = "";
+        this.hasta = "";
+        this.getChartDate();
+      }
+    }
+
   	getAll() {
     	this.bitacoraService.getAll().then(
     		success => {
@@ -293,6 +310,42 @@ export class FiltreportComponent implements OnInit {
                 }
             }
         );
+    }
+
+    getToday(){
+      var d = new Date();
+      var day = d.getDate();
+      var month = d.getMonth()+1;
+      var year = d.getFullYear();
+
+      if(day < 10){
+        this.day2 = "0"+day;
+      }else{
+        this.day2 = day;
+      }
+
+      if(month < 10){
+        this.month2 = "0"+month;
+      }else{
+        this.month2 = month;
+      }
+
+      this.date = year+"-"+this.month2+"-"+this.day2;
+      this.desde2 =this.date;
+
+      this.bitacoraService.getByDate(year, this.month2, this.day2, year, this.month2, this.day2).then(
+          success => {
+          this.reportes = success;
+          this.data = this.reportes.data;
+          }, error => {
+              if (error.status === 422) {
+                  // on some data incorrect
+              } else {
+                  // on general error
+              }
+          }
+       );
+
     }
 
     countInciden(data){
