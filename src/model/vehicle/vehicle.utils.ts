@@ -49,6 +49,8 @@ export class UtilsVehicles {
       return './assets/alerts/inside.png';
     } else if (history.alert_message.includes('velocidad')) {
       return './assets/alerts/speed.png';
+    } else if (history.alert_message.includes('SOS')) {
+      return './assets/alerts/sos.png';
     } else {
       return null;
     }

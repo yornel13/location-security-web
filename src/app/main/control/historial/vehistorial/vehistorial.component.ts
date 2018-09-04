@@ -118,7 +118,7 @@ export class VehistorialComponent {
   	this.vehistorialService.getAll().then(
         success => {
             this.vehicles = success;
-            this.data = this.vehicles.data;
+            this.data = this.vehicles.data.reverse();
             var body = [];
             var excel = [];
             for(var i=0; i<this.data.length; i++){
