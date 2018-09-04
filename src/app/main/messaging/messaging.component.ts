@@ -26,7 +26,9 @@ export class MessagingComponent implements OnInit {
     user: Admin;
     loading = false;
     loading_msg = false;
+    loading_chat = false;
     submitted = false;
+    showChatForm = false;
     error = '';
     addUsers: any[];
     message: string;
@@ -43,8 +45,11 @@ export class MessagingComponent implements OnInit {
     nameChannel: any;
     noMessages = false;
     emptyField = false;
+    showMensajeria = true;
+
     @ViewChild('messageField') messageField: any;
     @ViewChild('nameChannelField') nameChannelField: any;
+    @ViewChild('ngForm') ngForm: any;
 
     listContactGuard: any[];
     listContactAdmin: any[];
@@ -188,6 +193,7 @@ export class MessagingComponent implements OnInit {
         }
     }
     newMessage(formValue) {
+        this.showMensajeria = false;
         this.submitted = true;
         this.loading_msg = true;
         const chatId = this.isChannel ? this.currentChannel.channel_id : this.currentChat.id;
@@ -208,6 +214,7 @@ export class MessagingComponent implements OnInit {
     }
     newChannel(formValue) {
         console.log('crear grupo', formValue.nameChannel);
+        this.showMensajeria = false;
         this.submitted = true;
         this.loading = true;
         const sender_type = 'ADMIN';
@@ -242,15 +249,23 @@ export class MessagingComponent implements OnInit {
     }
 
     openChat(id, name, type) {
-      this.currentChat = null;
-      this.currentChannel = null;
+        console.log(name);
+        this.loading_chat = true;
+        this.showChatForm = false;
+      // this.currentChat = null;
+      // this.currentChannel = null;
+      this.showMensajeria = false;
       this.currentChatLines = [];
+      this.noMessages = false;
       this.isChannel = false;
       this.chatService.chat(id, name, type).subscribe(
         (data: ApiResponse) => {
           this.currentChat = data.result;
-          this.openOldMessages(this.currentChat.id);
-          console.log(data);
+          console.log('----->', this.currentChat);
+
+            this.openOldMessages(this.currentChat.id);
+            // this.loading_chat = false;
+            console.log(data);
         },
           error => {
           this.error = error;
@@ -260,13 +275,19 @@ export class MessagingComponent implements OnInit {
 
     openOldMessages(chat_id) {
       console.log('open old');
-      this.chatService.listOldMessage(chat_id).subscribe(
+        this.noMessages = false;
+        // this.loading_chat = true;
+        this.chatService.listOldMessage(chat_id).subscribe(
         data => {
                 this.currentChatLines = data.data;
                 this.currentChatLines.reverse();
-                this.noMessages = this.currentChatLines.length === 0;
-                this.loading = false;
+                if (this.currentChatLines.length === 0) {
+                    this.loading_chat = false;
+                    this.noMessages = true;
+                }
+                this.loading_chat = false;
                 this.scrollToBottom();
+                this.showChatForm = true;
                 },
                 error => {
                     this.error = error;
@@ -303,29 +324,50 @@ export class MessagingComponent implements OnInit {
                   this.loading = false;
               });
         this.loading = false;
-
     }
 
     openChannel(channel: Channel) {
-      console.log('try open channel');
+        this.loading_chat = true;
+        this.showChatForm = false;
+        console.log('try open channel');
+        this.currentChannel = channel;
+        this.showMensajeria = false;
+
         this.currentChat = null;
+        // this.currentChannel = null;
         this.currentChatLines = [];
         this.isChannel = true;
-        this.currentChannel = channel;
-        this.messageField.nativeElement.value = '';
+        this.noMessages = false;
+        if (this.messageField !== undefined) {
+            this.messageField.nativeElement.value = '';
+        }
+
         this.chatService.listOldMessageChannel(this.currentChannel.channel_id)
             .subscribe(
                 data => {
                   console.log(data);
-                    this.currentChat = null;
+                    this.loading_chat = true;
+
+                    this.currentChannel = channel;
+
                     this.currentChatLines = data.data;
+                    if (this.currentChatLines.length === 0) {
+                        this.loading_chat = false;
+                        this.noMessages = true;
+                    }
                     this.currentChatLines.reverse();
+                    this.loading_chat = false;
+                    this.showChatForm = true;
+
                 },
           error => {
             this.error = error;
             this.loading = false;
           }
         );
+        // this.currentChannel = null;
+        console.log('llego');
+
         this.scrollToBottom();
 
     }

@@ -89,7 +89,7 @@
 			</div>
 	</aside>
 
-    <div class="messages-container" *ngIf="currentChat == null && currentChannel == null">
+    <div class="messages-container" *ngIf="showMensajeria">
       <div style="display: flex; flex-direction: column; justify-items: center; align-items: center; justify-content: center; width: 100%; height: 100%">
         <img src="../../../assets/chat_icon.png" alt="chat" style="width: auto; height: 20%;">
         <p style="color: grey">Mensajeria</p>
@@ -118,18 +118,19 @@
 			</div>
 			
 			<!--WRITE MESSAGE-->
-			<div class="loader_msg"  *ngIf="loading_msg"></div>
-      <div *ngIf="noMessages && !loading_msg" style="width: 100%; height: 100%; text-align: center; vertical-align: middle; line-height: 90px; color: gray">
+			<div class="loader_chat"  *ngIf="loading_chat"  ></div>
+			<div *ngIf="noMessages && !loading_msg" style="width: 100%; height: 100%; text-align: center; vertical-align: middle; line-height: 0; color: gray">
         No hay Mensajes
       </div>
-			<form class="write-container" style="background-color: whitesmoke; " #chatForm="ngForm"  (ngSubmit)="newMessage(chatForm.value)" autocomplete="off">
+			<form *ngIf="showChatForm" class="write-container" style="background-color: whitesmoke; " #chatForm="ngForm"  (ngSubmit)="newMessage(chatForm.value)" autocomplete="off">
 			<div style="display: flex">
 				<div class="form-group col-lg-11">
 					<label for="message">Escribir Mensaje</label>
 					<br>
 					<input   [(ngModel)]="message" type="text" class="form-control" #messageField id="message" name="message" placeholder="...">
 				</div>
-				<button type="submit" style=" align-self: center; margin-top: 5px;" class="btn btn-primary" [disabled]="loading_msg" *ngIf="!loading_msg disable" ><i class="fa">&#xf1d8;</i></button>
+				<button type="submit" style=" align-self: center; margin-top: 5px;" class="btn btn-primary" [disabled]="loading_msg" *ngIf="!loading_msg" ><i class="fa">&#xf1d8;</i></button>
+				<div class="loader_msg"  *ngIf="loading_msg"></div>
 			</div>
 		</form>
 	</div>
