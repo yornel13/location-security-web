@@ -15,6 +15,7 @@ import { BannerService } from '../../../model/banner/banner.service';
 import { AlertaService } from '../../../model/alerta/alerta.service';
 import { ExcelService } from '../../../model/excel/excel.services';
 import { VehistorialService } from '../../../model/historial/vehistorial.service';
+import { TabhistoryService } from '../../../model/historial/tabhistory.service';
 
 import { HttpClientModule } from '@angular/common/http';
 import { ColorPickerModule } from 'ngx-color-picker';
@@ -133,7 +134,7 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
     providers: [
         GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService, ExcelService, PuestoService,
         IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService, AlertaService, CercoService, GrupoService,
-        VehistorialService ],
+        VehistorialService, TabhistoryService ],
     entryComponents: [ ],
     declarations: [
         GuardiaComponent, AdminComponent, ControlComponent,

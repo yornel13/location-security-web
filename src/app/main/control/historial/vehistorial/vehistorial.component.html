@@ -203,6 +203,19 @@
         <div class="mr-auto ml-4">
             <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Historial Vehículo</h3>
         </div>
+        <div class="ml-auto" style="margin-top: 25px; margin-right: 60px;">
+            <div class="btn-group btn-group-toggle ml-4" data-toggle="buttons">
+              <label class="btn btn-outline-dark" (click)="excelHistorial()">
+                <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+              </label>
+              <label class="btn btn-outline-dark" (click)="pdfHistorial()">
+                <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+              </label>
+              <label class="btn btn-outline-dark" (click)="printHistorial()">
+                <input type="radio" name="options" id="option3" autocomplete="off"> Print
+              </label>
+            </div>
+        </div>
     </div>
     <div style="text-align: center;" *ngIf="!loadh">
     	<h2>Cargando Historial</h2>
@@ -224,14 +237,19 @@
 	                    <th>Dirección</th>
 	                    <th>Fecha</th>
 	                    <th>Hora</th>
+                      <th style="width: 20%">Mensaje</th>
 	                    <th>Nivel de batería</th>
+                      <th>Centrar</th>
 	                </thead>
 	                <tbody>
 	                <tr *ngFor="let veh of history">
 	                    <td>{{veh.address}}</td>
 	                    <td>{{veh.date}}</td>
 	                    <td>{{veh.time}}</td>
+                      <td>{{veh.alert_message}}</td>
 	                    <td>{{veh.internal_battery_level}}</td>
+                        <td><a class="btn btn-primary btn-xs" (click)="metodoYornel()" style="display: inline-block; margin-right: 10px;" title="Centrar"><span class="far fa-eye"></span></a>
+                      </td>
 	                </tr>
 	                </tbody>
 	            </table>

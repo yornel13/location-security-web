@@ -26,6 +26,8 @@ export class VehistorialComponent {
   fecha:string;
   contpdf:any = [];
   info: any = [];
+  contpdf2:any = [];
+  info2: any = [];
   history:any = [];
   imei:any;
   loadh:boolean = true;
@@ -91,7 +93,6 @@ export class VehistorialComponent {
 
   constructor(private vehistorialService:VehistorialService, private excelService:ExcelService) { 
   	this.getAll();
-  	this.date = new Date().toISOString().substring(0, 10);
   }
 
   // Values to bind to Leaflet Directive
@@ -123,6 +124,7 @@ export class VehistorialComponent {
     }
 
     onMapReadyH(map: L.Map){
+      /*
     	console.log("vamos a ver si entra");
     	this.mapchart = map;
     	this.zoom = 12;
@@ -149,6 +151,7 @@ export class VehistorialComponent {
             detectRetina: true,
             attribution: 'Open Street Map'
         }).addTo(this.mapchart);
+     */
     }
 
   getAll(){
@@ -565,6 +568,84 @@ export class VehistorialComponent {
         excel.push({'Parametro' : 'Nivel de batería', 'Valor': this.vehiculo.battery_level});
         excel.push({'Parametro' : 'Odometer Kilometraje', 'Valor': this.vehiculo.odometer});
         this.excelService.exportAsExcelFile(excel, 'vehidetail');
+    }
+
+    pdfHistorial(){
+      var doc = new jsPDF();
+      doc.setFontSize(20);
+      doc.text('ICSSE Seguridad', 15, 20);
+      doc.setFontSize(12);
+      doc.setTextColor(100);
+      var d = new Date();
+      var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+      doc.text('Historial de vehiculo #'+ this.objvehi.id, 15, 27);
+      doc.text('Hora de impresión: '+ fecha, 15, 34);
+      var body = [];
+      if(this.history.length){
+        for(var i=0; i<this.history.length; i++){
+          body.push([i, this.history[i].address, this.history[i].date, this.history[i].time, this.history[i].alert_message, this.history[i].internal_battery_level]);
+        }
+        this.contpdf2 = body;
+      }
+      doc.autoTable({
+          head: [['#', 'Dirección', 'Fecha', 'Hora', 'Mensaje', 'Nivel de batería']],
+          body: this.contpdf2,
+          startY: 41,
+          columnStyles: {
+            0: {cellWidth: 10},
+            1: {cellWidth: 40},
+            2: {cellWidth: 'auto'},
+            3: {cellWidth: 'auto'},
+            4: {cellWidth: 40},
+            5: {cellWidth: 'auto'}
+          }
+      });  
+      doc.save('vehistorial.pdf');
+    }
+
+  printHistorial(){
+    var doc = new jsPDF();
+    doc.setFontSize(20);
+    doc.text('ICSSE Seguridad', 15, 20);
+    doc.setFontSize(12);
+    doc.setTextColor(100);
+    var d = new Date();
+    var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+    doc.text('Historial de vehiculo #'+ this.objvehi.id, 15, 27);
+    doc.text('Hora de impresión: '+ fecha, 15, 34);
+    var body = [];
+    if(this.history.length){
+      for(var i=0; i<this.history.length; i++){
+        body.push([i, this.history[i].address, this.history[i].date, this.history[i].time, this.history[i].alert_message, this.history[i].internal_battery_level]);
+      }
+      this.contpdf2 = body;
+    }
+    doc.autoTable({
+        head: [['#', 'Dirección', 'Fecha', 'Hora', 'Mensaje', 'Nivel de batería']],
+        body: this.contpdf2,
+        startY: 41,
+        columnStyles: {
+          0: {cellWidth: 10},
+          1: {cellWidth: 40},
+          2: {cellWidth: 'auto'},
+          3: {cellWidth: 'auto'},
+          4: {cellWidth: 40},
+          5: {cellWidth: 'auto'}
+        }
+    });   
+    doc.autoPrint();
+    window.open(doc.output('bloburl'), '_blank');
+  }
+
+    excelHistorial() {
+      var body = [];
+      if(this.history.length){
+        for(var i=0; i<this.history.length; i++){
+          body.push({'#': i, 'Dirección' : this.history[i].address, 'Fecha':this.history[i].date, 'Hora':this.history[i].time, 'Nivel de batería':this.history[i].internal_battery_level, 'Mensaje':this.history[i].alert_message});
+        }
+        this.info2 = body;
+      }
+        this.excelService.exportAsExcelFile(this.info2, 'vehistorial');
     }
 
 }

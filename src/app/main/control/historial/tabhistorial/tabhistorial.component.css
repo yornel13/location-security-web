@@ -1,0 +1,90 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css";
+
+.info-container {
+    height: 100%;
+    overflow-y:scroll;
+}
+
+.map-bounds-container{
+
+    top: 120px;
+    left: 60px;
+    right: 0;
+    bottom: 10px;
+}
+
+.map-bounds{
+    height: 500px;
+    width: 100%;
+}
+
+.name-bounds-f {
+    /*position: relative;*/
+    /*z-index: 99;*/
+}
+
+
+.back-save-btn {
+    margin-bottom: 3%;
+    /*position: absolute;*/
+    /*top: 89.5%;*/
+}
+
+.add-vehicle-cont {
+    height: 300px;
+    overflow: auto;
+}
+
+.checkbox-vehicle {
+    overflow: hidden;
+}
+
+.container-fluid {
+    padding-top: 4px;
+}
+
+.thead-light>th {
+    cursor: pointer;
+}
+
+.list-title {
+    color: var(--secondary-color);
+    margin-left: 2vw;
+    margin-top: 4px;
+}
+
+.icon-return {
+    padding: 6px;
+    font-size: 1.8rem
+}
+
+.map {
+    height: 500px;
+    width: 100%;
+}
+
+.mapchart {
+    height: 500px;
+    width: 100%;
+}
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid var(--primary-color);
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
