@@ -1,8 +1,6 @@
 <div class="chat-container" >
 	<aside class="chat-aside" >
 		<div class="container-fluid col-md-12 col-md-offset-12" style="height:100% !important; padding: 0; margin: 0;"> <!--DIV COLMD -->
-		
-			
 			<ul class="nav nav-tabs header-aside" style="height: 40px; padding: 0; margin: 0; ">
 				<li class="nav-item">
 					<a class="nav-link active show" data-toggle="tab" href="#guard" style="height: 100%; border-radius: 0; padding-top: 0"><p style="padding-top: 5px; margin: 2px; color: #6c757d">Guardias</p></a>
@@ -123,14 +121,16 @@
         No hay Mensajes
       </div>
 			<form *ngIf="showChatForm" class="write-container" style="background-color: whitesmoke; " #chatForm="ngForm"  (ngSubmit)="newMessage(chatForm.value)" autocomplete="off">
-			<div style="display: flex">
+			<div style="display: flex; align-items: center">
 				<div class="form-group col-lg-11">
 					<label for="message">Escribir Mensaje</label>
 					<br>
 					<input   [(ngModel)]="message" type="text" class="form-control" #messageField id="message" name="message" placeholder="...">
 				</div>
-				<button type="submit" style=" align-self: center; margin-top: 5px;" class="btn btn-primary" [disabled]="loading_msg" *ngIf="!loading_msg" ><i class="fa">&#xf1d8;</i></button>
-				<div class="loader_msg"  *ngIf="loading_msg"></div>
+        <div style="width: 40px; height: 40px;">
+          <button type="submit" style=" align-self: center; margin-top: 5px;" class="btn btn-primary" [disabled]="loading_msg" *ngIf="!loading_msg" ><i class="fa">&#xf1d8;</i></button>
+          <div class="loader_msg"  *ngIf="loading_msg"></div>
+        </div>
 			</div>
 		</form>
 	</div>

@@ -47,11 +47,7 @@ li {
     -webkit-animation: loader_msg 1s linear infinite;
     animation: loader_msg 1s linear infinite;
     align-items: center;
-    /*margin: 10px auto 5px;*/
-
-    left: 90%;
-    right: 10%;
-    bottom: 45px;
+    margin: 5px;
 }
 
 @keyframes loader_msg {
@@ -299,7 +295,7 @@ app-messaging {
     flex-direction: column;
     background: whitesmoke;
     box-shadow:  0 5px 0 0 #ccc;
-overflow: hidden;
+    overflow: hidden;
     position: relative;
 
     top: 0;
@@ -324,9 +320,9 @@ overflow: hidden;
 
 .tab-content-groups {
     height: 100%;
-    overflow-y: hidden;
-    display: block;
-
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
     /*width: 100%;*/
     /*height: 100%;*/
     /*display: block;*/
@@ -364,7 +360,7 @@ overflow: hidden;
 
 .write-container {
     background-color: honeydew;
-    margin: 15px;
+    margin: 1px;
     padding: 8px;
     border-radius: 4px;
 }
@@ -426,6 +422,13 @@ overflow: hidden;
     border-right: 0;
     margin-left: -9px;
     margin-bottom: -16px;
+}
+
+.container-fluid {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 

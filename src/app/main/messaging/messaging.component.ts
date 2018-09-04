@@ -203,14 +203,14 @@ export class MessagingComponent implements OnInit {
               (data: ChatLine)  => {
                   this.loading_msg = true;
                   this.currentChatLines.push(data);
-                    this.scrollToBottom();
+                  this.scrollToBottom();
                   this.loading_msg = false;
+                  this.messageField.nativeElement.value = '';
               },
                 error => {
                     this.error = error;
                     this.loading_msg = false;
                 });
-        this.messageField.nativeElement.value = '';
     }
     newChannel(formValue) {
         console.log('crear grupo', formValue.nameChannel);
@@ -288,6 +288,7 @@ export class MessagingComponent implements OnInit {
                 this.loading_chat = false;
                 this.scrollToBottom();
                 this.showChatForm = true;
+                this.message = '';
                 },
                 error => {
                     this.error = error;
