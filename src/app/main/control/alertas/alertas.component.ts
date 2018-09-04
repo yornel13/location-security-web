@@ -10,6 +10,7 @@ import { ExcelService } from '../../../../model/excel/excel.services';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import * as geolib from 'geolib';
+import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
 
 
 @Component({
@@ -18,6 +19,9 @@ import * as geolib from 'geolib';
   styleUrls: ['./alertas.component.css']
 })
 export class AlertasComponent implements OnInit {
+
+  readonly alertCollection: AngularFirestoreCollection<Alerta>;
+
   alertas:any = undefined;
   data:any = undefined;
   guardias:any = undefined;
@@ -105,9 +109,10 @@ export class AlertasComponent implements OnInit {
 
 
   constructor(
-        private alertaService:AlertaService,
-        private guardiaService:GuardService,
-        private excelService:ExcelService,
+        private alertaService: AlertaService,
+        private guardiaService: GuardService,
+        private excelService: ExcelService,
+        private db: AngularFirestore,
         private route: ActivatedRoute) {
   	this.getAll();
   	this.getGuardias();
@@ -134,7 +139,7 @@ export class AlertasComponent implements OnInit {
             "value": this.valores[2]
         }]
     };
-
+    this.alertCollection = db.collection<Alerta>('alerts');
   }
 
   // Values to bind to Leaflet Directive
@@ -316,6 +321,7 @@ export class AlertasComponent implements OnInit {
 	solveAlert(id) {
 		this.alertaService.solveAlert(id).then(
 	    success => {
+        this.alertCollection.doc(String(id)).update({'status': 0});
 	      this.getAlerts();
 	        }, error => {
 	            if (error.status === 422) {

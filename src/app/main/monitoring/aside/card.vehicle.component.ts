@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Vehicle} from '../../../../model/vehicle/vehicle';
-import {AsideService} from './aside.service';
+import {MainService} from '../../main.service';
 
 @Component({
     selector: 'app-card-vehicle',
@@ -15,7 +15,7 @@ export class CardVehicleComponent {
     @Output() markerFocused = new EventEmitter();
     devices_status = 'DESCONECTADO';
 
-    constructor(private asideService: AsideService) {}
+    constructor(private asideService: MainService) {}
 
     focusMarker(lat, lng) {
         console.log('lat: ', lat, 'lng: ', lng);

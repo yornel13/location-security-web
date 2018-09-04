@@ -29,7 +29,7 @@ import { MainComponent } from './main.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReportComponent } from './report/report.component';
 import {RouterModule, Routes} from '@angular/router';
-import {AsideService} from './monitoring/aside/aside.service';
+import {MainService} from './main.service';
 import { MessagingComponent } from './messaging/messaging.component';
 
 import { FilterPipe } from './monitoring/aside/filter.pipe';
@@ -41,6 +41,7 @@ import {ItemGuardComponent} from './messaging/item.guard.component';
 import {ChatComponent} from './chat/chat.component';
 import {PopupAlertComponent} from './monitoring/map/popup.alert.component';
 import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 export function controlModuleLoader() {
     return ControlModule;
@@ -86,10 +87,11 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
       customClass: 'modal-content',
       confirmButtonClass: 'btn btn-primary',
       cancelButtonClass: 'btn'
-    })
+    }),
+    NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
-      VehiclesService, WatchesService, AsideService, TabletService ],
+      VehiclesService, WatchesService, MainService, TabletService ],
   entryComponents: [ PopupVehicleComponent, PopupWatchComponent, PopupAlertComponent, CardVehicleComponent,
       CardTabletComponent, ItemGuardComponent ],
   declarations: [

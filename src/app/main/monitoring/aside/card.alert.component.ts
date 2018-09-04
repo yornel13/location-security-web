@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Alerta} from '../../../../model/alerta/alerta';
-import {AsideService} from './aside.service';
+import {MainService} from '../../main.service';
 
 @Component({
     selector: 'app-card-alert',
@@ -15,7 +15,7 @@ export class CardAlertComponent implements OnInit {
     title: string;
     date: Date;
 
-    constructor(private asideService: AsideService) {}
+    constructor(private mainService: MainService) {}
 
     ngOnInit() {
         if (this.alert.cause === 'SOS1') {
@@ -42,6 +42,6 @@ export class CardAlertComponent implements OnInit {
       console.log('lat: ', lat, 'lng: ', lng);
       this.latlng.lat = lat;
       this.latlng.lng = lng;
-      this.asideService.marker.emit(this.latlng);
+      this.mainService.marker.emit(this.latlng);
   }
 }
