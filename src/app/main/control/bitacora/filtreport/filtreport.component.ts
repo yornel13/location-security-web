@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ComponentFactoryResolver, Injector, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import { BitacoraService } from '../../../../../model/bitacora/bitacora.service';
 import { Bitacora } from '../../../../../model/bitacora/bitacora';
@@ -13,6 +13,10 @@ import * as geolib from 'geolib';
 import {isNumber} from 'util';
 import {AuthenticationService} from '../../../../_services';
 import {Admin} from '../../../../../model/admin/admin';
+import {Alerta} from "../../../../../model/alerta/alerta";
+import {GlobalOsm} from "../../../../global.osm";
+import {UtilsVehicles} from "../../../../../model/vehicle/vehicle.utils";
+import {PopupReportComponent} from "./popup.report.component";
 
 @Component({
   selector: 'app-filtreport',
@@ -86,52 +90,20 @@ export class FiltreportComponent implements OnInit {
   month2:any;
   day2:any;
 
-  zoom: 12;
+  zoom;
   center = L.latLng(([ this.lat, this.lng ]));
   marker = L.marker([this.lat, this.lng], {draggable: false});
-
-  LAYER_OSM = {
-        id: 'openstreetmap',
-        name: 'Open Street Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
-            detectRetina: true,
-            attribution: 'Open Street Map'
-        })
-    };
-    LAYER_GOOGLE_STREET = {
-        id: 'googlestreets',
-        name: 'Google Street Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=marker&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Street Map'
-        })
-    };
-    LAYER_GOOGLE_SATELLITE = {
-        id: 'googlesatellite',
-        name: 'Google Satellite Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Satellite Map'
-        })
-    };
-    LAYER_GOOGLE_TERRAIN = {
-        id: 'googletarrain',
-        name: 'Google Terrain Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Terrain Map'
-        })
-    };
+  markerClusterData: any[] = [];
+  markerClusterOptions: L.MarkerClusterGroupOptions;
+  layersControlOptions;
+  baseLayers;
+  options;
 
     constructor(
+            private resolver: ComponentFactoryResolver,
+            private globalOSM: GlobalOsm,
+            private injector: Injector,
+            private utilVehicle: UtilsVehicles,
             public router: Router,
             private bitacoraService: BitacoraService,
             private guardiaService: GuardService,
@@ -139,33 +111,23 @@ export class FiltreportComponent implements OnInit {
             private excelService: ExcelService,
             private route: ActivatedRoute,
             private authService: AuthenticationService) {
-        this.getIncidencias();
-        this.getToday();
-        this.getGuardias();
-        this.lista = true;
-        this.detalle = false;
-        this.dataSource = {
-            chart: {
-                "yAxisName": "Cantidad de reportes",
-                "yAxisMaxValue": 5
-            },
-            // Chart Data
-            "data": this.datos
-        };
+      this.layersControlOptions = this.globalOSM.layersOptions;
+      this.baseLayers = this.globalOSM.baseLayers;
+      this.options = this.globalOSM.defaultOptions;
+      this.getIncidencias();
+      this.getToday();
+      this.getGuardias();
+      this.lista = true;
+      this.detalle = false;
+      this.dataSource = {
+          chart: {
+              "yAxisName": "Cantidad de reportes",
+              "yAxisMaxValue": 5
+          },
+          // Chart Data
+          "data": this.datos
+      };
   }
-
-  // Values to bind to Leaflet Directive
-    layersControlOptions = { position: 'bottomright' };
-    baseLayers = {
-        'Open Street Map': this.LAYER_OSM.layer,
-        'Google Street Map': this.LAYER_GOOGLE_STREET.layer,
-        'Google Satellite Map': this.LAYER_GOOGLE_SATELLITE.layer,
-        'Google Terrain Map': this.LAYER_GOOGLE_TERRAIN.layer
-    };
-    options = {
-        zoom: 12,
-        center: L.latLng(([this.lat, this.lng ]))
-    };
 
     onMapReady(map: L.Map) {
       console.log("entra aqui");
@@ -182,36 +144,39 @@ export class FiltreportComponent implements OnInit {
         this.marker.addTo(this.map);
     }
 
-    onMapReadyChart(map:L.Map){
-      console.log("vamos a ver si entra");
-      this.mapchart = map;
-      this.zoom = 12;
-      this.layersControlOptions = { position: 'bottomright' };
-      var southWest = new L.LatLng(-2.100599,-79.560921);
-      var northEast = new L.LatLng(-2.030906,-79.568947);
-      var bounds = new L.LatLngBounds(southWest, northEast);
-      if(this.data.length){
-        var coord = [];
-        for(var i=0; i<this.data.length; i++){
-          var lat = Number(this.data[i].latitude);
-          var lng = Number(this.data[i].longitude);
-          var maker = L.marker([lat, lng]).addTo(this.mapchart);
-          coord.push({latitude: lat, longitude: lng});
-          bounds.extend(maker.getLatLng());
-        }
-        this.mapchart.fitBounds(bounds);
-        var centro = geolib.getCenter(coord);
-      }
-      console.log(coord);
-      this.center = L.latLng([centro.latitude, centro.longitude]);
-      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
-            detectRetina: true,
-            attribution: 'Open Street Map'
-        }).addTo(this.mapchart);
+  onMapReadyChart(map: L.Map) {
+    this.mapchart = map;
+    this.globalOSM.setupLayer(this.mapchart);
+    this.center = this.globalOSM.center;
+    this.zoom = this.globalOSM.zoom;
+    const southWest = new L.LatLng(-2.100599, -79.560921);
+    const northEast = new L.LatLng(-2.030906, -79.568947);
+    const bounds = new L.LatLngBounds(southWest, northEast);
+    const data: any[] = [];
+    if (this.data.length) {
+      const coors = [];
+      this.data.forEach((report: any) => {
+        const lat = Number(report.latitude);
+        const lng = Number(report.longitude);
+        const maker = L.marker([lat, lng], {icon: L.icon({iconUrl: './assets/alerts/report.png'})});
+        const factory = this.resolver.resolveComponentFactory(PopupReportComponent);
+        const component = factory.create(this.injector);
+        const popupContent = component.location.nativeElement;
+        component.instance.report = report;
+        component.changeDetectorRef.detectChanges();
+        maker.bindPopup(popupContent).openPopup();
+        data.push(maker);
+        coors.push({latitude: lat, longitude: lng});
+        bounds.extend(maker.getLatLng());
+      });
+      this.mapchart.fitBounds(bounds);
+      const geoCenter = geolib.getCenter(coors);
+      this.center = L.latLng([geoCenter.latitude, geoCenter.longitude]);
     }
+    this.markerClusterData = data;
+  }
 
-  sort(key){
+  sort(key) {
     this.key = key;
     this.reverse = !this.reverse;
   }

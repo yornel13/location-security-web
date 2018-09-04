@@ -54,6 +54,17 @@ export class UtilsVehicles {
     } else {
       return null;
     }
+  }
 
+  getHistoryIconTablet(history: any): string {
+    if (history.message.includes('FINISHED_WATCH')) {
+      return './assets/alerts/watch_end.png';
+    } else if (history.message.includes('INIT_WATCH')) {
+      return './assets/alerts/watch_start.png';
+    } else if (history.message.includes('RESUMED_WATCH')) {
+      return './assets/alerts/watch_start.png';
+    } else {
+      return null;
+    }
   }
 }

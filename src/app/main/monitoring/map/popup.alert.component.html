@@ -1,12 +1,12 @@
 <div>
   <div *ngIf="alert.guard_id">
     <h6 class="ppp">{{title}}</h6>
-    <p class="p-popup">{{alert.message}}</p>
-    <p class="p-popup">{{date | date : "medium"}}</p>
+    <p class="ps" style="font-size: 1rem; margin-top: 0; padding-top: 0; color: cornflowerblue; line-height: 1.2rem">{{alert.message}}</p>
+    <p class="ps" style="font-size: 1.1rem"><b>{{date | date : "medium"}}</b></p>
   </div>
   <div *ngIf="alert.imei">
-    <p class="p-popup">{{alert.message}}</p>
-    <p class="p-popup">imei: {{alert.imei}}</p>
-    <p class="p-popup">{{date | date : "medium"}}</p>
+    <p class="ps" style="font-size: 1rem; margin-top: 0; padding-top: 0; color: cornflowerblue; line-height: 1.2rem">{{alert.message}}</p>
+    <p class="ps" style="font-size: 0.8rem"><b>IMEI:</b> {{alert.imei}}</p>
+    <p class="ps" style="font-size: 1.1rem"><b>{{date | date : "medium"}}</b></p>
   </div>
 </div>

@@ -1,0 +1,10 @@
+<div>
+  <p class="ps" style="font-size: 0.8rem; color: lightcoral; padding-bottom: 0; margin-bottom: 0">Lugar:</p>
+  <p class="ps" style="font-size: 1rem; margin-top: 0; padding-top: 0">{{record.address}}</p>
+  <p class="ps" style="font-size: 1.2rem">Hora:  <b>{{record.time}}</b>, Fecha: <b>{{record.date}}</b></p>
+  <div *ngIf="record.is_exception">
+    <p class="ps" style="font-size: 0.9rem; color: deepskyblue" *ngIf="!isSOS" ngif>{{record.alert_message}}</p>
+    <p class="ps" style="font-size: 0.9rem; color: red" *ngIf="isSOS" ngif>{{record.alert_message}}</p>
+  </div>
+  <p class="ps" style="font-size: 1rem" *ngIf="record.zone">Zona: {{record.zone}}</p>
+</div>

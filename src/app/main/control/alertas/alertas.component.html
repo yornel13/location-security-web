@@ -72,7 +72,7 @@
             <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
           </select>
           <label for="start" class="mr-2">Fecha</label>
-          <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="desde" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
+            <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="desde" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
           <label for="start" class="mr-2">-</label>
           <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getAlerts()" [ngModelOptions]="{standalone: true}" disabled *ngIf="rangeday">
           <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getAlerts()" [ngModelOptions]="{standalone: true}" *ngIf="!rangeday">
@@ -234,6 +234,8 @@
          [(leafletCenter)]="center"
          [leafletBaseLayers]="baseLayers"
          [leafletLayersControlOptions]="layersControlOptions"
+         [leafletMarkerCluster]="markerClusterData"
+         [leafletMarkerClusterOptions]="markerClusterOptions"
          (leafletMapReady)="onMapReadyChart($event)">
     </div>
   </div>

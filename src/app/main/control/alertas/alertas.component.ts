@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ComponentFactoryResolver, Injector, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import { AlertaService } from '../../../../model/alerta/alerta.service';
 import { Alerta } from '../../../../model/alerta/alerta';
 import { GuardService } from '../../../../model/guard/guard.service';
-import { AgmMap } from '@agm/core';
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { ExcelService } from '../../../../model/excel/excel.services';
@@ -11,6 +10,9 @@ import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import * as geolib from 'geolib';
 import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
+import {PopupAlertComponent} from '../../monitoring/map/popup.alert.component';
+import {GlobalOsm} from '../../../global.osm';
+import {UtilsVehicles} from '../../../../model/vehicle/vehicle.utils';
 
 
 @Component({
@@ -65,58 +67,28 @@ export class AlertasComponent implements OnInit {
   month2:any;
   day2:any;
 
-  zoom: 12;
+  zoom;
   center = L.latLng(([ this.lat, this.lng ]));
   marker = L.marker([this.lat, this.lng], {draggable: false});
-
-  LAYER_OSM = {
-        id: 'openstreetmap',
-        name: 'Open Street Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
-            detectRetina: true,
-            attribution: 'Open Street Map'
-        })
-    };
-    LAYER_GOOGLE_STREET = {
-        id: 'googlestreets',
-        name: 'Google Street Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=marker&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Street Map'
-        })
-    };
-    LAYER_GOOGLE_SATELLITE = {
-        id: 'googlesatellite',
-        name: 'Google Satellite Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Satellite Map'
-        })
-    };
-    LAYER_GOOGLE_TERRAIN = {
-        id: 'googletarrain',
-        name: 'Google Terrain Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Terrain Map'
-        })
-    };
-
+  markerClusterData: any[] = [];
+  markerClusterOptions: L.MarkerClusterGroupOptions;
+  layersControlOptions;
+  baseLayers;
+  options;
 
   constructor(
+        private resolver: ComponentFactoryResolver,
+        private globalOSM: GlobalOsm,
+        private injector: Injector,
+        private utilVehicle: UtilsVehicles,
         private alertaService: AlertaService,
         private guardiaService: GuardService,
         private excelService: ExcelService,
         private db: AngularFirestore,
         private route: ActivatedRoute) {
+    this.layersControlOptions = this.globalOSM.layersOptions;
+    this.baseLayers = this.globalOSM.baseLayers;
+    this.options = this.globalOSM.defaultOptions;
   	this.getGuardias();
     this.getToday();
   	this.doughnutChartData = [3, 3, 0];
@@ -145,19 +117,6 @@ export class AlertasComponent implements OnInit {
     this.alertCollection = db.collection<Alerta>('alerts');
   }
 
-  // Values to bind to Leaflet Directive
-    layersControlOptions = { position: 'bottomright' };
-    baseLayers = {
-        'Open Street Map': this.LAYER_OSM.layer,
-        'Google Street Map': this.LAYER_GOOGLE_STREET.layer,
-        'Google Satellite Map': this.LAYER_GOOGLE_SATELLITE.layer,
-        'Google Terrain Map': this.LAYER_GOOGLE_TERRAIN.layer
-    };
-    options = {
-        zoom: 12,
-        center: L.latLng(([this.lat, this.lng ]))
-    };
-
   	onMapReady(map: L.Map) {
   		console.log("entra aqui");
   		this.map =  map;
@@ -173,39 +132,65 @@ export class AlertasComponent implements OnInit {
         this.marker.addTo(this.map);
     }
 
-    onMapReadyChart(map:L.Map){
-    	console.log("vamos a ver si entra");
-    	this.mapchart = map;
-    	this.zoom = 12;
-    	this.layersControlOptions = { position: 'bottomright' };
-      var southWest = new L.LatLng(-2.100599,-79.560921);
-      var northEast = new L.LatLng(-2.030906,-79.568947);
-      var bounds = new L.LatLngBounds(southWest, northEast);
-    	if(this.data.length){
-    		var coord = [];
-    		for(var i=0; i<this.data.length; i++){
-    			var lat = Number(this.data[i].latitude);
-    			var lng = Number(this.data[i].longitude);
-    			var maker = L.marker([lat, lng]).addTo(this.mapchart);
-    			coord.push({latitude: lat, longitude: lng});
-          bounds.extend(maker.getLatLng());
-    		}
-        this.mapchart.fitBounds(bounds);
-    		var centro = geolib.getCenter(coord);
-    	}
-    	console.log(centro);
-
-    	//this.center = L.latLng([centro.latitude, centro.longitude]);
-    	L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
-            detectRetina: true,
-            attribution: 'Open Street Map'
-        }).addTo(this.mapchart);
-
-
+  onMapReadyChart(map: L.Map) {
+    this.mapchart = map;
+    this.globalOSM.setupLayer(this.mapchart);
+    this.center = this.globalOSM.center;
+    this.zoom = this.globalOSM.zoom;
+    const southWest = new L.LatLng(-2.100599, -79.560921);
+    const northEast = new L.LatLng(-2.030906, -79.568947);
+    const bounds = new L.LatLngBounds(southWest, northEast);
+    const data: any[] = [];
+    if (this.data.length) {
+      const coors = [];
+      this.data.forEach((alert: Alerta) => {
+        const lat = Number(alert.latitude);
+        const lng = Number(alert.longitude);
+        const maker = L.marker([lat, lng], this.getIcon(alert));
+        const factory = this.resolver.resolveComponentFactory(PopupAlertComponent);
+        const component = factory.create(this.injector);
+        const popupContent = component.location.nativeElement;
+        component.instance.alert = alert;
+        component.changeDetectorRef.detectChanges();
+        maker.bindPopup(popupContent).openPopup();
+        data.push(maker);
+        coors.push({latitude: lat, longitude: lng});
+        bounds.extend(maker.getLatLng());
+      });
+      this.mapchart.fitBounds(bounds);
+      const geoCenter = geolib.getCenter(coors);
+      this.center = L.latLng([geoCenter.latitude, geoCenter.longitude]);
     }
+    this.markerClusterData = data;
+  }
 
-  	sort(key){
+  getIcon(alert) {
+    let imageIcon;
+    if (alert.type === this.globalOSM.DROP) {
+      imageIcon = {icon: L.icon({iconUrl: './assets/alerts/falldown.png'})};
+    } else if (alert.type === this.globalOSM.SOS1) {
+      imageIcon = {icon: L.icon({iconUrl: './assets/alerts/sos.png'})};
+    } else if (alert.type === this.globalOSM.IGNITION_ON) {
+      imageIcon = {icon: L.icon({iconUrl: './assets/alerts/on.png'})};
+    } else if (alert.type === this.globalOSM.IGNITION_OFF) {
+      imageIcon = {icon: L.icon({iconUrl: './assets/alerts/off.png'})};
+    } else if (alert.type === this.globalOSM.SPEED_MAX) {
+      imageIcon = {icon: L.icon({iconUrl: './assets/alerts/speed.png'})};
+    } else if (alert.type === this.globalOSM.INIT_WATCH) {
+      imageIcon = {icon: L.icon({iconUrl: './assets/alerts/watch_start.png'})};
+    } else if (alert.type === this.globalOSM.FINISH_WATCH) {
+      imageIcon = {icon: L.icon({iconUrl: './assets/alerts/watch_end.png'})};
+    } else if (alert.type === this.globalOSM.OUT_BOUNDS) {
+      imageIcon = {icon: L.icon({iconUrl: './assets/alerts/outside.png'})};
+    } else if (alert.type === this.globalOSM.IN_BOUNDS) {
+      imageIcon = {icon: L.icon({iconUrl: './assets/alerts/inside.png'})};
+    } else {
+      imageIcon = {icon: L.icon({iconUrl: './assets/alerts/report.png'})};
+    }
+    return imageIcon;
+  }
+
+  sort(key) {
 	  this.key = key;
 	  this.reverse = !this.reverse;
 	}

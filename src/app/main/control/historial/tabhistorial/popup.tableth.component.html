@@ -1,0 +1,11 @@
+<div>
+  <p class="ps" style="font-size: 0.8rem; color: lightcoral; padding-bottom: 0; margin-bottom: 0">Guardia:</p>
+  <p class="ps" style="font-size: 1rem; margin-top: 0; padding-top: 0; color: cornflowerblue">{{record.guard_name}} {{record.guard_lastname}}</p>
+  <p class="ps" style="font-size: 1.2rem">Fecha:  <b>{{record.generated_time}}</b></p>
+  <p class="ps" style="font-size: 0.9rem; color: deepskyblue">
+    <span *ngIf="record.message == 'INIT_WATCH'">INICIO DE GUARDIA</span>
+    <span *ngIf="record.message == 'FINISHED_WATCH'">FINALIZACIÓN DE GUARDIA</span>
+    <span *ngIf="record.message == 'UPDATE'">ACTUALIZACIÓN DE POSICIÓN</span>
+    <span *ngIf="record.message == 'RESUMED_WATCH'">GUARDIA RETOMADA</span>
+  </p>
+</div>

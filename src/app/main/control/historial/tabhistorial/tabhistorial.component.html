@@ -126,7 +126,12 @@
 	                    <td>{{tabh.imei}}</td>
                       <td>{{tabh.guard_name}} {{tabh.guard_lastname}}</td>
                       <td>{{tabh.guard_dni}}</td>
-	                    <td><span *ngIf="tabh.message == 'INIT_WATCH'">INICIO DE GUARDIA</span><span *ngIf="tabh.message == 'FINISHED_WATCH'">FINALIZACIÓN DE GUARDIA</span><span *ngIf="tabh.message == 'UPDATE'">ACTUALIZACIÓN DE POSICIÓN</span></td>
+	                    <td>
+                        <span *ngIf="tabh.message == 'INIT_WATCH'">INICIO DE GUARDIA</span>
+                        <span *ngIf="tabh.message == 'FINISHED_WATCH'">FINALIZACIÓN DE GUARDIA</span>
+                        <span *ngIf="tabh.message == 'UPDATE'">ACTUALIZACIÓN DE POSICIÓN</span>
+                        <span *ngIf="tabh.message == 'RESUMED_WATCH'">GUARDIA RETOMADA</span>
+                      </td>
                       <td>{{tabh.generated_time}}</td>
                       <td>{{tabh.message_time}}</td>
 	                </tr>
@@ -143,12 +148,14 @@
                        [(leafletCenter)]="center"
                        [leafletBaseLayers]="baseLayers"
                        [leafletLayersControlOptions]="layersControlOptions"
+                       [leafletMarkerCluster]="markerClusterData"
+                       [leafletMarkerClusterOptions]="markerClusterOptions"
                        (leafletMapReady)="onMapReadyH($event)">
                   </div>
                 </div>
               </div>
  
-              <div class="row mt-4">
+              <div class="row mt-4" style="margin-bottom: 30px">
                   <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
               </div>
             </form>

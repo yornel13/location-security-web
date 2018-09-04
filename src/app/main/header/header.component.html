@@ -1,4 +1,10 @@
 <!--Main nav-->
+<div style="position: absolute; background-color: transparent; height: 56px; margin-left: 20px; display: flex; justify-content: center">
+  <div class="image-cropper" style="background: #4A4048">
+    <img class="rounded" src="{{photo}}">
+  </div>
+  <p style="color: beige; margin-top: 13px; margin-left: 18px;">{{user}}</p>
+</div>
 <ul class="list-items" id="items">
   <li routerLink="/u/dashboard" class="list-item" [routerLinkActive]="['active']">Dashboard</li>
   <li routerLink="/u/monitoring" class="list-item" [routerLinkActive]="['active']">Monitoreo</li>

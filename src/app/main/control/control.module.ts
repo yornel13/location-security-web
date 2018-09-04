@@ -69,6 +69,9 @@ import { MhistorialComponent } from './subhome/mhistorial/mhistorial.component';
 import { VehistorialComponent } from './historial/vehistorial/vehistorial.component';
 import { TabhistorialComponent } from './historial/tabhistorial/tabhistorial.component';
 import { VehicercohistorialComponent } from './historial/vehicercohistorial/vehicercohistorial.component';
+import {PopupHistoryComponent} from './historial/vehistorial/popup.history.component';
+import {PopupTablethComponent} from './historial/tabhistorial/popup.tableth.component';
+import {PopupReportComponent} from './bitacora/filtreport/popup.report.component';
 
 export const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
@@ -136,7 +139,7 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService, ExcelService, PuestoService,
         IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService, AlertaService, CercoService, GrupoService,
         VehistorialService, TabhistoryService, SalidascercoService ],
-    entryComponents: [ ],
+    entryComponents: [ PopupHistoryComponent, PopupTablethComponent, PopupReportComponent ],
     declarations: [
         GuardiaComponent, AdminComponent, ControlComponent,
         VehiculosComponent, VisitantesComponent, FuncionariosComponent, IncidenciasComponent,
@@ -158,7 +161,10 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         PuestosComponent,
         MhistorialComponent,
         VehistorialComponent,
-        TabhistorialComponent ],
+        TabhistorialComponent,
+        PopupHistoryComponent,
+        PopupTablethComponent,
+        PopupReportComponent],
     bootstrap: [ ControlComponent ]
 })
 export class ControlModule {}

@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
             password: ['', Validators.required]
         });
         this.authService.cleanStore();
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/u/dashboard/';
+        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/u/monitoring/';
     }
 
     // convenience getter for easy access to form fields

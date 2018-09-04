@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ComponentFactoryResolver, Injector, OnInit} from '@angular/core';
 import { VehistorialService } from '../../../../../model/historial/vehistorial.service';
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -8,6 +8,9 @@ import 'leaflet.markercluster';
 import * as geolib from 'geolib';
 import {GlobalOsm} from '../../../../global.osm';
 import {UtilsVehicles} from '../../../../../model/vehicle/vehicle.utils';
+import {PopupHistoryComponent} from './popup.history.component';
+import {PolylineOptions} from "leaflet";
+import {LatLngExpression} from "leaflet";
 
 @Component({
   selector: 'app-vehistorial',
@@ -57,9 +60,11 @@ export class VehistorialComponent {
   options;
 
   constructor(
+      private resolver: ComponentFactoryResolver,
       private vehistorialService: VehistorialService,
       private excelService: ExcelService,
       private globalOSM: GlobalOsm,
+      private injector: Injector,
       private utilVehicle: UtilsVehicles) {
     this.layersControlOptions = this.globalOSM.layersOptions;
     this.baseLayers = this.globalOSM.baseLayers;
@@ -85,19 +90,32 @@ export class VehistorialComponent {
     const data: any[] = [];
     if (this.history.length) {
       const coors = [];
+      const points = [];
       this.history.forEach(record => {
         const lat = Number(record.latitude);
         const lng = Number(record.longitude);
         const maker = L.marker([lat, lng], this.getIcon(record));
+        const factory = this.resolver.resolveComponentFactory(PopupHistoryComponent);
+        const component = factory.create(this.injector);
+        const popupContent = component.location.nativeElement;
+        component.instance.record = record;
+        component.changeDetectorRef.detectChanges();
+        maker.bindPopup(popupContent).openPopup();
         data.push(maker);
         coors.push({latitude: lat, longitude: lng});
+        points.push(L.latLng(lat, lng));
         bounds.extend(maker.getLatLng());
       });
-      this.markerClusterData = data;
+      const polyline = L.polyline(points);
+      const editableLayers = new L.FeatureGroup();
+      this.mapchart.addLayer(editableLayers);
+      editableLayers.addLayer(polyline);
+
       this.mapchart.fitBounds(bounds);
       const geoCenter = geolib.getCenter(coors);
       this.center = L.latLng([geoCenter.latitude, geoCenter.longitude]);
     }
+    this.markerClusterData = data;
   }
 
   getIcon(history: any): any {
@@ -110,7 +128,7 @@ export class VehistorialComponent {
   }
 
   centerMap(history: any) {
-    this.zoom = 18;
+    this.zoom = 19;
     this.center = L.latLng(([ history.latitude, history.longitude ]));
   }
 
