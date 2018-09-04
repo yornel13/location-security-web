@@ -9,30 +9,31 @@ li {
 
 
 
-.loader {
-  display: inline-block;
-  width: 25px;
-  height: 25px;
+.loader_msg {
+
+
 
 }
 
-.loader:after {
+.loader_msg:after {
+
     content: " ";
-    display: block;
+    width: 25px;
+    height: 25px;
     position: absolute;
-    border: 8px solid #f3f3f3;
+    border: 3px solid #f3f3f3;
     border-radius: 50%;
-    border-top: 8px solid #3498db;
-    -webkit-animation: loader 1s linear infinite;
-    animation: loader 1s linear infinite;
+    border-top: 3px solid var(--primary-color);
+    -webkit-animation: loader_msg 1s linear infinite;
+    animation: loader_msg 1s linear infinite;
     align-items: center;
-    margin: 10px auto 5px;
+    /*margin: 10px auto 5px;*/
 
     left: 50%;
-    bottom: 100px;
+    bottom: 115px;
 }
 
-@keyframes loader {
+@keyframes loader_msg {
     0% {
         transform: rotate(0deg);
     }
@@ -40,6 +41,9 @@ li {
         transform: rotate(360deg);
     }
 }
+
+
+
 
 
 
@@ -280,7 +284,7 @@ app-messaging {
 }
 
 .tab-content-groups {
-    height: 83%;
+    height: 87%;
 }
 
 .scroll-content {
@@ -306,6 +310,7 @@ app-messaging {
 
 .write-container {
     background-color: honeydew;
+    margin: 15px;
     padding: 8px;
     border-radius: 4px;
 }
@@ -315,7 +320,7 @@ app-messaging {
 }
 
 .bubbles-container {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .bubble-sender {
