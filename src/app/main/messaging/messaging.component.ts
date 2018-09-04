@@ -25,6 +25,7 @@ export class MessagingComponent implements OnInit {
     @ViewChild('scrollMe') private myScrollContainer: ElementRef;
     user: Admin;
     loading = false;
+    loading_msg = false;
     submitted = false;
     error = '';
     addUsers: any[];
@@ -41,8 +42,9 @@ export class MessagingComponent implements OnInit {
     myForm: FormGroup;
     nameChannel: any;
     noMessages = false;
-    chanel_id;
+    emptyField = false;
     @ViewChild('messageField') messageField: any;
+    @ViewChild('nameChannelField') nameChannelField: any;
 
     listContactGuard: any[];
     listContactAdmin: any[];
@@ -185,38 +187,44 @@ export class MessagingComponent implements OnInit {
           }
         }
     }
-
     newMessage(formValue) {
         this.submitted = true;
-        this.loading = true;
-        this.loading = true;
+        this.loading_msg = true;
         const chatId = this.isChannel ? this.currentChannel.channel_id : this.currentChat.id;
         this.chatService.sendMessage(formValue.message, chatId, this.isChannel)
             .pipe(first())
             .subscribe(
               (data: ChatLine)  => {
-                this.currentChatLines.push(data);
-                    this.loading = false;
+                  this.loading_msg = true;
+                  this.currentChatLines.push(data);
                     this.scrollToBottom();
-                },
+                  this.loading_msg = false;
+              },
                 error => {
                     this.error = error;
-                    this.loading = false;
+                    this.loading_msg = false;
                 });
         this.messageField.nativeElement.value = '';
     }
-
     newChannel(formValue) {
+        console.log('crear grupo', formValue.nameChannel);
         this.submitted = true;
         this.loading = true;
         const sender_type = 'ADMIN';
-        this.loading = true;
         this.listChannelAdmin = [];
+
+        if (formValue.nameChannel === undefined) {
+            this.loading = false;
+            this.emptyField = true;
+            return;
+        }
+        this.emptyField = false;
         this.chatService.channel(formValue.nameChannel)
             .pipe(first())
             .subscribe(
                 data => {
                     console.log(data);
+                    this.nameChannelField.nativeElement.value = '';
                     this.loading = false;
                     this.loadAllChannel();
                 },
@@ -224,6 +232,7 @@ export class MessagingComponent implements OnInit {
                     this.error = error;
                     this.loading = false;
                 });
+        formValue.nameChannel = undefined;
     }
 
     scrollToBottom(): void {

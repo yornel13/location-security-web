@@ -30,22 +30,23 @@
 						</ul>
 					</div> <!-- ID ADMIN -->
 					<div class="tab-pane fade tab-content-groups" id="channel"> <!-- ID CHANNEL -->
-						<div class="create-group" style="padding: 5px 14px 0 5px; margin-bottom: 35px">
+						<div class="create-group" style="padding: 5px 14px 0 5px; margin-bottom: 5px">
 							<ul class="list-group">
 								<form #channelForm="ngForm" (ngSubmit)="newChannel(channelForm.value)" autocomplete="off" style="background-color: #fff; border: 1px #d8d8d8 solid; border-radius: 4px; padding: 8px 15px ">
 									<div class="form-group " >
-										<label for="nameChannel" style="color: #707070; margin-bottom: 5px ">Nuevo grupo</label>
+										<label for="nameChannelField" style="color: #707070; margin-bottom: 5px ">Nuevo grupo</label>
 										<br>
-										<input [(ngModel)]="nameChannel" type="text" class="form-control" id="nameChannel" name="nameChannel" placeholder="Nombre del grupo...">
+										<input [(ngModel)]="nameChannel" type="text" class="form-control" #nameChannelField id="nameChannelField" name="nameChannel" placeholder="Nombre del grupo...">
+										<p *ngIf="emptyField" style="margin: 0; font-size: 10px; padding-right: 3px; float: right; color: palevioletred">Debe asignar un nombre</p>
 									</div>
 									<button type="submit" class="btn btn-primary" [disabled]="loading" *ngIf="!loading disable" style="position: relative;" >Crear</button>
-									<div class="loader" *ngIf="loading"></div>
+									<div style="height: 38px; width: 38px;   border: 4px solid #f3f3f3;
+ 											   border-top: 4px solid var(--primary-color);" class="loader" *ngIf="loading"></div>
 								</form>
 							</ul>
 						</div>
 						
 						<div class="tab-content-groups">
-							
 							<div class=" scroll-content">
 							<ul class="list-group" *ngFor="let channel of allChannel">
 								<li class="list-group-item group-card" (click)="openChannel(channel)">
@@ -117,18 +118,18 @@
 			</div>
 			
 			<!--WRITE MESSAGE-->
-			<div class="loader"  *ngIf="loading"></div>
-      <div *ngIf="noMessages && !loading" style="width: 100%; height: 100%; text-align: center; vertical-align: middle; line-height: 90px; color: gray">
+			<div class="loader_msg"  *ngIf="loading_msg"></div>
+      <div *ngIf="noMessages && !loading_msg" style="width: 100%; height: 100%; text-align: center; vertical-align: middle; line-height: 90px; color: gray">
         No hay Mensajes
       </div>
-			<form class="write-container" style="background-color: whitesmoke; margin-left: 12px" #chatForm="ngForm"  (ngSubmit)="newMessage(chatForm.value)" autocomplete="off">
+			<form class="write-container" style="background-color: whitesmoke; " #chatForm="ngForm"  (ngSubmit)="newMessage(chatForm.value)" autocomplete="off">
 			<div style="display: flex">
 				<div class="form-group col-lg-11">
 					<label for="message">Escribir Mensaje</label>
 					<br>
 					<input   [(ngModel)]="message" type="text" class="form-control" #messageField id="message" name="message" placeholder="...">
 				</div>
-				<button type="submit" style=" align-self: center; margin-top: 5px;" class="btn btn-primary" [disabled]="loading" *ngIf="!loading disable" ><i class="fa">&#xf1d8;</i></button>
+				<button type="submit" style=" align-self: center; margin-top: 5px;" class="btn btn-primary" [disabled]="loading_msg" *ngIf="!loading_msg disable" ><i class="fa">&#xf1d8;</i></button>
 			</div>
 		</form>
 	</div>
