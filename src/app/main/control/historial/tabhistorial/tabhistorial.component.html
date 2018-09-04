@@ -52,7 +52,7 @@
 	            <tr *ngFor="let tab of data | filter:filter | paginate: { itemsPerPage: numElement, currentPage: p }">
 	                <td>{{tab.id}}</td>
 	                <td>{{tab.imei}}</td>
-	                <td>{{tab.message}}</td>
+	                <td><span *ngIf="tab.message == 'INIT_WATCH'">INICIO DE GUARDIA</span><span *ngIf="tab.message == 'FINISHED_WATCH'">FINALIZACIÓN DE GUARDIA</span><span *ngIf="tab.message == 'UPDATE'">ACTUALIZACIÓN DE POSICIÓN</span></td>
 	                <td>{{tab.guard_name}} {{tab.guard_lastname}}</td>
 	                <td>{{tab.guard_dni}}</td>
 	                <td>{{tab.generated_time}}</td>
@@ -114,7 +114,8 @@
                   </div>
               	</div>
 	          </div>
-	          <div style="height: auto; overflow-y: auto; margin-bottom: 30px; max-height: 500px;">
+            <h2 *ngIf="!hayhistory">Sin Historial</h2>
+	          <div *ngIf="hayhistory" style="height: auto; overflow-y: auto; margin-bottom: 30px; max-height: 500px;">
 	          	<table class="table table-bordered">
 	                <thead  class="thead-light">
 	                    <th>IMEI</th>
@@ -126,13 +127,13 @@
 	                <tr *ngFor="let tabh of history">
 	                    <td>{{tabh.imei}}</td>
 	                    <td>{{tabh.generated_time}}</td>
-	                    <td>{{tabh.message}}</td>
+	                    <td><span *ngIf="tabh.message == 'INIT_WATCH'">INICIO DE GUARDIA</span><span *ngIf="tabh.message == 'FINISHED_WATCH'">FINALIZACIÓN DE GUARDIA</span><span *ngIf="tabh.message == 'UPDATE'">ACTUALIZACIÓN DE POSICIÓN</span></td>
 	                    <td>{{tabh.message_time}}</td>
 	                </tr>
 	                </tbody>
 	            </table>
 	          </div>
-              <div class="form-group row">
+              <div *ngIf="hayhistory" class="form-group row">
                 <label for="dni" class="col-sm-1 col-form-label"><b>Mapa</b></label>
                 <div class="col-sm-11">
                   <div class="mapchart"

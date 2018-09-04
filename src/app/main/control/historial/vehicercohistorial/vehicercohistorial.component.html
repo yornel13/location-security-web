@@ -1,3 +1,191 @@
-<p>
-  vehicercohistorial works!
-</p>
+<div class="info-container panel panel-default" *ngIf="lista">
+    <div class="container-fluid row mx-auto mt-2">
+        <div class="mr-auto row ml-1">
+            <a routerLink="/u/control/home/historial" title="Atrás" style="color: var(--secondary-color)">
+                <i class="fas fa-reply icon-return"></i>
+            </a>
+            <h3 class="list-title">Salidas del cerco virtual</h3>
+        </div>
+        <div class="ml-auto form-inline">
+            <input type="text" name="searchString" class="form-control mr-4" placeholder="Buscar Salida" [(ngModel)]="filter">
+        	<div class="btn-group btn-group-toggle mr-2" data-toggle="buttons">
+              <label class="btn btn-outline-secondary" (click)="excelDownload()">
+                <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+              </label>
+              <label class="btn btn-outline-secondary" (click)="pdfDownload()">
+                <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+              </label>
+              <label class="btn btn-outline-secondary" (click)="print()">
+                <input type="radio" name="options" id="option3" autocomplete="off"> Print
+              </label>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid row mx-auto mt-2">
+            <div class="mr-auto row ml-2 form-inline">
+                <label class="mr-1"><b>Mostrar:</b></label>
+                <select id="inputState" class="form-control mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
+                  <option [ngValue]="10">10</option>
+                  <option [ngValue]="25">25</option>
+                  <option [ngValue]="50">50</option>
+                  <option [ngValue]="100">100</option>
+                </select>
+                <label>Elementos</label>
+            </div>
+            <div class="ml-auto form-inline">
+        	<div class="form-group row">
+                  <label for="start" class="mr-2">Fecha</label>
+                  <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="desde" (change)="getSearch()" [ngModelOptions]="{standalone: true}">
+                  <label for="start" class="mr-2">-</label>
+                  <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getSearch()" [ngModelOptions]="{standalone: true}" disabled *ngIf="rangeday">
+                  <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="!rangeday">
+                  <div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">
+                    <label class="btn btn-outline-secondary btn-sm active" (click)="selectRange(1)">
+                      <input type="radio" name="options" id="option1" autocomplete="off" checked> Dia
+                    </label>
+                    <label class="btn btn-outline-secondary btn-sm" (click)="selectRange(2)">
+                      <input type="radio" name="options" id="option3" autocomplete="off"> Fechas
+                    </label>
+                  </div>
+	        </div>
+	      </div>
+        </div>
+    <div class="table mt-2 container-fluid">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <th>ID</th>
+            <th>IMEI</th>
+            <th>Alias</th>
+            <th>Fecha Salida</th>
+            <th>Lat Salida</th>
+            <th>Lng Salida</th>
+            <th>Fecha Vuelta</th>
+            <th>Lat Vuelta</th>
+            <th>Lng Vuelta</th>
+            <th>Duración</th>
+            <th>Detalle</th>
+            </thead>
+            <tbody>
+	            <tr *ngFor="let tab of data | filter:filter | paginate: { itemsPerPage: numElement, currentPage: p }">
+	                <td>{{tab.id}}</td>
+	                <td>{{tab.imei}}</td>
+                    <td>{{tab.alias}}</td>
+	                <td>{{tab.create_date}}</td>
+	                <td>{{tab.latitude}}</td>
+	                <td>{{tab.longitude}}</td>
+	                <td *ngIf="(tab.in | json) != '{}'">{{tab.in.create_date}}</td>
+	                <td *ngIf="(tab.in | json) != '{}'">{{tab.in.latitude}}</td>
+	                <td *ngIf="(tab.in | json) != '{}'">{{tab.in.longitude}}</td>
+                    <td colspan="3" *ngIf="(tab.in | json) == '{}'">AUN FUERA DE LA ZONA ESTABLECIDA</td>
+	                <td>{{tab.diff_text}}</td>
+	                <td>
+	                    <a class="btn btn-primary btn-xs" (click)="verDetalle(tab)" title="Detalle"><span class="fas fa-eye"></span></a>
+	                </td>
+	            </tr>
+            </tbody>
+        </table>
+        <div style="text-align: center; padding-right: 40px;">
+            <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
+                  nextLabel="">
+            </pagination-controls>
+        </div>
+    </div>
+</div>
+
+<div class="info-container panel panel-default" *ngIf="detalle">
+    <div class="row panel-heading mb-2" style="background-color: #D9D9D9; padding: 10px">
+        <div class="mr-auto ml-4">
+            <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle de Salida</h3>
+        </div>
+        <div class="ml-auto" style="margin-top: 25px; margin-right: 60px;">
+            <div class="btn-group btn-group-toggle ml-4" data-toggle="buttons">
+              <label class="btn btn-outline-dark" (click)="excelHistorial()">
+                <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+              </label>
+              <label class="btn btn-outline-dark" (click)="pdfHistorial()">
+                <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+              </label>
+              <label class="btn btn-outline-dark" (click)="printHistorial()">
+                <input type="radio" name="options" id="option3" autocomplete="off"> Print
+              </label>
+            </div>
+        </div>
+    </div>
+    <div style="text-align: center;" *ngIf="!loadh">
+        <h2>Cargando ...</h2>
+        <div class="loader mb-4 mx-auto"></div>
+    </div>
+    <div class="panel-body mt-2" *ngIf="loadh">          
+          <div class="table-container container">
+            <form  role="form">
+              <div>
+                <div class="row form-inline mb-2">
+                    <b class="mr-auto ml-3">Historial</b> 
+                  <label for="start" class="mr-2">Fecha</label>
+                  <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="desde2" (change)="getHistory()" [ngModelOptions]="{standalone: true}">
+                  <label for="start" class="mr-2">-</label>
+                  <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta2" (change)="getHistory()" [ngModelOptions]="{standalone: true}" disabled *ngIf="rangeday2">
+                  <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta2" (change)="getHistory()" [ngModelOptions]="{standalone: true}" *ngIf="!rangeday2">
+                  <div class="btn-group btn-group-toggle ml-2 mr-3 algo" data-toggle="buttons">
+                    <label class="btn btn-outline-secondary btn-sm active" (click)="selectRange2(1)">
+                      <input type="radio" name="options" id="option1" autocomplete="off" checked> Dia
+                    </label>
+                    <label class="btn btn-outline-secondary btn-sm" (click)="selectRange2(2)">
+                      <input type="radio" name="options" id="option3" autocomplete="off"> Fechas
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div style="height: auto; overflow-y: auto; margin-bottom: 30px; margin-top: 20px; max-height: 500px;">
+                <table class="table table-bordered table-sm">
+                    <thead  class="thead-light">
+                        <th>ID</th>
+                        <th>IMEI</th>
+                        <th>Alias</th>
+                        <th>Fecha Salida</th>
+                        <th>Lat Salida</th>
+                        <th>Lng Salida</th>
+                        <th>Fecha Vuelta</th>
+                        <th>Lat Vuelta</th>
+                        <th>Lng Vuelta</th>
+                        <th>Duración</th>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let tabh of exitcercos">
+                        <td>{{tabh.id}}</td>
+                        <td>{{tabh.imei}}</td>
+                        <td>{{tabh.alias}}</td>
+                        <td>{{tabh.create_date}}</td>
+                        <td>{{tabh.latitude}}</td>
+                        <td>{{tabh.longitude}}</td>
+                        <td *ngIf="(tabh.in | json) != '{}'">{{tabh.in.create_date}}</td>
+                        <td *ngIf="(tabh.in | json) != '{}'">{{tabh.in.latitude}}</td>
+                        <td *ngIf="(tabh.in | json) != '{}'">{{tabh.in.longitude}}</td>
+                        <td colspan="3" *ngIf="(tabh.in | json) == '{}'">AUN FUERA DE LA ZONA ESTABLECIDA</td>
+                        <td>{{tabh.diff_text}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+              </div>
+              <div class="form-group row">
+                <label for="dni" class="col-sm-1 col-form-label"><b>Mapa</b></label>
+                <div class="col-sm-11">
+                  <div class="mapchart"
+                       leaflet
+                       [leafletOptions]="options"
+                       [(leafletZoom)]="zoom"
+                       [(leafletCenter)]="center"
+                       [leafletBaseLayers]="baseLayers"
+                       [leafletLayersControlOptions]="layersControlOptions"
+                       (leafletMapReady)="onMapReadyH($event)">
+                  </div>
+                </div>
+              </div>
+ 
+              <div class="row mt-4">
+                  <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
+              </div>
+            </form>
+          </div>
+        </div>
+  </div>
