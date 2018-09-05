@@ -1,0 +1,11 @@
+<div>
+  <p class="ps" style="font-size: 1.2rem">Fecha:  <b>{{visit.create_date}}</b></p>
+  <br>
+  <p class="ps" style="font-size: 1rem; margin-top: 0; padding-top: 0; color: cornflowerblue">Personas que ingresaron: {{visit.persons}}</p>
+  <p class="ps" style="font-size: 1rem; margin-top: 0; padding-top: 0; color: red"  *ngIf="visit.comment">{{visit.comment}}</p>
+  <br>
+  <p class="ps" style="font-size: 0.8rem; color: lightcoral; padding-bottom: 0; margin-bottom: 0">Datos del visitante:</p>
+  <p class="ps" style="font-size: 1rem;"><b>Cedula:</b> {{visit.visitor_dni}}</p>
+  <p class="ps" style="font-size: 1rem;">{{visit.visitor_name}} {{visit.visitor_lastname}}</p>
+  <p class="ps" style="font-size: 1rem;" *ngIf="visit.plate">Place del vehiculo:<b> {{visit.plate}}</b></p>
+</div>

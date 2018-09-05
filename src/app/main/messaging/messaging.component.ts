@@ -34,13 +34,12 @@ export class MessagingComponent implements OnInit {
     message: string;
     isChannel: boolean;
     options: any[];
-    private channelMessage: ChatLine[];
-    private allChat: Chat[];
-    private allChannel: Channel[];
-    private guards: Guard[];
-    private guardsData;
-    private admins: Admin[];
-    private adminsData;
+    allChat: Chat[];
+    allChannel: Channel[];
+    guards: Guard[];
+    guardsData;
+    admins: Admin[];
+    adminsData;
     myForm: FormGroup;
     nameChannel: any;
     noMessages = false;
@@ -165,7 +164,7 @@ export class MessagingComponent implements OnInit {
     }
 
     receivedMessage(chatLine: ChatLine) {
-        console.log('received message from ', chatLine.sender_name + ' ->' + chatLine.sender_type);
+        console.log('received message from ', chatLine.sender_name + ' -> ' + chatLine.sender_type);
         if (chatLine.chat_id != null && this.currentChat != null) {
             if (+this.currentChat.id === +chatLine.chat_id) {
               let alreadyAdded = false;
@@ -174,7 +173,7 @@ export class MessagingComponent implements OnInit {
                     alreadyAdded = true;
                   }
                 });
-                if (alreadyAdded) {
+                if (!alreadyAdded) {
                   this.currentChatLines.push(chatLine);
                 }
             }
@@ -186,7 +185,7 @@ export class MessagingComponent implements OnInit {
                 alreadyAdded = true;
               }
             });
-            if (alreadyAdded) {
+            if (!alreadyAdded) {
               this.currentChatLines.push(chatLine);
             }
           }

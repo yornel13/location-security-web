@@ -27,8 +27,6 @@ import {NotificationService} from './shared/notification.service';
 import {GlobalOsm} from './global.osm';
 import {UtilsVehicles} from '../model/vehicle/vehicle.utils';
 
-
-
 @NgModule({
     imports: [
         BrowserModule,

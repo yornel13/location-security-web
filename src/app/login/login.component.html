@@ -2,8 +2,14 @@
   <form class="simple-login-container animation-fadeIn" style="padding:4%; position:relative; top:160px"
    [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <h2 style="padding: 0px; margin: 0px">Ingreso</h2>
-        <h2 style="padding: 0px; margin: 10px 0px 30px 0px">ICSSE Seguridad</h2>
+        <div style="display: flex; max-height: 150px; justify-content: space-between">
+          <div style="display: flex; flex-direction: column; align-items: self-start">
+            <h2 style="padding: 0; margin: 0">Ingreso</h2>
+            <h2 style="padding: 0; margin: 0">ICSSE Seguridad</h2>
+            <br>
+          </div>
+          <img src="./favicon.png" style="width: 68px; height: 80px">
+        </div>
           <input type="text" formControlName="dni" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.dni.errors }" placeholder="Cédula"/>
           <div *ngIf="submitted && f.dni.errors" class="invalid-feedback">
               <div *ngIf="f.dni.errors.required">Cedula is required</div>
