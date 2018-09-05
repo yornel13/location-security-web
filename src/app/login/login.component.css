@@ -8,8 +8,8 @@
 
 .simple-login-container{
     width:400px;
-    max-width:100%;
-    margin: auto;
+    padding: 36px;
+    padding-top: 70px;
     -webkit-border-radius: 8px 8px 8px 8px;
     border-radius: 8px 8px 8px 8px;
     -webkit-box-shadow: 0 0 7px 7px rgba(102,102,102, 0.6);
