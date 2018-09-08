@@ -73,6 +73,7 @@ import {PopupHistoryComponent} from './historial/vehistorial/popup.history.compo
 import {PopupTablethComponent} from './historial/tabhistorial/popup.tableth.component';
 import {PopupReportComponent} from './bitacora/filtreport/popup.report.component';
 import {PopupVisitComponent} from './visitas/visitas/popup.visit.component';
+import {PopupWatchtComponent} from './watches/wtodas/popup.watcht.component';
 
 export const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
@@ -140,7 +141,7 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService, ExcelService, PuestoService,
         IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService, AlertaService, CercoService, GrupoService,
         VehistorialService, TabhistoryService, SalidascercoService ],
-    entryComponents: [ PopupHistoryComponent, PopupTablethComponent, PopupReportComponent, PopupVisitComponent ],
+    entryComponents: [ PopupHistoryComponent, PopupTablethComponent, PopupReportComponent, PopupVisitComponent, PopupWatchtComponent ],
     declarations: [
         GuardiaComponent, AdminComponent, ControlComponent,
         VehiculosComponent, VisitantesComponent, FuncionariosComponent, IncidenciasComponent,
@@ -166,7 +167,8 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         PopupHistoryComponent,
         PopupTablethComponent,
         PopupReportComponent,
-        PopupVisitComponent],
+        PopupVisitComponent,
+        PopupWatchtComponent],
     bootstrap: [ ControlComponent ]
 })
 export class ControlModule {}

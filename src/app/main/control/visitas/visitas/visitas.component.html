@@ -153,6 +153,12 @@
                       <input type="text" readonly class="form-control" id="lastname" value="{{visi.finish_date}}">
                   </div>
               </div>
+              <div class="form-group row" [hidden]="visi.finish_date == '0000-00-00 00:00:00'" *ngIf="visi.comment">
+                <label class="col-sm-2 col-form-label">Observación</label>
+                <div class="col-sm-10">
+                  <textarea rows="5" cols="10" readonly class="form-control input">{{visi.comment}}</textarea>
+                </div>
+              </div>
               <div class="form-group row">
                 <label for="dni" class="col-sm-2 col-form-label">Latitud</label>
                 <div class="col-sm-4">
