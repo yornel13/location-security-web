@@ -296,10 +296,7 @@ export class MapOsmComponent implements OnChanges, OnInit {
                     const factory = this.resolver.resolveComponentFactory(PopupWatchComponent);
                     const component = factory.create(this.injector);
                     const popupContent = component.location.nativeElement;
-                    component.instance.dni = mData.guard_dni;
-                    component.instance.name = mData.guard_name;
-                    component.instance.lastname = mData.guard_lastname;
-                    component.instance.generated_time = mData.generated_time;
+                    component.instance.tablet = mData;
                     component.changeDetectorRef.detectChanges();
                     m.bindPopup(popupContent).openPopup();
                     data.push(m);

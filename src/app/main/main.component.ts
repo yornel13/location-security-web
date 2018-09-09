@@ -34,7 +34,7 @@ export class MainComponent implements OnInit {
             private mainService: MainService,
             private db: AngularFirestore) {
         this.alertCollection = db.collection<Alerta>('alerts',
-            ref => ref.orderBy('id', 'desc').limit(10));
+            ref => ref.orderBy('status', 'desc').orderBy('id', 'desc').limit(10));
     }
 
     ngOnInit() {

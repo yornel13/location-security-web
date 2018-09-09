@@ -20,12 +20,12 @@ export class TabletService {
     }
 
     getAll() {
-        return this.http.get(this.TABLET_URL+'/active/all').toPromise()
+        return this.http.get(this.TABLET_URL + '/active/all').toPromise()
             .then((response) => response);
     }
 
-    setStatus(id:number, status:number){
-        return this.http.put(this.TABLET_URL + '/' + id + '/active/'+ status, httpOptions).toPromise()
+    setStatus(id: number, status: number) {
+        return this.http.put(this.TABLET_URL + '/' + id + '/active/' + status, httpOptions).toPromise()
             .then((response) => response);
     }
 
