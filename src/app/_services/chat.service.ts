@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -13,33 +13,30 @@ import {ListChannel} from '../../model/chat/list.channel';
 import {ChatLine} from '../../model/chat/chat.line';
 import {ListChatLine} from '../../model/chat/list.chat.line';
 import {ListGroupMembers} from '../../model/chat/list.group.members';
+import {Admin} from '../../model/admin/admin';
 
 const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
 
-    user_1_id;
-    user_1_type;
-    user_1_name;
-    token_session;
+    private user_1_id;
+    private user_1_type;
+    private user_1_name;
+    private token_session;
 
-    constructor(private http: HttpClient, private authService: AuthenticationService) {
-        if (authService.getUser() != null) {
-            this.user_1_id   = authService.getUser().id;
+    constructor(private http: HttpClient) { }
+
+    setUser(user: Admin, tokenSession) {
+        if (user != null) {
+            this.user_1_id   = user.id;
             this.user_1_type = 'ADMIN';
-            this.user_1_name = `${authService.getUser().name} ${authService.getUser().lastname}`;
-            this.token_session = authService.getTokenSession();
+            this.user_1_name = `${user.name} ${user.lastname}`;
+            this.token_session = tokenSession;
+        } else {
+            console.log('No user to work with ChatService');
         }
-        httpOptions.headers.set('APP-TOKEN', authService.getTokenSession());
-    }
-
-    webRegister(tokenFire: String, tokenSession: String, adminId: number) {
-        return this.http.post(`${environment.BASIC_URL}/messenger/register/web`, {
-                                            registration_id: tokenFire,
-                                            session: tokenSession,
-                                            admin_id: adminId}, httpOptions)
-            .toPromise().then((response) => response);
+        httpOptions.headers.set('APP-TOKEN', tokenSession);
     }
 
     chat(user_2_id: number, user_2_name: string, user_2_type: string) {
@@ -105,11 +102,9 @@ export class ChatService {
     }
 
     listContactGuard() {
-      // /public/guard/active/1
         return this.http.get(`${environment.BASIC_URL}/guard/active/1`);
     }
     listContactAdmin() {
-      // /public/admin/active/1
         return this.http.get(`${environment.BASIC_URL}/admin/active/1`);
     }
 
@@ -130,24 +125,14 @@ export class ChatService {
     }
 
     listAllChannelIdAdmin() {
+        console.log('this.user_1_id: ' + this.user_1_id);
         return this.http.get<ListChannel>(`${environment.BASIC_URL}/messenger/channel/admin/` + this.user_1_id, httpOptions);
     }
 
-    listAllChannelIdGuard() {
-        return this.http.get(`${environment.BASIC_URL}/messenger/channel/guard/` + this.user_1_id, httpOptions);
-    }
-
-    listAllChanelId() {
-        return this.http.get(`${environment.BASIC_URL}/messenger/channel/guard/` + this.user_1_id, httpOptions);
-    }
-
-    addUsers(channel_id, user_id, user_type, user_name) {
-        console.log('new channel:' , channel_id);
-        return this.http.post<any>(`${environment.BASIC_URL}/messenger/channel/` + channel_id + `/add`, {
-                user_id: user_id,
-                user_type: user_type,
-                user_name: user_name
-        }).pipe(map(add => {
+    addUsers(channel_id, users) {
+        return this.http.post<any>(`${environment.BASIC_URL}/messenger/channel/` + channel_id + `/add`,
+          users
+        ).pipe(map(add => {
                 console.log(add);
             return(add);
         }), catchError((error: any) => {
@@ -159,5 +144,4 @@ export class ChatService {
         return this.http.get<ListGroupMembers>(`${environment.BASIC_URL}/messenger/channel/` + id + `/members`, httpOptions).toPromise()
             .then((response) => response);
     }
-
 }

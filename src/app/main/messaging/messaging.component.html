@@ -49,7 +49,7 @@
 							<ul class="list-group" *ngFor="let channel of allChannel">
 								<li class="list-group-item group-card" (click)="openChannel(channel)">
 									<a class="btn buttonContact " ><span> {{channel.channel_name}} </span></a>
-									<a class="btn btn-danger fas fa-user-plus" data-toggle="modal" href="#add{{channel.channel_id}}" title="Add" style="float: right; padding: 12px"></a>
+									<a class="btn btn-danger fas fa-user-plus" data-toggle="modal" href="#add{{channel.channel_id}}" (click)="getUsers(); filterValue = ''" title="Add" style="float: right; padding: 12px"></a>
 									<a class="btn btn-primary fa fa-eye" data-toggle="modal" href="#see{{channel.channel_id}}" (click)="viewGroupMembers(channel.channel_id)" title="see" style="float: right; padding: 12px; margin-right: 5px"></a>
 								</li>
 								
@@ -72,7 +72,7 @@
 												</form>
 											</div>
 											<div class="modal-footer">
-												<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
 											</div>
 										</div>
 									</div>
@@ -83,33 +83,33 @@
 									<div class="modal-dialog" role="document">
 										<div class="modal-content">
 											<div class="modal-header">
-												<h5 class="modal-title">Agregar Participantes </h5>
+												<h5 class="modal-title">Agregar Participantes</h5>
 												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 													<span aria-hidden="true">&times;</span>
 												</button>
 											</div>
 											<div class="modal-body">
-												<form [formGroup]="myForm">
-													<li class="list-group-item list" style="border: 0; align-items: left; max-height:400px;" *ngFor="let chit of listContactGuard">
-														<input type="checkbox" (change)="onChange(chit,'GUARD', $event.target.checked)">
-														<a> {{chit.name}} {{chit.lastname}} </a>
-													</li>
-													<li class="list-group-item" style="border: 0" *ngFor="let chit of listContactAdmin">
-														<input type="checkbox" (change)="onChange(chit.id,'ADMIN',$event.target.checked)">
-														<a> {{chit.name}} {{chit.lastname}} </a>
-													</li>
-												</form>
+                        <input type="text" name="searchString" class="form-control" placeholder="Buscar" [(ngModel)]="filterValue">
+												<div class="form-group">
+                          <div *ngFor="let chit of usersToSelect | filterUsers: filterValue">
+                            <label style="padding: 10px">
+                              <input type="checkbox"
+                                     name="users"
+                                     value="{{chit.id}}"
+                                     [(ngModel)]="chit.checked"/>
+                              <a style="padding-left: 16px">{{chit.name}}</a>
+                            </label>
+                          </div>
+												</div>
 											</div>
 											<div class="modal-footer">
-												<button type="button" class="btn btn-primary" (click)="add(channel.id,addUsers)" data-dismiss="modal">Save changes</button>
-												<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+												<button type="button" class="btn btn-primary" (click)="add(channel.channel_id)" data-dismiss="modal">Agregar</button>
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
 											</div>
 										</div>
 									</div>
 								</div>
-								
-								
-								
+
 							</ul>
 						</div>
 						</div>
@@ -156,7 +156,7 @@
 				<div class="form-group col-lg-11">
 					<label for="message">Escribir Mensaje</label>
 					<br>
-					<input   [(ngModel)]="message" type="text" class="form-control" #messageField id="message" name="message" placeholder="...">
+					<input [(ngModel)]="message" type="text" class="form-control" #messageField id="message" name="message" placeholder="...">
 				</div>
         <div style="width: 40px; height: 40px;">
           <button type="submit" style=" align-self: center; margin-top: 5px;" class="btn btn-primary" [disabled]="loading_msg" *ngIf="!loading_msg" ><i class="fa">&#xf1d8;</i></button>

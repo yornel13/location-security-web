@@ -9,7 +9,7 @@ import * as firebase from 'firebase';
 import { take } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
-import {AuthenticationService, ChatService} from '../_services';
+import {AuthenticationService} from '../_services';
 import {NotificationService} from './notification.service';
 
 @Injectable()
@@ -24,8 +24,7 @@ export class MessagingService {
         private notificationService: NotificationService,
         private authService: AuthenticationService,
         private afDB: AngularFireDatabase,
-        private afAuth: AngularFireAuth,
-        private chatService: ChatService) {
+        private afAuth: AngularFireAuth) {
   }
 
   /**
@@ -38,7 +37,7 @@ export class MessagingService {
     this.afAuth.authState.pipe(take(1)).subscribe(() => {
       const data = new Object;
       data[userId] = token;
-      this.afDB.object('fcmTokens/').update(data);
+      this.afDB.object('fcmTokens/').update(data).then();
     });
   }
 
@@ -57,7 +56,7 @@ export class MessagingService {
       .then(token => {
         console.log(token);
         this.authService.setTokenFire(token);
-        this.chatService.webRegister(token, this.authService.getTokenSession(), this.authService.getUser().id)
+        this.authService.webRegister(token, this.authService.getTokenSession(), this.authService.getUser().id)
           .then(success => {
                 console.log(success);
               },

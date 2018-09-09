@@ -1,8 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { interval } from 'rxjs';
 import { MessagingService } from '../../shared/messaging.service';
 
 import {AuthenticationService, ChatService} from '../../_services';
@@ -30,7 +29,10 @@ export class MessagingComponent implements OnInit {
     submitted = false;
     showChatForm = false;
     error = '';
-    addUsers: any[];
+    usersToSelect: any[];
+    usersSelected: any[];
+    addUsersAdmin: any[];
+    addUsersGuard: any[];
     message: string;
     isChannel: boolean;
     options: any[];
@@ -45,6 +47,9 @@ export class MessagingComponent implements OnInit {
     noMessages = false;
     emptyField = false;
     showMensajeria = true;
+    filterValue: string;
+    filter: string;
+    search: any;
 
     @ViewChild('messageField') messageField: any;
     @ViewChild('nameChannelField') nameChannelField: any;
@@ -68,28 +73,33 @@ export class MessagingComponent implements OnInit {
         private chatService: ChatService,
         private guardService: GuardService,
         private adminService: AdminService) {
-        this.user = authService.getUser();
     }
 
     ngOnInit() {
-        this.currentChat = null;
-        this.currentChatLines = [];
-        this.listContactGuard = [];
-        this.listContactAdmin = [];
-        this.listChannelAdmin = [];
-        this.groupMembers = [];
-        this.addUsers = [];
-        this.loadContactGuard();
-        this.loadContactAdmin();
-        this.loadAllChannel();
-        console.log(this.authService.getUser());
-        this.myForm = this.formBuilder.group({
-            data: this.formBuilder.array([])
-        });
-        this.notificationService.newMessage.subscribe(
-            (chatLine: ChatLine) => {
-                this.receivedMessage(chatLine);
+        this.user = this.authService.getUser();
+        if (this.user != null) {
+            this.chatService.setUser(
+              this.authService.getUser(),
+              this.authService.getTokenSession());
+            this.currentChat = null;
+            this.currentChatLines = [];
+            this.listContactGuard = [];
+            this.listContactAdmin = [];
+            this.listChannelAdmin = [];
+            this.groupMembers = [];
+            this.addUsersAdmin = [];
+            this.addUsersGuard = [];
+            this.loadContactGuard();
+            this.loadContactAdmin();
+            this.loadAllChannel();
+            this.myForm = this.formBuilder.group({
+              data: this.formBuilder.array([])
             });
+            this.notificationService.newMessage.subscribe(
+              (chatLine: ChatLine) => {
+                this.receivedMessage(chatLine);
+              });
+        }
     }
 
     loadContactGuard() {
@@ -145,19 +155,18 @@ export class MessagingComponent implements OnInit {
         );
     }
 
-
-
     loadAllChannel() {
       this.listChannelAdmin = [];
       this.chatService.listAllChannelIdAdmin()
         .subscribe(
           success => {
             this.allChannel = success.data;
+            //console.log('allChannel ' + success.data);
             for (let i = 0; i < this.allChannel.length; i++) {
               const channel = Object.assign(
                 {id: this.allChannel[i].channel_id},
                 {name: this.allChannel[i].channel_name});
-              console.log('channel ' + i + ': ', this.allChannel[i]);
+              //console.log('channel ' + i + ': ', this.allChannel[i]);
               this.listChannelAdmin.push(channel);
             }
           },
@@ -195,6 +204,7 @@ export class MessagingComponent implements OnInit {
           }
         }
     }
+
     newMessage(formValue) {
         this.showMensajeria = false;
         this.submitted = true;
@@ -215,6 +225,7 @@ export class MessagingComponent implements OnInit {
                     this.loading_msg = false;
                 });
     }
+
     newChannel(formValue) {
         console.log('crear grupo', formValue.nameChannel);
         this.showMensajeria = false;
@@ -399,39 +410,57 @@ export class MessagingComponent implements OnInit {
 
     }
 
-    add(channel_id, tags) {
-        for (let i = 0; i < tags.length; i++) {
-            const id = tags.id;
-            const name = tags.name;
-            const type = tags.type;
-            this.chatService.addUsers(channel_id, id, type, name)
-                .pipe(first())
-                .subscribe(
-                    data => {
-                        console.log(data);
-                        this.loading = false;
-                }, error => {
-                    this.error = error;
-                    this.loading = false;
+    add(channel_id) {
+
+        const users = [];
+        this.usersToSelect.forEach(user => {
+            if (user.checked) {
+                users.push({
+                    user_id: user.id,
+                    user_type: user.type,
+                    user_name: user.name
                 });
+            }
+        });
+        if (users.length > 0) {
+          this.chatService.addUsers(channel_id, users)
+              .pipe(first())
+              .subscribe(
+                  data => {
+                      console.log(data);
+                      this.loading = false;
+              }, error => {
+                  this.error = error;
+                  this.loading = false;
+              });
         }
     }
 
-    onChange(contact: any, type: string, isChecked: boolean) {
-      const name = contact.name + ' ' + contact.lastname;
-      if (isChecked) {
-        const user = Object.assign(
-                {id: contact.id},
-                {name: name},
-                {type: type});
-            const list = this.addUsers.push(user);
-            console.log(this.addUsers);
-    } else {
-            console.log('deselect');
-            //let index = this.addUsers.findIndex(x => x.value == id);
-            //this.addUsers.removeAt(index);
+    getUsers(): any[] {
+        this.usersToSelect = [];
+        this.listContactAdmin.forEach(admin => {
+            const name = admin.name + ' ' + admin.lastname;
+            const userA = Object.assign(
+              {id: admin.id},
+              {name: name},
+              {type: 'ADMIN'},
+              {checked: false});
+            this.usersToSelect.push(userA);
+        });
+        this.listContactGuard.forEach(guard => {
+            const name = guard.name + ' ' + guard.lastname;
+            const userG = Object.assign(
+              {id: guard.id},
+              {name: name},
+              {type: 'GUARD'},
+              {checked: false});
+            this.usersToSelect.push(userG);
+        });
+        this.usersToSelect.sort((n1, n2) => {
+            if (n1.name.trim().toUpperCase() < n2.name.trim().toUpperCase()) { return -1; }
+            if (n1.name.trim().toUpperCase() > n2.name.trim().toUpperCase()) {return 1; }
+            return 0;
+        });
+        return this.usersToSelect;
     }
-
-  }
-
 }

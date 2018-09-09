@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import {ActivatedRoute, Router} from '@angular/router';
 import {Admin} from '../../model/admin/admin';
 import {ApiResponse} from '../../model/app.response';
 
@@ -19,8 +18,6 @@ export class AuthenticationService {
 
     constructor(
           private http: HttpClient,
-          private route: ActivatedRoute,
-          private router: Router,
           ) { }
 
     public getTokenSession(): string {
@@ -88,5 +85,14 @@ export class AuthenticationService {
             .pipe(map((data: ApiResponse) => {
                 console.log(data);
             })).toPromise().then((response) => response);
+    }
+
+    webRegister(tokenFire: String, tokenSession: String, adminId: number) {
+        return this.http.post(`${environment.BASIC_URL}/messenger/register/web`, {
+            registration_id: tokenFire,
+            session: tokenSession,
+            admin_id: adminId},
+          httpOptions)
+        .toPromise().then((response) => response);
     }
 }
