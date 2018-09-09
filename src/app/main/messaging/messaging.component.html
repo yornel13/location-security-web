@@ -50,7 +50,35 @@
 								<li class="list-group-item group-card" (click)="openChannel(channel)">
 									<a class="btn buttonContact " ><span> {{channel.channel_name}} </span></a>
 									<a class="btn btn-danger fas fa-user-plus" data-toggle="modal" href="#add{{channel.channel_id}}" title="Add" style="float: right; padding: 12px"></a>
+									<a class="btn btn-primary fa fa-eye" data-toggle="modal" href="#see{{channel.channel_id}}" (click)="viewGroupMembers(channel.channel_id)" title="see" style="float: right; padding: 12px; margin-right: 5px"></a>
 								</li>
+								
+								<!--SEE USERS FROM GROUP-->
+								<div class="modal" id="see{{channel.channel_id}}">
+									<div class="modal-dialog" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title">Participantes </h5>
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<form [formGroup]="myForm">
+													<li class="list-group-item list"  style="border: 0; align-items: left; max-height:400px;" *ngFor="let member of groupMembers">
+														{{member.user_name}}
+													</li>
+													
+												</form>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<!--ADD USERS TO GROUP-->
 								<div class="modal" id="add{{channel.channel_id}}">
 									<div class="modal-dialog" role="document">
 										<div class="modal-content">
@@ -79,6 +107,9 @@
 										</div>
 									</div>
 								</div>
+								
+								
+								
 							</ul>
 						</div>
 						</div>

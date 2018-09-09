@@ -12,6 +12,7 @@ import {ListChat} from '../../model/chat/list.chat';
 import {ListChannel} from '../../model/chat/list.channel';
 import {ChatLine} from '../../model/chat/chat.line';
 import {ListChatLine} from '../../model/chat/list.chat.line';
+import {ListGroupMembers} from '../../model/chat/list.group.members';
 
 const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
 
@@ -152,6 +153,11 @@ export class ChatService {
         }), catchError((error: any) => {
             return Observable.throw(error);
         }));
+    }
+
+    getGroupMembers(id) {
+        return this.http.get<ListGroupMembers>(`${environment.BASIC_URL}/messenger/channel/` + id + `/members`, httpOptions).toPromise()
+            .then((response) => response);
     }
 
 }

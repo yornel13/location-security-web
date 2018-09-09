@@ -53,6 +53,7 @@ export class MessagingComponent implements OnInit {
     listContactGuard: any[];
     listContactAdmin: any[];
     listChannelAdmin: any[];
+    groupMembers: any[];
     currentChat: Chat;
     currentChannel: Channel;
     currentChatLines: ChatLine[];
@@ -76,6 +77,7 @@ export class MessagingComponent implements OnInit {
         this.listContactGuard = [];
         this.listContactAdmin = [];
         this.listChannelAdmin = [];
+        this.groupMembers = [];
         this.addUsers = [];
         this.loadContactGuard();
         this.loadContactAdmin();
@@ -142,6 +144,8 @@ export class MessagingComponent implements OnInit {
             }
         );
     }
+
+
 
     loadAllChannel() {
       this.listChannelAdmin = [];
@@ -292,6 +296,29 @@ export class MessagingComponent implements OnInit {
                 error => {
                     this.error = error;
                 });
+    }
+
+    viewGroupMembers(id) {
+        this.groupMembers = [];
+        console.log('g->>> ', id);
+        this.chatService.getGroupMembers(id).then(
+            data => {
+                for (let i = 0; i < data.data.length; i++) {
+                    const member = Object.assign(
+                        {
+                            user_type: data.data[i].user_type,
+                            user_name: data.data[i].user_name,
+                        }
+                    );
+                    console.log('M->>> ', member.user_name);
+
+                    this.groupMembers.push(member);
+            }
+
+        }, error => {
+                this.error = error;
+                this.loading = false;
+        });
     }
 
     listAllChat(id, name, type) {
