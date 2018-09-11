@@ -1,4 +1,4 @@
-import {Component, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MessagingService} from '../shared/messaging.service';
 import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
 import {Alerta} from '../../model/alerta/alerta';
@@ -7,6 +7,7 @@ import {GlobalOsm} from '../global.osm';
 import {Router} from '@angular/router';
 import {AlertaService} from '../../model/alerta/alerta.service';
 import {MainService} from './main.service';
+import {AuthenticationService} from '../_services';
 
 
 @Component({
@@ -32,17 +33,21 @@ export class MainComponent implements OnInit {
             public alertService: AlertaService,
             private router: Router,
             private mainService: MainService,
-            private db: AngularFirestore) {
+            private db: AngularFirestore,
+            private authService: AuthenticationService) {
         this.alertCollection = db.collection<Alerta>('alerts',
             ref => ref.orderBy('status', 'desc').orderBy('id', 'desc').limit(10));
     }
 
     ngOnInit() {
-        const userId = 'user001';
-        this.messagingService.requestPermission(userId);
-        this.messagingService.receiveMessage();
-        this.message = this.messagingService.currentMessage;
-        this.getAlerts();
+        if (this.authService.getUser() != null) {
+            const userId = 'user001';
+            this.messagingService.requestPermission(userId);
+            this.messagingService.receiveMessage();
+            this.messagingService.loadUnreadMessages();
+            this.message = this.messagingService.currentMessage;
+            this.getAlerts();
+        }
     }
 
   getAlerts() {

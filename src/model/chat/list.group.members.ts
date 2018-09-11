@@ -1,5 +1,5 @@
 import {Chat} from './chat';
-import {Member} from './Member';
+import {Member} from './member';
 
 export interface ListGroupMembers {
     data: Member[];

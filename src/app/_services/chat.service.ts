@@ -14,6 +14,8 @@ import {ChatLine} from '../../model/chat/chat.line';
 import {ListChatLine} from '../../model/chat/list.chat.line';
 import {ListGroupMembers} from '../../model/chat/list.group.members';
 import {Admin} from '../../model/admin/admin';
+import {ApiResponse} from "../../model/app.response";
+import {ListUnread} from "../../model/chat/list.unread";
 
 const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
 
@@ -47,14 +49,7 @@ export class ChatService {
                 user_2_id,
                 user_2_name,
                 user_2_type
-        }).pipe(map(chat => {
-                if (chat['result'] != null) {
-                    return chat;
-                }
-            }),
-            catchError((error: any) => {
-                return Observable.throw(error);
-            }));
+        }).toPromise();
     }
 
     channel(name: string) {
@@ -112,6 +107,11 @@ export class ChatService {
         return this.http.get<ListChatLine>(`${environment.BASIC_URL}/messenger/conversations/chat/` + id, httpOptions);
     }
 
+    makeMessagesChatRead(id) {
+        return this.http.put<ApiResponse>(`${environment.BASIC_URL}/messenger/conversations/admin/`
+          + this.user_1_id + `/chat/` + id + `/read`, httpOptions).toPromise().then((response) => response);
+    }
+
     listOldMessageChannel(id) {
         return this.http.get<ListChatLine>(`${environment.BASIC_URL}/messenger/conversations/channel/` + id, httpOptions);
     }
@@ -125,7 +125,6 @@ export class ChatService {
     }
 
     listAllChannelIdAdmin() {
-        console.log('this.user_1_id: ' + this.user_1_id);
         return this.http.get<ListChannel>(`${environment.BASIC_URL}/messenger/channel/admin/` + this.user_1_id, httpOptions);
     }
 
@@ -143,5 +142,25 @@ export class ChatService {
     getGroupMembers(id) {
         return this.http.get<ListGroupMembers>(`${environment.BASIC_URL}/messenger/channel/` + id + `/members`, httpOptions).toPromise()
             .then((response) => response);
+    }
+
+    getUnreadMessages() {
+        return this.http.get<ListUnread>(`${environment.BASIC_URL}/messenger/conversations/admin/`
+              + this.user_1_id + `/chat/unread`, httpOptions).toPromise()
+          .then((response) => response);
+    }
+
+    putRead(chat_id: number) {
+        return this.http.put<ApiResponse>(`${environment.BASIC_URL}/messenger/conversations/admin/`
+          + this.user_1_id + `/chat/`
+          + chat_id + `/read`, httpOptions
+        ).pipe(map(response => {
+          if (response['result'] != null) {
+            return response;
+          }
+        }),
+        catchError((error: any) => {
+          return Observable.throw(error);
+        }));
     }
 }

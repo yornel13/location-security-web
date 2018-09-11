@@ -3,7 +3,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { AuthenticationService } from '../_services';
-import {MessagingService} from '../shared/messaging.service';
 import {ApiResponse} from '../../model/app.response';
 
 @Component({
@@ -21,16 +20,17 @@ export class LoginComponent implements OnInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private authService: AuthenticationService,
-        private messagingService: MessagingService) {}
+        private authService: AuthenticationService) {}
 
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
             dni: ['', Validators.required],
             password: ['', Validators.required]
         });
-        this.authService.cleanStore();
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/u/monitoring/';
+        if (this.authService.getUser() != null) {
+            this.router.navigate([this.returnUrl]).then();
+        }
     }
 
     // convenience getter for easy access to form fields
@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
                         this.loading = false;
                         return;
                     }
-                    this.router.navigate([this.returnUrl]).then(res => {});
+                    this.router.navigate([this.returnUrl]).then();
                 },
                 error => {
                     this.error = error;

@@ -9,6 +9,8 @@
   <li routerLink="/u/dashboard" class="list-item" [routerLinkActive]="['active']">Dashboard</li>
   <li routerLink="/u/monitoring" class="list-item" [routerLinkActive]="['active']">Monitoreo</li>
   <li routerLink="/u/control" class="list-item" [routerLinkActive]="['active']">Control</li>
-  <li routerLink="/u/messaging" class="list-item" [routerLinkActive]="['active']">Mensajería</li>
+  <li routerLink="/u/messaging" class="list-item" [routerLinkActive]="['active']">Mensajería
+    <span *ngIf="unread > 0" style="background: white; padding: 0 4px; border-radius: 40%; color: black; font-size: .8rem">{{unread}}</span>
+  </li>
   <li class="list-item" (click)="exit()">Salir</li>
 </ul>

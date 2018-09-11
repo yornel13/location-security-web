@@ -75,11 +75,11 @@ export class AsideComponent implements OnInit, OnChanges {
         this.alertCollection.doc(String(alert.id)).update({'status': 0});
         if (alert.cause === this.mapService.INCIDENCE) {
           const report = JSON.parse(alert.extra);
-          this.router.navigate(['/u/control/bitacora/reportfilter/' + report.id]);
+          this.router.navigate(['/u/control/bitacora/reportfilter/' + report.id]).then();
         } else if (alert.cause === this.mapService.DROP) {
-          this.router.navigate(['/u/control/alertas/' + alert.id]);
+          this.router.navigate(['/u/control/alertas/' + alert.id]).then();
         } else if (alert.cause === this.mapService.SOS1) {
-          this.router.navigate(['/u/control/alertas/' + alert.id]);
+          this.router.navigate(['/u/control/alertas/' + alert.id]).then();
         }
       }, error => {
         if (error.status === 422) {

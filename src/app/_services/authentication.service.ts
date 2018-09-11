@@ -10,7 +10,7 @@ const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/js
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
 
-    user: Admin;
+    private user: Admin;
 
     private readonly TOKEN_SESSION = 'TOKEN-SESSION';
     private readonly TOKEN_FIRE = 'TOKEN-FIRE';

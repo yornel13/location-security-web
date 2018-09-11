@@ -1,8 +1,8 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { first } from 'rxjs/operators';
-import { MessagingService } from '../../shared/messaging.service';
+import {first} from 'rxjs/operators';
+import {MessagingService} from '../../shared/messaging.service';
 
 import {AuthenticationService, ChatService} from '../../_services';
 import {GuardService} from '../../../model/guard/guard.service';
@@ -14,13 +14,14 @@ import {Channel} from '../../../model/chat/channel';
 import {ChatLine} from '../../../model/chat/chat.line';
 import {NotificationService} from '../../shared/notification.service';
 import {ApiResponse} from '../../../model/app.response';
+import {timer} from 'rxjs';
 
 @Component({
     selector: 'app-messaging',
     templateUrl: './messaging.component.html',
     styleUrls: ['./messaging.component.css']
 })
-export class MessagingComponent implements OnInit {
+export class MessagingComponent implements OnInit, OnDestroy {
     @ViewChild('scrollMe') private myScrollContainer: ElementRef;
     user: Admin;
     loading = false;
@@ -30,7 +31,6 @@ export class MessagingComponent implements OnInit {
     showChatForm = false;
     error = '';
     usersToSelect: any[];
-    usersSelected: any[];
     addUsersAdmin: any[];
     addUsersGuard: any[];
     message: string;
@@ -50,6 +50,12 @@ export class MessagingComponent implements OnInit {
     filterValue: string;
     filter: string;
     search: any;
+    userSelected: any;
+    guardUnread: number;
+    adminUnread: number;
+    channelUnread: number;
+    guardChatUnread: any[] = [];
+    adminChatUnread: any[] = [];
 
     @ViewChild('messageField') messageField: any;
     @ViewChild('nameChannelField') nameChannelField: any;
@@ -57,11 +63,11 @@ export class MessagingComponent implements OnInit {
 
     listContactGuard: any[];
     listContactAdmin: any[];
-    listChannelAdmin: any[];
     groupMembers: any[];
-    currentChat: Chat;
-    currentChannel: Channel;
+    currentChat: Chat = null;
+    currentChannel: Channel = null;
     currentChatLines: ChatLine[];
+    isClicked = false;
 
     constructor(
         private authService: AuthenticationService,
@@ -80,26 +86,49 @@ export class MessagingComponent implements OnInit {
         if (this.user != null) {
             this.chatService.setUser(
               this.authService.getUser(),
-              this.authService.getTokenSession());
+              this.authService.getTokenSession()
+            );
             this.currentChat = null;
             this.currentChatLines = [];
             this.listContactGuard = [];
             this.listContactAdmin = [];
-            this.listChannelAdmin = [];
             this.groupMembers = [];
             this.addUsersAdmin = [];
             this.addUsersGuard = [];
             this.loadContactGuard();
             this.loadContactAdmin();
             this.loadAllChannel();
+            this.listAllOpenedChat();
             this.myForm = this.formBuilder.group({
-              data: this.formBuilder.array([])
+                data: this.formBuilder.array([])
             });
             this.notificationService.newMessage.subscribe(
-              (chatLine: ChatLine) => {
-                this.receivedMessage(chatLine);
-              });
+                (chatLine: ChatLine) => {
+                    this.receivedMessage(chatLine);
+                });
+            this.subscribeToUnreadMessages();
         }
+        this.messagingService.isMessengerOpen = true;
+    }
+
+    ngOnDestroy() {
+        this.messagingService.isMessengerOpen = false;
+    }
+
+    subscribeToUnreadMessages() {
+        this.guardUnread = this.messagingService.guardUnread;
+        this.adminUnread = this.messagingService.adminUnread;
+        this.channelUnread = this.messagingService.channelUnread;
+        this.guardChatUnread = this.messagingService.guardChatUnread;
+        this.adminChatUnread = this.messagingService.adminChatUnread;
+        this.messagingService.unreadEmitter.subscribe(data => {
+            this.guardUnread = this.messagingService.guardUnread;
+            this.adminUnread = this.messagingService.adminUnread;
+            this.channelUnread = this.messagingService.channelUnread;
+            this.guardChatUnread = this.messagingService.guardChatUnread;
+            this.adminChatUnread = this.messagingService.adminChatUnread;
+            this.checkUnreadMessagesFromChat();
+        });
     }
 
     loadContactGuard() {
@@ -117,6 +146,11 @@ export class MessagingComponent implements OnInit {
                             {type: 'GUARD'});
                     this.listContactGuard.push(contact);
                 }
+                this.listContactGuard.sort((n1, n2) => {
+                    if (n1.name.trim().toUpperCase() < n2.name.trim().toUpperCase()) { return -1; }
+                    if (n1.name.trim().toUpperCase() > n2.name.trim().toUpperCase()) {return 1; }
+                    return 0;
+                });
             }, error => {
                 this.error = error;
                 this.loading = false;
@@ -148,6 +182,11 @@ export class MessagingComponent implements OnInit {
                         {type: 'ADMIN'});
                     this.listContactAdmin.push(contact);
                 }
+                this.listContactAdmin.sort((n1, n2) => {
+                    if (n1.name.trim().toUpperCase() < n2.name.trim().toUpperCase()) { return -1; }
+                    if (n1.name.trim().toUpperCase() > n2.name.trim().toUpperCase()) {return 1; }
+                    return 0;
+                });
             }, error => {
                 this.error = error;
                 this.loading = false;
@@ -156,19 +195,15 @@ export class MessagingComponent implements OnInit {
     }
 
     loadAllChannel() {
-      this.listChannelAdmin = [];
       this.chatService.listAllChannelIdAdmin()
         .subscribe(
           success => {
             this.allChannel = success.data;
-            //console.log('allChannel ' + success.data);
-            for (let i = 0; i < this.allChannel.length; i++) {
-              const channel = Object.assign(
-                {id: this.allChannel[i].channel_id},
-                {name: this.allChannel[i].channel_name});
-              //console.log('channel ' + i + ': ', this.allChannel[i]);
-              this.listChannelAdmin.push(channel);
-            }
+            this.allChannel.sort((n1, n2) => {
+              if (n1.channel_update_at > n2.channel_update_at) { return -1; }
+              if (n1.channel_update_at < n2.channel_update_at) {return 1; }
+              return 0;
+            });
           },
           error => {
             this.error = error;
@@ -180,14 +215,33 @@ export class MessagingComponent implements OnInit {
         console.log('received message from ', chatLine.sender_name + ' -> ' + chatLine.sender_type);
         if (chatLine.chat_id != null && this.currentChat != null) {
             if (+this.currentChat.id === +chatLine.chat_id) {
-              let alreadyAdded = false;
-                this.currentChatLines.forEach(currentLine => {
-                  if (currentLine.id === chatLine.id) {
-                    alreadyAdded = true;
-                  }
-                });
-                if (!alreadyAdded) {
-                  this.currentChatLines.push(chatLine);
+                this.addChatLineIfNotExit(chatLine);
+            } else {
+                if (chatLine.sender_type === 'GUARD') {
+                    let fromUser = null;
+                    this.listContactGuard.forEach(guard => {
+                        if (chatLine.sender_id === guard.id) {
+                            fromUser = guard;
+                        }
+                    });
+                    if (fromUser != null) {
+                        fromUser.unread = fromUser.unread + 1;
+                        this.listContactGuard.splice(this.listContactGuard.indexOf(fromUser, 0), 1);
+                        this.listContactGuard.unshift(fromUser);
+                    }
+                }
+                if (chatLine.sender_type === 'ADMIN') {
+                    let fromUser = null;
+                    this.listContactAdmin.forEach(admin => {
+                        if (chatLine.sender_id === admin.id) {
+                            fromUser = admin;
+                        }
+                    });
+                    if (fromUser != null) {
+                        fromUser.unread = fromUser.unread + 1;
+                        this.listContactAdmin.splice(this.listContactAdmin.indexOf(fromUser, 0), 1);
+                        this.listContactAdmin.unshift(fromUser);
+                    }
                 }
             }
         } else if (chatLine.channel_id != null && this.currentChannel != null) {
@@ -205,6 +259,18 @@ export class MessagingComponent implements OnInit {
         }
     }
 
+    addChatLineIfNotExit(chatLine: ChatLine) {
+        let alreadyAdded = false;
+        this.currentChatLines.forEach(currentLine => {
+          if (+currentLine.id === +chatLine.id) {
+            alreadyAdded = true;
+          }
+        });
+        if (!alreadyAdded) {
+          this.currentChatLines.push(chatLine);
+        }
+    }
+
     newMessage(formValue) {
         this.showMensajeria = false;
         this.submitted = true;
@@ -213,13 +279,14 @@ export class MessagingComponent implements OnInit {
         this.chatService.sendMessage(formValue.message, chatId, this.isChannel)
             .pipe(first())
             .subscribe(
-              (data: ChatLine)  => {
-                  this.loading_msg = true;
-                  this.currentChatLines.push(data);
-                  this.scrollToBottom();
-                  this.loading_msg = false;
-                  this.messageField.nativeElement.value = '';
-              },
+                (data: ChatLine)  => {
+                    this.loading_msg = true;
+                    this.addChatLineIfNotExit(data);
+                    this.scrollToBottom();
+                    this.loading_msg = false;
+                    this.messageField.nativeElement.value = '';
+                    this.clickMakeAllRead();
+                },
                 error => {
                     this.error = error;
                     this.loading_msg = false;
@@ -227,13 +294,9 @@ export class MessagingComponent implements OnInit {
     }
 
     newChannel(formValue) {
-        console.log('crear grupo', formValue.nameChannel);
         this.showMensajeria = false;
         this.submitted = true;
         this.loading = true;
-        const sender_type = 'ADMIN';
-        this.listChannelAdmin = [];
-
         if (formValue.nameChannel === undefined) {
             this.loading = false;
             this.emptyField = true;
@@ -244,7 +307,6 @@ export class MessagingComponent implements OnInit {
             .pipe(first())
             .subscribe(
                 data => {
-                    console.log(data);
                     this.nameChannelField.nativeElement.value = '';
                     this.loading = false;
                     this.loadAllChannel();
@@ -262,35 +324,40 @@ export class MessagingComponent implements OnInit {
         } catch (err) { }
     }
 
-    openChat(id, name, type) {
-        console.log(name);
+    openChat(user: any) {
+        this.clearSelected()
+        user.active = true;
+        this.userSelected = user;
         this.loading_chat = true;
         this.showChatForm = false;
-      // this.currentChat = null;
-      // this.currentChannel = null;
-      this.showMensajeria = false;
-      this.currentChatLines = [];
-      this.noMessages = false;
-      this.isChannel = false;
-      this.chatService.chat(id, name, type).subscribe(
-        (data: ApiResponse) => {
-          this.currentChat = data.result;
-          console.log('----->', this.currentChat);
+        this.showMensajeria = false;
+        this.currentChatLines = [];
+        this.noMessages = false;
+        this.isChannel = false;
+        this.chatService.chat(user.id, user.name, user.type).then(
+          (data: ApiResponse) => {
+              this.currentChat = data.result;
+              this.openOldMessages(this.currentChat.id);
+          },
+            error => {
+              this.error = error;
+              console.log(this.error);
+          });
+    }
 
-            this.openOldMessages(this.currentChat.id);
-            // this.loading_chat = false;
-            console.log(data);
-        },
-          error => {
-          this.error = error;
-          console.log(this.error);
-        });
+    clearSelected() {
+        if (this.userSelected !== undefined) {
+            this.userSelected.active = false;
+        }
+        if (this.currentChannel != null) {
+            this.currentChannel.active = false;
+        }
+        this.currentChat = null;
+        this.currentChannel = null;
     }
 
     openOldMessages(chat_id) {
-      console.log('open old');
         this.noMessages = false;
-        // this.loading_chat = true;
         this.chatService.listOldMessage(chat_id).subscribe(
         data => {
                 this.currentChatLines = data.data;
@@ -299,6 +366,7 @@ export class MessagingComponent implements OnInit {
                     this.loading_chat = false;
                     this.noMessages = true;
                 }
+                this.makeAllRead(chat_id);
                 this.loading_chat = false;
                 this.scrollToBottom();
                 this.showChatForm = true;
@@ -309,9 +377,31 @@ export class MessagingComponent implements OnInit {
                 });
     }
 
+    clickMakeAllRead() {
+        if (!this.isClicked) {
+            timer(5000).subscribe(t => {
+              this.isClicked = false;
+            });
+            this.isClicked = true;
+            if (this.currentChat != null) {
+                this.makeAllRead(this.currentChat.id);
+            }
+        }
+    }
+
+    makeAllRead(chat_id) {
+        this.userSelected.unread = 0;
+        this.chatService.makeMessagesChatRead(chat_id).then(response => {
+            if (response.response) {
+                this.messagingService.loadUnreadMessages();
+            }
+        }, error => {
+            // on error
+        });
+    }
+
     viewGroupMembers(id) {
         this.groupMembers = [];
-        console.log('g->>> ', id);
         this.chatService.getGroupMembers(id).then(
             data => {
                 for (let i = 0; i < data.data.length; i++) {
@@ -321,8 +411,6 @@ export class MessagingComponent implements OnInit {
                             user_name: data.data[i].user_name,
                         }
                     );
-                    console.log('M->>> ', member.user_name);
-
                     this.groupMembers.push(member);
             }
 
@@ -332,47 +420,90 @@ export class MessagingComponent implements OnInit {
         });
     }
 
-    listAllChat(id, name, type) {
+    listAllOpenedChat() {
         this.currentChat = null;
-
         this.chatService.listAllChatId()
             .subscribe(
                 data => {
                     this.allChat = data.data;
-                    let userSelect;
-                    this.loading = true;
-                    for (let i = 0; i < this.allChat.length; i++) {
-                        if ((this.allChat[i].user_2_id == id && this.allChat[i].user_2_type == type) ||
-                            (this.allChat[i].user_2_id == this.user.id && this.allChat[i].user_1_id == id)) {
-                            // console.log(this.allChat[i]);
-                            userSelect = this.allChat[i];
-                            break;
-                        }
-                    }
-                    if (userSelect) {
-                      // console.log('usuario seleccionado-->  ', userSelect);
-                      this.openOldMessages(userSelect.id);
-                      //this.idChat = userSelect.id;
-                  } else {
-                      this.openChat(id, name, type);
-                  }
+                    this.allChat.sort((n1, n2) => {
+                      if (n1.update_at < n2.update_at) { return -1; }
+                      if (n1.update_at > n2.update_at) {return 1; }
+                      return 0;
+                    });
+                    this.checkChats();
               },
               error => {
-                  this.error = error;
-                  this.loading = false;
+                  console.log(this.error);
               });
         this.loading = false;
     }
 
-    openChannel(channel: Channel) {
+    checkChats() {
+        const usersGuardOpenChat = [];
+        this.allChat.forEach(chat => {
+            this.listContactGuard.forEach(guard => {
+                if ((guard.id === chat.user_1_id && 'GUARD' === chat.user_1_type)
+                      || (guard.id === chat.user_2_id && 'GUARD' === chat.user_2_type)) {
+                    guard.update_at = chat.update_at;
+                    guard.chat = chat;
+                    usersGuardOpenChat.push(guard);
+                }
+            });
+        });
+        // put all users with open chat to top
+        usersGuardOpenChat.forEach(guard => {
+            this.listContactGuard.splice(this.listContactGuard.indexOf(guard, 0), 1);
+            this.listContactGuard.unshift(guard);
+        });
+
+        const usersAdminOpenChat = [];
+        this.allChat.forEach(chat => {
+            this.listContactAdmin.forEach(admin => {
+                if ((admin.id === chat.user_1_id && 'ADMIN' === chat.user_1_type)
+                      || (admin.id === chat.user_2_id && 'ADMIN' === chat.user_2_type)) {
+                    admin.update_at = chat.update_at;
+                    admin.chat = chat;
+                    usersAdminOpenChat.push(admin);
+                }
+            });
+        });
+        // put all users with open chat to top
+        usersAdminOpenChat.forEach(admin => {
+            this.listContactAdmin.splice(this.listContactAdmin.indexOf(admin, 0), 1);
+            this.listContactAdmin.unshift(admin);
+        });
+        this.checkUnreadMessagesFromChat();
+    }
+
+    checkUnreadMessagesFromChat() {
+        this.listContactGuard.forEach(guard => {
+            if (guard.update_at) {
+                this.guardChatUnread.forEach(value => {
+                    if (value.chat.id === guard.chat.id) {
+                        guard.unread = value.unread;
+                    }
+                });
+            }
+        });
+        this.listContactAdmin.forEach(admin => {
+            if (admin.update_at) {
+                this.adminChatUnread.forEach(value => {
+                    if (value.chat.id === admin.chat.id) {
+                        admin.unread = value.unread;
+                    }
+              });
+            }
+        });
+    }
+
+    openChannel(channel: any) {
+        this.clearSelected();
+        channel.active = true;
         this.loading_chat = true;
         this.showChatForm = false;
-        console.log('try open channel');
         this.currentChannel = channel;
         this.showMensajeria = false;
-
-        this.currentChat = null;
-        // this.currentChannel = null;
         this.currentChatLines = [];
         this.isChannel = true;
         this.noMessages = false;
@@ -383,7 +514,6 @@ export class MessagingComponent implements OnInit {
         this.chatService.listOldMessageChannel(this.currentChannel.channel_id)
             .subscribe(
                 data => {
-                  console.log(data);
                     this.loading_chat = true;
 
                     this.currentChannel = channel;
@@ -396,22 +526,19 @@ export class MessagingComponent implements OnInit {
                     this.currentChatLines.reverse();
                     this.loading_chat = false;
                     this.showChatForm = true;
-
+                    this.messagingService.channelUnread = 0;
+                    this.messagingService.loadUnreadMessages();
                 },
           error => {
             this.error = error;
             this.loading = false;
           }
         );
-        // this.currentChannel = null;
-        console.log('llego');
-
         this.scrollToBottom();
 
     }
 
     add(channel_id) {
-
         const users = [];
         this.usersToSelect.forEach(user => {
             if (user.checked) {
@@ -427,7 +554,6 @@ export class MessagingComponent implements OnInit {
               .pipe(first())
               .subscribe(
                   data => {
-                      console.log(data);
                       this.loading = false;
               }, error => {
                   this.error = error;

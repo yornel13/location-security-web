@@ -43,6 +43,7 @@ import {PopupAlertComponent} from './monitoring/map/popup.alert.component';
 import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import {FilterUsers} from './messaging/filter.users';
+import {RelativeTimePipe} from './messaging/relative.pipe';
 
 export function controlModuleLoader() {
     return ControlModule;
@@ -99,7 +100,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
       MonitoringComponent, MapOsmComponent, PopupVehicleComponent, PopupWatchComponent, PopupAlertComponent,
       HeaderComponent, AsideComponent, MainComponent,
       DashboardComponent, ReportComponent, MessagingComponent, ChatComponent,
-      CardVehicleComponent, CardTabletComponent, FilterPipe, CardAlertComponent, ItemGuardComponent, FilterUsers
+      CardVehicleComponent, CardTabletComponent, FilterPipe, CardAlertComponent, ItemGuardComponent, FilterUsers, RelativeTimePipe
   ],
   bootstrap: [ MainComponent ]
 })
