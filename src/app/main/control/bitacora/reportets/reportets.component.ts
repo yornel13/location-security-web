@@ -72,6 +72,15 @@ export class ReportetsComponent {
   hasta:any = "";
   rangeday:boolean=true;
 
+  //dropdow
+  dropdownList1 = [];
+  selectedIncidencias = [];
+  dropdownSettings1 = {};
+
+  dropdownList2 = [];
+  selectedGuardias = [];
+  dropdownSettings2 = {};
+
   zoom: 12;
   center = L.latLng(([ this.lat2, this.lng2 ]));
   marker = L.marker([this.lat2, this.lng2], {draggable: false});
@@ -130,6 +139,8 @@ export class ReportetsComponent {
       this.getGuardias();
       this.lista = true;
       this.detalle = false;
+      this.setupDropdown1();
+      this.setupDropdown2();
   }
 
   // Values to bind to Leaflet Directive
@@ -328,32 +339,45 @@ export class ReportetsComponent {
       var month2 = valuesdate2[1];
       var day2 = valuesdate2[2];
 
+      var guardia = this.selectedGuardias;
+      var incidencia = this.selectedIncidencias;
+
       //Incidencias
       if(this.filtroSelect == 0){
          if(this.desde == ""){
-           if(this.incidenSelect == 0){
+           if(incidencia.length == 0){
              this.getOpenAll();
            }else{
-              this.bitacoraService.getByIncidenciaOpen(this.incidenSelect).then(
-              success => {
-              this.reportes = success;
-              this.data = this.reportes.data;
-                  }, error => {
-                      if (error.status === 422) {
-                          // on some data incorrect
-                      } else {
-                          // on general error
-                      }
-                  }
-              );
+              var result = [];
+              for(var i=0;i<incidencia.length;i++){
+                this.bitacoraService.getByIncidenciaOpen(incidencia[i].item_id).then(
+                success => {
+                this.reportes = success;
+                result = result.concat(this.reportes.data);
+                this.data = result;
+                for(var i=0; i<this.data.length; i++){
+                  this.data[i].id = Number(this.data[i].id);
+                }
+                    }, error => {
+                        if (error.status === 422) {
+                            // on some data incorrect
+                        } else {
+                            // on general error
+                        }
+                    }
+                );
+              }
            }
          }else{
            if(this.rangeday){
-             if(this.incidenSelect == 0){
+             if(incidencia.length == 0){
                 this.bitacoraService.getOpenDate(year1, month1, day1, year1, month1, day1).then(
                 success => {
                 this.reportes = success;
                 this.data = this.reportes.data;
+                for(var i=0; i<this.data.length; i++){
+                  this.data[i].id = Number(this.data[i].id);
+                }
                     }, error => {
                         if (error.status === 422) {
                             // on some data incorrect
@@ -363,25 +387,35 @@ export class ReportetsComponent {
                     }
                 );
              }else{
-                this.bitacoraService.getByIncidenciaOpenDate(this.incidenSelect, year1, month1, day1, year1, month1, day1).then(
-                success => {
-                this.reportes = success;
-                this.data = this.reportes.data;
-                    }, error => {
-                        if (error.status === 422) {
-                            // on some data incorrect
-                        } else {
-                            // on general error
-                        }
-                    }
-                );
+                var result = [];
+                for(var i=0;i<incidencia.length;i++){
+                  this.bitacoraService.getByIncidenciaOpenDate(incidencia[i].item_id, year1, month1, day1, year1, month1, day1).then(
+                  success => {
+                  this.reportes = success;
+                  result = result.concat(this.reportes.data);
+                  this.data = result;
+                  for(var i=0; i<this.data.length; i++){
+                    this.data[i].id = Number(this.data[i].id);
+                  }
+                      }, error => {
+                          if (error.status === 422) {
+                              // on some data incorrect
+                          } else {
+                              // on general error
+                          }
+                      }
+                  );
+                }
              }
            }else{
-             if(this.incidenSelect == 0){
+             if(incidencia.length == 0){
                 this.bitacoraService.getOpenDate(year1, month1, day1, year2, month2, day2).then(
                 success => {
                 this.reportes = success;
                 this.data = this.reportes.data;
+                for(var i=0; i<this.data.length; i++){
+                  this.data[i].id = Number(this.data[i].id);
+                }
                     }, error => {
                         if (error.status === 422) {
                             // on some data incorrect
@@ -391,18 +425,25 @@ export class ReportetsComponent {
                     }
                 );
              }else{
-                this.bitacoraService.getByIncidenciaOpenDate(this.incidenSelect, year1, month1, day1, year2, month2, day2).then(
-                success => {
-                this.reportes = success;
-                this.data = this.reportes.data;
-                    }, error => {
-                        if (error.status === 422) {
-                            // on some data incorrect
-                        } else {
-                            // on general error
-                        }
-                    }
-                );
+                var result = [];
+                for(var i=0;i<incidencia.length;i++){
+                  this.bitacoraService.getByIncidenciaOpenDate(incidencia[i].item_id, year1, month1, day1, year2, month2, day2).then(
+                  success => {
+                  this.reportes = success;
+                  result = result.concat(this.reportes.data);
+                  this.data = result;
+                  for(var i=0; i<this.data.length; i++){
+                    this.data[i].id = Number(this.data[i].id);
+                  }
+                      }, error => {
+                          if (error.status === 422) {
+                              // on some data incorrect
+                          } else {
+                              // on general error
+                          }
+                      }
+                  );
+                }
              }
            }
          }
@@ -410,29 +451,39 @@ export class ReportetsComponent {
       //Guardias
       if(this.filtroSelect == 1){
         if(this.desde == ""){
-           if(this.guardiaSelect == 0){
+           if(guardia.length == 0){
              this.getOpenAll();
            }else{
-              this.bitacoraService.getByGuardiaOpen(this.guardiaSelect).then(
-              success => {
-              this.reportes = success;
-              this.data = this.reportes.data;
-                  }, error => {
-                      if (error.status === 422) {
-                          // on some data incorrect
-                      } else {
-                          // on general error
-                      }
-                  }
-              );
+              var result = [];
+              for(var i=0;i<guardia.length;i++){
+                this.bitacoraService.getByGuardiaOpen(guardia[i].item_id).then(
+                success => {
+                this.reportes = success;
+                result = result.concat(this.reportes.data);
+                this.data = result;
+                for(var i=0; i<this.data.length; i++){
+                  this.data[i].id = Number(this.data[i].id);
+                }
+                    }, error => {
+                        if (error.status === 422) {
+                            // on some data incorrect
+                        } else {
+                            // on general error
+                        }
+                    }
+                );
+              }
            }
          }else{
            if(this.rangeday){
-             if(this.guardiaSelect == 0){
+             if(guardia.length == 0){
                 this.bitacoraService.getOpenDate(year1, month1, day1, year1, month1, day1).then(
                 success => {
                 this.reportes = success;
                 this.data = this.reportes.data;
+                for(var i=0; i<this.data.length; i++){
+                  this.data[i].id = Number(this.data[i].id);
+                }
                     }, error => {
                         if (error.status === 422) {
                             // on some data incorrect
@@ -442,25 +493,35 @@ export class ReportetsComponent {
                     }
                 );
              }else{
-                this.bitacoraService.getByGuardiaOpenDate(this.guardiaSelect, year1, month1, day1, year1, month1, day1).then(
-                success => {
-                this.reportes = success;
-                this.data = this.reportes.data;
-                    }, error => {
-                        if (error.status === 422) {
-                            // on some data incorrect
-                        } else {
-                            // on general error
-                        }
-                    }
-                );
+                var result = [];
+                for(var i=0;i<guardia.length;i++){
+                  this.bitacoraService.getByGuardiaOpenDate(guardia[i].item_id, year1, month1, day1, year1, month1, day1).then(
+                  success => {
+                  this.reportes = success;
+                  result = result.concat(this.reportes.data);
+                  this.data = result;
+                  for(var i=0; i<this.data.length; i++){
+                    this.data[i].id = Number(this.data[i].id);
+                  }
+                      }, error => {
+                          if (error.status === 422) {
+                              // on some data incorrect
+                          } else {
+                              // on general error
+                          }
+                      }
+                  );
+                }
              }
            }else{
-             if(this.guardiaSelect == 0){
+             if(guardia.length == 0){
                 this.bitacoraService.getOpenDate(year1, month1, day1, year2, month2, day2).then(
                 success => {
                 this.reportes = success;
                 this.data = this.reportes.data;
+                for(var i=0; i<this.data.length; i++){
+                  this.data[i].id = Number(this.data[i].id);
+                }
                     }, error => {
                         if (error.status === 422) {
                             // on some data incorrect
@@ -470,18 +531,25 @@ export class ReportetsComponent {
                     }
                 );
              }else{
-                this.bitacoraService.getByGuardiaOpenDate(this.guardiaSelect, year1, month1, day1, year2, month2, day2).then(
-                success => {
-                this.reportes = success;
-                this.data = this.reportes.data;
-                    }, error => {
-                        if (error.status === 422) {
-                            // on some data incorrect
-                        } else {
-                            // on general error
-                        }
-                    }
-                );
+                var result = [];
+                for(var i=0;i<guardia.length;i++){
+                  this.bitacoraService.getByGuardiaOpenDate(guardia[i].item_id, year1, month1, day1, year2, month2, day2).then(
+                  success => {
+                  this.reportes = success;
+                  result = result.concat(this.reportes.data);
+                  this.data = result;
+                  for(var i=0; i<this.data.length; i++){
+                    this.data[i].id = Number(this.data[i].id);
+                  }
+                      }, error => {
+                          if (error.status === 422) {
+                              // on some data incorrect
+                          } else {
+                              // on general error
+                          }
+                      }
+                  );
+                }
              }
            }
          }
@@ -494,6 +562,11 @@ export class ReportetsComponent {
         success => {
           this.incidencias = success;
           this.inciden = this.incidencias.data;
+          const datag = [];
+          this.inciden.forEach(inciden => {
+            datag.push({ item_id: inciden.id, item_text: inciden.name });
+          });
+          this.dropdownList1 = datag;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -509,6 +582,11 @@ export class ReportetsComponent {
         success => {
           this.guardias = success;
           this.guard = this.guardias.data;
+          const datag = [];
+          this.guard.forEach(guard => {
+            datag.push({ item_id: guard.id, item_text: guard.name+' '+guard.lastname });
+          });
+          this.dropdownList2 = datag;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -567,6 +645,55 @@ export class ReportetsComponent {
             }
         );
     }
+
+    //configuración de los selects
+  onItemSelect1 (item:any) {
+    this.getSearch();
+  }
+
+  onItemDeSelect1(item:any){
+    this.getSearch();
+  }
+
+  setupDropdown1() {
+      this.dropdownList1 = [];
+      this.selectedIncidencias = [];
+      this.dropdownSettings1 = {
+        singleSelection: false,
+        idField: 'item_id',
+        textField: 'item_text',
+        selectAllText: 'Seleccionar todo',
+        unSelectAllText: 'Deseleccionar todo',
+        searchPlaceholderText: 'Buscar Incidencia',
+        itemsShowLimit: 3,
+        allowSearchFilter: true,
+        enableCheckAll: false,
+      };
+    }
+    //configuración de los selects
+    onItemSelect2 (item:any) {
+      this.getSearch();
+    }
+
+    onItemDeSelect2 (item:any){
+      this.getSearch();
+    }
+
+    setupDropdown2() {
+        this.dropdownList2 = [];
+        this.selectedGuardias = [];
+        this.dropdownSettings2 = {
+          singleSelection: false,
+          idField: 'item_id',
+          textField: 'item_text',
+          selectAllText: 'Seleccionar todo',
+          unSelectAllText: 'Deseleccionar todo',
+          searchPlaceholderText: 'Buscar Guardia',
+          itemsShowLimit: 1,
+          allowSearchFilter: true,
+          enableCheckAll: false,
+        };
+      }
 
     pdfDownload() {
         var doc = new jsPDF();

@@ -75,6 +75,23 @@ export class VisitasComponent {
   month2:any;
   day2:any;
 
+  //dropdow
+  dropdownList1 = [];
+  selectedVehiculos = [];
+  dropdownSettings1 = {};
+
+  dropdownList2 = [];
+  selectedGuardias = [];
+  dropdownSettings2 = {};
+
+  dropdownList3 = [];
+  selectedVisitantes = [];
+  dropdownSettings3 = {};
+
+  dropdownList4 = [];
+  selectedFuncionarios = [];
+  dropdownSettings4 = {};
+
   zoom;
   center = L.latLng(([ this.lat, this.lng ]));
   marker = L.marker([this.lat, this.lng], {draggable: false});
@@ -103,6 +120,10 @@ export class VisitasComponent {
       this.getVehiculos();
       this.getVisitantes();
       this.getFuncionarios();
+      this.setupDropdown1();
+      this.setupDropdown2();
+      this.setupDropdown3();
+      this.setupDropdown4();
   }
   	onMapReady(map: L.Map) {
   		console.log("entra aqui");
@@ -244,33 +265,46 @@ export class VisitasComponent {
 	var month2 = valuesdate2[1];
 	var day2 = valuesdate2[2];
 
+	var vehiculo = this.selectedVehiculos;
+	var guardia = this.selectedGuardias;
+	var visitante = this.selectedVisitantes;
+	var funcionario = this.selectedFuncionarios;
 	//Vehiculo
 	if(this.filtroSelect == 0){
 		if(this.desde == ""){
-			if(this.vehiculoSelect ==0){
+			if(vehiculo.length ==0){
 				this.getAll();
 			}else{
-				console.log("Debe entrar aca");
-				this.visitasService.getByVehiculo(this.vehiculoSelect, 'all').then(
-			      success => {
-			        this.visitas = success;
-			        this.data = this.visitas.data;
-			          }, error => {
-			              if (error.status === 422) {
-			                  // on some data incorrect
-			              } else {
-			                  // on general error
-			              }
-			          }
-			    );
+				var result = [];
+				for(var i=0;i<vehiculo.length;i++){
+					this.visitasService.getByVehiculo(vehiculo[i].item_id, 'all').then(
+				      success => {
+				        this.visitas = success;
+				        result = result.concat(this.visitas.data);
+              			this.data = result;
+              			for(var i=0; i<this.data.length; i++){
+		                  this.data[i].id = Number(this.data[i].id);
+		                }
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+				}
 			}
 		}else{
 			if(this.rangeday){
-				if(this.vehiculoSelect == 0){
+				if(vehiculo.length == 0){
 	  				this.visitasService.getByDate(year1, month1, day1, 'all', year1, month1, day1).then(
 				      success => {
 				        this.visitas = success;
 				        this.data = this.visitas.data;
+				        for(var i=0; i<this.data.length; i++){
+		                  this.data[i].id = Number(this.data[i].id);
+		                }
 				          }, error => {
 				              if (error.status === 422) {
 				                  // on some data incorrect
@@ -280,25 +314,35 @@ export class VisitasComponent {
 				          }
 				    );
 	  			}else{
-	  				this.visitasService.getByVehiculoDate(this.vehiculoSelect, year1, month1, day1, 'all', year1, month1, day1).then(
-				      success => {
-				        this.visitas = success;
-				        this.data = this.visitas.data;
-				          }, error => {
-				              if (error.status === 422) {
-				                  // on some data incorrect
-				              } else {
-				                  // on general error
-				              }
-				          }
-				    );
+	  				var result = [];
+	  				for(var i=0;i<vehiculo.length;i++){
+	  					this.visitasService.getByVehiculoDate(vehiculo[i].item_id, year1, month1, day1, 'all', year1, month1, day1).then(
+					      success => {
+					        this.visitas = success;
+					        result = result.concat(this.visitas.data);
+              				this.data = result;
+              				for(var i=0; i<this.data.length; i++){
+		                  this.data[i].id = Number(this.data[i].id);
+		                }
+					          }, error => {
+					              if (error.status === 422) {
+					                  // on some data incorrect
+					              } else {
+					                  // on general error
+					              }
+					          }
+					    );
+	  				}
 	  			}
 			}else{
-				if(this.vehiculoSelect == 0){
+				if(vehiculo.length == 0){
 	  				this.visitasService.getByDate(year1, month1, day1, 'all', year2, month2, day2).then(
 				      success => {
 				        this.visitas = success;
 				        this.data = this.visitas.data;
+				        for(var i=0; i<this.data.length; i++){
+		                  this.data[i].id = Number(this.data[i].id);
+		                }
 				          }, error => {
 				              if (error.status === 422) {
 				                  // on some data incorrect
@@ -308,18 +352,25 @@ export class VisitasComponent {
 				          }
 				    );
 	  			}else{
-	  				this.visitasService.getByVehiculoDate(this.vehiculoSelect, year1, month1, day1, 'all', year2, month2, day2).then(
-				      success => {
-				        this.visitas = success;
-				        this.data = this.visitas.data;
-				          }, error => {
-				              if (error.status === 422) {
-				                  // on some data incorrect
-				              } else {
-				                  // on general error
-				              }
-				          }
-				    );
+	  				var result = [];
+	  				for(var i=0;i<vehiculo.length;i++){
+	  					this.visitasService.getByVehiculoDate(vehiculo[i].item_id, year1, month1, day1, 'all', year2, month2, day2).then(
+					      success => {
+					        this.visitas = success;
+					        result = result.concat(this.visitas.data);
+              				this.data = result;
+              				for(var i=0; i<this.data.length; i++){
+			                  this.data[i].id = Number(this.data[i].id);
+			                }
+					          }, error => {
+					              if (error.status === 422) {
+					                  // on some data incorrect
+					              } else {
+					                  // on general error
+					              }
+					          }
+					    );
+	  				}
 	  			}
 			}
 		}
@@ -327,29 +378,39 @@ export class VisitasComponent {
 	//Guardia
 	if(this.filtroSelect == 1){
 		if(this.desde == ''){
-  			if(this.guardiaSelect ==0 ){
+  			if(guardia.length ==0 ){
   				this.getAll();
   			}else{
-  				this.visitasService.getByGuard(this.guardiaSelect, 'all').then(
-			      success => {
-			        this.visitas = success;
-			        this.data = this.visitas.data;
-			          }, error => {
-			              if (error.status === 422) {
-			                  // on some data incorrect
-			              } else {
-			                  // on general error
-			              }
-			          }
-			    );
+  				var result = [];
+  				for(var i=0;i<guardia.length;i++){
+  					this.visitasService.getByGuard(guardia[i].item_id, 'all').then(
+				      success => {
+				        this.visitas = success;
+				        result = result.concat(this.visitas.data);
+              			this.data = result;
+              			for(var i=0; i<this.data.length; i++){
+		                  this.data[i].id = Number(this.data[i].id);
+		                }
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+  				}
   			}
   		}else{
   			if(this.rangeday){
-  				if(this.guardiaSelect == 0){
+  				if(guardia.length == 0){
 	  				this.visitasService.getByDate(year1, month1, day1, 'all', year1, month1, day1).then(
 				      success => {
 				        this.visitas = success;
 				        this.data = this.visitas.data;
+				        for(var i=0; i<this.data.length; i++){
+		                  this.data[i].id = Number(this.data[i].id);
+		                }
 				          }, error => {
 				              if (error.status === 422) {
 				                  // on some data incorrect
@@ -359,25 +420,35 @@ export class VisitasComponent {
 				          }
 				    );
 	  			}else{
-	  				this.visitasService.getByGuardDate(this.guardiaSelect, year1, month1, day1, 'all', year1, month1, day1).then(
-				      success => {
-				        this.visitas = success;
-				        this.data = this.visitas.data;
-				          }, error => {
-				              if (error.status === 422) {
-				                  // on some data incorrect
-				              } else {
-				                  // on general error
-				              }
-				          }
-				    );
+	  				var result = [];
+	  				for(var i=0;i<guardia.length;i++){
+	  					this.visitasService.getByGuardDate(guardia[i].item_id, year1, month1, day1, 'all', year1, month1, day1).then(
+					      success => {
+					        this.visitas = success;
+					        result = result.concat(this.visitas.data);
+              				this.data = result;
+              				for(var i=0; i<this.data.length; i++){
+			                  this.data[i].id = Number(this.data[i].id);
+			                }
+					          }, error => {
+					              if (error.status === 422) {
+					                  // on some data incorrect
+					              } else {
+					                  // on general error
+					              }
+					          }
+					    );
+	  				}
 	  			}
   			}else{
-  				if(this.guardiaSelect == 0){
+  				if(guardia.length == 0){
 	  				this.visitasService.getByDate(year1, month1, day1, 'all', year2, month2, day2).then(
 				      success => {
 				        this.visitas = success;
 				        this.data = this.visitas.data;
+				        for(var i=0; i<this.data.length; i++){
+		                  this.data[i].id = Number(this.data[i].id);
+		                }
 				          }, error => {
 				              if (error.status === 422) {
 				                  // on some data incorrect
@@ -387,18 +458,25 @@ export class VisitasComponent {
 				          }
 				    );
 	  			}else{
-	  				this.visitasService.getByGuardDate(this.guardiaSelect, year1, month1, day1, 'all', year2, month2, day2).then(
-				      success => {
-				        this.visitas = success;
-				        this.data = this.visitas.data;
-				          }, error => {
-				              if (error.status === 422) {
-				                  // on some data incorrect
-				              } else {
-				                  // on general error
-				              }
-				          }
+	  				var result = [];
+	  				for(var i=0;i<guardia.length;i++){
+	  					this.visitasService.getByGuardDate(guardia[i].item_id, year1, month1, day1, 'all', year2, month2, day2).then(
+					      success => {
+					        this.visitas = success;
+					        result = result.concat(this.visitas.data);
+              				this.data = result;
+              				for(var i=0; i<this.data.length; i++){
+			                  this.data[i].id = Number(this.data[i].id);
+			                }
+					          }, error => {
+					              if (error.status === 422) {
+					                  // on some data incorrect
+					              } else {
+					                  // on general error
+					              }
+					          }
 				    );
+	  				}
 	  			}
   			}
   		}
@@ -406,29 +484,39 @@ export class VisitasComponent {
 	//visitante
 	if(this.filtroSelect == 2){
 		if(this.desde == ''){
-  			if(this.visitanteSelect ==0 ){
+  			if(visitante.length ==0 ){
   				this.getAll();
   			}else{
-  				this.visitasService.getByVisitante(this.visitanteSelect, 'all').then(
-			      success => {
-			        this.visitas = success;
-			        this.data = this.visitas.data;
-			          }, error => {
-			              if (error.status === 422) {
-			                  // on some data incorrect
-			              } else {
-			                  // on general error
-			              }
-			          }
-			    );
+  				var result = [];
+  				for(var i=0;i<visitante.length;i++){
+  					this.visitasService.getByVisitante(visitante[i].item_id, 'all').then(
+				      success => {
+				        this.visitas = success;
+				        result = result.concat(this.visitas.data);
+              			this.data = result;
+              			for(var i=0; i<this.data.length; i++){
+		                  this.data[i].id = Number(this.data[i].id);
+		                }
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+  				}
   			}
   		}else{
   			if(this.rangeday){
-  				if(this.visitanteSelect == 0){
+  				if(visitante.length == 0){
 	  				this.visitasService.getByDate(year1, month1, day1, 'all', year1, month1, day1).then(
 				      success => {
 				        this.visitas = success;
 				        this.data = this.visitas.data;
+				        for(var i=0; i<this.data.length; i++){
+		                  this.data[i].id = Number(this.data[i].id);
+		                }
 				          }, error => {
 				              if (error.status === 422) {
 				                  // on some data incorrect
@@ -438,25 +526,35 @@ export class VisitasComponent {
 				          }
 				    );
 	  			}else{
-	  				this.visitasService.getByVisitanteDate(this.visitanteSelect, year1, month1, day1, 'all', year1, month1, day1).then(
-				      success => {
-				        this.visitas = success;
-				        this.data = this.visitas.data;
-				          }, error => {
-				              if (error.status === 422) {
-				                  // on some data incorrect
-				              } else {
-				                  // on general error
-				              }
-				          }
-				    );
+	  				var result = [];
+	  				for(var i=0;i<visitante.length;i++){
+	  					this.visitasService.getByVisitanteDate(visitante[i].item_id, year1, month1, day1, 'all', year1, month1, day1).then(
+					      success => {
+					        this.visitas = success;
+					        result = result.concat(this.visitas.data);
+              				this.data = result;
+              				for(var i=0; i<this.data.length; i++){
+			                  this.data[i].id = Number(this.data[i].id);
+			                }
+					          }, error => {
+					              if (error.status === 422) {
+					                  // on some data incorrect
+					              } else {
+					                  // on general error
+					              }
+					          }
+					    );
+	  				}
 	  			}
   			}else{
-  				if(this.visitanteSelect == 0){
+  				if(visitante.length == 0){
 	  				this.visitasService.getByDate(year1, month1, day1, 'all', year2, month2, day2).then(
 				      success => {
 				        this.visitas = success;
 				        this.data = this.visitas.data;
+				        for(var i=0; i<this.data.length; i++){
+		                  this.data[i].id = Number(this.data[i].id);
+		                }
 				          }, error => {
 				              if (error.status === 422) {
 				                  // on some data incorrect
@@ -466,18 +564,25 @@ export class VisitasComponent {
 				          }
 				    );
 	  			}else{
-	  				this.visitasService.getByVisitanteDate(this.visitanteSelect, year1, month1, day1, 'all', year2, month2, day2).then(
-				      success => {
-				        this.visitas = success;
-				        this.data = this.visitas.data;
-				          }, error => {
-				              if (error.status === 422) {
-				                  // on some data incorrect
-				              } else {
-				                  // on general error
-				              }
-				          }
-				    );
+	  				var result = [];
+	  				for(var i=0;i<visitante.length;i++){
+	  					this.visitasService.getByVisitanteDate(visitante[i].item_id, year1, month1, day1, 'all', year2, month2, day2).then(
+					      success => {
+					        this.visitas = success;
+					        result = result.concat(this.visitas.data);
+              				this.data = result;
+              				for(var i=0; i<this.data.length; i++){
+			                  this.data[i].id = Number(this.data[i].id);
+			                }
+					          }, error => {
+					              if (error.status === 422) {
+					                  // on some data incorrect
+					              } else {
+					                  // on general error
+					              }
+					          }
+					    );
+	  				}
 	  			}
   			}
   		}
@@ -485,29 +590,39 @@ export class VisitasComponent {
 	//Funcionario
 	if(this.filtroSelect == 3){
 		if(this.desde == ''){
-  			if(this.funcionarioSelect ==0 ){
+  			if(funcionario.length ==0 ){
   				this.getAll();
   			}else{
-  				this.visitasService.getByFuncionario(this.funcionarioSelect, 'all').then(
-			      success => {
-			        this.visitas = success;
-			        this.data = this.visitas.data;
-			          }, error => {
-			              if (error.status === 422) {
-			                  // on some data incorrect
-			              } else {
-			                  // on general error
-			              }
-			          }
-			    );
+  				var result = [];
+  				for(var i=0;i<funcionario.length;i++){
+	  				this.visitasService.getByFuncionario(funcionario[i].item_id, 'all').then(
+				      success => {
+				        this.visitas = success;
+				        result = result.concat(this.visitas.data);
+              			this.data = result;
+              			for(var i=0; i<this.data.length; i++){
+		                  this.data[i].id = Number(this.data[i].id);
+		                }
+				          }, error => {
+				              if (error.status === 422) {
+				                  // on some data incorrect
+				              } else {
+				                  // on general error
+				              }
+				          }
+				    );
+  				}
   			}
   		}else{
   			if(this.rangeday){
-  				if(this.funcionarioSelect == 0){
+  				if(funcionario.length == 0){
 	  				this.visitasService.getByDate(year1, month1, day1, 'all', year1, month1, day1).then(
 				      success => {
 				        this.visitas = success;
 				        this.data = this.visitas.data;
+				        for(var i=0; i<this.data.length; i++){
+		                  this.data[i].id = Number(this.data[i].id);
+		                }
 				          }, error => {
 				              if (error.status === 422) {
 				                  // on some data incorrect
@@ -517,25 +632,35 @@ export class VisitasComponent {
 				          }
 				    );
 	  			}else{
-	  				this.visitasService.getByFuncionarioDate(this.funcionarioSelect, year1, month1, day1, 'all', year1, month1, day1).then(
-				      success => {
-				        this.visitas = success;
-				        this.data = this.visitas.data;
-				          }, error => {
-				              if (error.status === 422) {
-				                  // on some data incorrect
-				              } else {
-				                  // on general error
-				              }
-				          }
-				    );
+	  				var result = [];
+	  				for(var i=0;i<funcionario.length;i++){
+		  				this.visitasService.getByFuncionarioDate(funcionario[i].item_id, year1, month1, day1, 'all', year1, month1, day1).then(
+					      success => {
+					        this.visitas = success;
+					        result = result.concat(this.visitas.data);
+              				this.data = result;
+              				for(var i=0; i<this.data.length; i++){
+			                  this.data[i].id = Number(this.data[i].id);
+			                }
+					          }, error => {
+					              if (error.status === 422) {
+					                  // on some data incorrect
+					              } else {
+					                  // on general error
+					              }
+					          }
+					    );
+	  				}
 	  			}
   			}else{
-  				if(this.funcionarioSelect == 0){
+  				if(funcionario.length == 0){
 	  				this.visitasService.getByDate(year1, month1, day1, 'all', year2, month2, day2).then(
 				      success => {
 				        this.visitas = success;
 				        this.data = this.visitas.data;
+				        for(var i=0; i<this.data.length; i++){
+		                  this.data[i].id = Number(this.data[i].id);
+		                }
 				          }, error => {
 				              if (error.status === 422) {
 				                  // on some data incorrect
@@ -545,18 +670,25 @@ export class VisitasComponent {
 				          }
 				    );
 	  			}else{
-	  				this.visitasService.getByFuncionarioDate(this.funcionarioSelect, year1, month1, day1, 'all', year2, month2, day2).then(
-				      success => {
-				        this.visitas = success;
-				        this.data = this.visitas.data;
-				          }, error => {
-				              if (error.status === 422) {
-				                  // on some data incorrect
-				              } else {
-				                  // on general error
-				              }
-				          }
-				    );
+	  				var result = [];
+	  				for(var i=0; i<funcionario.length;i++){
+		  				this.visitasService.getByFuncionarioDate(this.funcionarioSelect, year1, month1, day1, 'all', year2, month2, day2).then(
+					      success => {
+					        this.visitas = success;
+					        result = result.concat(this.visitas.data);
+              				this.data = result;
+              				for(var i=0; i<this.data.length; i++){
+			                  this.data[i].id = Number(this.data[i].id);
+			                }
+					          }, error => {
+					              if (error.status === 422) {
+					                  // on some data incorrect
+					              } else {
+					                  // on general error
+					              }
+					          }
+					    );
+	  				}
 	  			}
   			}
   		}
@@ -636,6 +768,11 @@ export class VisitasComponent {
     success => {
       this.guardias = success;
       this.guard = this.guardias.data;
+      const datag = [];
+        this.guard.forEach(guard => {
+          datag.push({ item_id: guard.id, item_text: guard.name+' '+guard.lastname });
+        });
+        this.dropdownList2 = datag;
         }, error => {
             if (error.status === 422) {
                 // on some data incorrect
@@ -651,6 +788,11 @@ export class VisitasComponent {
     success => {
       this.vehiculos = success;
       this.vehi = this.vehiculos.data;
+      const datag = [];
+        this.vehi.forEach(vehi => {
+          datag.push({ item_id: vehi.id, item_text: vehi.plate});
+        });
+        this.dropdownList1 = datag;
         }, error => {
             if (error.status === 422) {
                 // on some data incorrect
@@ -666,6 +808,11 @@ export class VisitasComponent {
     success => {
       this.visitantes = success;
       this.visit = this.visitantes.data;
+      const datag = [];
+        this.visit.forEach(visit => {
+          datag.push({ item_id: visit.id, item_text: visit.name+' '+visit.lastname });
+        });
+        this.dropdownList3 = datag;
         }, error => {
             if (error.status === 422) {
                 // on some data incorrect
@@ -681,6 +828,11 @@ export class VisitasComponent {
     success => {
       this.funcionarios = success;
       this.funcio = this.funcionarios.data;
+      const datag = [];
+        this.funcio.forEach(funcio => {
+          datag.push({ item_id: funcio.id, item_text: funcio.name+' '+funcio.lastname });
+        });
+        this.dropdownList4 = datag;
         }, error => {
             if (error.status === 422) {
                 // on some data incorrect
@@ -690,6 +842,103 @@ export class VisitasComponent {
         }
     );
   }
+
+  //configuración de los selects
+  onItemSelect1 (item:any) {
+    this.getSearch();
+  }
+
+  onItemDeSelect1(item:any){
+    this.getSearch();
+  }
+
+  setupDropdown1() {
+      this.dropdownList1 = [];
+      this.selectedVehiculos = [];
+      this.dropdownSettings1 = {
+        singleSelection: false,
+        idField: 'item_id',
+        textField: 'item_text',
+        selectAllText: 'Seleccionar todo',
+        unSelectAllText: 'Deseleccionar todo',
+        searchPlaceholderText: 'Buscar Vehículo',
+        itemsShowLimit: 3,
+        allowSearchFilter: true,
+        enableCheckAll: false,
+      };
+    }
+    //configuración de los selects
+    onItemSelect2 (item:any) {
+      this.getSearch();
+    }
+
+    onItemDeSelect2 (item:any){
+      this.getSearch();
+    }
+
+    setupDropdown2() {
+        this.dropdownList2 = [];
+        this.selectedVehiculos = [];
+        this.dropdownSettings2 = {
+          singleSelection: false,
+          idField: 'item_id',
+          textField: 'item_text',
+          selectAllText: 'Seleccionar todo',
+          unSelectAllText: 'Deseleccionar todo',
+          searchPlaceholderText: 'Buscar Guardia',
+          itemsShowLimit: 1,
+          allowSearchFilter: true,
+          enableCheckAll: false,
+        };
+      }
+    //configuración de los selects
+    onItemSelect3 (item:any) {
+      this.getSearch();
+    }
+
+    onItemDeSelect3 (item:any){
+      this.getSearch();
+    }
+
+    setupDropdown3() {
+        this.dropdownList3 = [];
+        this.selectedVehiculos = [];
+        this.dropdownSettings3 = {
+          singleSelection: false,
+          idField: 'item_id',
+          textField: 'item_text',
+          selectAllText: 'Seleccionar todo',
+          unSelectAllText: 'Deseleccionar todo',
+          searchPlaceholderText: 'Buscar Visitante',
+          itemsShowLimit: 1,
+          allowSearchFilter: true,
+          enableCheckAll: false,
+        };
+      }
+    //configuración de los selects
+    onItemSelect4 (item:any) {
+      this.getSearch();
+    }
+
+    onItemDeSelect4 (item:any){
+      this.getSearch();
+    }
+
+    setupDropdown4() {
+        this.dropdownList4 = [];
+        this.selectedFuncionarios = [];
+        this.dropdownSettings4 = {
+          singleSelection: false,
+          idField: 'item_id',
+          textField: 'item_text',
+          selectAllText: 'Seleccionar todo',
+          unSelectAllText: 'Deseleccionar todo',
+          searchPlaceholderText: 'Buscar Funcionario',
+          itemsShowLimit: 1,
+          allowSearchFilter: true,
+          enableCheckAll: false,
+        };
+      }
 
   pdfDownload() {
         var doc = new jsPDF();

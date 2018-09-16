@@ -66,11 +66,23 @@
               <option [ngValue]="3">Salida del Cerco</option>
               <option [ngValue]="4">General</option>
           </select>
+          <!--
           <label class="mr-2"><b>Guardia:</b></label>
           <select id="inputState" class="form-control-sm mr-2 filtros" [(ngModel)]="guardiaSelect" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
             <option [ngValue]="0">Todos</option>
             <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
           </select>
+          -->
+            <ng-multiselect-dropdown style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
+              [placeholder]="'Selección de Guardias'"
+              [data]="dropdownList"
+              [(ngModel)]="selectedGuardias"
+              [settings]="dropdownSettings"
+              (onSelect)="onItemSelect($event)"
+              (onSelectAll)="onSelectAll($event)"
+              (onDeSelect)="onItemDeSelect($event)"
+              (onDeSelectAll)="onDeSelectAll($event)">
+            </ng-multiselect-dropdown>
           <label for="start" class="mr-2">Fecha</label>
             <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="desde" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
           <label for="start" class="mr-2">-</label>

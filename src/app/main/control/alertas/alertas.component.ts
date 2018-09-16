@@ -67,6 +67,11 @@ export class AlertasComponent implements OnInit {
   month2:any;
   day2:any;
 
+  //dropdow
+  dropdownList = [];
+  selectedGuardias = [];
+  dropdownSettings = {};
+
   zoom;
   center = L.latLng(([ this.lat, this.lng ]));
   marker = L.marker([this.lat, this.lng], {draggable: false});
@@ -90,6 +95,7 @@ export class AlertasComponent implements OnInit {
     this.baseLayers = this.globalOSM.baseLayers;
     this.options = this.globalOSM.defaultOptions;
   	this.getGuardias();
+    this.setupDropdown();
     this.getToday();
   	this.doughnutChartData = [3, 3, 0];
   	this.regresar();
@@ -332,6 +338,11 @@ export class AlertasComponent implements OnInit {
 	    success => {
 	      this.guardias = success;
 	      this.guard = this.guardias.data;
+        const datag = [];
+        this.guard.forEach(guard => {
+          datag.push({ item_id: guard.id, item_text: guard.name+' '+guard.lastname });
+        });
+        this.dropdownList = datag;
 	        }, error => {
 	            if (error.status === 422) {
 	                // on some data incorrect
@@ -341,6 +352,31 @@ export class AlertasComponent implements OnInit {
 	        }
 	    );
 	}
+
+  onItemSelect (item:any) {
+    this.getAlerts();
+  }
+
+  onItemDeSelect(item:any){
+    this.getAlerts();
+  }
+
+  setupDropdown() {
+      this.dropdownList = [];
+      this.selectedGuardias = [];
+      this.dropdownSettings = {
+        singleSelection: false,
+        idField: 'item_id',
+        textField: 'item_text',
+        selectAllText: 'Seleccionar todo',
+        unSelectAllText: 'Deseleccionar todo',
+        searchPlaceholderText: 'Buscar Guardia',
+        itemsShowLimit: 1,
+        allowSearchFilter: true,
+        enableCheckAll: false,
+      };
+    }
+
 
 	solveAlert(id) {
 		this.alertaService.solveAlert(id).then(
@@ -399,34 +435,44 @@ export class AlertasComponent implements OnInit {
     var year2 = valuesdate2[0];
     var month2 = valuesdate2[1];
     var day2 = valuesdate2[2];
-        //formateo de guardias
-        var guardia = this.guardiaSelect;
-
+    //formateo de guardias
+    var guardia = this.selectedGuardias;
+    console.log(guardia);
         //Iniciar búsqueda
 		if(this.desde == ""){
 			if(cause == "all"){
-				if(guardia == 0){
+				if(guardia.length == 0){
 					this.getAll();
 				}else{
-					this.alertaService.getByGuard(guardia).then(
-				    success => {
-				      this.alertas = success;
-			          this.data = this.alertas.data;
-				        }, error => {
-				            if (error.status === 422) {
-				                // on some data incorrect
-				            } else {
-				                // on general error
-				            }
-				        }
-				    );
+          var result = [];
+					for(var i=0; i<guardia.length; i++){
+            this.alertaService.getByGuard(guardia[i].item_id).then(
+              success => {
+                this.alertas = success;
+                  result = result.concat(this.alertas.data);
+                  this.data = result;
+                  for(var i=0; i<this.data.length; i++){
+                    this.data[i].id = Number(this.data[i].id);
+                  }
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }
 				}
 			}else{
-				if(guardia == 0){
+				if(guardia.length == 0){
 					this.alertaService.getByCause(cause).then(
 				    success => {
 				      this.alertas = success;
 			          this.data = this.alertas.data;
+                for(var i=0; i<this.data.length; i++){
+                    this.data[i].id = Number(this.data[i].id);
+                  }
 				        }, error => {
 				            if (error.status === 422) {
 				                // on some data incorrect
@@ -436,28 +482,38 @@ export class AlertasComponent implements OnInit {
 				        }
 				    );
 				}else{
-					this.alertaService.getByGuardCause(guardia, cause).then(
-				    success => {
-				      this.alertas = success;
-			          this.data = this.alertas.data;
-				        }, error => {
-				            if (error.status === 422) {
-				                // on some data incorrect
-				            } else {
-				                // on general error
-				            }
-				        }
-				    );
+          var result = [];
+					for(var i=0;i<guardia.length;i++){
+            this.alertaService.getByGuardCause(guardia[i].item_id, cause).then(
+              success => {
+                this.alertas = success;
+                  result = result.concat(this.alertas.data);
+                  this.data = result;
+                  for(var i=0; i<this.data.length; i++){
+                    this.data[i].id = Number(this.data[i].id);
+                  }
+                  }, error => {
+                      if (error.status === 422) {
+                          // on some data incorrect
+                      } else {
+                          // on general error
+                      }
+                  }
+              );
+          }
 				}
 			}
 		}else{
 			if(this.rangeday){
         if(cause == "all"){
-          if(guardia == 0){
+          if(guardia.length == 0){
             this.alertaService.getByCauseDate(cause, year1, month1, day1, year1, month1, day1).then(
               success => {
                 this.alertas = success;
                   this.data = this.alertas.data;
+                  for(var i=0; i<this.data.length; i++){
+                    this.data[i].id = Number(this.data[i].id);
+                  }
                   }, error => {
                       if (error.status === 422) {
                           // on some data incorrect
@@ -467,25 +523,35 @@ export class AlertasComponent implements OnInit {
                   }
               );
           }else{
-            this.alertaService.getByGuardDate(guardia, year1, month1, day1, year1, month1, day1).then(
-              success => {
-                this.alertas = success;
-                  this.data = this.alertas.data;
-                  }, error => {
-                      if (error.status === 422) {
-                          // on some data incorrect
-                      } else {
-                          // on general error
-                      }
+            var result = [];
+            for(var i=0;i<guardia.length;i++){
+              this.alertaService.getByGuardDate(guardia[i].item_id, year1, month1, day1, year1, month1, day1).then(
+                success => {
+                  this.alertas = success;
+                    result = result.concat(this.alertas.data);
+                    this.data = result;
+                    for(var i=0; i<this.data.length; i++){
+                    this.data[i].id = Number(this.data[i].id);
                   }
-              );
+                    }, error => {
+                        if (error.status === 422) {
+                            // on some data incorrect
+                        } else {
+                            // on general error
+                        }
+                    }
+                );
+            }
           }
         }else{
-          if(guardia == 0){
+          if(guardia.length == 0){
             this.alertaService.getByCauseDate(cause, year1, month1, day1, year1, month1, day1).then(
               success => {
                 this.alertas = success;
                   this.data = this.alertas.data;
+                  for(var i=0; i<this.data.length; i++){
+                    this.data[i].id = Number(this.data[i].id);
+                  }
                   }, error => {
                       if (error.status === 422) {
                           // on some data incorrect
@@ -495,10 +561,16 @@ export class AlertasComponent implements OnInit {
                   }
               );
           }else{
-            this.alertaService.getByGuardCaseDate(guardia, cause, year1, month1, day1, year1, month1, day1).then(
+            var result = [];
+            for(var i=0;i<guardia.length;i++){
+              this.alertaService.getByGuardCaseDate(guardia[i].item_id, cause, year1, month1, day1, year1, month1, day1).then(
               success => {
                 this.alertas = success;
-                  this.data = this.alertas.data;
+                  result = result.concat(this.alertas.data);
+                  this.data = result;
+                  for(var i=0; i<this.data.length; i++){
+                    this.data[i].id = Number(this.data[i].id);
+                  }
                   }, error => {
                       if (error.status === 422) {
                           // on some data incorrect
@@ -507,15 +579,19 @@ export class AlertasComponent implements OnInit {
                       }
                   }
               );
+            }
           }
         }
       }else{
         if(cause == "all"){
-          if(guardia == 0){
+          if(guardia.length == 0){
             this.alertaService.getByCauseDate(cause, year1, month1, day1, year2, month2, day2).then(
               success => {
                 this.alertas = success;
                   this.data = this.alertas.data;
+                  for(var i=0; i<this.data.length; i++){
+                    this.data[i].id = Number(this.data[i].id);
+                  }
                   }, error => {
                       if (error.status === 422) {
                           // on some data incorrect
@@ -525,10 +601,16 @@ export class AlertasComponent implements OnInit {
                   }
               );
           }else{
-            this.alertaService.getByGuardDate(guardia, year1, month1, day1, year2, month2, day2).then(
+            var result = [];
+            for(var i=0;i<guardia.length;i++){
+              this.alertaService.getByGuardDate(guardia[i].item_id, year1, month1, day1, year2, month2, day2).then(
               success => {
                 this.alertas = success;
-                  this.data = this.alertas.data;
+                  result = result.concat(this.alertas.data);
+                  this.data = result;
+                  for(var i=0; i<this.data.length; i++){
+                    this.data[i].id = Number(this.data[i].id);
+                  }
                   }, error => {
                       if (error.status === 422) {
                           // on some data incorrect
@@ -537,13 +619,17 @@ export class AlertasComponent implements OnInit {
                       }
                   }
               );
+            }
           }
         }else{
-          if(guardia == 0){
+          if(guardia.length == 0){
             this.alertaService.getByCauseDate(cause, year1, month1, day1, year2, month2, day2).then(
               success => {
                 this.alertas = success;
                   this.data = this.alertas.data;
+                  for(var i=0; i<this.data.length; i++){
+                    this.data[i].id = Number(this.data[i].id);
+                  }
                   }, error => {
                       if (error.status === 422) {
                           // on some data incorrect
@@ -553,10 +639,16 @@ export class AlertasComponent implements OnInit {
                   }
               );
           }else{
-            this.alertaService.getByGuardCaseDate(guardia, cause, year1, month1, day1, year2, month2, day2).then(
+            var result = [];
+            for(var i=0;i<guardia.length;i++){
+              this.alertaService.getByGuardCaseDate(guardia[i].item_id, cause, year1, month1, day1, year2, month2, day2).then(
               success => {
                 this.alertas = success;
-                  this.data = this.alertas.data;
+                  result = result.concat(this.alertas.data);
+                  this.data = result;
+                  for(var i=0; i<this.data.length; i++){
+                    this.data[i].id = Number(this.data[i].id);
+                  }
                   }, error => {
                       if (error.status === 422) {
                           // on some data incorrect
@@ -565,6 +657,7 @@ export class AlertasComponent implements OnInit {
                       }
                   }
               );
+            }
           }
         }
       }

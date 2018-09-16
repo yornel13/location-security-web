@@ -54,6 +54,11 @@ export class WtodasComponent {
   month2:any;
   day2:any;
 
+  //dropdow
+  dropdownList = [];
+  selectedGuardias = [];
+  dropdownSettings = {};
+
   zoom;
   center = L.latLng(([ this.lat, this.lng ]));
   marker = L.marker([this.lat, this.lng], {draggable: false});
@@ -73,6 +78,7 @@ export class WtodasComponent {
       private excelService: ExcelService) {
     this.getToday();
     this.getGuard();
+    this.setupDropdown();
     this.lista = true;
     this.detalle = false;
   }
@@ -224,6 +230,12 @@ export class WtodasComponent {
         success => {
             this.guardias = success;
             this.guard = this.guardias.data;
+            const datag = [];
+            this.guard.forEach(guard => {
+              datag.push({ item_id: guard.id, item_text: guard.name+' '+guard.lastname });
+            });
+            console.log(datag);
+            this.dropdownList = datag;
         }, error => {
             if (error.status === 422) {
                 // on some data incorrect
@@ -233,6 +245,34 @@ export class WtodasComponent {
         }
     );
   }
+
+  onItemSelect (item:any) {
+    console.log(item);
+    console.log(this.selectedGuardias);
+    this.getSearch();
+  }
+
+  onItemDeSelect(item:any){
+    console.log(item);
+    console.log(this.selectedGuardias);
+    this.getSearch();
+  }
+
+  setupDropdown() {
+      this.dropdownList = [];
+      this.selectedGuardias = [];
+      this.dropdownSettings = {
+        singleSelection: false,
+        idField: 'item_id',
+        textField: 'item_text',
+        selectAllText: 'Seleccionar todo',
+        unSelectAllText: 'Deseleccionar todo',
+        searchPlaceholderText: 'Buscar Guardia',
+        itemsShowLimit: 1,
+        allowSearchFilter: true,
+        enableCheckAll: false,
+      };
+    }
 
   getSearch(){
     var fecha1 = String(this.desde);
@@ -247,26 +287,32 @@ export class WtodasComponent {
     var month2 = valuesdate2[1];
     var day2 = valuesdate2[2];
 
+    var guardia = this.selectedGuardias;
+
     if(this.desde == ""){
-      if(this.guardiaSelect == 0){
+      if(guardia.length == 0){
         this.getAll();
       }else{
-        this.watchesService.getByGuard(this.guardiaSelect).then(
-            success => {
-                this.watches = success;
-                this.data = this.watches.data;
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
+        var result = [];
+        for(var i=0;i<guardia.length;i++){
+          this.watchesService.getByGuard(guardia[i].item_id).then(
+              success => {
+                  this.watches = success;
+                  result = result.concat(this.watches.data);
+                  this.data = result;
+              }, error => {
+                  if (error.status === 422) {
+                      // on some data incorrect
+                  } else {
+                      // on general error
+                  }
+              }
+          );
+        }
       }
     }else{
       if(this.rangeday){
-        if(this.guardiaSelect == 0){
+        if(guardia.length == 0){
           this.watchesService.getByDate(year1, month1, day1, year1, month1, day1).then(
               success => {
                   this.watches = success;
@@ -280,21 +326,25 @@ export class WtodasComponent {
               }
           );
         }else{
-          this.watchesService.getByGuardDate(this.guardiaSelect, year1, month1, day1, year1, month1, day1).then(
-              success => {
-                  this.watches = success;
-                  this.data = this.watches.data;
-              }, error => {
-                  if (error.status === 422) {
-                      // on some data incorrect
-                  } else {
-                      // on general error
-                  }
-              }
-          );
+          var result = [];
+          for(var i=0;i<guardia.length;i++){
+            this.watchesService.getByGuardDate(guardia[i].item_id, year1, month1, day1, year1, month1, day1).then(
+                success => {
+                    this.watches = success;
+                    result = result.concat(this.watches.data);
+                    this.data = result;
+                }, error => {
+                    if (error.status === 422) {
+                        // on some data incorrect
+                    } else {
+                        // on general error
+                    }
+                }
+            );
+          }
         }
       }else{
-        if(this.guardiaSelect == 0){
+        if(guardia.length == 0){
           this.watchesService.getByDate(year1, month1, day1, year2, month2, day2).then(
               success => {
                   this.watches = success;
@@ -308,18 +358,22 @@ export class WtodasComponent {
               }
           );
         }else{
-          this.watchesService.getByGuardDate(this.guardiaSelect, year1, month1, day1, year2, month2, day2).then(
-              success => {
-                  this.watches = success;
-                  this.data = this.watches.data;
-              }, error => {
-                  if (error.status === 422) {
-                      // on some data incorrect
-                  } else {
-                      // on general error
-                  }
-              }
-          );
+          var result = [];
+          for(var i=0;i<guardia.length;i++){
+            this.watchesService.getByGuardDate(guardia[i].item_id, year1, month1, day1, year2, month2, day2).then(
+                success => {
+                    this.watches = success;
+                    result = result.concat(this.watches.data);
+                    this.data = result;
+                }, error => {
+                    if (error.status === 422) {
+                        // on some data incorrect
+                    } else {
+                        // on general error
+                    }
+                }
+            );
+          }
         }
       }
     }
