@@ -5,6 +5,8 @@ import {Observable, of} from 'rxjs';
 
 const httpOpts = { headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
 
+const TOKEN = '01EC469EB5F64D8DA878042400D3CBA2';
+
 @Injectable()
 export class VehistorialService {
 
@@ -18,7 +20,15 @@ export class VehistorialService {
     }
 
     getImei(imei: number) {
-        return this.http.get(this.VEHISTORY_URL + '/' + imei).toPromise()
+        // return this.http.get(this.VEHISTORY_URL + '/' + imei).toPromise()
+        //     .then((response) => response);
+        return this.http.get('http://dts.location-world.com/api/Fleet/' +
+            'dailyhistory?token=' + TOKEN + '&' +
+            'imei=' + imei + '&' +
+            'year=2018&' +
+            'month=09&' +
+            'day=15&' +
+            'timezoneoffset=-5&culture=es').toPromise()
             .then((response) => response);
     }
 

@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    BASIC_URL: 'http://icsseseguridad.com/api/public',
+    BASIC_URL: 'https://www.icsseseguridad.com/api/public',
     // BASIC_URL: './api/public',
     // BASIC_URL: 'http://icsseseguridad.com/test/public',
     firebase: {

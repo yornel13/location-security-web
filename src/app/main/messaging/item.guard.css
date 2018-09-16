@@ -60,7 +60,7 @@ img{ max-width:100%;}
 .inbox_chat { height: 550px; overflow-y: scroll;}
 
 .no-active_chat{ background:white;}
-.active_chat{ background:lightblue;}
+.active_chat{ background:lightgray;}
 
 .incoming_msg_img {
     display: inline-block;

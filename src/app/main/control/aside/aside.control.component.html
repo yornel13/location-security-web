@@ -12,8 +12,9 @@
         <a class="btn btn-secondary btn-aside_menu" role="button" routerLink="/u/control/alertas" [routerLinkActive]="['active']" title="Alertas">
             <i class="fas fa-bell"></i>
         </a>
-        <a class="btn btn-secondary btn-aside_menu" role="button" routerLink="/u/control/home/bitacora" [routerLinkActive]="['active']" title="Bitacora">
+        <a style="max-height: 53px;" class="btn btn-secondary btn-aside_menu" role="button" routerLink="/u/control/home/bitacora" [routerLinkActive]="['active']" title="Bitacora">
             <i class="fas fa-list-ol"></i>
+            <span *ngIf="unreadReplies > 0" style="background: red; padding: 0 4px; border-radius: 40%; color: white; font-size: .8rem;">{{unreadReplies}}</span>
         </a>
         <a class="btn btn-secondary btn-aside_menu" role="button" routerLink="/u/control/home/vigilancia" [routerLinkActive]="['active']" title="Vigilancia">
             <i class="fas fa-tablet-alt"></i>

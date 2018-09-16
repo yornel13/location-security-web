@@ -1,5 +1,4 @@
-import {Component, ComponentFactoryResolver, Injector, OnInit} from '@angular/core';
-import {HttpErrorResponse} from '@angular/common/http';
+import {Component, ComponentFactoryResolver, Injector} from '@angular/core';
 import { Router } from '@angular/router';
 import { VisitasService } from '../../../../../model/visitas/visitas.service';
 import { GuardService } from '../../../../../model/guard/guard.service';
@@ -12,12 +11,8 @@ import { ExcelService } from '../../../../../model/excel/excel.services';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import * as geolib from 'geolib';
-import {visit} from "../../../../../../node_modules/@angular/compiler-cli/src/ngtsc/util/src/visitor";
 import {GlobalOsm} from "../../../../global.osm";
 import {UtilsVehicles} from "../../../../../model/vehicle/vehicle.utils";
-import {Alerta} from "../../../../../model/alerta/alerta";
-import {PopupAlertComponent} from "../../../monitoring/map/popup.alert.component";
-import {PopupReportComponent} from "../../bitacora/filtreport/popup.report.component";
 import {PopupVisitComponent} from "./popup.visit.component";
 
 @Component({

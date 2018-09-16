@@ -1,5 +1,12 @@
 
-    <h6>DNI {{ dni }}</h6>
-    <p><b>{{name}} {{lastname}}</b></p>
-    <p class="p-popup"><b>Última transmisión: </b> {{generated_time }}</p>
-    <!--<p><b>Observación: </b>{{observation}}</p>-->
+    <p class="ppp ps" style="font-size: 0.85rem"><b>{{tablet.guard_name}} {{tablet.guard_lastname}}</b></p>
+    <p class="ppp ps"><b>IMEI: </b>{{tablet.imei}}</p>
+    <p class="ppp ps"><b>Cedula del guardia: </b>{{tablet.guard_dni}}</p>
+    <p class="ppp ps" style="font-size: 0.9rem; color: deepskyblue">
+      <span *ngIf="tablet.message == 'INIT_WATCH'">INICIO DE GUARDIA</span>
+      <span style="color: red" *ngIf="tablet.message == 'FINISHED_WATCH'">GUARDIA FINALIZADA</span>
+      <span *ngIf="tablet.message == 'UPDATE'">ACTUALIZACIÓN DE POSICIÓN</span>
+      <span *ngIf="tablet.message == 'RESUMED_WATCH'">GUARDIA RETOMADA</span>
+    </p>
+    <p class="ppp ps"><b>Última transmisión: </b> &ensp; &ensp; &ensp; {{tablet.generated_time | date : "medium"}}</p>
+    <p class="ppp ps"><b>Última posición valida: </b>&ensp;{{tablet.message_time | date : "medium"}}</p>

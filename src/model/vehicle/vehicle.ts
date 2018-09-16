@@ -1,4 +1,5 @@
 export interface Vehicle {
+  id: number;
   imei: string;
   alias: string;
   automotor_plate: string;

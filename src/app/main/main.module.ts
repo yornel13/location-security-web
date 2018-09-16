@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
@@ -42,6 +43,9 @@ import {ChatComponent} from './chat/chat.component';
 import {PopupAlertComponent} from './monitoring/map/popup.alert.component';
 import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import {FilterUsers} from './messaging/filter.users';
+import {RelativeTimePipe} from './messaging/relative.pipe';
+import {CardRecordComponent} from './monitoring/aside/card.record.component';
 
 export function controlModuleLoader() {
     return ControlModule;
@@ -69,37 +73,39 @@ export const mainRoutes: Routes = [
 export const mainRouting = RouterModule.forChild(mainRoutes);
 
 @NgModule({
-  imports: [
-    HttpClientModule,
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    mainRouting,
-    ChartsModule,
-    FusionChartsModule,
-    FilterPipeModule,
-    LeafletModule.forRoot(),
-    LeafletMarkerClusterModule.forRoot(),
-    LeafletDrawModule.forRoot(),
-    ControlModule,
-    SweetAlert2Module.forRoot({
-      buttonsStyling: false,
-      customClass: 'modal-content',
-      confirmButtonClass: 'btn btn-primary',
-      cancelButtonClass: 'btn'
-    }),
-    NgMultiSelectDropDownModule.forRoot()
-  ],
-  providers: [
-      VehiclesService, WatchesService, MainService, TabletService ],
-  entryComponents: [ PopupVehicleComponent, PopupWatchComponent, PopupAlertComponent, CardVehicleComponent,
-      CardTabletComponent, ItemGuardComponent ],
-  declarations: [
-      MonitoringComponent, MapOsmComponent, PopupVehicleComponent, PopupWatchComponent, PopupAlertComponent,
-      HeaderComponent, AsideComponent, MainComponent,
-      DashboardComponent, ReportComponent, MessagingComponent, ChatComponent,
-      CardVehicleComponent, CardTabletComponent, FilterPipe, CardAlertComponent, ItemGuardComponent
-  ],
-  bootstrap: [ MainComponent ]
+    imports: [
+        HttpClientModule,
+        CommonModule,
+        NgSelectModule,
+        FormsModule,
+        ReactiveFormsModule,
+        mainRouting,
+        ChartsModule,
+        FusionChartsModule,
+        FilterPipeModule,
+        LeafletModule.forRoot(),
+        LeafletMarkerClusterModule.forRoot(),
+        LeafletDrawModule.forRoot(),
+        ControlModule,
+        SweetAlert2Module.forRoot({
+            buttonsStyling: false,
+            customClass: 'modal-content',
+            confirmButtonClass: 'btn btn-primary',
+            cancelButtonClass: 'btn'
+        }),
+        NgMultiSelectDropDownModule.forRoot()
+    ],
+    providers: [
+        VehiclesService, WatchesService, MainService, TabletService ],
+    entryComponents: [ PopupVehicleComponent, PopupWatchComponent, PopupAlertComponent, CardVehicleComponent,
+        CardTabletComponent, ItemGuardComponent, CardTabletComponent ],
+    declarations: [
+        MonitoringComponent, MapOsmComponent, PopupVehicleComponent, PopupWatchComponent, PopupAlertComponent,
+        HeaderComponent, AsideComponent, MainComponent,
+        DashboardComponent, ReportComponent, MessagingComponent, ChatComponent,
+        CardVehicleComponent, CardTabletComponent, FilterPipe, CardAlertComponent, ItemGuardComponent, FilterUsers,
+        RelativeTimePipe, CardRecordComponent
+    ],
+    bootstrap: [ MainComponent ]
 })
 export class MainModule {}

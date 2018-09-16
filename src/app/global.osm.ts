@@ -4,19 +4,19 @@ import * as L from 'leaflet';
 @Injectable()
 export class GlobalOsm {
 
-  readonly OUT_BOUNDS = 'OUT_BOUNDS';
-  readonly IN_BOUNDS = 'IN_BOUNDS';
-  readonly IGNITION_ON = 'IGNITION_ON';
-  readonly IGNITION_OFF = 'IGNITION_OFF';
-  readonly SPEED_MAX = 'SPEED_MAX';
-  readonly GENERAL = 'GENERAL';
-  readonly INIT_WATCH = 'INIT_WATCH';
-  readonly FINISH_WATCH = 'FINISH_WATCH';
-  readonly INCIDENCE = 'INCIDENCE';
-  readonly DROP = 'DROP';
-  readonly SOS1 = 'SOS1';
-  readonly INCIDENCE_LEVEL_1 = 'INCIDENCE_LEVEL_1';
-  readonly INCIDENCE_LEVEL_2 = 'INCIDENCE_LEVEL_2';
+    readonly OUT_BOUNDS = 'OUT_BOUNDS';
+    readonly IN_BOUNDS = 'IN_BOUNDS';
+    readonly IGNITION_ON = 'IGNITION_ON';
+    readonly IGNITION_OFF = 'IGNITION_OFF';
+    readonly SPEED_MAX = 'SPEED_MAX';
+    readonly GENERAL = 'GENERAL';
+    readonly INIT_WATCH = 'INIT_WATCH';
+    readonly FINISH_WATCH = 'FINISH_WATCH';
+    readonly INCIDENCE = 'INCIDENCE';
+    readonly DROP = 'DROP';
+    readonly SOS1 = 'SOS1';
+    readonly INCIDENCE_LEVEL_1 = 'INCIDENCE_LEVEL_1';
+    readonly INCIDENCE_LEVEL_2 = 'INCIDENCE_LEVEL_2';
 
     readonly LAYER_OSM = {
         id: 'openstreetmap',
@@ -27,6 +27,16 @@ export class GlobalOsm {
             detectRetina: true,
             attribution: 'Open Street Map'
         })
+    };
+    readonly LAYER_VALDEZ = {
+      id: 'valdezmap',
+      name: 'Mapa Valdez',
+      enabled: false,
+      layer: L.tileLayer('https://maps.location-world.com/GlobalWMA/{z}/{x}/{y}.png?token=01EC469EB5F64D8DA878042400D3CBA2', {
+        maxZoom: 19,
+        detectRetina: true,
+        attribution: 'Mapa Valdez'
+      })
     };
     readonly LAYER_GOOGLE_STREET = {
         id: 'googlestreets',
@@ -60,6 +70,7 @@ export class GlobalOsm {
     };
     readonly baseLayers = {
         'Open Street Map': this.LAYER_OSM.layer,
+        'Mapa Valdez': this.LAYER_VALDEZ.layer,
         'Google Street Map': this.LAYER_GOOGLE_STREET.layer,
         'Google Satellite Map': this.LAYER_GOOGLE_SATELLITE.layer,
         'Google Terrain Map': this.LAYER_GOOGLE_TERRAIN.layer

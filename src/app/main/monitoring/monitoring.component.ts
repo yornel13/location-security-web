@@ -8,6 +8,7 @@ import {Watch} from '../../../model/watch/watch';
 import {TabletService} from '../../../model/tablet/tablet.service';
 import {Tablet} from '../../../model/tablet/tablet';
 import {TabletUtils} from '../../../model/tablet/tablet.utils';
+import {isArray} from "util";
 
 @Component({
   selector: 'app-monitoring',
@@ -59,6 +60,7 @@ export class MonitoringComponent implements OnInit {
     getTablets() {
        this.tabletService.getTablet().subscribe(data => {
            this.tablets = new TabletUtils().processTablets(data.data);
+           if (isArray(this.tablets)) { this.tablets.reverse(); }
            this.updateTablet(this.tablets);
        }, (error: HttpErrorResponse) => {
            console.log(error.message);

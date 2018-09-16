@@ -1,0 +1,12 @@
+<div class="tablet-card" (click)="focusMarker(record.latitude, record.longitude)" [ngClass]="{'is-alert': record.is_exception}">
+    <div>
+        <p class="title ps">Secuencia {{record.index}}</p>
+        <p class="address ps">Dirección: {{record.address}}</p>
+        <p class="date ps">{{date | date : "medium"}}</p>
+        <div class="container-alert" *ngIf="record.is_exception">
+            <img class="image" src="{{record.iconUrl}}">
+            <p class="alert ps">{{record.alert_message}}</p>
+        </div>
+        <!--<p class="alert-text ps">{{record.alert_message}}</p>-->
+    </div>
+</div>
