@@ -8,9 +8,11 @@
 <ul class="list-items" id="items">
   <li routerLink="/u/dashboard" class="list-item" [routerLinkActive]="['active']">Dashboard</li>
   <li routerLink="/u/monitoring" class="list-item" [routerLinkActive]="['active']">Monitoreo</li>
-  <li routerLink="/u/control" class="list-item" [routerLinkActive]="['active']">Control</li>
+  <li routerLink="/u/control" class="list-item" [routerLinkActive]="['active']">Control
+    <span *ngIf="unreadReplies > 0" style="background: white; padding: 0 4px; border-radius: 40%; color: black; font-size: .8rem">{{unreadReplies}}</span>
+  </li>
   <li routerLink="/u/messaging" class="list-item" [routerLinkActive]="['active']">Mensajería
-    <span *ngIf="unread > 0" style="background: white; padding: 0 4px; border-radius: 40%; color: black; font-size: .8rem">{{unread}}</span>
+    <span *ngIf="unreadMessages > 0" style="background: white; padding: 0 4px; border-radius: 40%; color: black; font-size: .8rem">{{unreadMessages}}</span>
   </li>
   <li class="list-item" (click)="exit()">Salir</li>
 </ul>

@@ -149,18 +149,4 @@ export class ChatService {
               + this.user_1_id + `/chat/unread`, httpOptions).toPromise()
           .then((response) => response);
     }
-
-    putRead(chat_id: number) {
-        return this.http.put<ApiResponse>(`${environment.BASIC_URL}/messenger/conversations/admin/`
-          + this.user_1_id + `/chat/`
-          + chat_id + `/read`, httpOptions
-        ).pipe(map(response => {
-          if (response['result'] != null) {
-            return response;
-          }
-        }),
-        catchError((error: any) => {
-          return Observable.throw(error);
-        }));
-    }
 }

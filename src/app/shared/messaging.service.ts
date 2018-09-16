@@ -1,5 +1,5 @@
 
-import {EventEmitter, Injectable} from '@angular/core';
+import {EventEmitter, Injectable, OnInit} from '@angular/core';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase';
@@ -8,6 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 import {AuthenticationService, ChatService} from '../_services';
 import {NotificationService} from './notification.service';
 import {ChatLine} from '../../model/chat/chat.line';
+import {BitacoraService} from '../../model/bitacora/bitacora.service';
 
 @Injectable()
 export class MessagingService {
@@ -26,12 +27,16 @@ export class MessagingService {
     adminChatUnread: any[] = [];
     unreadEmitter = new EventEmitter<any>();
 
+    repliesUnread: number;
+    repliesUnreadEmitter = new EventEmitter<any>();
+
     constructor(
         private notificationService: NotificationService,
         private authService: AuthenticationService,
         private afDB: AngularFireDatabase,
         private afAuth: AngularFireAuth,
-        private chatService: ChatService) {
+        private chatService: ChatService,
+        private binnacleService: BitacoraService) {
     }
 
   /**
@@ -40,42 +45,42 @@ export class MessagingService {
    * @param userId userId as a key
    * @param token token as a value
    */
-  updateToken(userId, token) {
-    this.afAuth.authState.pipe(take(1)).subscribe(() => {
-      const data = new Object;
-      data[userId] = token;
-      this.afDB.object('fcmTokens/').update(data).then();
-    });
-  }
-
-  /**
-   * request permission for notification from firebase cloud messaging
-   *
-   * @param userId userId
-   */
-  requestPermission(userId) {
-      this.messaging.requestPermission()
-          .then(() => {
-              console.log('notification permission granted.');
-              console.log(firebase.messaging().getToken());
-              return firebase.messaging().getToken();
-          })
-          .then(token => {
-              console.log(token);
-              this.authService.setTokenFire(token);
-              this.authService.webRegister(token, this.authService.getTokenSession(), this.authService.getUser().id)
-                    .then(success => {
-                  console.log(success);
-              },
-              error => {
-                  this.error = error;
-                  this.loading = false;
-              });
-          })
-          .catch((err) => {
-            console.log('Unable to get permission to notify.', err);
+    updateToken(userId, token) {
+      this.afAuth.authState.pipe(take(1)).subscribe(() => {
+        const data = new Object;
+        data[userId] = token;
+        this.afDB.object('fcmTokens/').update(data).then();
       });
-  }
+    }
+
+    /**
+     * request permission for notification from firebase cloud messaging
+     *
+     * @param userId userId
+     */
+    requestPermission(userId) {
+        this.messaging.requestPermission()
+            .then(() => {
+                console.log('notification permission granted.');
+                console.log(firebase.messaging().getToken());
+                return firebase.messaging().getToken();
+            })
+            .then(token => {
+                console.log(token);
+                this.authService.setTokenFire(token);
+                this.authService.webRegister(token, this.authService.getTokenSession(), this.authService.getUser().id)
+                      .then(success => {
+                    console.log(success);
+                },
+                error => {
+                    this.error = error;
+                    this.loading = false;
+                });
+            })
+            .catch((err) => {
+              console.log('Unable to get permission to notify.', err);
+        });
+    }
 
     /**
     * hook method when new notification received
@@ -120,7 +125,22 @@ export class MessagingService {
                     };
                 }
             }
-            this.currentMessage.next(payload);
+            if (payload.data.type === 'REPORT') {
+                const reply: any = JSON.parse(payload.data.message.toString());
+                this.loadUnreadReplies();
+                  const notificationTitle = payload.notification.title;
+                  const notificationOptions = {
+                      body: payload.notification.body,
+                      icon: payload.notification.icon,
+                  };
+                  const notification = new Notification(notificationTitle, notificationOptions);
+                  notification.onclick = function(event) {
+                      event.preventDefault(); // prevent the browser from focusing the Notification's tab
+                      window.open('/u/control/bitacora/reportes');
+                      notification.close();
+                  };
+            }
+            //this.currentMessage.next(payload);
         });
     }
 
@@ -157,5 +177,13 @@ export class MessagingService {
 
     getUnread(): number {
         return (this.unread + this.channelUnread);
+    }
+
+    loadUnreadReplies() {
+        this.binnacleService.getAllUnreadReplies().then((data: any) => {
+            console.log(data.unread + ' unread replies');
+            this.repliesUnread = data.unread;
+            this.repliesUnreadEmitter.emit(this.repliesUnread);
+        });
     }
 }

@@ -1,0 +1,65 @@
+.tablet-card{
+    background-color: whitesmoke;
+    height: auto;
+    max-width: 320px;
+    border-radius: 3px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    padding: 4px 8px 2px 8px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.is-alert {
+    background-color: #ffd4d4;
+}
+
+.ps{
+    margin: 0;
+    padding: 0;
+}
+
+.title{
+    // font-weight: bold;
+    color: #DE3133;
+}
+
+.address{
+    font-size: .8em;
+    line-height: .9rem;
+}
+
+.date{
+     color: #4A4048;
+     font-size: .8em;
+ }
+
+.container-alert {
+    display: flex;
+    justify-content: space-between;
+    align-items: self-start;
+}
+
+.alert {
+    font-size: .8rem;
+    line-height: .9rem;
+}
+
+.image {
+    height: auto;
+    min-width: 32px;
+    width: 32px;
+    padding: 2px;
+}
+
+
+
+.btn-success {
+    float: right;
+}
+
+.alert-text{
+    font-size: .9em;
+    line-height: 1.2;
+}

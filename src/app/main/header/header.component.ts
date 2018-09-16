@@ -13,7 +13,8 @@ export class HeaderComponent implements OnInit {
 
   user: string;
   photo: string;
-  unread: number;
+  unreadMessages: number;
+  unreadReplies: number;
 
   constructor(
       private authService: AuthenticationService,
@@ -37,9 +38,13 @@ export class HeaderComponent implements OnInit {
   }
 
   subscribeToUnreadMessages() {
-      this.unread = this.messagingService.getUnread();
+      this.unreadMessages = this.messagingService.getUnread();
+      this.unreadReplies = this.messagingService.repliesUnread;
       this.messagingService.unreadEmitter.subscribe(count => {
-          this.unread = count;
+          this.unreadMessages = count;
+      });
+      this.messagingService.repliesUnreadEmitter.subscribe(count => {
+          this.unreadReplies = count;
       });
   }
 

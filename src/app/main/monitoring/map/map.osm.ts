@@ -15,7 +15,6 @@ import {PopupWatchComponent} from './popup.watch.component';
 import {MainService} from '../../main.service';
 import {GlobalOsm} from '../../../global.osm';
 import {Alerta} from '../../../../model/alerta/alerta';
-import {AngularFirestore} from 'angularfire2/firestore';
 import {PopupAlertComponent} from './popup.alert.component';
 import {GrupoService} from '../../../../model/grupos/grupo.service';
 import {Grupos} from '../../../../model/grupos/grupos';

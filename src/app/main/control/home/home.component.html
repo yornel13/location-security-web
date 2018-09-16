@@ -29,7 +29,10 @@
 		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/home/bitacora" [routerLinkActive]="['active']">
 			<div class="mx-auto content-control pb-2 pt-3">
 				<i class="fas fa-list-ol icono" style="background-color: #6610f2; padding: 12px !important"></i>
-				<p class="enlace">Bitácora<br><span class="subtitle">Reportes de actividades</span></p>
+				<p class="enlace">Bitácora
+          <span *ngIf="unreadReplies > 0" style="background: red; padding: 0 4px; border-radius: 40%; color: white; font-size: .8rem">{{unreadReplies}}</span>
+          <br><span class="subtitle">Reportes de actividades</span>
+        </p>
 			</div>
 		</a>
 		<a class="col-4 cardcontrol mt-5 link"  routerLink="/u/control/home/vigilancia" [routerLinkActive]="['active']">

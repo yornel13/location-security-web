@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {MessagingService} from '../../../shared/messaging.service';
 
 
 @Component({
@@ -7,4 +8,16 @@ import { Component } from '@angular/core';
     styleUrls: ['./aside.control.component.css']
 })
 
-export class AsideControlComponent {}
+export class AsideControlComponent  implements OnInit {
+
+  unreadReplies: number;
+
+  constructor(private messagingService: MessagingService) {}
+
+  ngOnInit() {
+      this.unreadReplies = this.messagingService.repliesUnread;
+      this.messagingService.repliesUnreadEmitter.subscribe(count => {
+          this.unreadReplies = count;
+      });
+  }
+}

@@ -1,76 +1,78 @@
 <!--Sidebar-->
 <aside class="aside">
 
-  <!--header aside-->
-  <!--<div class="header-aside">-->
-    <!--<div class="dropdown">-->
-      <!--<div class="btn btn-secondary menu-item dropdown-toggle" href="#"   id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-        <!--Dispositivos-->
-      <!--</div>-->
-    <!---->
-      <!--<div class="dropdown-menu menu-item" >-->
-        <!--<div class=" menu-items" (click)="selectMarkersOpts('showVehicles')" >Vehiculos<img *ngIf="vehiclesCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>-->
-        <!--<div class=" menu-items" (click)="selectMarkersOpts('showBombas')">Bombas<img *ngIf="bombasCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>-->
-        <!--<div class=" menu-items" (click)="selectMarkersOpts('showTablets')">Tablets   <img *ngIf="watchesCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>-->
-        <!--&lt;!&ndash;<div class=" menu-items" (click)="selectMarkersOpts('showNoGroups')">No agrupados<img *ngIf="noGroupCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>&ndash;&gt;-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--<div class="menu-item alerta">Alertas</div>-->
-  <!--</div>-->
-
   <div class="container">
-    <ul class="nav nav-tabs" id="myTab" role="tablist" style="height: 40px">
-      <li class="nav-item">
-        <a (click)="selectTab('alerts')" class="nav-link active" data-toggle="tab" role="tab" aria-selected="true" href="#alerts" style="height: 40px; border-radius: 0; padding-top: 0"><p style="margin: 5px;">Alertas</p></a>
-      </li>
-      <li class="nav-item">
-        <a (click)="selectTab('devices')" class="nav-link" data-toggle="tab" role="tab" aria-selected="false" href="#devices" style="height: 40px; border-radius: 0; padding-top: 0"><p style="margin: 5px;">Dispositivos</p></a>
-      </li>
-      <li class="nav-item dropdown" id="dropdown" *ngIf="isShow" style="background-color: white">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" style="height: 40px; border-radius: 0; padding-top: 16px"></a>
-        <div class="dropdown-menu menu-item" style="z-index: 5000">
-          <div class=" menu-items" (click)="selectMarkersOpts('showVehicles')" >Vehiculos<img *ngIf="vehiclesCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>
-          <div class=" menu-items" (click)="selectMarkersOpts('showBombas')">Bombas<img *ngIf="bombasCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>
-          <div class=" menu-items" (click)="selectMarkersOpts('showTablets')">Tablets   <img *ngIf="watchesCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>
-        </div>
-      </li>
+    <ul class="nav nav-tabs" id="myTab" role="tablist" style="height: 32px">
+        <li class="nav-item">
+            <a (click)="selectTab('alerts')" class="nav-link" data-toggle="tab" role="tab" aria-selected="false" href="#alerts" style="height: 32px; border-radius: 0; padding-top: 0"><p style="margin: 1px;">Alertas</p></a>
+        </li>
+        <li class="nav-item">
+            <a (click)="selectTab('histories')" class="nav-link active" data-toggle="tab" role="tab" aria-selected="true" href="#histories" style="height: 32px; border-radius: 0; padding-top: 0"><p style="margin: 1px;">Historial</p></a>
+        </li>
+        <li class="nav-item">
+            <a (click)="selectTab('devices')" class="nav-link" data-toggle="tab" role="tab" aria-selected="false" href="#devices" style="height: 32px; border-radius: 0; padding-top: 0"><p style="margin: 1px;">En línea</p></a>
+        </li>
+        <li class="nav-item dropdown" id="dropdown" *ngIf="isShow" style="background-color: white; color: black">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" style="height: 32px; border-radius: 0; padding-top: 14px; color: black"></a>
+            <div class="dropdown-menu menu-item" style="z-index: 5000">
+                <div class=" menu-items" (click)="selectMarkersOpts('showVehicles')" >Vehiculos<img *ngIf="vehiclesCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>
+                <div class=" menu-items" (click)="selectMarkersOpts('showBombas')">Bombas<img *ngIf="bombasCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>
+                <div class=" menu-items" (click)="selectMarkersOpts('showTablets')">Tablets   <img *ngIf="watchesCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>
+            </div>
+        </li>
     </ul>
 
     <div class="tab-content" id="myTabContent">
 
-      <div id="alerts" class="tab-pane active">
-        <div class="cards-container" style="padding-top: 10px">
-          <div *ngFor="let alert of alerts1">
-            <app-card-alert (solveAlert)="solveAlert($event)" [alert]="alert"></app-card-alert>
-          </div>
-          <div *ngFor="let alert of alerts0">
-            <app-card-alert (solveAlert)="solveAlert($event)"  [alert]="alert"></app-card-alert>
-          </div>
+        <div id="alerts" class="tab-pane">
+            <div class="cards-container" style="padding-top: 10px">
+              <div *ngFor="let alert of alerts1">
+                <app-card-alert (solveAlert)="solveAlert($event)" [alert]="alert"></app-card-alert>
+              </div>
+              <div *ngFor="let alert of alerts0">
+                <app-card-alert (solveAlert)="solveAlert($event)"  [alert]="alert"></app-card-alert>
+              </div>
+            </div>
         </div>
-      </div>
 
-      <div id="devices" class="tab-pane">
-        <input [(ngModel)]="search" name="search" #newSearsh class="filter form-control" type="text" placeholder="Filtrar">
-        <p *ngIf="noCards" class="no-cards">Seleccione algun dispositivo</p>
-        <!--Cards contaniner-->
-        <div class="cards-container devices-container"  *ngIf="showCardContainer">
-          <!--Cards-->
-          <div *ngFor="let data of markersData | filter: search">
-            <div  *ngIf="data.group_name === 'Tablet Guardia'">
-              <app-card-tablet *ngIf="watchesCheck" [tablet]="data"></app-card-tablet>
+        <div id="histories" class="tab-pane active">
+            <ng-select [items]="vehicles"
+                       bindLabel="alias"
+                       bindValue="imei"
+                       [(ngModel)]="selectedItem"
+                       placeholder="Seleccione un dispositivo..."
+                       style="margin: 8px"
+                       (ngModelChange)="searchHistory()">
+            </ng-select>
+            <div class="cards-container" style="padding-top: 10px">
+                <div *ngFor="let record of records">
+                    <app-card-record [record]="record"></app-card-record>
+                </div>
             </div>
-            <div *ngIf="data.group_name === 'BOMBAS DE DRENAJE'">
-              <app-card-vehicle *ngIf="bombasCheck" [vehicle]="data"></app-card-vehicle>
-            </div>
-            <div *ngIf="data.group_name === 'AZUCARERA INGENIO VALDEZ'">
-              <app-card-vehicle *ngIf="vehiclesCheck" [vehicle]="data"></app-card-vehicle>
-            </div>
-            <div *ngIf="data.group_name !== 'AZUCARERA INGENIO VALDEZ' && 'BOMBAS DE DRENAJE' && 'Tablet Guardia'">
-              <!--no group-->
-            </div>
-          </div>
         </div>
-      </div>
+
+        <div id="devices" class="tab-pane">
+            <input [(ngModel)]="search" name="search" #newSearsh class="filter form-control" type="text" placeholder="Ingrese el término de búsqueda">
+            <p *ngIf="noCards" class="no-cards">Seleccione algun dispositivo</p>
+            <!--Cards contaniner-->
+            <div class="cards-container devices-container"  *ngIf="showCardContainer">
+              <!--Cards-->
+              <div *ngFor="let data of markersData | filter: search">
+                <div  *ngIf="data.group_name === 'Tablet Guardia'">
+                  <app-card-tablet *ngIf="watchesCheck" [tablet]="data"></app-card-tablet>
+                </div>
+                <div *ngIf="data.group_name === 'BOMBAS DE DRENAJE'">
+                  <app-card-vehicle *ngIf="bombasCheck" [vehicle]="data"></app-card-vehicle>
+                </div>
+                <div *ngIf="data.group_name === 'AZUCARERA INGENIO VALDEZ'">
+                  <app-card-vehicle *ngIf="vehiclesCheck" [vehicle]="data"></app-card-vehicle>
+                </div>
+                <div *ngIf="data.group_name !== 'AZUCARERA INGENIO VALDEZ' && 'BOMBAS DE DRENAJE' && 'Tablet Guardia'">
+                  <!--no group-->
+                </div>
+              </div>
+            </div>
+        </div>
 
     </div>
   </div>

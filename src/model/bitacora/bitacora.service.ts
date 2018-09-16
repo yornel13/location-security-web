@@ -39,7 +39,12 @@ export class BitacoraService {
             .then((response) => response);
     }
 
-//------------------------ Status en Incidencia ------------------------------------------------------
+    getAllUnreadReplies() {
+        return this.http.get(this.BITAC_URL + '-reply/admin/comment/unread').toPromise()
+          .then((response) => response);
+    }
+
+// ------------------------ Status en Incidencia ------------------------------------------------------
 
     getOpenDate(year, month, day, year1, month1, day1) {
         return this.http.get(this.BITAC_URL+'/resolved/open/date/'+year+'/'+month+'/'+day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
@@ -91,7 +96,7 @@ export class BitacoraService {
             .then((response) => response);
     }
 
-//----------------------- Status en Guardia
+// ----------------------- Status en Guardia
 
     getByGuardiaAll(id) {
         return this.http.get(this.BITAC_URL+'/resolved/all/guard/'+id).toPromise()
@@ -124,7 +129,7 @@ export class BitacoraService {
     }
 
 
-//-------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------
     getId(id: number) {
         return this.http.get(this.BITAC_URL + '/' + id).toPromise()
             .then((response) => response);
