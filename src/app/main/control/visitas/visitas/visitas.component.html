@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="container-fluid row mx-auto mt-2">
-        <div class="mr-auto row ml-2 form-inline">
+      <div class="mr-auto row ml-2 form-inline">
             <label class="mr-1"><b>Mostrar:</b></label>
             <select id="inputState" class="form-control-sm mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
               <option [ngValue]="10">10</option>
@@ -36,6 +36,8 @@
             </select>
             <label>Elementos</label>
         </div>
+    </div>
+    <div class="container-fluid row mx-auto mt-2">
         <div class="ml-auto form-inline">
           <div class="form-group row">
             <label class="mr-2"><b>Filtrar por:</b></label>
@@ -45,22 +47,62 @@
               <option [ngValue]="2">Visitante</option>
               <option [ngValue]="3">Funcionario</option>
             </select>
-            <select id="inputState" class="form-control-sm mr-2" [(ngModel)]="vehiculoSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="filtro == 1">
+            <!--<select id="inputState" class="form-control-sm mr-2" [(ngModel)]="vehiculoSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="filtro == 1">
               <option [ngValue]="0">Todos</option>
               <option *ngFor="let v of vehi" [ngValue]="v.id">{{v.plate}}</option>
-            </select>
-            <select id="inputState" class="form-control-sm mr-2" [(ngModel)]="guardiaSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}"  *ngIf="filtro == 2">
+            </select>-->
+            <ng-multiselect-dropdown *ngIf="filtro == 1" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
+              [placeholder]="'Selección de Vehículos'"
+              [data]="dropdownList1"
+              [(ngModel)]="selectedVehiculos"
+              [settings]="dropdownSettings1"
+              (onSelect)="onItemSelect1($event)"
+              (onSelectAll)="onSelectAll1($event)"
+              (onDeSelect)="onItemDeSelect1($event)"
+              (onDeSelectAll)="onDeSelectAll1($event)">
+            </ng-multiselect-dropdown>
+            <!--<select id="inputState" class="form-control-sm mr-2" [(ngModel)]="guardiaSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}"  *ngIf="filtro == 2">
               <option [ngValue]="0">Guardias</option>
               <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
-            </select>
-            <select id="inputState" class="form-control-sm mr-2" [(ngModel)]="visitanteSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="filtro == 3">
+            </select>-->
+            <ng-multiselect-dropdown *ngIf="filtro == 2" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
+              [placeholder]="'Selección de Guardias'"
+              [data]="dropdownList2"
+              [(ngModel)]="selectedGuardias"
+              [settings]="dropdownSettings2"
+              (onSelect)="onItemSelect2($event)"
+              (onSelectAll)="onSelectAll2($event)"
+              (onDeSelect)="onItemDeSelect2($event)"
+              (onDeSelectAll)="onDeSelectAll2($event)">
+            </ng-multiselect-dropdown>
+            <!--<select id="inputState" class="form-control-sm mr-2" [(ngModel)]="visitanteSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="filtro == 3">
               <option [ngValue]="0">Visitantes</option>
               <option *ngFor="let i of visit" [ngValue]="i.id">{{i.name}} {{i.lastname}}</option>
-            </select>
-            <select id="inputState" class="form-control-sm mr-2" [(ngModel)]="funcionarioSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}"  *ngIf="filtro == 4">
+            </select>-->
+            <ng-multiselect-dropdown *ngIf="filtro == 3" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
+              [placeholder]="'Selección de Visitantes'"
+              [data]="dropdownList3"
+              [(ngModel)]="selectedVisitantes"
+              [settings]="dropdownSettings3"
+              (onSelect)="onItemSelect3($event)"
+              (onSelectAll)="onSelectAll3($event)"
+              (onDeSelect)="onItemDeSelect3($event)"
+              (onDeSelectAll)="onDeSelectAll3($event)">
+            </ng-multiselect-dropdown>
+            <!--<select id="inputState" class="form-control-sm mr-2" [(ngModel)]="funcionarioSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}"  *ngIf="filtro == 4">
               <option [ngValue]="0">Funcionarios</option>
               <option *ngFor="let f of funcio" [ngValue]="f.id">{{f.name}} {{f.lastname}}</option>
-            </select>
+            </select>-->
+            <ng-multiselect-dropdown *ngIf="filtro == 4" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
+              [placeholder]="'Selección de Funcionarios'"
+              [data]="dropdownList4"
+              [(ngModel)]="selectedFuncionarios"
+              [settings]="dropdownSettings4"
+              (onSelect)="onItemSelect4($event)"
+              (onSelectAll)="onSelectAll4($event)"
+              (onDeSelect)="onItemDeSelect4($event)"
+              (onDeSelectAll)="onDeSelectAll4($event)">
+            </ng-multiselect-dropdown>
             <label for="start" class="mr-2">Fecha</label>
             <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="desde" (change)="getSearch()" [ngModelOptions]="{standalone: true}">
             <label for="start" class="mr-2">-</label>

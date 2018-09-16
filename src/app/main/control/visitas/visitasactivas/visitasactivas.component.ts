@@ -66,6 +66,23 @@ export class VisitasactivasComponent {
   lng:number = -79.0000;
   viewmap:boolean = false;
 
+  //dropdow
+  dropdownList1 = [];
+  selectedVehiculos = [];
+  dropdownSettings1 = {};
+
+  dropdownList2 = [];
+  selectedGuardias = [];
+  dropdownSettings2 = {};
+
+  dropdownList3 = [];
+  selectedVisitantes = [];
+  dropdownSettings3 = {};
+
+  dropdownList4 = [];
+  selectedFuncionarios = [];
+  dropdownSettings4 = {};
+
   zoom: 12;
   center = L.latLng(([ this.lat, this.lng ]));
   marker = L.marker([this.lat, this.lng], {draggable: false});
@@ -120,6 +137,10 @@ export class VisitasactivasComponent {
     this.getVehiculos();
     this.getVisitantes();
     this.getFuncionarios();
+    this.setupDropdown1();
+    this.setupDropdown2();
+    this.setupDropdown3();
+    this.setupDropdown4();
   }
 
   // Values to bind to Leaflet Directive
@@ -243,91 +264,118 @@ export class VisitasactivasComponent {
     this.viewmap = false;
   }
 
-  getByVehiculo(id){
-
-
+  getByVehiculo(){
+    var vehiculo = this.selectedVehiculos;
     if(this.dateSelect == ''){
-      if(id == 0){
+      if( vehiculo.length == 0){
         this.getActives();
       }else{
-        this.visitasService.getByVehiculo(id, '1').then(
-          success => {
-            this.visitas = success;
-            this.data = this.visitas.data;
-              }, error => {
-                  if (error.status === 422) {
-                      // on some data incorrect
-                  } else {
-                      // on general error
-                  }
-              }
-        );
+        var result = [];
+        for(var i=0;i<vehiculo.length;i++){
+          this.visitasService.getByVehiculo(vehiculo[i].item_id, '1').then(
+            success => {
+              this.visitas = success;
+              result = result.concat(this.visitas.data);
+              this.data = result;
+              for(var i=0; i<this.data.length; i++){
+                  this.data[i].id = Number(this.data[i].id);
+                }
+                }, error => {
+                    if (error.status === 422) {
+                        // on some data incorrect
+                    } else {
+                        // on general error
+                    }
+                }
+          );
+        }
       }
     }
   }
 
-  getByGuardia(id){
-
+  getByGuardia(){
+    var guardia = this.selectedGuardias;
     if(this.dateSelect == ''){
-      if(id == 0){
+      if(guardia.length == 0){
         this.getActives();
       }else{
-        this.visitasService.getByGuard(id, '1').then(
-          success => {
-            this.visitas = success;
-            this.data = this.visitas.data;
-              }, error => {
-                  if (error.status === 422) {
-                      // on some data incorrect
-                  } else {
-                      // on general error
-                  }
-              }
-        );
+        var result = [];
+        for(var i=0;i<guardia.length;i++){
+          this.visitasService.getByGuard(guardia[i].item_id, '1').then(
+            success => {
+              this.visitas = success;
+              result = result.concat(this.visitas.data);
+              this.data = result;
+              for(var i=0; i<this.data.length; i++){
+                  this.data[i].id = Number(this.data[i].id);
+                }
+                }, error => {
+                    if (error.status === 422) {
+                        // on some data incorrect
+                    } else {
+                        // on general error
+                    }
+                }
+          );
+        }
       }
     }
   }
 
-  getByVisitante(id){
-
+  getByVisitante(){
+    var visitante = this.selectedVisitantes;
     if(this.dateSelect == ''){
-      if(id == 0){
+      if(visitante.length == 0){
         this.getActives();
       }else{
-        this.visitasService.getByVisitante(id, '1').then(
-          success => {
-            this.visitas = success;
-            this.data = this.visitas.data;
-              }, error => {
-                  if (error.status === 422) {
-                      // on some data incorrect
-                  } else {
-                      // on general error
-                  }
-              }
-        );
+        var result = []
+        for(var i=0;i<visitante.length;i++){
+          this.visitasService.getByVisitante(visitante[i].item_id, '1').then(
+            success => {
+              this.visitas = success;
+              result = result.concat(this.visitas.data);
+              this.data = result;
+              for(var i=0; i<this.data.length; i++){
+                  this.data[i].id = Number(this.data[i].id);
+                }
+                }, error => {
+                    if (error.status === 422) {
+                        // on some data incorrect
+                    } else {
+                        // on general error
+                    }
+                }
+          );
+        }
       }
     }
   }
 
-  getByFuncionario(id){
-
+  getByFuncionario(){
+    var funcionario = this.selectedFuncionarios;
     if(this.dateSelect == ''){
-      if(id == 0){
+      if(funcionario.length == 0){
         this.getActives();
       }else{
-        this.visitasService.getByFuncionario(id, '1').then(
-          success => {
-            this.visitas = success;
-            this.data = this.visitas.data;
-              }, error => {
-                  if (error.status === 422) {
-                      // on some data incorrect
-                  } else {
-                      // on general error
-                  }
-              }
+        var result = [];
+        for(var i=0;i<funcionario.length;i++){
+          this.visitasService.getByFuncionario(funcionario[i].item_id, '1').then(
+            success => {
+              this.visitas = success;
+              result = result.concat(this.visitas.data);
+              this.data = result;
+              for(var i=0; i<this.data.length; i++){
+                  this.data[i].id = Number(this.data[i].id);
+                }
+                }, error => {
+                    if (error.status === 422) {
+                        // on some data incorrect
+                    } else {
+                        // on general error
+                    }
+                }
         );
+        }
       }
     }
   }
@@ -339,25 +387,25 @@ export class VisitasactivasComponent {
       this.guardiaSelect = 0;
       this.visitanteSelect = 0;
       this.funcionarioSelect = 0;
-      this.getByVehiculo(this.vehiculoSelect);
+      this.getByVehiculo();
     }else if(id == 1){
       this.filtro = 2;
       this.vehiculoSelect = 0;
       this.visitanteSelect = 0;
       this.funcionarioSelect = 0;
-      this.getByGuardia(this.guardiaSelect);
+      this.getByGuardia();
     }else if(id == 2){
       this.filtro = 3;
       this.vehiculoSelect = 0;
       this.guardiaSelect = 0;
       this.funcionarioSelect = 0;
-      this.getByVisitante(this.visitanteSelect);
+      this.getByVisitante();
     }else if(id == 3){
       this.filtro = 4;
       this.vehiculoSelect = 0;
       this.guardiaSelect = 0;
       this.funcionarioSelect = 0;
-      this.getByFuncionario(this.funcionarioSelect);
+      this.getByFuncionario();
     }
   }
 
@@ -366,6 +414,11 @@ export class VisitasactivasComponent {
     success => {
       this.guardias = success;
       this.guard = this.guardias.data;
+      const datag = [];
+        this.guard.forEach(guard => {
+          datag.push({ item_id: guard.id, item_text: guard.name+' '+guard.lastname });
+        });
+        this.dropdownList2 = datag;
         }, error => {
             if (error.status === 422) {
                 // on some data incorrect
@@ -381,6 +434,11 @@ export class VisitasactivasComponent {
     success => {
       this.vehiculos = success;
       this.vehi = this.vehiculos.data;
+      const datag = [];
+        this.vehi.forEach(vehi => {
+          datag.push({ item_id: vehi.id, item_text: vehi.plate});
+        });
+        this.dropdownList1 = datag;
         }, error => {
             if (error.status === 422) {
                 // on some data incorrect
@@ -396,6 +454,11 @@ export class VisitasactivasComponent {
     success => {
       this.visitantes = success;
       this.visit = this.visitantes.data;
+      const datag = [];
+        this.visit.forEach(visit => {
+          datag.push({ item_id: visit.id, item_text: visit.name+' '+visit.lastname });
+        });
+        this.dropdownList3 = datag;
         }, error => {
             if (error.status === 422) {
                 // on some data incorrect
@@ -411,6 +474,11 @@ export class VisitasactivasComponent {
     success => {
       this.funcionarios = success;
       this.funcio = this.funcionarios.data;
+      const datag = [];
+        this.funcio.forEach(funcio => {
+          datag.push({ item_id: funcio.id, item_text: funcio.name+' '+funcio.lastname });
+        });
+        this.dropdownList4 = datag;
         }, error => {
             if (error.status === 422) {
                 // on some data incorrect
@@ -420,6 +488,103 @@ export class VisitasactivasComponent {
         }
     );
   }
+
+  //configuración de los selects
+  onItemSelect1 (item:any) {
+    this.getByVehiculo();
+  }
+
+  onItemDeSelect1(item:any){
+    this.getByVehiculo();
+  }
+
+  setupDropdown1() {
+      this.dropdownList1 = [];
+      this.selectedVehiculos = [];
+      this.dropdownSettings1 = {
+        singleSelection: false,
+        idField: 'item_id',
+        textField: 'item_text',
+        selectAllText: 'Seleccionar todo',
+        unSelectAllText: 'Deseleccionar todo',
+        searchPlaceholderText: 'Buscar Vehículo',
+        itemsShowLimit: 3,
+        allowSearchFilter: true,
+        enableCheckAll: false,
+      };
+    }
+    //configuración de los selects
+    onItemSelect2 (item:any) {
+      this.getByGuardia();
+    }
+
+    onItemDeSelect2 (item:any){
+      this.getByGuardia();
+    }
+
+    setupDropdown2() {
+        this.dropdownList2 = [];
+        this.selectedGuardias = [];
+        this.dropdownSettings2 = {
+          singleSelection: false,
+          idField: 'item_id',
+          textField: 'item_text',
+          selectAllText: 'Seleccionar todo',
+          unSelectAllText: 'Deseleccionar todo',
+          searchPlaceholderText: 'Buscar Guardia',
+          itemsShowLimit: 1,
+          allowSearchFilter: true,
+          enableCheckAll: false,
+        };
+      }
+    //configuración de los selects
+    onItemSelect3 (item:any) {
+      this.getByVisitante();
+    }
+
+    onItemDeSelect3 (item:any){
+      this.getByVisitante();
+    }
+
+    setupDropdown3() {
+        this.dropdownList3 = [];
+        this.selectedVisitantes = [];
+        this.dropdownSettings3 = {
+          singleSelection: false,
+          idField: 'item_id',
+          textField: 'item_text',
+          selectAllText: 'Seleccionar todo',
+          unSelectAllText: 'Deseleccionar todo',
+          searchPlaceholderText: 'Buscar Visitante',
+          itemsShowLimit: 1,
+          allowSearchFilter: true,
+          enableCheckAll: false,
+        };
+      }
+    //configuración de los selects
+    onItemSelect4 (item:any) {
+      this.getByFuncionario();
+    }
+
+    onItemDeSelect4 (item:any){
+      this.getByFuncionario();
+    }
+
+    setupDropdown4() {
+        this.dropdownList4 = [];
+        this.selectedFuncionarios = [];
+        this.dropdownSettings4 = {
+          singleSelection: false,
+          idField: 'item_id',
+          textField: 'item_text',
+          selectAllText: 'Seleccionar todo',
+          unSelectAllText: 'Deseleccionar todo',
+          searchPlaceholderText: 'Buscar Funcionario',
+          itemsShowLimit: 1,
+          allowSearchFilter: true,
+          enableCheckAll: false,
+        };
+      }
 
   pdfDownload() {
         var doc = new jsPDF();
