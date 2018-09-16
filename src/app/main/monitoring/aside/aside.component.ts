@@ -159,8 +159,9 @@ export class AsideComponent implements OnInit, OnChanges {
     }
 
     searchHistory() {
-        this.utilVehicle.processVehicle(this.selectedItem);
+        this.records = [];
         if (this.selectedItem !== undefined && this.selectedItem !== null) {
+            this.utilVehicle.processVehicle(this.selectedItem);
             this.vehistorialService.getHistoryImei(this.selectedItem.imei).then((histories: Record[]) => {
                 const arrToShow = [];
                 let date = new Date();
