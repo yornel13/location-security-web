@@ -10,7 +10,6 @@ import { Vehicle } from '../../../../model/vehicle/vehicle';
 import { PopupVehicleComponent } from './popup.vehicle.component';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
-import {Watch} from '../../../../model/watch/watch';
 import {PopupWatchComponent} from './popup.watch.component';
 import {MainService} from '../../main.service';
 import {GlobalOsm} from '../../../global.osm';
@@ -19,6 +18,7 @@ import {PopupAlertComponent} from './popup.alert.component';
 import {GrupoService} from '../../../../model/grupos/grupo.service';
 import {Grupos} from '../../../../model/grupos/grupos';
 import {Cerco} from '../../../../model/cerco/cerco';
+import {Tablet} from '../../../../model/tablet/tablet';
 
 @Component({
     selector : 'app-map-osm',
@@ -29,7 +29,7 @@ export class MapOsmComponent implements OnChanges, OnInit {
     @Input()
     vehicles: Vehicle[] = [];
     @Input()
-    watches: Watch[] = [];
+    tablets: Tablet[] = [];
     @Input()
     lat = -2.071522;
     @Input()
@@ -284,7 +284,7 @@ export class MapOsmComponent implements OnChanges, OnInit {
                 data.push(m);
               }
             }
-            if (showMarker.watches) {
+            if (showMarker.tablets) {
                 if (mData.group_name === 'Tablet Guardia') {
                     const imageIcon = {
                         icon: L.icon({

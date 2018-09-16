@@ -17,7 +17,7 @@
             <div class="dropdown-menu menu-item" style="z-index: 5000">
                 <div class=" menu-items" (click)="selectMarkersOpts('showVehicles')" >Vehiculos<img *ngIf="vehiclesCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>
                 <div class=" menu-items" (click)="selectMarkersOpts('showBombas')">Bombas<img *ngIf="bombasCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>
-                <div class=" menu-items" (click)="selectMarkersOpts('showTablets')">Tablets   <img *ngIf="watchesCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>
+                <div class=" menu-items" (click)="selectMarkersOpts('showTablets')">Tablets   <img *ngIf="tabletsCheck" class="checked-icon" src="{{CHECK_ICON_URL}}" alt=""></div>
             </div>
         </li>
     </ul>
@@ -38,13 +38,12 @@
         <div id="histories" class="tab-pane active">
             <ng-select [items]="vehicles"
                        bindLabel="alias"
-                       bindValue="imei"
                        [(ngModel)]="selectedItem"
                        placeholder="Seleccione un dispositivo..."
-                       style="margin: 8px"
+                       style="margin: 5px;"
                        (ngModelChange)="searchHistory()">
             </ng-select>
-            <div class="cards-container" style="padding-top: 10px">
+            <div class="cards-container" style="padding-top: 2px">
                 <div *ngFor="let record of records">
                     <app-card-record [record]="record"></app-card-record>
                 </div>
@@ -59,7 +58,7 @@
               <!--Cards-->
               <div *ngFor="let data of markersData | filter: search">
                 <div  *ngIf="data.group_name === 'Tablet Guardia'">
-                  <app-card-tablet *ngIf="watchesCheck" [tablet]="data"></app-card-tablet>
+                  <app-card-tablet *ngIf="tabletsCheck" [tablet]="data"></app-card-tablet>
                 </div>
                 <div *ngIf="data.group_name === 'BOMBAS DE DRENAJE'">
                   <app-card-vehicle *ngIf="bombasCheck" [vehicle]="data"></app-card-vehicle>

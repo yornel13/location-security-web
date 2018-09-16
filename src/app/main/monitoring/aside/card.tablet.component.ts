@@ -7,7 +7,7 @@ import {MainService} from '../../main.service';
     templateUrl: './card.tablet.component.html',
     styleUrls: ['./card.tablet.css']
 })
-export class CardTabletComponent implements OnInit{
+export class CardTabletComponent implements OnInit {
     @Input()
     tablet: Tablet;
     @Output() latlng = {lat: null , lng: null};

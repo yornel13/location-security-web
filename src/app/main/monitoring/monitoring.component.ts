@@ -1,24 +1,23 @@
 ///<reference path="../../../model/admin/admin.service.ts"/>
-import {Component, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Vehicle} from '../../../model/vehicle/vehicle';
 import {VehiclesService} from '../../../model/vehicle/vehicle.service';
 import {UtilsVehicles} from '../../../model/vehicle/vehicle.utils';
 import {HttpErrorResponse} from '@angular/common/http';
-import {Watch} from '../../../model/watch/watch';
 import {TabletService} from '../../../model/tablet/tablet.service';
 import {Tablet} from '../../../model/tablet/tablet';
 import {TabletUtils} from '../../../model/tablet/tablet.utils';
-import {isArray} from "util";
+import {isArray} from 'util';
 
 @Component({
   selector: 'app-monitoring',
   template: `
       <main class="monitoring-container">
           <app-aside (markerFocused)="markersFocused($event, $event)" (markerChanged)="setMarkerChanged($event)"
-                     [vehicles]="vehicles" [watches]="watches" [markersData]="markersData" class="app-aside" ></app-aside>
+                     [vehicles]="vehicles" [tablets]="tablets" [markersData]="markersData" class="app-aside" ></app-aside>
           <div class="maps-container">
               <app-map-osm [markerChanged]="markerChanged" [showMarker]="showMarker" [markersData]="markersData"
-                           [vehicles]="vehicles"  [watches]="watches" [lat]="lat" [lng]="lng"
+                           [vehicles]="vehicles"  [tablets]="tablets" [lat]="lat" [lng]="lng"
                            [zoom]="zoom"></app-map-osm>
           </div>
       </main>    `,
@@ -30,11 +29,10 @@ export class MonitoringComponent implements OnInit {
     zoom = 8;
     vehicles: Vehicle[] = [];
     tablets: Tablet[] = [];
-    watches: Watch[] = [];
     markersData: any[] = [];
     error: string;
     @Input() markerChanged: boolean;
-    @Input() showMarker = {alerts: true, vehicles: true , watches: true , bombas: true, noGroup: true, message: ''};
+    @Input() showMarker = {alerts: true, vehicles: true , tablets: true , bombas: true, noGroup: true, message: ''};
     @Input() latlng = {lat: null , lng: null};
 
     @ViewChild('deleteSwal') private deleteSwal;

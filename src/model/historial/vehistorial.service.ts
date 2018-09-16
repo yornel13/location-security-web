@@ -32,7 +32,7 @@ export class VehistorialService {
             .then((response) => response);
     }
 
-    getHistoryImei(imei: number) {
+    getHistoryImei(imei: string) {
         return this.http.get(this.VEHISTORY_URL + '/history/' + imei).toPromise()
             .then((response) => response);
     }

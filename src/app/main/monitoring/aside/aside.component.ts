@@ -1,6 +1,5 @@
-import {Component, Input, OnChanges, OnInit, Output, SimpleChanges, EventEmitter, Injectable} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, Output, SimpleChanges, EventEmitter} from '@angular/core';
 import {Vehicle} from '../../../../model/vehicle/vehicle';
-import {Watch} from '../../../../model/watch/watch';
 import {MainService} from '../../main.service';
 import {AlertaService} from '../../../../model/alerta/alerta.service';
 import {Alerta} from '../../../../model/alerta/alerta';
@@ -9,9 +8,9 @@ import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firesto
 import {Router} from '@angular/router';
 import {GlobalOsm} from '../../../global.osm';
 import {VehistorialService} from '../../../../model/historial/vehistorial.service';
-import * as L from "leaflet";
-import {Record} from "../../../../model/historial/record";
-import {UtilsVehicles} from "../../../../model/vehicle/vehicle.utils";
+import {Record} from '../../../../model/historial/record';
+import {UtilsVehicles} from '../../../../model/vehicle/vehicle.utils';
+import {Tablet} from '../../../../model/tablet/tablet';
 
 @Component({
   selector: 'app-aside',
@@ -26,13 +25,13 @@ export class AsideComponent implements OnInit, OnChanges {
     records: any[] = [];
 
     @Input() vehicles: Vehicle[] = [];
-    @Input() watches: Watch[] = [];
+    @Input() tablets: Tablet[] = [];
     @Input() markersData: any[] = [];
-    @Output() showMarker = {alerts: true, vehicles: true , watches: true , bombas: true, noGroups: true, message: ''};
+    @Output() showMarker = {alerts: true, vehicles: true , tablets: true , bombas: true, noGroups: true, message: ''};
     @Output() markerChanged = new EventEmitter();
     @Output() markerFocused = new EventEmitter();
     @Output() vehiclesCheck = true;
-    @Output() watchesCheck = true;
+    @Output() tabletsCheck = true;
     @Output() bombasCheck = true;
     @Output() noGroupCheck = true;
     @Output() isShow = false;
@@ -41,7 +40,7 @@ export class AsideComponent implements OnInit, OnChanges {
     search: any;
     CHECK_ICON_URL = './assets/aside-menu/checked.png';
     alertCollection: AngularFirestoreCollection<Alerta>;
-    selectedItem;
+    selectedItem: Vehicle;
 
     constructor(
             private mainService: MainService,
@@ -134,12 +133,12 @@ export class AsideComponent implements OnInit, OnChanges {
           this.markerChanged.emit(this.showMarker);
         }
         if (message.match('showTablets')) {
-          this.watchesCheck = !this.watchesCheck;
-          this.showMarker.watches = this.watchesCheck;
+          this.tabletsCheck = !this.tabletsCheck;
+          this.showMarker.tablets = this.tabletsCheck;
           this.showMarker.message = message;
           this.markerChanged.emit(this.showMarker);
         }
-        if (!this.vehiclesCheck && !this.bombasCheck && !this.watchesCheck) {
+        if (!this.vehiclesCheck && !this.bombasCheck && !this.tabletsCheck) {
           this.noCards = true;
           this.showCardContainer = false;
         } else {
@@ -160,27 +159,32 @@ export class AsideComponent implements OnInit, OnChanges {
     }
 
     searchHistory() {
+        this.utilVehicle.processVehicle(this.selectedItem);
         if (this.selectedItem !== undefined && this.selectedItem !== null) {
-            this.vehistorialService.getHistoryImei(this.selectedItem).then((histories: any[]) => {
+            this.vehistorialService.getHistoryImei(this.selectedItem.imei).then((histories: Record[]) => {
                 const arrToShow = [];
                 let date = new Date();
                 date = new Date(date.getTime() - 3600000); // para igualar con la hora de ecuador
                 const dateLong = date.getTime();
+                let count = 1;
                 histories.forEach((history: Record) => {
+                    history.iconUrl = this.selectedItem.iconUrl;
                     const dateC = new Date(history.date + ' ' + history.time);
                     const dateCLong = dateC.getTime();
                     const  rest = dateLong - dateCLong;
                     if (!(rest > 1800 * 1000)) {
+                        // const icon = this.utilVehicle.getHistoryIcon(history);
+                        // if (icon !== null) { history.iconUrl = icon; }
+                        // history.index = count++;
                         // arrToShow.push(history);
-                        // history.iconUrl = this.utilVehicle.getHistoryIcon(history);
                     }
+                    const icon = this.utilVehicle.getHistoryIcon(history); // remove
+                    if (icon !== null) { history.iconUrl = icon; } // remove
+                    history.index = count++; // remove
                     arrToShow.push(history); // remove
-                    history.iconUrl = this.utilVehicle.getHistoryIcon(history); // remove
                 });
-                console.log(arrToShow.length);
                 this.records = arrToShow;
             });
-            console.log(this.selectedItem);
         }
     }
 }

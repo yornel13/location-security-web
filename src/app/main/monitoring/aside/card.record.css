@@ -2,10 +2,10 @@
     background-color: whitesmoke;
     height: auto;
     max-width: 320px;
-    border-radius: 3px;
+    border-radius: 2px;
     margin-left: 5px;
     margin-right: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 7px;
     padding: 4px 8px 2px 8px;
     overflow: hidden;
     cursor: pointer;
@@ -30,36 +30,29 @@
     line-height: .9rem;
 }
 
-.date{
-     color: #4A4048;
-     font-size: .8em;
+.date-time{
+    color: #4A4048;
+    font-size: .8em;
+    font-weight: bold;
  }
 
 .container-alert {
+    padding: 0 2px 2px;
     display: flex;
-    justify-content: space-between;
-    align-items: self-start;
+    justify-content: left;
+    align-items: center;
 }
 
-.alert {
+.alert-message {
     font-size: .8rem;
     line-height: .9rem;
+    margin-left: 8px;
 }
 
-.image {
+.image-alert {
     height: auto;
-    min-width: 32px;
-    width: 32px;
-    padding: 2px;
-}
-
-
-
-.btn-success {
-    float: right;
-}
-
-.alert-text{
-    font-size: .9em;
-    line-height: 1.2;
+    margin-top: 4px;
+    min-width: 28px;
+    width: 28px;
+    padding: 1px;
 }

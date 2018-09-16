@@ -9,31 +9,27 @@ export class UtilsVehicles {
         return vehicles;
     }
 
-  processVehicle(vehicle: Vehicle): Vehicle {
-    switch (vehicle.model_name) {
-      case 'Queclink GV300W_Ins': {
-        if (vehicle.alias.search('MOVIL')) {
-          vehicle.iconUrl = './assets/maps/water.png';
-        } else {
-          vehicle.iconUrl = './assets/maps/truck.png';
+    processVehicle(vehicle: Vehicle): Vehicle {
+        switch (vehicle.model_name) {
+            case 'Queclink GV300W_Ins':
+                if (vehicle.alias.search('MOVIL')) {
+                    vehicle.iconUrl = './assets/maps/water.png';
+                } else {
+                    vehicle.iconUrl = './assets/maps/truck.png';
+                }
+                break;
+            case 'Queclink GMT100N':
+                vehicle.iconUrl = './assets/maps/motorcycle.png';
+                break;
+            case 'GL300N':
+                vehicle.iconUrl = './assets/maps/cellphone.png';
+                break;
+            case 'GMT100':
+                vehicle.iconUrl = './assets/maps/motor-del.png';
+                break;
         }
-      }
-        break;
-      case 'Queclink GMT100N': {
-        vehicle.iconUrl = './assets/maps/motorcycle.png';
-      }
-        break;
-      case 'GL300N': {
-        vehicle.iconUrl = './assets/maps/cellphone.png';
-      }
-        break;
-      case 'GMT100': {
-        vehicle.iconUrl = './assets/maps/motor-del.png';
-      }
-        break;
+        return vehicle;
     }
-    return vehicle;
-  }
 
   getHistoryIcon(history: any): string {
     if (!history.is_exception) {
@@ -50,7 +46,11 @@ export class UtilsVehicles {
     } else if (history.alert_message.includes('velocidad')) {
       return './assets/alerts/speed.png';
     } else if (history.alert_message.includes('SOS')) {
-      return './assets/alerts/sos.png';
+        return './assets/alerts/sos.png';
+    } else if (history.alert_message.includes('detuvo')) {
+        return './assets/alerts/stop.png';
+    } else if (history.alert_message.includes('carga')) {
+        return './assets/alerts/charge.png';
     } else {
       return null;
     }
