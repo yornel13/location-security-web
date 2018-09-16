@@ -67,6 +67,11 @@ export class AlertasComponent implements OnInit {
   month2:any;
   day2:any;
 
+  //dropdow
+  dropdownList = [];
+  selectedItems = [];
+  dropdownSettings = {};
+
   zoom;
   center = L.latLng(([ this.lat, this.lng ]));
   marker = L.marker([this.lat, this.lng], {draggable: false});
@@ -90,6 +95,7 @@ export class AlertasComponent implements OnInit {
     this.baseLayers = this.globalOSM.baseLayers;
     this.options = this.globalOSM.defaultOptions;
   	this.getGuardias();
+    this.setupDropdown();
     this.getToday();
   	this.doughnutChartData = [3, 3, 0];
   	this.regresar();
@@ -332,6 +338,11 @@ export class AlertasComponent implements OnInit {
 	    success => {
 	      this.guardias = success;
 	      this.guard = this.guardias.data;
+        const datag = [];
+        this.guard.forEach(guard => {
+          datag.push({ item_id: guard.id, item_text: guard.name+' '+guard.lastname });
+        });
+        this.dropdownList = datag;
 	        }, error => {
 	            if (error.status === 422) {
 	                // on some data incorrect
@@ -341,6 +352,33 @@ export class AlertasComponent implements OnInit {
 	        }
 	    );
 	}
+
+  onItemSelect (item:any) {
+    console.log(item);
+    console.log(this.selectedItems);
+  }
+
+  onItemDeSelect(item:any){
+    console.log(item);
+    console.log(this.selectedItems);
+  }
+
+  setupDropdown() {
+      this.dropdownList = [];
+      this.selectedItems = [];
+      this.dropdownSettings = {
+        singleSelection: false,
+        idField: 'item_id',
+        textField: 'item_text',
+        selectAllText: 'Seleccionar todo',
+        unSelectAllText: 'Deseleccionar todo',
+        searchPlaceholderText: 'Buscar Guardia',
+        itemsShowLimit: 1,
+        allowSearchFilter: true,
+        enableCheckAll: false,
+      };
+    }
+
 
 	solveAlert(id) {
 		this.alertaService.solveAlert(id).then(

@@ -74,6 +74,7 @@ import {PopupTablethComponent} from './historial/tabhistorial/popup.tableth.comp
 import {PopupReportComponent} from './bitacora/filtreport/popup.report.component';
 import {PopupVisitComponent} from './visitas/visitas/popup.visit.component';
 import {PopupWatchtComponent} from './watches/wtodas/popup.watcht.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 export const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
@@ -136,6 +137,7 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         LeafletMarkerClusterModule.forRoot(),
         IgxSnackbarModule,
         NgxPaginationModule,
+        NgMultiSelectDropDownModule
     ],
     providers: [
         GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService, ExcelService, PuestoService,
