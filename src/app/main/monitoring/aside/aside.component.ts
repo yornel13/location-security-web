@@ -146,25 +146,18 @@ export class AsideComponent implements OnInit, OnChanges {
     }
 
     solveAlert(alert: Alerta) {
-        this.alertService.solveAlert(alert.id).then(
-            success => {
-                this.alertCollection.doc(String(alert.id)).update({'status': 0});
-                if (alert.cause === this.mapService.INCIDENCE) {
-                    const report = JSON.parse(alert.extra);
-                    this.router.navigate(['/u/control/bitacora/reportfilter/' + report.id]).then();
-                } else if (alert.cause === this.mapService.DROP) {
-                    this.router.navigate(['/u/control/alertas/' + alert.id]).then();
-                } else if (alert.cause === this.mapService.SOS1) {
-                    this.router.navigate(['/u/control/alertas/' + alert.id]).then();
-                }
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
+        this.alertCollection.doc(String(alert.id)).update({'status': 0}).then();
+    }
+
+    showAlert(alert: Alerta) {
+        if (alert.cause === this.mapService.INCIDENCE) {
+            const report = JSON.parse(alert.extra);
+            this.router.navigate(['/u/control/bitacora/reportfilter/' + report.id]).then();
+        } else if (alert.cause === this.mapService.DROP) {
+            this.router.navigate(['/u/control/alertas/' + alert.id]).then();
+        } else if (alert.cause === this.mapService.SOS1) {
+            this.router.navigate(['/u/control/alertas/' + alert.id]).then();
+        }
     }
 
     selectTab(tab) {
@@ -251,7 +244,8 @@ export class AsideComponent implements OnInit, OnChanges {
                 } else {
                     this.tabhistoryService.getHistoryImeiDate(this.selectedItem.imei, year1, month1, day1, year1, month1, day1)
                         .then((value: any) => {
-                            const histories: [] = value.data.reverse();
+                            const histories = value.data;
+                            histories.reverse();
                             this.setupRecordTablet(histories);
                         });
                 }
@@ -264,7 +258,8 @@ export class AsideComponent implements OnInit, OnChanges {
                 } else {
                     this.tabhistoryService.getHistoryImei(this.selectedItem.imei)
                         .then((value: any) => {
-                            const histories: [] = value.data.reverse();
+                            const histories = value.data;
+                            histories.reverse();
                             this.setupRecordTablet(histories);
                         });
                 }

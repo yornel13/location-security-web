@@ -1,14 +1,45 @@
-<div class="tablet-card" (click)="focusMarker(alert.latitude, alert.longitude)">
-    <div *ngIf="alert.guard_id">
-        <p class="alert-import ps" *ngIf="alert.status == 1">Importante!</p>
+<!--<div class="tablet-card" (click)="focusMarker(alert.latitude, alert.longitude)">-->
+    <!--<div *ngIf="alert.guard_id">-->
+        <!--<p class="alert-import ps" *ngIf="alert.status == 1">Importante!</p>-->
+        <!--<p class="alert-title ps" *ngIf="alert.cause != 'GENERAL'">{{title}}</p>-->
+        <!--<p class="alert-text ps">{{alert.message}}</p>-->
+        <!--<p class="alert-date ps">{{date | date : "medium"}}</p>-->
+        <!--<button class="btn btn-success" *ngIf="alert.status == 1" (click)="callParent(alert);$event.stopPropagation()"><span class="fas fa-check"></span></button>-->
+    <!--</div>-->
+    <!--<div *ngIf="alert.imei">-->
+        <!--<p class="alert-text ps">{{alert.message}}</p>-->
+        <!--<p class="alert-imei ps">imei: {{alert.imei}}</p>-->
+        <!--<p class="alert-date ps">{{date | date : "medium"}}</p>-->
+    <!--</div>-->
+<!--</div>-->
+
+<div class="card" (click)="focusMarker(alert.latitude, alert.longitude)">
+    <div class="card-header" *ngIf="alert.status == 1">
         <p class="alert-title ps" *ngIf="alert.cause != 'GENERAL'">{{title}}</p>
-        <p class="alert-text ps">{{alert.message}}</p>
-        <p class="alert-date ps">{{date | date : "medium"}}</p>
-        <button class="btn btn-success" *ngIf="alert.status == 1" (click)="callParent(alert);$event.stopPropagation()"><span class="fas fa-check"></span></button>
+        <div style="display: flex">
+            <button class="btn btn-warning" (click)="showAlert.emit(alert); $event.stopPropagation()" title="Ver alerta"><span class="fas fa-eye"></span></button>
+            <button class="btn btn-success" (click)="solveAlert.emit(alert); $event.stopPropagation()" title="Aceptar alerta"><span class="fas fa-check"></span></button>
+        </div>
     </div>
-    <div *ngIf="alert.imei">
-        <p class="alert-text ps">{{alert.message}}</p>
-        <p class="alert-imei ps">imei: {{alert.imei}}</p>
-        <p class="alert-date ps">{{date | date : "medium"}}</p>
+    <div class="card-body">
+        <div>
+            <div class="container-alert">
+                <i *ngIf="alert.guard_id" style="margin-right: 10px" class="fas fa-tablet-alt"></i>
+                <i *ngIf="!alert.guard_id" style="margin-right: 10px" class="fas fa-truck"></i>
+                <p class="alert-text ps">{{alert.message}}</p>
+            </div>
+            <p class="alert-imei ps" *ngIf="alert.imei">IMEI {{alert.imei}}</p>
+            <div style="display: flex; justify-content: space-between">
+                <p class="alert-date ps">{{date | date : "medium"}}</p>
+                <button *ngIf="(alert.cause === 'INCIDENCE' || alert.cause === 'SOS1' || alert.cause === 'DROP') && alert.status == 0"
+                        class="btn btn-warning" style="border: 0;
+                        background: transparent;
+                        float: right"
+                        (click)="showAlert.emit(alert);
+                        $event.stopPropagation()" title="Ver Reporte">
+                    <span class="fas fa-eye"></span>
+                </button>
+            </div>
+        </div>
     </div>
 </div>

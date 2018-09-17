@@ -27,247 +27,249 @@
         <div id="alerts" class="tab-pane active">
             <div class="cards-container" style="padding-top: 10px">
               <div *ngFor="let alert of alerts1">
-                <app-card-alert (solveAlert)="solveAlert($event)" [alert]="alert"></app-card-alert>
+                <app-card-alert (solveAlert)="solveAlert($event)" (showAlert)="showAlert($event)" [alert]="alert"></app-card-alert>
               </div>
               <div *ngFor="let alert of alerts0">
-                <app-card-alert (solveAlert)="solveAlert($event)"  [alert]="alert"></app-card-alert>
+                <app-card-alert (solveAlert)="solveAlert($event)" (showAlert)="showAlert($event)" [alert]="alert"></app-card-alert>
               </div>
             </div>
         </div>
 
         <div id="records" class="tab-pane">
-            <ng-select [items]="devices"
-                       bindLabel="alias"
-                       [(ngModel)]="selectedItem"
-                       placeholder="Seleccione un dispositivo..."
-                       class="selector-filter"
-                       (ngModelChange)="selectDevice()">
-            </ng-select>
-            <ul class="nav nav-tabs" id="timeTab" role="tablist" style="height: 32px">
-                <li class="nav-item" (click)="minutes = 30">
-                    <a class="nav-link active" data-toggle="tab" role="tab" style="height: 32px; border-radius: 0; padding-top: 0; padding-left: 4px; padding-right: 4px" (click)="showDates = false">
-                        <p style="margin: 1px;">30m</p>
+            <div class="container-records">
+                <ng-select [items]="devices"
+                           bindLabel="alias"
+                           [(ngModel)]="selectedItem"
+                           placeholder="Seleccione un dispositivo..."
+                           class="selector-filter"
+                           (ngModelChange)="selectDevice()">
+                </ng-select>
+                <ul class="nav nav-tabs" id="timeTab" role="tablist" style="min-height: 32px; height: 32px;">
+                    <li class="nav-item" (click)="minutes = 30">
+                        <a class="nav-link active" data-toggle="tab" role="tab" style="height: 32px; border-radius: 0; padding-top: 0; padding-left: 4px; padding-right: 4px" (click)="showDates = false">
+                            <p style="margin: 1px;">30m</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" (click)="minutes = 180">
+                        <a class="nav-link" data-toggle="tab" role="tab" style="height: 32px; border-radius: 0; padding-top: 0; padding-left: 4px; padding-right: 4px" (click)="showDates = false">
+                            <p style="margin: 1px;">3h</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" (click)="minutes = 320">
+                        <a class="nav-link" data-toggle="tab" role="tab" style="height: 32px; border-radius: 0; padding-top: 0; padding-left: 4px; padding-right: 4px" (click)="showDates = false">
+                            <p style="margin: 1px;">6h</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" (click)="minutes = 720">
+                        <a class="nav-link" data-toggle="tab" role="tab" style="height: 32px; border-radius: 0; padding-top: 0; padding-left: 4px; padding-right: 4px" (click)="showDates = false">
+                            <p style="margin: 1px;">12h</p></a>
+                    </li>
+                    <li class="nav-item" (click)="minutes = 1440">
+                        <a class="nav-link" data-toggle="tab" role="tab" style="height: 32px; border-radius: 0; padding-top: 0; padding-left: 4px; padding-right: 4px" (click)="showDates = false">
+                            <p style="margin: 1px;">24h</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" (click)="minutes = 0">
+                        <a class="nav-link" data-toggle="tab" role="tab" style="height: 32px; border-radius: 0; padding-top: 0; padding-left: 4px; padding-right: 4px" (click)="showDates = true">
+                            <p style="margin: 1px;">Más</p>
+                        </a>
+                    </li>
+                    <a class="btn btn-secondary btn-search" role="button" title="Buscar.." (click)="searchHistory()">
+                        <i class="fa fa-search"></i>
                     </a>
-                </li>
-                <li class="nav-item" (click)="minutes = 180">
-                    <a class="nav-link" data-toggle="tab" role="tab" style="height: 32px; border-radius: 0; padding-top: 0; padding-left: 4px; padding-right: 4px" (click)="showDates = false">
-                        <p style="margin: 1px;">3h</p>
-                    </a>
-                </li>
-                <li class="nav-item" (click)="minutes = 320">
-                    <a class="nav-link" data-toggle="tab" role="tab" style="height: 32px; border-radius: 0; padding-top: 0; padding-left: 4px; padding-right: 4px" (click)="showDates = false">
-                        <p style="margin: 1px;">6h</p>
-                    </a>
-                </li>
-                <li class="nav-item" (click)="minutes = 720">
-                    <a class="nav-link" data-toggle="tab" role="tab" style="height: 32px; border-radius: 0; padding-top: 0; padding-left: 4px; padding-right: 4px" (click)="showDates = false">
-                        <p style="margin: 1px;">12h</p></a>
-                </li>
-                <li class="nav-item" (click)="minutes = 1440">
-                    <a class="nav-link" data-toggle="tab" role="tab" style="height: 32px; border-radius: 0; padding-top: 0; padding-left: 4px; padding-right: 4px" (click)="showDates = false">
-                        <p style="margin: 1px;">24h</p>
-                    </a>
-                </li>
-                <li class="nav-item" (click)="minutes = 0">
-                    <a class="nav-link" data-toggle="tab" role="tab" style="height: 32px; border-radius: 0; padding-top: 0; padding-left: 4px; padding-right: 4px" (click)="showDates = true">
-                        <p style="margin: 1px;">Más</p>
-                    </a>
-                </li>
-                <a class="btn btn-secondary btn-search" role="button" title="Buscar.." (click)="searchHistory()">
-                    <i class="fa fa-search"></i>
-                </a>
-            </ul>
-            <div class="dates" *ngIf="showDates">
-                <div class="date-d1">
-                    <input class="form-control mr-3 date-selector" type="date" name="date" [(ngModel)]="date" [ngModelOptions]="{standalone: true}">
+                </ul>
+                <div class="dates" *ngIf="showDates">
+                    <div class="date-d1">
+                        <input class="form-control mr-3 date-selector" type="date" name="date" [(ngModel)]="date" [ngModelOptions]="{standalone: true}">
+                    </div>
+                    <div class="date-d2">
+                        <p class="text-history">Entre: </p>
+                        <select class="selector-time" id="hour1" [(ngModel)]="hours1">
+                            <option value="00">00</option>
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                        </select>
+                        <select class="selector-time" id="minute1" [(ngModel)]="mints1">
+                            <option value="00">00</option>
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                            <option value="24">24</option>
+                            <option value="25">25</option>
+                            <option value="26">26</option>
+                            <option value="27">27</option>
+                            <option value="28">28</option>
+                            <option value="29">29</option>
+                            <option value="30">30</option>
+                            <option value="31">31</option>
+                            <option value="32">32</option>
+                            <option value="33">33</option>
+                            <option value="34">34</option>
+                            <option value="35">35</option>
+                            <option value="36">36</option>
+                            <option value="37">37</option>
+                            <option value="38">38</option>
+                            <option value="39">39</option>
+                            <option value="40">40</option>
+                            <option value="41">41</option>
+                            <option value="42">42</option>
+                            <option value="43">43</option>
+                            <option value="44">44</option>
+                            <option value="45">45</option>
+                            <option value="46">46</option>
+                            <option value="47">47</option>
+                            <option value="48">48</option>
+                            <option value="49">49</option>
+                            <option value="50">50</option>
+                            <option value="51">51</option>
+                            <option value="52">52</option>
+                            <option value="53">53</option>
+                            <option value="54">54</option>
+                            <option value="55">55</option>
+                            <option value="56">56</option>
+                            <option value="57">57</option>
+                            <option value="58">58</option>
+                            <option value="59">59</option>
+                        </select>
+                        <p class="text-history">Y: </p>
+                        <select class="selector-time" id="hour2" [(ngModel)]="hours2">
+                            <option value="00">00</option>
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23" selected>23</option>
+                        </select>
+                        <select class="selector-time" id="minute2" [(ngModel)]="mints2">
+                            <option value="00">00</option>
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                            <option value="24">24</option>
+                            <option value="25">25</option>
+                            <option value="26">26</option>
+                            <option value="27">27</option>
+                            <option value="28">28</option>
+                            <option value="29">29</option>
+                            <option value="30">30</option>
+                            <option value="31">31</option>
+                            <option value="32">32</option>
+                            <option value="33">33</option>
+                            <option value="34">34</option>
+                            <option value="35">35</option>
+                            <option value="36">36</option>
+                            <option value="37">37</option>
+                            <option value="38">38</option>
+                            <option value="39">39</option>
+                            <option value="40">40</option>
+                            <option value="41">41</option>
+                            <option value="42">42</option>
+                            <option value="43">43</option>
+                            <option value="44">44</option>
+                            <option value="45">45</option>
+                            <option value="46">46</option>
+                            <option value="47">47</option>
+                            <option value="48">48</option>
+                            <option value="49">49</option>
+                            <option value="50">50</option>
+                            <option value="51">51</option>
+                            <option value="52">52</option>
+                            <option value="53">53</option>
+                            <option value="54">54</option>
+                            <option value="55">55</option>
+                            <option value="56">56</option>
+                            <option value="57">57</option>
+                            <option value="58">58</option>
+                            <option value="59" selected>59</option>
+                        </select>
+                    </div>
+                    <div class="date-d2">
+                    </div>
                 </div>
-                <div class="date-d2">
-                    <p class="text-history">Entre: </p>
-                    <select class="selector-time" id="hour1" [(ngModel)]="hours1">
-                        <option value="00">00</option>
-                        <option value="01">01</option>
-                        <option value="02">02</option>
-                        <option value="03">03</option>
-                        <option value="04">04</option>
-                        <option value="05">05</option>
-                        <option value="06">06</option>
-                        <option value="07">07</option>
-                        <option value="08">08</option>
-                        <option value="09">09</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                        <option value="21">21</option>
-                        <option value="22">22</option>
-                        <option value="23">23</option>
-                    </select>
-                    <select class="selector-time" id="minute1" [(ngModel)]="mints1">
-                        <option value="00">00</option>
-                        <option value="01">01</option>
-                        <option value="02">02</option>
-                        <option value="03">03</option>
-                        <option value="04">04</option>
-                        <option value="05">05</option>
-                        <option value="06">06</option>
-                        <option value="07">07</option>
-                        <option value="08">08</option>
-                        <option value="09">09</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                        <option value="21">21</option>
-                        <option value="22">22</option>
-                        <option value="23">23</option>
-                        <option value="24">24</option>
-                        <option value="25">25</option>
-                        <option value="26">26</option>
-                        <option value="27">27</option>
-                        <option value="28">28</option>
-                        <option value="29">29</option>
-                        <option value="30">30</option>
-                        <option value="31">31</option>
-                        <option value="32">32</option>
-                        <option value="33">33</option>
-                        <option value="34">34</option>
-                        <option value="35">35</option>
-                        <option value="36">36</option>
-                        <option value="37">37</option>
-                        <option value="38">38</option>
-                        <option value="39">39</option>
-                        <option value="40">40</option>
-                        <option value="41">41</option>
-                        <option value="42">42</option>
-                        <option value="43">43</option>
-                        <option value="44">44</option>
-                        <option value="45">45</option>
-                        <option value="46">46</option>
-                        <option value="47">47</option>
-                        <option value="48">48</option>
-                        <option value="49">49</option>
-                        <option value="50">50</option>
-                        <option value="51">51</option>
-                        <option value="52">52</option>
-                        <option value="53">53</option>
-                        <option value="54">54</option>
-                        <option value="55">55</option>
-                        <option value="56">56</option>
-                        <option value="57">57</option>
-                        <option value="58">58</option>
-                        <option value="59">59</option>
-                    </select>
-                    <p class="text-history">Y: </p>
-                    <select class="selector-time" id="hour2" [(ngModel)]="hours2">
-                        <option value="00">00</option>
-                        <option value="01">01</option>
-                        <option value="02">02</option>
-                        <option value="03">03</option>
-                        <option value="04">04</option>
-                        <option value="05">05</option>
-                        <option value="06">06</option>
-                        <option value="07">07</option>
-                        <option value="08">08</option>
-                        <option value="09">09</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                        <option value="21">21</option>
-                        <option value="22">22</option>
-                        <option value="23" selected>23</option>
-                    </select>
-                    <select class="selector-time" id="minute2" [(ngModel)]="mints2">
-                        <option value="00">00</option>
-                        <option value="01">01</option>
-                        <option value="02">02</option>
-                        <option value="03">03</option>
-                        <option value="04">04</option>
-                        <option value="05">05</option>
-                        <option value="06">06</option>
-                        <option value="07">07</option>
-                        <option value="08">08</option>
-                        <option value="09">09</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                        <option value="21">21</option>
-                        <option value="22">22</option>
-                        <option value="23">23</option>
-                        <option value="24">24</option>
-                        <option value="25">25</option>
-                        <option value="26">26</option>
-                        <option value="27">27</option>
-                        <option value="28">28</option>
-                        <option value="29">29</option>
-                        <option value="30">30</option>
-                        <option value="31">31</option>
-                        <option value="32">32</option>
-                        <option value="33">33</option>
-                        <option value="34">34</option>
-                        <option value="35">35</option>
-                        <option value="36">36</option>
-                        <option value="37">37</option>
-                        <option value="38">38</option>
-                        <option value="39">39</option>
-                        <option value="40">40</option>
-                        <option value="41">41</option>
-                        <option value="42">42</option>
-                        <option value="43">43</option>
-                        <option value="44">44</option>
-                        <option value="45">45</option>
-                        <option value="46">46</option>
-                        <option value="47">47</option>
-                        <option value="48">48</option>
-                        <option value="49">49</option>
-                        <option value="50">50</option>
-                        <option value="51">51</option>
-                        <option value="52">52</option>
-                        <option value="53">53</option>
-                        <option value="54">54</option>
-                        <option value="55">55</option>
-                        <option value="56">56</option>
-                        <option value="57">57</option>
-                        <option value="58">58</option>
-                        <option value="59" selected>59</option>
-                    </select>
-                </div>
-                <div class="date-d2">
-                </div>
-            </div>
 
-            <div class="cards-container" style="padding-top: 2px">
-                <div *ngFor="let record of records">
-                    <app-card-record [record]="record"></app-card-record>
+                <div class="cards-container" style="padding-top: 2px">
+                    <div *ngFor="let record of records">
+                        <app-card-record [record]="record"></app-card-record>
+                    </div>
                 </div>
             </div>
         </div>

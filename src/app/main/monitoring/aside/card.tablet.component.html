@@ -1,28 +1,17 @@
-
-<!--<div class="tablet-card" (click)="focusMarker(tablet.latitude, tablet.longitude)">-->
-    <!--<p class="dni ps">CEDULA {{tablet.guard_dni}}</p>-->
-    <!--<p class="nombre ps">GUARDIA: {{tablet.guard_name}} {{tablet.guard_lastname}}</p>-->
-    <!--&lt;!&ndash;<p class="imei ps">Imei: {{tablet.imei}}</p>&ndash;&gt;-->
-    <!--<p class="date-s ps">{{tablet.generated_time}}</p>-->
-    <!--<img class="guard-icon" src="{{tablet.iconUrl}}" alt="">-->
-    <!--<p class="ps">Status:</p>-->
-    <!--<p class="ps online" *ngIf="tablet.message == 'FINISHED_WATCH'; else inactive">{{devices_status}}</p>-->
-    <!--<p class="date ps"></p>-->
-<!--</div>-->
-
-<!--<ng-template #inactive>-->
-    <!--<p class="inactive ps">-->
-        <!--DESCONECTADO-->
-    <!--</p>-->
-<!--</ng-template>-->
-
 <div class="tablet-card" (click)="focusMarker(tablet.latitude, tablet.longitude)">
-  <p class="ps" style="font-size: 1.0rem; margin-bottom: 3px"><b>IMEI {{tablet.imei}}</b></p>
-  <p class="ps" style="font-size: 1.0rem; color: cornflowerblue; line-height: 1.1rem"><b>Cedula:</b> {{tablet.guard_dni}}</p>
-  <p class="ps" style="font-size: 1.0rem; color: cornflowerblue;">{{tablet.guard_name}} {{tablet.guard_lastname}}</p>
-  <p class="date-s ps">{{date | date : "medium"}}</p>
-  <img class="guard-icon" src="{{tablet.iconUrl}}" alt="">
-  <p class="ps online" *ngIf="tablet.message != 'FINISHED_WATCH'; else inactive">{{devices_status}}</p>
+    <div class="card-header" style="padding: 16px">
+        <span class="card-alias ps">{{tablet.alias}}</span>
+        <span class="card-imei ps"><b>IMEI {{tablet.imei}}</b></span>
+    </div>
+    <div class="card-body" style="padding: 8px 16px">
+        <p class="ps card-dni">Cedula: {{tablet.guard_dni}}</p>
+        <p class="ps card-name">{{tablet.guard_name}} {{tablet.guard_lastname}}</p>
+        <div class="container-status">
+            <img class="guard-icon" src="{{tablet.iconUrl}}" alt="">
+            <span class="ps online" *ngIf="tablet.message != 'FINISHED_WATCH'; else inactive">{{devices_status}}</span>
+        </div>
+        <p class="date-s ps">{{date | date : "medium"}}</p>
+    </div>
 </div>
 
 <ng-template #inactive>

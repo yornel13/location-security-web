@@ -38,7 +38,7 @@ export class MainComponent implements OnInit {
             private db: AngularFirestore,
             private authService: AuthenticationService) {
         this.alertCollection = db.collection<Alerta>('alerts',
-            ref => ref.orderBy('status', 'desc').orderBy('id', 'desc').limit(10));
+            ref => ref.orderBy('status', 'desc').orderBy('id', 'desc').limit(50));
         this.isVisible = true;
     }
 
@@ -95,7 +95,7 @@ export class MainComponent implements OnInit {
                 confirmButtonText: 'Ir a'
               }).then(result => {
                 if (result.value) {
-                  this.solveAlert(alert);
+                  this.showAlert(alert);
                 }
               });
             }
@@ -150,24 +150,36 @@ export class MainComponent implements OnInit {
     }
 
     solveAlert(alert: Alerta) {
-      this.alertService.solveAlert(alert.id).then(
-        success => {
-          this.alertCollection.doc(String(alert.id)).update({'status': 0});
-          if (alert.cause === this.mapService.INCIDENCE) {
+        this.alertCollection.doc(String(alert.id)).update({'status': 0}).then();
+        // this.alertService.solveAlert(alert.id).then(
+        // success => {
+        //     this.alertCollection.doc(String(alert.id)).update({'status': 0}).then();
+        //     if (alert.cause === this.mapService.INCIDENCE) {
+        //         const report = JSON.parse(alert.extra);
+        //         this.router.navigate(['/u/control/bitacora/reportfilter/' + report.id]).then();
+        //     } else if (alert.cause === this.mapService.DROP) {
+        //         this.router.navigate(['/u/control/alertas/' + alert.id]).then();
+        //     } else if (alert.cause === this.mapService.SOS1) {
+        //         this.router.navigate(['/u/control/alertas/' + alert.id]).then();
+        //     }
+        // }, error => {
+        //   if (error.status === 422) {
+        //     // on some data incorrect
+        //   } else {
+        //     // on general error
+        //   }
+        // }
+        // );
+    }
+
+    showAlert(alert: Alerta) {
+        if (alert.cause === this.mapService.INCIDENCE) {
             const report = JSON.parse(alert.extra);
             this.router.navigate(['/u/control/bitacora/reportfilter/' + report.id]).then();
-          } else if (alert.cause === this.mapService.DROP) {
+        } else if (alert.cause === this.mapService.DROP) {
             this.router.navigate(['/u/control/alertas/' + alert.id]).then();
-          } else if (alert.cause === this.mapService.SOS1) {
+        } else if (alert.cause === this.mapService.SOS1) {
             this.router.navigate(['/u/control/alertas/' + alert.id]).then();
-          }
-        }, error => {
-          if (error.status === 422) {
-            // on some data incorrect
-          } else {
-            // on general error
-          }
         }
-      );
     }
 }

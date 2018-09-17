@@ -1,15 +1,23 @@
 <div class="vehicle-card" (click)="focusMarker(vehicle.latitude, vehicle.longitude)">
-    <p class="imei ps">IMEI {{vehicle.imei}}</p>
-    <p class="alias ps">{{vehicle.alias}}</p>
-    <p class="date-s ps">Fecha: {{vehicle.generated_time | date : "medium" : 'UTC-9'}}</p>
-    <div class="status-vehicle-cont">
-        <img class="vehicle-icon" src="{{vehicle.iconUrl}}" alt="">
-        <p class="bateria ps"><img src="./assets/cards/battery.png" alt="">{{vehicle.battery_level}}%</p>
+    <div class="card-header" style="padding: 16px">
+        <span class="card-alias ps">{{vehicle.alias}}</span>
+        <span class="card-imei ps"><b>IMEI {{vehicle.imei}}</b></span>
     </div>
-    <p class="ps">Status:</p>
-    <div class="ps"
-    *ngIf="vehicle.device_status == 'OFFOROUTOFCOVERAGE'; else online"
-    [ngClass]="{'inactive':vehicle.device_status=='OFFOROUTOFCOVERAGE'}">{{devices_status}}
+    <div class="card-body" style="padding: 8px 16px">
+        <div style="white-space: nowrap;">
+            <p class="ps card-dni">Placa: {{vehicle.automotor_plate}}</p>
+            <p class="ps card-name">Grupo: {{vehicle.group_name}}</p>
+        </div>
+        <div class="container-status">
+            <img class="vehicle-icon" src="{{vehicle.iconUrl}}" alt="">
+            <p class="bateria ps"><img src="./assets/cards/battery.png" alt=""></p>
+            <span class="bateria-text ps">{{vehicle.battery_level}}%</span>
+            <div class="ps"
+                 *ngIf="vehicle.device_status == 'OFFOROUTOFCOVERAGE'; else online"
+                 [ngClass]="{'inactive':vehicle.device_status=='OFFOROUTOFCOVERAGE'}">{{devices_status}}
+            </div>
+        </div>
+        <p class="date-s ps">Fecha: {{vehicle.generated_time | date : "medium" : 'UTC-9'}}</p>
     </div>
 </div>
 

@@ -10,8 +10,10 @@ import {MainService} from '../../main.service';
 export class CardAlertComponent implements OnInit {
 
     @Output() solveAlert = new EventEmitter<Alerta>();
+    @Output() showAlert = new EventEmitter<Alerta>();
     @Output() latlng = {lat: null , lng: null};
     @Input() alert: Alerta;
+    report: any;
     title: string;
     date: Date;
 
@@ -26,6 +28,10 @@ export class CardAlertComponent implements OnInit {
             this.title = 'Fuera de Los Limites';
         } else if (this.alert.cause === 'INCIDENCE') {
             this.title = 'Incidencia';
+            this.report = JSON.parse(this.alert.extra);
+            if (this.report.title.trim().toLowerCase() !== 'general') {
+                this.title = this.report.title;
+            }
         } else {
             this.title = 'General';
         }

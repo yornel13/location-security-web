@@ -29,6 +29,7 @@ export class MessagingService {
 
     repliesUnread: number;
     repliesUnreadEmitter = new EventEmitter<any>();
+    private audio;
 
     constructor(
         private notificationService: NotificationService,
@@ -140,13 +141,19 @@ export class MessagingService {
                       notification.close();
                   };
             }
-            //this.currentMessage.next(payload);
+            // this.currentMessage.next(payload);
         });
     }
 
     loadUnreadMessages() {
         this.chatService.setUser(this.authService.getUser(), this.authService.getTokenSession());
         this.chatService.getUnreadMessages().then(success => {
+            // if (this.unread < success.unread) {
+            //     this.audio = new Audio();
+            //     this.audio.src = './assets/sounds/alert.mp3';
+            //     this.audio.load();
+            //     this.audio.play();
+            // }
             this.unread = success.unread;
             this.guardUnread = 0;
             this.guardChatUnread = []; // chats from guards with messages without read
@@ -182,6 +189,12 @@ export class MessagingService {
     loadUnreadReplies() {
         this.binnacleService.getAllUnreadReplies().then((data: any) => {
             console.log(data.unread + ' unread replies');
+            // if (+this.repliesUnread < +data.unread) {
+            //     this.audio = new Audio();
+            //     this.audio.src = './assets/sounds/alert.mp3';
+            //     this.audio.load();
+            //     this.audio.play();
+            // }
             this.repliesUnread = data.unread;
             this.repliesUnreadEmitter.emit(this.repliesUnread);
         });

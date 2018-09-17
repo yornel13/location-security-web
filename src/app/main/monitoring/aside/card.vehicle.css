@@ -1,31 +1,70 @@
-.vehicle-card{
+.vehicle-card {
     background-color: whitesmoke;
     height: auto;
     max-width: 320px;
-    border-radius: 3px;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-bottom: 10px;
-    padding: 9px 10px;
+    border-radius: 4px;
+    margin: 5px;
+    /*padding: 6px 9px 4px 9px;*/
     overflow: hidden;
     cursor: pointer;
 }
 
-.status-vehicle-cont{
+.card-header {
     display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
 }
 
-.vehicle-icon {
-    height: 24px;
-    margin-top: 4px;
+.card-alias {
+    font-size: 0.8em;
+}
+
+.card-imei {
+    font-weight: bold;
+    font-size: 0.8em;
+    float: right;
+}
+
+.card-dni {
+    font-size: 0.85em;
+    color: #666;
+    line-height: 1.2em
+}
+
+.card-name {
+    font-size: 0.85em;
+    color: black;
+    line-height: 1.2em;
+}
+
+.container-status {
+    margin-top: 7px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
 }
 
 .ps{
     margin: 0;
+    padding: 0;
 }
 
-.imei{
+.dni{
     font-weight: bold;
+}
+
+.vehicle-icon{
+    height: 24px;
+    margin-right: 8px;
+}
+
+.bateria {
+    margin-top: 3px;
+}
+
+.bateria-text {
+    font-size: .9em;
 }
 
 .date-s{
@@ -34,8 +73,12 @@
 
 .online{
     color: limegreen;
+    margin-left: 8px;
+    font-size: .9em;
 }
 
 .inactive{
     color: red;
+    margin-left: 8px;
+    font-size: .9em;
 }

@@ -1,14 +1,25 @@
-.tablet-card{
-    background-color: whitesmoke;
+.card {
+    /*background-color: whitesmoke;*/
     height: auto;
     max-width: 320px;
-    border-radius: 3px;
+    /*border-radius: 4px;*/
     margin-left: 5px;
     margin-right: 5px;
-    margin-bottom: 10px;
-    padding: 9px 10px;
+    margin-bottom: 5px;
+    /*padding: 9px 10px;*/
     overflow: hidden;
     cursor: pointer;
+}
+
+.card-header {
+    padding: 6px 12px;
+    background: brown;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-body {
+    padding: 12px;
 }
 
 .ps{
@@ -22,25 +33,36 @@
 }
 
 .alert-title{
-    font-weight: bold;
+    font-weight: 400;
+    color: white;
+    font-size: 1em;
 }
 
 .alert-text{
-    font-size: .9em;
-    line-height: 1.2;
+    font-size: .85em;
+    line-height: 1.1;
 }
 
 .alert-imei{
-    font-size: .9em;
     font-weight: bold;
+    font-size: 0.85em;
 }
 
 
 .alert-date{
-    color: #4A4048;
+    color: #666;;
     font-size: .8em;
+    font-weight: 500;
 }
 
-.btn-success {
-    float: right;
+.btn {
+    padding: 2px 8px;
+    margin-left: 6px;
+}
+
+.container-alert {
+    padding: 0 2px 2px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
 }
