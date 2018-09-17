@@ -72,6 +72,14 @@ export class ReportetsComponent {
   hasta:any = "";
   rangeday:boolean=true;
 
+  //fechas
+  desde2:any = "";
+  hasta2:any = "";
+  rangeday2:boolean=true;
+  date:any;
+  month2:any;
+  day2:any;
+
   //dropdow
   dropdownList1 = [];
   selectedIncidencias = [];
@@ -134,7 +142,8 @@ export class ReportetsComponent {
         private incidenciaService: IncidenciasService,
         private excelService: ExcelService,
         private authService: AuthenticationService) {
-      this.getOpenAll();
+      //this.getOpenAll();
+      this.getToday();
       this.getIncidencias();
       this.getGuardias();
       this.lista = true;
@@ -216,6 +225,45 @@ export class ReportetsComponent {
         this.hasta = "";
         this.getSearch();
       }
+    }
+
+    getToday(){
+      var d = new Date();
+      var day = d.getDate();
+      var month = d.getMonth()+1;
+      var year = d.getFullYear();
+
+      if(day < 10){
+        this.day2 = "0"+day;
+      }else{
+        this.day2 = day;
+      }
+
+      if(month < 10){
+        this.month2 = "0"+month;
+      }else{
+        this.month2 = month;
+      }
+
+      this.date = year+"-"+this.month2+"-"+this.day2;
+      this.desde =this.date;
+
+      this.bitacoraService.getByDate(year, this.month2, this.day2, year, this.month2, this.day2).then(
+          success => {
+          this.reportes = success;
+          this.data = this.reportes.data;
+          for(var i=0; i<this.data.length; i++){
+            this.data[i].id = Number(this.data[i].id);
+          }
+          }, error => {
+              if (error.status === 422) {
+                  // on some data incorrect
+              } else {
+                  // on general error
+              }
+          }
+       );
+
     }
 
     getOpenAll() {
