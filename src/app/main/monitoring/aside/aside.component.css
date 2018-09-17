@@ -15,7 +15,7 @@
 }
 
 .menu-item{
-    background-color: #444 ;
+    background-color: #444;
     margin: 0;
     padding: 8px;
     border: none;
@@ -42,6 +42,59 @@
     margin-bottom: 10px;
     margin-top: 10px;
     font-size: 0.8rem;
+}
+
+.selector-filter{
+    width: 95%;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    margin-right: 5px;
+    font-size: 0.8rem;
+}
+
+.selector-time {
+    font-size: 0.8rem;
+    margin-left: 4px;
+}
+
+.date-selector {
+    margin-left: 5px;
+    width: 95%;
+    font-size: 0.8rem;
+    height: 30px;
+}
+
+.text-history {
+    font-size: 0.85em;
+    display: inline-block;
+    width: 50px;
+    text-align: right;
+}
+
+.dates {
+    font-size: 0.85em;
+    padding: 7px;
+    display: flex;
+    flex-direction: column;
+    height: 72px;
+}
+
+.date-d1 {
+    display: block;
+}
+
+.date-d2 {
+    display: block;
+    margin-top: 5px;
+    height: 20px;
+}
+
+.btn-search {
+    padding: 2px 8px;
+    position: absolute;
+    left: 292px;
+    background-color: whitesmoke;
 }
 
 .cards-container{
@@ -120,4 +173,8 @@
 .nav-link.active.show {
     font-weight: bold;
     color: black;
+}
+
+.nav-link {
+    cursor: pointer;
 }

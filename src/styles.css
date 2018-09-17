@@ -18,35 +18,9 @@
     --secondary-color: #666;
 
     /*Layout props*/
-    /*display: block;*/
-    /*width: 100%;*/
-    /*height: 100%;*/
     margin: 0;
     --gutter: 1em;
-    /*min-width: 100vw;*/
-    /*min-height: 100vh;*/
 }
-
-/*app-main{*/
-    /*display: flex;*/
-    /*flex-direction: column;*/
-/*}*/
-
-/*body{*/
-
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    /*align-content: stretch;*/
-    /*align-items: stretch;*/
-    /*height: 100vh;*/
-/*}*/
-
-/*app-main{*/
-    /*order: 0;*/
-    /*flex: 1 1 auto;*/
-    /*align-self: auto;*/
-    /*display: grid;*/
-/*}*/
 
 .loader {
   border: 16px solid #f3f3f3;
@@ -67,5 +41,23 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.bus-div-icon {
+    background: royalblue;
+    border-radius: 3px;
+    color: white;
+    text-align:center;
+    font-size: 9px;
+    opacity: 0.75;
+}
+
+.bus-div-icon-red {
+    background: darkred;
+    border-radius: 3px;
+    color: white;
+    text-align:center;
+    font-size: 9px;
+    opacity: 0.75;
 }
 

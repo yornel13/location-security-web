@@ -63,6 +63,12 @@ export class UtilsVehicles {
       return './assets/alerts/watch_start.png';
     } else if (history.message.includes('RESUMED_WATCH')) {
       return './assets/alerts/watch_start.png';
+    } else if (history.message.includes('SOS1')) {
+        return './assets/alerts/sos.png';
+    } else if (history.message.includes('DROP')) {
+        return './assets/alerts/drop.png';
+    } else if (history.message.includes('INCIDENCE')) {
+        return './assets/alerts/report.png';
     } else {
       return null;
     }

@@ -19,6 +19,9 @@ import {GrupoService} from '../../../../model/grupos/grupo.service';
 import {Grupos} from '../../../../model/grupos/grupos';
 import {Cerco} from '../../../../model/cerco/cerco';
 import {Tablet} from '../../../../model/tablet/tablet';
+import {Record} from '../../../../model/historial/record';
+import {PopupHistoryComponent} from '../../control/historial/vehistorial/popup.history.component';
+import {PopupTablethComponent} from "../../control/historial/tabhistorial/popup.tableth.component";
 
 @Component({
     selector : 'app-map-osm',
@@ -46,7 +49,7 @@ export class MapOsmComponent implements OnChanges, OnInit {
     markerClusterData: any[] = [];
     markerClusterOptions: L.MarkerClusterGroupOptions;
     center = L.latLng(([ this.lat, this.lng ]));
-    map: any;
+    map: L.Map;
     // Values to bind to Leaflet Directive
     layersControlOptions;
     baseLayers;
@@ -62,6 +65,9 @@ export class MapOsmComponent implements OnChanges, OnInit {
     /* Alerts */
     alerts: Alerta[] = [];
     alertsMarketData: any[] = [];
+    records: any[] = [];
+    recordMarketData: any[] = [];
+    recordsLayer = new L.FeatureGroup();
 
     constructor(private resolver: ComponentFactoryResolver,
                 private mainService: MainService,
@@ -82,10 +88,11 @@ export class MapOsmComponent implements OnChanges, OnInit {
     }
 
     ngOnInit() {
-      this.subscribeToAlerts();
-      this.subscribeToClick();
-      this.getGroups();
-      this.setupDropdown();
+        this.subscribeToAlerts();
+        this.subscribeToRecords();
+        this.subscribeToClick();
+        this.getGroups();
+        this.setupDropdown();
     }
 
     subscribeToClick() {
@@ -128,54 +135,121 @@ export class MapOsmComponent implements OnChanges, OnInit {
     }
 
     subscribeToAlerts() {
-      this.alerts = this.mainService.alerts;
-      this.setupAlerts();
-      this.mainService.alertsEmitter.subscribe((alerts: Alerta[]) => {
-        this.alerts = alerts;
+        this.alerts = this.mainService.alerts;
         this.setupAlerts();
-      });
+        this.mainService.alertsEmitter.subscribe((alerts: Alerta[]) => {
+            this.alerts = alerts;
+            this.setupAlerts();
+        });
+    }
+
+    subscribeToRecords() {
+        this.records = this.mainService.records;
+        this.mainService.recordsEmitter.subscribe((records: Record[]) => {
+            this.records = records;
+            this.setupRecords();
+        });
     }
 
     setupAlerts() {
-      const data: any[] = [];
-      this.alerts.forEach((alert: Alerta) => {
-        let imageIcon;
-        if (alert.type === this.globalOSM.DROP) {
-          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/falldown.png'})};
-        } else if (alert.type === this.globalOSM.SOS1) {
-          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/sos.png'})};
-        } else if (alert.type === this.globalOSM.IGNITION_ON) {
-          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/on.png'})};
-        } else if (alert.type === this.globalOSM.IGNITION_OFF) {
-          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/off.png'})};
-        } else if (alert.type === this.globalOSM.SPEED_MAX) {
-          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/speed.png'})};
-        } else if (alert.type === this.globalOSM.INIT_WATCH) {
-          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/watch_start.png'})};
-        } else if (alert.type === this.globalOSM.FINISH_WATCH) {
-          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/watch_end.png'})};
-        } else if (alert.type === this.globalOSM.OUT_BOUNDS) {
-          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/outside.png'})};
-        } else if (alert.type === this.globalOSM.IN_BOUNDS) {
-          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/inside.png'})};
-        } else {
-          imageIcon = {icon: L.icon({iconUrl: './assets/alerts/report.png'})};
+        const data: any[] = [];
+        this.alerts.forEach((alert: Alerta) => {
+            let imageIcon;
+            if (alert.type === this.globalOSM.DROP) {
+                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/falldown.png'})};
+            } else if (alert.type === this.globalOSM.SOS1) {
+                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/sos.png'})};
+            } else if (alert.type === this.globalOSM.IGNITION_ON) {
+                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/on.png'})};
+            } else if (alert.type === this.globalOSM.IGNITION_OFF) {
+                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/off.png'})};
+            } else if (alert.type === this.globalOSM.SPEED_MAX) {
+                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/speed.png'})};
+            } else if (alert.type === this.globalOSM.INIT_WATCH) {
+                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/watch_start.png'})};
+            } else if (alert.type === this.globalOSM.FINISH_WATCH) {
+                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/watch_end.png'})};
+            } else if (alert.type === this.globalOSM.OUT_BOUNDS) {
+                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/outside.png'})};
+            } else if (alert.type === this.globalOSM.IN_BOUNDS) {
+                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/inside.png'})};
+            } else {
+                imageIcon = {icon: L.icon({iconUrl: './assets/alerts/report.png'})};
+            }
+            if (Number(alert.latitude) && Number(alert.longitude)) {
+                const m = L.marker([+alert.latitude, +alert.longitude], imageIcon);
+                const factory = this.resolver.resolveComponentFactory(PopupAlertComponent);
+                const component = factory.create(this.injector);
+                const popupContent = component.location.nativeElement;
+                component.instance.alert = alert;
+                component.changeDetectorRef.detectChanges();
+                m.bindPopup(popupContent).openPopup();
+                data.push(m);
+            }
+        });
+        this.alertsMarketData = data;
+        if (this.showMarker.alerts) {
+            this.markerClusterData = this.alertsMarketData;
         }
-        if (Number(alert.latitude) && Number(alert.longitude)) {
-          const m = L.marker([+alert.latitude, +alert.longitude], imageIcon);
-          const factory = this.resolver.resolveComponentFactory(PopupAlertComponent);
-          const component = factory.create(this.injector);
-          const popupContent = component.location.nativeElement;
-          component.instance.alert = alert;
-          component.changeDetectorRef.detectChanges();
-          m.bindPopup(popupContent).openPopup();
-          data.push(m);
+    }
+
+    setupRecords() {
+        this.recordsLayer.clearLayers();
+        const data: any[] = [];
+        if (this.records.length) {
+            const points = [];
+            const bounds = new L.LatLngBounds(
+                new L.LatLng(this.records[0].latitude, this.records[0].longitude),
+                new L.LatLng(this.records[0].latitude, this.records[0].longitude));
+            this.records.forEach((record: any) => {
+                if (Number(record.latitude) && Number(record.longitude)) {
+                    // const imageIcon = {icon: L.icon({iconUrl: record.iconUrl})};
+                    let m;
+                    if (record.is_exception) {
+                        const textIcon = {icon: L.divIcon({
+                                className: 'bus-div-icon-red',
+                                html: '' + record.index,
+                                iconSize: [22, 13]
+                            })};
+                        m = L.marker([+record.latitude, +record.longitude], textIcon);
+                    } else {
+                        const textIcon = {icon: L.divIcon({
+                                className: 'bus-div-icon',
+                                html: '' + record.index,
+                                iconSize: [22, 13]
+                            })};
+                        m = L.marker([+record.latitude, +record.longitude], textIcon);
+                    }
+                    let factory;
+                    if (record.is_tablet) {
+                        factory = this.resolver.resolveComponentFactory(PopupTablethComponent);
+                    } else {
+                        factory = this.resolver.resolveComponentFactory(PopupHistoryComponent);
+                    }
+                    const component = factory.create(this.injector);
+                    const popupContent = component.location.nativeElement;
+                    component.instance.record = record;
+                    component.changeDetectorRef.detectChanges();
+                    m.bindPopup(popupContent).openPopup();
+                    this.recordsLayer.addLayer(m);
+                    points.push(L.latLng(+record.latitude, +record.longitude));
+                    bounds.extend(m.getLatLng());
+                    if (this.records.indexOf(record) === (this.records.length - 1)) { // setup last position with devices icon
+                        const mf = L.marker([+record.latitude, +record.longitude],
+                            {icon: L.icon({iconUrl: this.mainService.selectedDevice.iconUrl})});
+                        this.recordsLayer.addLayer(mf);
+                    }
+                }
+            });
+            const polyline = L.polyline(points);
+            this.recordsLayer.addLayer(polyline);
+            this.map.addLayer(this.recordsLayer);
+            this.map.fitBounds(bounds);
         }
-      });
-      this.alertsMarketData = data;
-      if (this.showMarker.alerts) {
-        this.markerClusterData = this.alertsMarketData;
-      }
+        this.recordMarketData = data;
+        if (this.showMarker.records) {
+            this.markerClusterData = this.recordMarketData;
+        }
     }
 
     getGroups() {
@@ -223,12 +297,12 @@ export class MapOsmComponent implements OnChanges, OnInit {
           removePolygon = groupPolygon;
         }
       });
-      removePolygon.editableLayers.remove(this.map);
+      removePolygon.editableLayers.remove();
     }
 
     deselectAll() {
       this.groupsPolygons.forEach(groupPolygon => {
-          groupPolygon.editableLayers.remove(this.map);
+          groupPolygon.editableLayers.remove();
       });
     }
 
@@ -248,64 +322,77 @@ export class MapOsmComponent implements OnChanges, OnInit {
     }
 
     setupMarkers(showMarker) {
-        const data: any[] = [];
-        this.markersData.forEach(mData => {
-            if (showMarker.vehicles) {
-                if (mData.group_name === 'AZUCARERA INGENIO VALDEZ') {
-                    const imageIcon = {
-                        icon: L.icon({
-                            iconUrl: mData.iconUrl,
-                        })
-                    };
-                    const m = L.marker([mData.latitude, mData.longitude], imageIcon);
-                    const factory = this.resolver.resolveComponentFactory(PopupVehicleComponent);
-                    const component = factory.create(this.injector);
-                    const popupContent = component.location.nativeElement;
-                    component.instance.vehicle = mData;
-                    component.changeDetectorRef.detectChanges();
-                    m.bindPopup(popupContent).openPopup();
-                    data.push(m);
+        if (showMarker.devices) {
+            const data: any[] = [];
+            this.markersData.forEach(mData => {
+                if (showMarker.vehicles) {
+                    if (mData.group_name === 'AZUCARERA INGENIO VALDEZ') {
+                        const imageIcon = {
+                            icon: L.icon({
+                                iconUrl: mData.iconUrl,
+                            })
+                        };
+                        const m = L.marker([mData.latitude, mData.longitude], imageIcon);
+                        const factory = this.resolver.resolveComponentFactory(PopupVehicleComponent);
+                        const component = factory.create(this.injector);
+                        const popupContent = component.location.nativeElement;
+                        component.instance.vehicle = mData;
+                        component.changeDetectorRef.detectChanges();
+                        m.bindPopup(popupContent).openPopup();
+                        data.push(m);
+                    }
                 }
-            }
-            if (showMarker.bombas) {
-                if (mData.group_name.match('BOMBA')) {
-                const imageIcon = {
-                  icon: L.icon({
-                    iconUrl: mData.iconUrl,
-                  })
-                };
-                const m = L.marker([mData.latitude, mData.longitude], imageIcon);
-                const factory = this.resolver.resolveComponentFactory(PopupVehicleComponent);
-                const component = factory.create(this.injector);
-                const popupContent = component.location.nativeElement;
-                component.instance.vehicle = mData;
-                component.changeDetectorRef.detectChanges();
-                m.bindPopup(popupContent).openPopup();
-                data.push(m);
-              }
-            }
-            if (showMarker.tablets) {
-                if (mData.group_name === 'Tablet Guardia') {
-                    const imageIcon = {
-                        icon: L.icon({
-                            iconUrl: mData.iconUrl,
-                        })
-                    };
-                    const m = L.marker([mData.latitude, mData.longitude], imageIcon);
-                    const factory = this.resolver.resolveComponentFactory(PopupWatchComponent);
-                    const component = factory.create(this.injector);
-                    const popupContent = component.location.nativeElement;
-                    component.instance.tablet = mData;
-                    component.changeDetectorRef.detectChanges();
-                    m.bindPopup(popupContent).openPopup();
-                    data.push(m);
+                if (showMarker.bombas) {
+                    if (mData.group_name.match('BOMBA')) {
+                        const imageIcon = {
+                            icon: L.icon({
+                                iconUrl: mData.iconUrl,
+                            })
+                        };
+                        const m = L.marker([mData.latitude, mData.longitude], imageIcon);
+                        const factory = this.resolver.resolveComponentFactory(PopupVehicleComponent);
+                        const component = factory.create(this.injector);
+                        const popupContent = component.location.nativeElement;
+                        component.instance.vehicle = mData;
+                        component.changeDetectorRef.detectChanges();
+                        m.bindPopup(popupContent).openPopup();
+                        data.push(m);
+                    }
                 }
+                if (showMarker.tablets) {
+                    if (mData.group_name === 'Tablet Guardia') {
+                        const imageIcon = {
+                            icon: L.icon({
+                                iconUrl: mData.iconUrl,
+                            })
+                        };
+                        const m = L.marker([mData.latitude, mData.longitude], imageIcon);
+                        const factory = this.resolver.resolveComponentFactory(PopupWatchComponent);
+                        const component = factory.create(this.injector);
+                        const popupContent = component.location.nativeElement;
+                        component.instance.tablet = mData;
+                        component.changeDetectorRef.detectChanges();
+                        m.bindPopup(popupContent).openPopup();
+                        data.push(m);
+                    }
+                }
+            });
+            this.markerClusterData = data;
+            if (this.map !== undefined) {
+                this.map.removeLayer(this.recordsLayer);
             }
-        });
-        if (!this.showMarker.alerts) {
-          this.markerClusterData = data;
-        } else {
-          this.markerClusterData = this.alertsMarketData;
+        }
+        if (showMarker.alerts) {
+            this.markerClusterData = this.alertsMarketData;
+            if (this.map !== undefined) {
+                this.map.removeLayer(this.recordsLayer);
+            }
+        }
+        if (showMarker.records) {
+            this.markerClusterData = this.recordMarketData;
+            if (this.map !== undefined) {
+                this.map.addLayer(this.recordsLayer);
+            }
         }
     }
 

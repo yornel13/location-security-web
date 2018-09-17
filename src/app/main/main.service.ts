@@ -10,8 +10,14 @@ export class MainService {
     alerts0: Alerta[] = [];
     alerts1: Alerta[] = [];
 
+    records: any[] = [];
+
+    selectedDevice: any;
+
     marker = new EventEmitter<any>();
     alertsEmitter = new EventEmitter<Alerta[]>();
     alerts0Emitter = new EventEmitter<Alerta[]>();
     alerts1Emitter = new EventEmitter<Alerta[]>();
+
+    recordsEmitter = new EventEmitter<any[]>();
 }

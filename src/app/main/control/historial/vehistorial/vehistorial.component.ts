@@ -86,7 +86,7 @@ export class VehistorialComponent {
     this.zoom = this.globalOSM.zoom;
     const southWest = new L.LatLng(-2.100599, -79.560921);
     const northEast = new L.LatLng(-2.030906, -79.568947);
-    const bounds = new L.LatLngBounds(southWest, northEast);
+      const bounds = new L.LatLngBounds(southWest, northEast);
     const data: any[] = [];
     if (this.history.length) {
       const coors = [];

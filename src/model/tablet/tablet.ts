@@ -1,5 +1,6 @@
 export interface Tablet {
     id: number;
+    alias?: string;
     latitude: string;
     longitude: string;
     generated_time: string;

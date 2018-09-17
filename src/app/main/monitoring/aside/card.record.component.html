@@ -1,5 +1,5 @@
 <div class="tablet-card" (click)="focusMarker(record.latitude, record.longitude)" [ngClass]="{'is-alert': record.is_exception}">
-    <div>
+    <div *ngIf="!record.is_tablet">
         <p class="title ps">Secuencia {{record.index}}</p>
         <p class="address ps">Dirección: {{record.address}}</p>
         <p class="date-time ps">{{date | date : "medium"}}</p>
@@ -7,6 +7,14 @@
             <img class="image-alert" src="{{record.iconUrl}}">
             <p class="alert-message ps">{{record.alert_message}}</p>
         </div>
-        <!--<p class="alert-text ps">{{record.alert_message}}</p>-->
+    </div>
+    <div *ngIf="record.is_tablet">
+        <p class="title ps">Secuencia {{record.index}}</p>
+        <p class="address ps">Guardia: {{record.guard_name}} {{record.guard_lastname}}</p>
+        <p class="date-time ps">{{date | date : "medium"}}</p>
+        <div class="container-alert" *ngIf="record.is_exception">
+            <img class="image-alert" src="{{record.iconUrl}}">
+            <p class="alert-message ps">{{record.alert_message}}</p>
+        </div>
     </div>
 </div>

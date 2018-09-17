@@ -10,15 +10,18 @@ import {Record} from '../../../../model/historial/record';
 export class CardRecordComponent implements OnInit {
 
     @Output() latlng = {lat: null , lng: null};
-    @Input() record: Record;
+    @Input() record: any;
     title: string;
     date: Date;
 
     constructor(private mainService: MainService) {}
 
     ngOnInit() {
-        const newDate = new Date(this.record.date + ' ' + this.record.time);
-        this.date = newDate;
+        if (this.record.is_tablet) {
+            this.date = new Date(this.record.generated_time);
+        } else {
+            this.date = new Date(this.record.date + ' ' + this.record.time);
+        }
     }
 
     focusMarker(lat, lng) {

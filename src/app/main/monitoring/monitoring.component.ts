@@ -97,26 +97,30 @@ export class MonitoringComponent implements OnInit {
     }
 
     setMarkerChanged(showMarker) {
-      if (showMarker.message === 'alerts') {
-        this.markerChanged = !this.markerChanged;
-        this.showMarker = showMarker;
-      }
-      if (showMarker.message === 'devices') {
-        this.markerChanged = !this.markerChanged;
-        this.showMarker = showMarker;
-      }
-      if (showMarker.message === 'showVehicles') {
-          this.markerChanged = !this.markerChanged;
-          this.showMarker = showMarker;
-      }
-      if (showMarker.message === 'showBombas') {
-          this.markerChanged = !this.markerChanged;
-          this.showMarker = showMarker;
-      }
-      if (showMarker.message === 'showTablets') {
-          this.markerChanged = !this.markerChanged;
-          this.showMarker = showMarker;
-      }
+        if (showMarker.message === 'alerts') {
+            this.markerChanged = !this.markerChanged;
+            this.showMarker = showMarker;
+        }
+        if (showMarker.message === 'devices') {
+            this.markerChanged = !this.markerChanged;
+            this.showMarker = showMarker;
+        }
+        if (showMarker.message === 'records') {
+            this.markerChanged = !this.markerChanged;
+            this.showMarker = showMarker;
+        }
+        if (showMarker.message === 'showVehicles') {
+            this.markerChanged = !this.markerChanged;
+            this.showMarker = showMarker;
+        }
+        if (showMarker.message === 'showBombas') {
+            this.markerChanged = !this.markerChanged;
+            this.showMarker = showMarker;
+        }
+        if (showMarker.message === 'showTablets') {
+            this.markerChanged = !this.markerChanged;
+            this.showMarker = showMarker;
+        }
     }
 
     markersFocused(lat, lng) {

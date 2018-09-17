@@ -1,3 +1,24 @@
 .ps{
   margin: 0;
 }
+
+.container-alert {
+    padding: 0 2px 2px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+.alert-message {
+    font-size: .8rem;
+    line-height: .9rem;
+    margin-left: 8px;
+}
+
+.image-alert {
+    height: auto;
+    margin-top: 4px;
+    min-width: 28px;
+    width: 28px;
+    padding: 1px;
+}

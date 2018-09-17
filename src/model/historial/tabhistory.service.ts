@@ -23,7 +23,7 @@ export class TabhistoryService {
     }
 
     getHistoryImei(imei: number) {
-        return this.http.get(this.TABHISTORY_URL + '/history/' + imei).toPromise()
+        return this.http.get(this.TABHISTORY_URL + '/imei/' + imei + '/date').toPromise()
             .then((response) => response);
     }
 
