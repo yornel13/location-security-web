@@ -39,7 +39,6 @@ import {TabletService} from '../../model/tablet/tablet.service';
 import {ControlModule} from './control/control.module';
 import {CardAlertComponent} from './monitoring/aside/card.alert.component';
 import {ItemGuardComponent} from './messaging/item.guard.component';
-import {ChatComponent} from './chat/chat.component';
 import {PopupAlertComponent} from './monitoring/map/popup.alert.component';
 import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
@@ -61,7 +60,6 @@ export const mainRoutes: Routes = [
                     { path: 'monitoring', component: MonitoringComponent },
                     { path: 'control', loadChildren: './control/control.module#ControlModule' },
                     { path: 'messaging', component: MessagingComponent },
-                    { path: 'chat', component: ChatComponent },
                     { path: 'report', component: ReportComponent },
                     { path: '', redirectTo: '/u/dashboard', pathMatch: 'full' },
                 ]
@@ -102,7 +100,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     declarations: [
         MonitoringComponent, MapOsmComponent, PopupVehicleComponent, PopupWatchComponent, PopupAlertComponent,
         HeaderComponent, AsideComponent, MainComponent,
-        DashboardComponent, ReportComponent, MessagingComponent, ChatComponent,
+        DashboardComponent, ReportComponent, MessagingComponent,
         CardVehicleComponent, CardTabletComponent, FilterPipe, CardAlertComponent, ItemGuardComponent, FilterUsers,
         RelativeTimePipe, CardRecordComponent
     ],
