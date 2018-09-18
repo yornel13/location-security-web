@@ -49,7 +49,6 @@ export class AuthenticationService {
 
     public cleanStore(): boolean {
         localStorage.removeItem(this.TOKEN_SESSION);
-        localStorage.removeItem(this.TOKEN_FIRE);
         localStorage.removeItem(this.USER);
         return true;
     }

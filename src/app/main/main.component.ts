@@ -38,7 +38,7 @@ export class MainComponent implements OnInit {
             private db: AngularFirestore,
             private authService: AuthenticationService) {
         this.alertCollection = db.collection<Alerta>('alerts',
-            ref => ref.orderBy('status', 'desc').orderBy('id', 'desc').limit(50));
+            ref => ref.orderBy('status', 'desc').orderBy('id', 'desc').limit(10));
         this.isVisible = true;
     }
 
@@ -51,9 +51,9 @@ export class MainComponent implements OnInit {
             this.messagingService.loadUnreadReplies();
             this.message = this.messagingService.currentMessage;
             this.getAlerts();
+            document.addEventListener('visibilitychange',
+                this.setupVisibility.bind(this));
         }
-        document.addEventListener('visibilitychange',
-          this.setupVisibility.bind(this));
     }
 
     setupVisibility() {

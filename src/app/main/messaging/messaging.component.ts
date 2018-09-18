@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {first} from 'rxjs/operators';
@@ -85,8 +85,8 @@ export class MessagingComponent implements OnInit, OnDestroy {
         this.user = this.authService.getUser();
         if (this.user != null) {
             this.chatService.setUser(
-              this.authService.getUser(),
-              this.authService.getTokenSession()
+                this.authService.getUser(),
+                this.authService.getTokenSession()
             );
             this.currentChat = null;
             this.currentChatLines = [];
@@ -109,6 +109,23 @@ export class MessagingComponent implements OnInit, OnDestroy {
             this.subscribeToUnreadMessages();
         }
         this.messagingService.isMessengerOpen = true;
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                if (this.currentChannel != null) {
+                    this.openOldChannelMessages(this.currentChannel);
+                }
+            }
+        });
+    }
+
+    @HostListener('window:focus', ['$event'])
+    onFocus(event: any): void {
+        this.messagingService.isMessengerOpen = true;
+    }
+
+    @HostListener('window:blur', ['$event'])
+    onBlur(event: any): void {
+        this.messagingService.isMessengerOpen = false;
     }
 
     ngOnDestroy() {
@@ -122,6 +139,12 @@ export class MessagingComponent implements OnInit, OnDestroy {
         this.guardChatUnread = this.messagingService.guardChatUnread;
         this.adminChatUnread = this.messagingService.adminChatUnread;
         this.messagingService.unreadEmitter.subscribe(data => {
+            if (this.currentChat != null) {
+                if (this.guardUnread < this.messagingService.guardUnread ||
+                    this.adminUnread < this.messagingService.adminUnread) {
+                    this.openOldMessages(this.currentChat.id);
+                }
+            }
             this.guardUnread = this.messagingService.guardUnread;
             this.adminUnread = this.messagingService.adminUnread;
             this.channelUnread = this.messagingService.channelUnread;
@@ -143,7 +166,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
                         {lastname: this.guards[i].lastname},
                         {update_date: this.guards[i].update_date},
                         {photo: this.guards[i].photo},
-                            {type: 'GUARD'});
+                        {type: 'GUARD'});
                     this.listContactGuard.push(contact);
                 }
                 this.listContactGuard.sort((n1, n2) => {
@@ -165,12 +188,12 @@ export class MessagingComponent implements OnInit, OnDestroy {
                 this.admins = this.adminsData.data;
                 let me: Admin = null;
                 this.admins.forEach(admin => {
-                  if (admin.id === this.user.id) {
-                    me = admin;
-                  }
+                    if (admin.id === this.user.id) {
+                        me = admin;
+                    }
                 });
                 if (me != null) {
-                  this.admins.splice(this.admins.indexOf(me, 0), 1);
+                    this.admins.splice(this.admins.indexOf(me, 0), 1);
                 }
                 for (let i = 0; i < this.admins.length; i++) {
                     const contact = Object.assign(
@@ -195,20 +218,20 @@ export class MessagingComponent implements OnInit, OnDestroy {
     }
 
     loadAllChannel() {
-      this.chatService.listAllChannelIdAdmin()
-        .subscribe(
-          success => {
-            this.allChannel = success.data;
-            this.allChannel.sort((n1, n2) => {
-              if (n1.channel_update_at > n2.channel_update_at) { return -1; }
-              if (n1.channel_update_at < n2.channel_update_at) {return 1; }
-              return 0;
-            });
-          },
-          error => {
-            this.error = error;
-            this.loading = false;
-          });
+        this.chatService.listAllChannelIdAdmin()
+            .subscribe(
+                success => {
+                    this.allChannel = success.data;
+                    this.allChannel.sort((n1, n2) => {
+                        if (n1.channel_update_at > n2.channel_update_at) { return -1; }
+                        if (n1.channel_update_at < n2.channel_update_at) {return 1; }
+                        return 0;
+                    });
+                },
+                error => {
+                    this.error = error;
+                    this.loading = false;
+                });
     }
 
     receivedMessage(chatLine: ChatLine) {
@@ -245,29 +268,29 @@ export class MessagingComponent implements OnInit, OnDestroy {
                 }
             }
         } else if (chatLine.channel_id != null && this.currentChannel != null) {
-          if (+this.currentChannel.channel_id === +chatLine.channel_id) {
-            let alreadyAdded = false;
-            this.currentChatLines.forEach(currentLine => {
-              if (currentLine.id === chatLine.id) {
-                alreadyAdded = true;
-              }
-            });
-            if (!alreadyAdded) {
-              this.currentChatLines.push(chatLine);
+            if (+this.currentChannel.channel_id === +chatLine.channel_id) {
+                let alreadyAdded = false;
+                this.currentChatLines.forEach(currentLine => {
+                    if (currentLine.id === chatLine.id) {
+                        alreadyAdded = true;
+                    }
+                });
+                if (!alreadyAdded) {
+                    this.currentChatLines.push(chatLine);
+                }
             }
-          }
         }
     }
 
     addChatLineIfNotExit(chatLine: ChatLine) {
         let alreadyAdded = false;
         this.currentChatLines.forEach(currentLine => {
-          if (+currentLine.id === +chatLine.id) {
-            alreadyAdded = true;
-          }
+            if (+currentLine.id === +chatLine.id) {
+                alreadyAdded = true;
+            }
         });
         if (!alreadyAdded) {
-          this.currentChatLines.push(chatLine);
+            this.currentChatLines.push(chatLine);
         }
     }
 
@@ -335,14 +358,14 @@ export class MessagingComponent implements OnInit, OnDestroy {
         this.noMessages = false;
         this.isChannel = false;
         this.chatService.chat(user.id, user.name, user.type).then(
-          (data: ApiResponse) => {
-              this.currentChat = data.result;
-              this.openOldMessages(this.currentChat.id);
-          },
+            (data: ApiResponse) => {
+                this.currentChat = data.result;
+                this.openOldMessages(this.currentChat.id);
+            },
             error => {
-              this.error = error;
-              console.log(this.error);
-          });
+                this.error = error;
+                console.log(this.error);
+            });
     }
 
     clearSelected() {
@@ -359,11 +382,11 @@ export class MessagingComponent implements OnInit, OnDestroy {
     openOldMessages(chat_id) {
         this.noMessages = false;
         this.chatService.listOldMessage(chat_id).subscribe(
-        data => {
+            data => {
                 this.currentChatLines = data.data;
                 this.currentChatLines.reverse();
+                this.loading_chat = false;
                 if (this.currentChatLines.length === 0) {
-                    this.loading_chat = false;
                     this.noMessages = true;
                 }
                 this.makeAllRead(chat_id);
@@ -371,16 +394,16 @@ export class MessagingComponent implements OnInit, OnDestroy {
                 this.scrollToBottom();
                 this.showChatForm = true;
                 this.message = '';
-                },
-                error => {
-                    this.error = error;
-                });
+            },
+            error => {
+                this.error = error;
+            });
     }
 
     clickMakeAllRead() {
         if (!this.isClicked) {
             timer(5000).subscribe(t => {
-              this.isClicked = false;
+                this.isClicked = false;
             });
             this.isClicked = true;
             if (this.currentChat != null) {
@@ -412,12 +435,12 @@ export class MessagingComponent implements OnInit, OnDestroy {
                         }
                     );
                     this.groupMembers.push(member);
-            }
+                }
 
-        }, error => {
+            }, error => {
                 this.error = error;
                 this.loading = false;
-        });
+            });
     }
 
     listAllOpenedChat() {
@@ -427,15 +450,15 @@ export class MessagingComponent implements OnInit, OnDestroy {
                 data => {
                     this.allChat = data.data;
                     this.allChat.sort((n1, n2) => {
-                      if (n1.update_at < n2.update_at) { return -1; }
-                      if (n1.update_at > n2.update_at) {return 1; }
-                      return 0;
+                        if (n1.update_at < n2.update_at) { return -1; }
+                        if (n1.update_at > n2.update_at) {return 1; }
+                        return 0;
                     });
                     this.checkChats();
-              },
-              error => {
-                  console.log(this.error);
-              });
+                },
+                error => {
+                    console.log(this.error);
+                });
         this.loading = false;
     }
 
@@ -444,7 +467,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
         this.allChat.forEach(chat => {
             this.listContactGuard.forEach(guard => {
                 if ((guard.id === chat.user_1_id && 'GUARD' === chat.user_1_type)
-                      || (guard.id === chat.user_2_id && 'GUARD' === chat.user_2_type)) {
+                    || (guard.id === chat.user_2_id && 'GUARD' === chat.user_2_type)) {
                     guard.update_at = chat.update_at;
                     guard.chat = chat;
                     usersGuardOpenChat.push(guard);
@@ -461,7 +484,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
         this.allChat.forEach(chat => {
             this.listContactAdmin.forEach(admin => {
                 if ((admin.id === chat.user_1_id && 'ADMIN' === chat.user_1_type)
-                      || (admin.id === chat.user_2_id && 'ADMIN' === chat.user_2_type)) {
+                    || (admin.id === chat.user_2_id && 'ADMIN' === chat.user_2_type)) {
                     admin.update_at = chat.update_at;
                     admin.chat = chat;
                     usersAdminOpenChat.push(admin);
@@ -492,7 +515,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
                     if (value.chat.id === admin.chat.id) {
                         admin.unread = value.unread;
                     }
-              });
+                });
             }
         });
     }
@@ -510,17 +533,19 @@ export class MessagingComponent implements OnInit, OnDestroy {
         if (this.messageField !== undefined) {
             this.messageField.nativeElement.value = '';
         }
+        this.openOldChannelMessages(channel);
+    }
 
+    openOldChannelMessages(channel) {
         this.chatService.listOldMessageChannel(this.currentChannel.channel_id)
-            .subscribe(
-                data => {
+            .subscribe(data => {
                     this.loading_chat = true;
 
                     this.currentChannel = channel;
 
                     this.currentChatLines = data.data;
+                    this.loading_chat = false;
                     if (this.currentChatLines.length === 0) {
-                        this.loading_chat = false;
                         this.noMessages = true;
                     }
                     this.currentChatLines.reverse();
@@ -528,14 +553,12 @@ export class MessagingComponent implements OnInit, OnDestroy {
                     this.showChatForm = true;
                     this.messagingService.channelUnread = 0;
                     this.messagingService.loadUnreadMessages();
-                },
-          error => {
-            this.error = error;
-            this.loading = false;
-          }
-        );
-        this.scrollToBottom();
-
+                    this.scrollToBottom();
+                }, error => {
+                    this.error = error;
+                    this.loading = false;
+                }
+            );
     }
 
     add(channel_id) {
@@ -550,15 +573,15 @@ export class MessagingComponent implements OnInit, OnDestroy {
             }
         });
         if (users.length > 0) {
-          this.chatService.addUsers(channel_id, users)
-              .pipe(first())
-              .subscribe(
-                  data => {
-                      this.loading = false;
-              }, error => {
-                  this.error = error;
-                  this.loading = false;
-              });
+            this.chatService.addUsers(channel_id, users)
+                .pipe(first())
+                .subscribe(
+                    data => {
+                        this.loading = false;
+                    }, error => {
+                        this.error = error;
+                        this.loading = false;
+                    });
         }
     }
 
@@ -567,19 +590,19 @@ export class MessagingComponent implements OnInit, OnDestroy {
         this.listContactAdmin.forEach(admin => {
             const name = admin.name + ' ' + admin.lastname;
             const userA = Object.assign(
-              {id: admin.id},
-              {name: name},
-              {type: 'ADMIN'},
-              {checked: false});
+                {id: admin.id},
+                {name: name},
+                {type: 'ADMIN'},
+                {checked: false});
             this.usersToSelect.push(userA);
         });
         this.listContactGuard.forEach(guard => {
             const name = guard.name + ' ' + guard.lastname;
             const userG = Object.assign(
-              {id: guard.id},
-              {name: name},
-              {type: 'GUARD'},
-              {checked: false});
+                {id: guard.id},
+                {name: name},
+                {type: 'GUARD'},
+                {checked: false});
             this.usersToSelect.push(userG);
         });
         this.usersToSelect.sort((n1, n2) => {

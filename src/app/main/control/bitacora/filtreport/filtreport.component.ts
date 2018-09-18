@@ -15,6 +15,8 @@ import {Admin} from '../../../../../model/admin/admin';
 import {GlobalOsm} from '../../../../global.osm';
 import {UtilsVehicles} from '../../../../../model/vehicle/vehicle.utils';
 import {PopupReportComponent} from './popup.report.component';
+import {MessagingService} from "../../../../shared/messaging.service";
+import {NotificationService} from "../../../../shared/notification.service";
 
 @Component({
     selector: 'app-filtreport',
@@ -107,17 +109,19 @@ export class FiltreportComponent implements OnInit {
     options;
 
     constructor(
-        private resolver: ComponentFactoryResolver,
-        private globalOSM: GlobalOsm,
-        private injector: Injector,
-        private utilVehicle: UtilsVehicles,
-        public router: Router,
-        private bitacoraService: BitacoraService,
-        private guardiaService: GuardService,
-        private incidenciaService: IncidenciasService,
-        private excelService: ExcelService,
-        private route: ActivatedRoute,
-        private authService: AuthenticationService) {
+            private resolver: ComponentFactoryResolver,
+            private globalOSM: GlobalOsm,
+            private injector: Injector,
+            private utilVehicle: UtilsVehicles,
+            public router: Router,
+            private bitacoraService: BitacoraService,
+            private guardiaService: GuardService,
+            private incidenciaService: IncidenciasService,
+            private excelService: ExcelService,
+            private route: ActivatedRoute,
+            private messagingService: MessagingService,
+            private notificationService: NotificationService,
+            private authService: AuthenticationService) {
         this.layersControlOptions = this.globalOSM.layersOptions;
         this.baseLayers = this.globalOSM.baseLayers;
         this.options = this.globalOSM.defaultOptions;
@@ -136,6 +140,20 @@ export class FiltreportComponent implements OnInit {
             // Chart Data
             "data": this.datos
         };
+        this.notificationService.newReply.subscribe(reply => {
+            if (this.detalle) {
+                if (+this.report.id === +reply.report_id) {
+                    this.coment.unshift(reply);
+                }
+            }
+        });
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                if (this.detalle) {
+                    this.getComments(this.report.id);
+                }
+            }
+        });
     }
 
     onMapReady(map: L.Map) {
@@ -542,15 +560,19 @@ export class FiltreportComponent implements OnInit {
             }
         );
 
-        this.bitacoraService.getComentarios(id).then(
-            success => {
+        this.getComments(id);
+    }
+
+    getComments(id) {
+        this.bitacoraService.getComentarios(id).then(success => {
                 this.comentarios = success;
                 this.coment = this.comentarios.data;
-                if(this.coment.length == 0){
+                if (this.coment.length == 0) {
                     this.haycomentarios = false;
-                }else{
+                } else {
                     this.haycomentarios = true;
                 }
+                this.putReportRead(id);
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -559,6 +581,14 @@ export class FiltreportComponent implements OnInit {
                 }
             }
         );
+    }
+
+    putReportRead(id) {
+        if (this.coment.length > 0) {
+            this.bitacoraService.putReportRead(id).then(success => {
+                this.messagingService.loadUnreadReplies();
+            });
+        }
     }
 
     regresar() {

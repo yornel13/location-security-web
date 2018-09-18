@@ -40,18 +40,18 @@ export class MessagingService {
         private binnacleService: BitacoraService) {
     }
 
-  /**
-   * update token in firebase database
-   *
-   * @param userId userId as a key
-   * @param token token as a value
-   */
+    /**
+     * update token in firebase database
+     *
+     * @param userId userId as a key
+     * @param token token as a value
+     */
     updateToken(userId, token) {
-      this.afAuth.authState.pipe(take(1)).subscribe(() => {
-        const data = new Object;
-        data[userId] = token;
-        this.afDB.object('fcmTokens/').update(data).then();
-      });
+        this.afAuth.authState.pipe(take(1)).subscribe(() => {
+            const data = new Object;
+            data[userId] = token;
+            this.afDB.object('fcmTokens/').update(data).then();
+        });
     }
 
     /**
@@ -69,23 +69,27 @@ export class MessagingService {
             .then(token => {
                 console.log(token);
                 this.authService.setTokenFire(token);
-                this.authService.webRegister(token, this.authService.getTokenSession(), this.authService.getUser().id)
-                      .then(success => {
+                this.registerWeb(token);
+            })
+            .catch((err) => {
+                console.log('Unable to get permission to notify.', err);
+            });
+    }
+
+    registerWeb(token) {
+        this.authService.webRegister(token, this.authService.getTokenSession(), this.authService.getUser().id)
+            .then(success => {
                     console.log(success);
                 },
                 error => {
                     this.error = error;
                     this.loading = false;
                 });
-            })
-            .catch((err) => {
-              console.log('Unable to get permission to notify.', err);
-        });
     }
 
     /**
-    * hook method when new notification received
-    */
+     * hook method when new notification received
+     */
     receiveMessage() {
         this.messaging.onMessage((payload) => {
             // const notificationTitle = payload.notification.title;
@@ -130,17 +134,17 @@ export class MessagingService {
                 const reply: any = JSON.parse(payload.data.message.toString());
                 this.notificationService.newReply.emit(reply);
                 this.loadUnreadReplies();
-                  const notificationTitle = payload.notification.title;
-                  const notificationOptions = {
-                      body: payload.notification.body,
-                      icon: payload.notification.icon,
-                  };
-                  const notification = new Notification(notificationTitle, notificationOptions);
-                  notification.onclick = function(event) {
-                      event.preventDefault(); // prevent the browser from focusing the Notification's tab
-                      window.open('/u/control/bitacora/reportes');
-                      notification.close();
-                  };
+                const notificationTitle = payload.notification.title;
+                const notificationOptions = {
+                    body: payload.notification.body,
+                    icon: payload.notification.icon,
+                };
+                const notification = new Notification(notificationTitle, notificationOptions);
+                notification.onclick = function(event) {
+                    event.preventDefault(); // prevent the browser from focusing the Notification's tab
+                    window.open('/u/control/bitacora/reportes');
+                    notification.close();
+                };
             }
             // this.currentMessage.next(payload);
         });

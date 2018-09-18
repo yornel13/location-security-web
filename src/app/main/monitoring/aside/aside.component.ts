@@ -271,7 +271,7 @@ export class AsideComponent implements OnInit, OnChanges {
         const millisSeconds = this.minutes * 60 * 1000;
         const arrToShow = [];
         let date = new Date();
-        date = new Date(date.getTime() - 3600000); // para igualar con la hora de ecuador, quitar linea
+        // date = new Date(date.getTime() - 3600000); // para igualar con la hora de ecuador, quitar linea
         const dateLong = date.getTime();
         let count = 1;
         const date1 = new Date(this.date + ' ' + this.hours1 + ':' + this.mints1 + ':00');
@@ -305,7 +305,7 @@ export class AsideComponent implements OnInit, OnChanges {
         const millisSeconds = this.minutes * 60 * 1000;
         const arrToShow = [];
         let date = new Date();
-        date = new Date(date.getTime() - 3600000); // para igualar con la hora de ecuador, quitar linea
+        // date = new Date(date.getTime() - 3600000); // para igualar con la hora de ecuador, quitar linea
         const dateLong = date.getTime();
         let count = 1;
         const date1 = new Date(this.date + ' ' + this.hours1 + ':' + this.mints1 + ':00');

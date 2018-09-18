@@ -61,6 +61,13 @@ export class LoginComponent implements OnInit {
                     if (this.authService.getUser() === null) {
                         this.error = 'Usuario no definido';
                         this.loading = false;
+                        if (this.authService.getTokenFire() != null) {
+                            this.authService.webRegister(
+                                this.authService.getTokenFire(),
+                                this.authService.getTokenSession(),
+                                this.authService.getUser().id
+                            ).then();
+                        }
                         return;
                     }
                     this.router.navigate([this.returnUrl]).then();
