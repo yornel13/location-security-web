@@ -442,7 +442,7 @@ export class AlertasComponent implements OnInit {
 		if(this.desde == ""){
 			if(cause == "all"){
 				if(guardia.length == 0){
-					this.getAll();
+					// this.getAll();
 				}else{
           var result = [];
 					for(var i=0; i<guardia.length; i++){

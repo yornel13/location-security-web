@@ -1,7 +1,7 @@
 <div class="info-container panel panel-default" *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
         <div class="mr-auto row ml-1">
-            <a routerLink="/u/control/home/cerco" title="Atrás" style="color: var(--secondary-color)">
+            <a routerLink="/u/control/cerco" title="Atrás" style="color: var(--secondary-color)">
                 <i class="fas fa-reply icon-return"></i>
             </a>
             <h3 class="list-title">Cercos Virutales</h3>
@@ -197,45 +197,61 @@
                         <input type="text" name="searchString" class="form-control" placeholder="Buscar Vehículo" name="search" [(ngModel)]="filter">
                     </div>
                     <a class="btn btn-secondary" data-toggle="modal" href="#algo" style="background-color: #28a745; border: none; color: #fff" ><i class="fas fa-plus-circle mr-2"></i>Agregar vehiculo</a>
-                     <!--ADD VEHICLE MODAL -->
-                            <div class="modal"  tabindex="-1"  role="dialog" id="algo">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-                                        <div class="modal-header" style="background-color: #c82333; color: white;">
-                                            <h5 class="modal-title">Añadir vehiculos</h5>
-                                        </div>
-                                        <div class="modal-body scrolled">
-                                                <div style="display: flex; overflow: hidden">
-                                                    <h6 style="margin-left: 1%; margin-bottom: 10px">IMEI</h6>
-                                                    <h6 style="margin-left: 29%; margin-bottom: 10px">Alias</h6>
-                                                    <h6 style="margin-left: 49%; margin-bottom: 10px">Agregar</h6>
-                                                </div>
-                                            <div class="add-vehicle-cont">
-                                                <table style="width: 100%">
-                                                    <tbody>
-                                                        <tr *ngFor="let vehicle of vehiclesList " >
-                                                            <td>{{vehicle.imei}}</td>
-                                                            <td>{{vehicle.alias}}</td>
-                                                            <td class="checkbox-vehicle"><input  #vehicleChecked type="checkbox" id="che" value="{{vehicle.imei}}" (click)="getVehicleByChecked(vehicle)"  /></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success" (click)="addVehiclesToBound(cercoId)" data-dismiss="modal">Guardar</button>
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
-                                        </div>
+                    <!--ADD VEHICLE MODAL -->
+                    <div class="modal"  tabindex="-1"  role="dialog" id="algo">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #c82333; color: white;">
+                                    <h5 class="modal-title">Añadir vehiculos</h5>
+                                </div>
+                                <div class="modal-body scrolled">
+                                    <div style="display: flex; overflow: hidden">
+                                        <input style="margin-bottom: 8px" type="text" name="searchString" class="form-control" placeholder="Buscar" [(ngModel)]="filterValue">
+                                    </div>
+                                    <div class="add-vehicle-cont">
+                                        <table class="table table-bordered">
+                                            <thead class="thead-light">
+                                            <tr>
+                                                <th width="40px">*</th>
+                                                <th width="50px">ID</th>
+                                                <th>IMEI</th>
+                                                <th>Alias</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr *ngFor="let vehicle of vehiclesList | filter: filterValue"
+                                                (click)="vehicle.checked = !vehicle.checked"
+                                                style="cursor: pointer">
+                                                <td class="checkbox-vehicle">
+                                                    <input
+                                                            #tabletChecked
+                                                            type="checkbox"
+                                                            value="{{vehicle.id}}"
+                                                            [(ngModel)]="vehicle.checked"
+                                                            [ngModelOptions]="{standalone: true}"/>
+                                                </td>
+                                                <td>{{vehicle.id}}</td>
+                                                <td>{{vehicle.imei}}</td>
+                                                <td>{{vehicle.alias}}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
-                            </div>  
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-success" (click)="addVehiclesToBound()" data-dismiss="modal">Guardar</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="table mt-2 container-fluid">
                     <table class="table table-bordered">
                         <thead  class="thead-light">
-                            <th>IMEI</th>
-                            <th>Alias</th>
-                            <th>Eliminar</th>
+                        <th>IMEI</th>
+                        <th>Alias</th>
+                        <th>Eliminar</th>
                         </thead>
                         <tbody>
                         <tr *ngFor="let vehicle of vehiclesInBound  | filter:filter">
@@ -263,7 +279,7 @@
                                     </div>
                                 </div>
                             </div>
-                                
+
                         </tr>
                         </tbody>
                     </table>

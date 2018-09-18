@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { BitacoraService } from '../../../../../model/bitacora/bitacora.service';
 import { Bitacora } from '../../../../../model/bitacora/bitacora';
 import { GuardService } from '../../../../../model/guard/guard.service';
-import { AgmMap } from '@agm/core';
 import { IncidenciasService } from '../../../../../model/incidencias/incidencia.service';
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -13,6 +12,9 @@ import 'leaflet.markercluster';
 import * as geolib from 'geolib';
 import {Admin} from '../../../../../model/admin/admin';
 import {AuthenticationService} from '../../../../_services';
+import {GlobalOsm} from '../../../../global.osm';
+import {NotificationService} from '../../../../shared/notification.service';
+import {MessagingService} from '../../../../shared/messaging.service';
 
 @Component({
   selector: 'app-reportets',
@@ -20,163 +22,119 @@ import {AuthenticationService} from '../../../../_services';
   styleUrls: ['./reportets.component.css']
 })
 export class ReportetsComponent {
-  //general
-  reportes:any = [];
-  data:any = [];
-  open:any = [];
-  reopen:any = [];
-  report:any = [];
-  comentarios:any = [];
-  coment:any = [];
-  resolved:number = 0;
-  change:any = [];
-  haycomentarios:boolean = false;
-  incidencias:any = [];
-  inciden:any = [];
-  incidenSelect:number = 0;
-  //vistas
-  lista:boolean;
-  detalle:boolean;
-  //comentario
-  newcoment:string = '';
-  addcomment:boolean = false;
-  lat: number = 0;
-  lng: number = 0;
-  valueDate:any = [];
-  dateSelect:any = '';
-  filtro:boolean = true;
-  guardiaSelect:number = 0;
-  filtroSelect:number = 0;
-  guardias:any = [];
-  guard:any = [];
-  //status
-  status:number = 0;
-  hay: boolean;
-  numElement:number = 10;
-  //exportaciones
-  contpdf:any = [];
-  info: any = [];
+    // general
+    reportes:any = [];
+    data:any = [];
+    open:any = [];
+    reopen:any = [];
+    report:any = [];
+    comentarios:any = [];
+    coment:any[] = [];
+    resolved:number = 0;
+    change:any = [];
+    haycomentarios:boolean = false;
+    incidencias:any = [];
+    inciden:any = [];
+    incidenSelect:number = 0;
+    //vistas
+    lista:boolean;
+    detalle:boolean;
+    //comentario
+    newcoment:string = '';
+    addcomment:boolean = false;
+    lat: number = 0;
+    lng: number = 0;
+    valueDate:any = [];
+    dateSelect:any = '';
+    filtro:boolean = true;
+    guardiaSelect:number = 0;
+    filtroSelect:number = 0;
+    guardias:any = [];
+    guard:any = [];
+    //status
+    status:number = 0;
+    hay: boolean;
+    numElement:number = 10;
+    //exportaciones
+    contpdf:any = [];
+    info: any = [];
+    filter: string;
+    key: string = 'id'; // set default
+    reverse: boolean = true;
 
-  key: string = 'id'; //set default
-  reverse: boolean = true;
+    //map
+    map: any;
+    mapchart: any;
+    lat2:number= -2.0000;
+    lng2:number = -79.0000;
+    viewmap:boolean = false;
 
-  //map
-  map: any;
-  mapchart: any;
-  lat2:number= -2.0000;
-  lng2:number = -79.0000;
-  viewmap:boolean = false;
+    //fechas
+    desde:any = "";
+    hasta:any = "";
+    rangeday:boolean=true;
 
-  //fechas
-  desde:any = "";
-  hasta:any = "";
-  rangeday:boolean=true;
+    //fechas
+    desde2:any = "";
+    hasta2:any = "";
+    rangeday2:boolean=true;
+    date:any;
+    month2:any;
+    day2:any;
 
-  //fechas
-  desde2:any = "";
-  hasta2:any = "";
-  rangeday2:boolean=true;
-  date:any;
-  month2:any;
-  day2:any;
+    //dropdow
+    dropdownList1 = [];
+    selectedIncidencias = [];
+    dropdownSettings1 = {};
 
-  //dropdow
-  dropdownList1 = [];
-  selectedIncidencias = [];
-  dropdownSettings1 = {};
+    dropdownList2 = [];
+    selectedGuardias = [];
+    dropdownSettings2 = {};
 
-  dropdownList2 = [];
-  selectedGuardias = [];
-  dropdownSettings2 = {};
+    zoom = 12;
+    center = L.latLng(([ this.lat2, this.lng2 ]));
+    marker = L.marker([this.lat2, this.lng2], {draggable: false});
 
-  zoom: 12;
-  center = L.latLng(([ this.lat2, this.lng2 ]));
-  marker = L.marker([this.lat2, this.lng2], {draggable: false});
+    layersControlOptions;
+    baseLayers;
+    options;
 
-  LAYER_OSM = {
-        id: 'openstreetmap',
-        name: 'Open Street Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
-            detectRetina: true,
-            attribution: 'Open Street Map'
-        })
-    };
-    LAYER_GOOGLE_STREET = {
-        id: 'googlestreets',
-        name: 'Google Street Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=marker&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Street Map'
-        })
-    };
-    LAYER_GOOGLE_SATELLITE = {
-        id: 'googlesatellite',
-        name: 'Google Satellite Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Satellite Map'
-        })
-    };
-    LAYER_GOOGLE_TERRAIN = {
-        id: 'googletarrain',
-        name: 'Google Terrain Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Terrain Map'
-        })
-    };
-
-
-  constructor(
-        public router: Router,
-        private bitacoraService: BitacoraService,
-        private guardiaService: GuardService,
-        private incidenciaService: IncidenciasService,
-        private excelService: ExcelService,
-        private authService: AuthenticationService) {
-      //this.getOpenAll();
-      this.getToday();
-      this.getIncidencias();
-      this.getGuardias();
-      this.lista = true;
-      this.detalle = false;
-      this.setupDropdown1();
-      this.setupDropdown2();
-  }
-
-  // Values to bind to Leaflet Directive
-    layersControlOptions = { position: 'bottomright' };
-    baseLayers = {
-        'Open Street Map': this.LAYER_OSM.layer,
-        'Google Street Map': this.LAYER_GOOGLE_STREET.layer,
-        'Google Satellite Map': this.LAYER_GOOGLE_SATELLITE.layer,
-        'Google Terrain Map': this.LAYER_GOOGLE_TERRAIN.layer
-    };
-    options = {
-        zoom: 12,
-        center: L.latLng(([this.lat2, this.lng2 ]))
-    };
+    constructor(
+            public router: Router,
+            private globalOSM: GlobalOsm,
+            private bitacoraService: BitacoraService,
+            private guardiaService: GuardService,
+            private incidenciaService: IncidenciasService,
+            private excelService: ExcelService,
+            private messagingService: MessagingService,
+            private notificationService: NotificationService,
+            private authService: AuthenticationService) {
+        this.layersControlOptions = this.globalOSM.layersOptions;
+        this.baseLayers = this.globalOSM.baseLayers;
+        this.options = this.globalOSM.defaultOptions;
+        this.getToday();
+        this.getIncidencias();
+        this.getGuardias();
+        this.lista = true;
+        this.detalle = false;
+        this.setupDropdown1();
+        this.setupDropdown2();
+        this.notificationService.newReply.subscribe(reply => {
+            this.getToday();
+            if (this.detalle) {
+                if (+this.report.id === +reply.report_id) {
+                    this.coment.unshift(reply);
+                }
+            }
+        });
+    }
 
     onMapReady(map: L.Map) {
-      console.log("entra aqui");
-      this.map =  map;
+        this.map = map;
+        this.globalOSM.setupLayer(this.map);
         this.zoom = 12;
         this.center = L.latLng(([ this.lat2, this.lng2 ]));
-      this.marker = L.marker([this.lat2, this.lng2], {draggable: false});
-      this.layersControlOptions = { position: 'bottomright' };
-      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
-            detectRetina: true,
-            attribution: 'Open Street Map'
-        }).addTo(this.map);
+        this.marker = L.marker([this.lat2, this.lng2], { icon: L.icon({iconUrl: './assets/alerts/report.png'})} );
         this.marker.addTo(this.map);
     }
 
@@ -248,13 +206,14 @@ export class ReportetsComponent {
       this.date = year+"-"+this.month2+"-"+this.day2;
       this.desde =this.date;
 
-      this.bitacoraService.getByDate(year, this.month2, this.day2, year, this.month2, this.day2).then(
+      this.bitacoraService.getAllUnreadReports().then(
           success => {
-          this.reportes = success;
-          this.data = this.reportes.data;
-          for(var i=0; i<this.data.length; i++){
-            this.data[i].id = Number(this.data[i].id);
-          }
+              this.reportes = success;
+              this.data = this.reportes.data;
+              for (let i = 0; i < this.data.length; i++) {
+                this.data[i].id = Number(this.data[i].id);
+              }
+              this.hay = this.data.length > 0;
           }, error => {
               if (error.status === 422) {
                   // on some data incorrect
@@ -303,8 +262,8 @@ export class ReportetsComponent {
         );
     }
 
-    viewDetail(id) {
-      this.bitacoraService.getId(id).then(
+    viewDetail(d) {
+      this.bitacoraService.getId(d.id).then(
         success => {
           this.report = success;
           this.report.latitude = this.lat2 = Number(this.report.latitude);
@@ -312,6 +271,7 @@ export class ReportetsComponent {
           this.lista = false;
           this.detalle = true;
           this.zoom = 12;
+          d.unread = 0;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -321,15 +281,15 @@ export class ReportetsComponent {
             }
         );
 
-      this.bitacoraService.getComentarios(id).then(
-        success => {
-          this.comentarios = success;
-          this.coment = this.comentarios.data;
-          if(this.coment.length == 0){
-            this.haycomentarios = false;
-          }else{
-            this.haycomentarios = true;
-          }
+        this.bitacoraService.getComentarios(d.id).then(success => {
+                this.comentarios = success;
+                this.coment = this.comentarios.data;
+                if (this.coment.length == 0) {
+                    this.haycomentarios = false;
+                } else {
+                    this.haycomentarios = true;
+                }
+                this.putReportRead(d.id);
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -338,6 +298,14 @@ export class ReportetsComponent {
                 }
             }
         );
+    }
+
+    putReportRead(id) {
+        if (this.coment.length > 0) {
+            this.bitacoraService.putReportRead(id).then(success => {
+                this.messagingService.loadUnreadReplies();
+            });
+        }
     }
 
     regresar() {

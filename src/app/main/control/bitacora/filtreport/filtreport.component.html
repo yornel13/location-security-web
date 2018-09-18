@@ -2,7 +2,7 @@
   <div class="info-container panel panel-default"  *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
       <div class="mr-auto row ml-1">
-        <a routerLink="/u/control/home/bitacora" title="Atrás" style="color: var(--secondary-color)">
+        <a routerLink="/u/control/bitacora" title="Atrás" style="color: var(--secondary-color)">
             <i class="fas fa-reply icon-return"></i>
         </a>
         <h3 class="list-title">Todos los Reportes</h3>
@@ -166,6 +166,9 @@
                   <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)"  title="Detalle"><span class="far fa-eye"></span></a>
                  </td>
                </tr>
+                  <tr *ngIf="data.length == 0">
+                      <th colspan="8"><h3>Sin reportes para esta selección</h3></th>
+                  </tr>
             </tbody>
           </table>
           <div style="text-align: center; padding-right: 40px;">
@@ -321,50 +324,87 @@
                   <input type="text" readonly class="form-control" id="dni" value="{{report.watch.guard_dni}}">
                 </div>
               </div>
-              <hr>
-              <div class="form-group row mt-2"  *ngIf="haycomentarios">
-                <label for="creation" class="col-sm-9 col-form-label"><b>Comentarios</b></label>
-                <div class="col-sm-3">
-                  <button class="btn btn-success form-control ml-auto" *ngIf="report.resolved != 0" (click)="agregarComentario()">Agregar comentario</button>
-                </div>
-              </div>
-              <div class="form-group row mt-2" *ngIf="!haycomentarios">
-                <label for="creation" class="col-sm-9 col-form-label"><b>No hay comentarios</b></label>
-                <div class="col-sm-3">
-                  <button class="btn btn-success form-control ml-auto" *ngIf="report.resolved != 0" (click)="agregarComentario()">Agregar comentario</button>
-                </div>
-              </div>
-              <div *ngFor="let c of coment">
-                <hr>
-                <div class="form-group row mt-2">
-                  <label for="dni" class="col-sm-2 col-form-label">Usuario</label>
-                  <div class="col-sm-4">
-                    <input type="text" readonly class="form-control" id="dni" value="{{c.user_name}}">
-                  </div>
-                  <label for="dni" class="col-sm-2 col-form-label">Fecha</label>
-                  <div class="col-sm-4">
-                    <input type="text" readonly class="form-control" id="dni" value="{{c.create_date}}">
-                  </div>
-                </div>
                 <div class="form-group row">
-                  <label for="dni" class="col-sm-2 col-form-label">Comentario</label>
-                  <div class="col-sm-10">
-                    <input type="text" readonly class="form-control" id="dni" value="{{c.text}}">
-                  </div>
+                    <label class="col-sm-2 col-form-label">Tablet</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" value="{{report.watch.tablet_imei}}">
+                    </div>
+                    <label class="col-sm-2 col-form-label">Puesto</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" value="{{report.watch.stand_name}}">
+                    </div>
                 </div>
-              </div>
               <hr>
-              <div>
-                <div class="form-group row mt-2" *ngIf="addcomment">
-                  <label class="col-sm-2 col-form-label">Nuevo Comentario</label>
-                  <div class="col-sm-8">
-                    <textarea [(ngModel)]="newcoment" [ngModelOptions]="{standalone: true}" placeholder="Ingrese nuevo comentario" style="width: 100%"></textarea>
-                  </div>
-                  <div class="col-sm-2">
-                    <button class="btn btn-danger" (click)="guardarComentario(report.id)">Guardar</button>
-                  </div>
+                <div class="form-group row mt-2">
+                    <label class="col-sm-9 col-form-label" *ngIf="haycomentarios"><b>Comentarios</b></label>
+                    <label class="col-sm-9 col-form-label" *ngIf="!haycomentarios"><b>Sin comentarios</b></label>
+                    <div class="col-sm-3">
+                        <button class="btn btn-success form-control ml-auto" *ngIf="report.resolved != 0" (click)="agregarComentario()">Agregar comentario</button>
+                    </div>
                 </div>
-              </div>
+                <div>
+                    <div class="form-group row mt-2" *ngIf="addcomment">
+                        <label class="col-sm-2 col-form-label">Nuevo Comentario</label>
+                        <div class="col-sm-8">
+                            <textarea [(ngModel)]="newcoment" [ngModelOptions]="{standalone: true}" placeholder="Ingrese nuevo comentario" style="width: 100%"></textarea>
+                        </div>
+                        <div class="col-sm-2">
+                            <button class="btn btn-danger" (click)="guardarComentario(report.id)">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div *ngFor="let c of coment">
+                        <div class="bubble-reply">
+                            <p class="user-reply">{{c.user_name}} <span class="text-reply">{{c.text}}</span></p>
+                            <p class="date-reply">{{c.create_date | agoTime}}</p>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+              <!--<div class="form-group row mt-2"  *ngIf="haycomentarios">-->
+                <!--<label for="creation" class="col-sm-9 col-form-label"><b>Comentarios</b></label>-->
+                <!--<div class="col-sm-3">-->
+                  <!--<button class="btn btn-success form-control ml-auto" *ngIf="report.resolved != 0" (click)="agregarComentario()">Agregar comentario</button>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div class="form-group row mt-2" *ngIf="!haycomentarios">-->
+                <!--<label for="creation" class="col-sm-9 col-form-label"><b>No hay comentarios</b></label>-->
+                <!--<div class="col-sm-3">-->
+                  <!--<button class="btn btn-success form-control ml-auto" *ngIf="report.resolved != 0" (click)="agregarComentario()">Agregar comentario</button>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div *ngFor="let c of coment">-->
+                <!--<hr>-->
+                <!--<div class="form-group row mt-2">-->
+                  <!--<label for="dni" class="col-sm-2 col-form-label">Usuario</label>-->
+                  <!--<div class="col-sm-4">-->
+                    <!--<input type="text" readonly class="form-control" id="dni" value="{{c.user_name}}">-->
+                  <!--</div>-->
+                  <!--<label for="dni" class="col-sm-2 col-form-label">Fecha</label>-->
+                  <!--<div class="col-sm-4">-->
+                    <!--<input type="text" readonly class="form-control" id="dni" value="{{c.create_date}}">-->
+                  <!--</div>-->
+                <!--</div>-->
+                <!--<div class="form-group row">-->
+                  <!--<label for="dni" class="col-sm-2 col-form-label">Comentario</label>-->
+                  <!--<div class="col-sm-10">-->
+                    <!--<input type="text" readonly class="form-control" id="dni" value="{{c.text}}">-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<hr>-->
+              <!--<div>-->
+                <!--<div class="form-group row mt-2" *ngIf="addcomment">-->
+                  <!--<label class="col-sm-2 col-form-label">Nuevo Comentario</label>-->
+                  <!--<div class="col-sm-8">-->
+                    <!--<textarea [(ngModel)]="newcoment" [ngModelOptions]="{standalone: true}" placeholder="Ingrese nuevo comentario" style="width: 100%"></textarea>-->
+                  <!--</div>-->
+                  <!--<div class="col-sm-2">-->
+                    <!--<button class="btn btn-danger" (click)="guardarComentario(report.id)">Guardar</button>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</div>-->
               <div class="row mt-4">
                   <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
               </div>

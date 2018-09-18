@@ -10,13 +10,11 @@ import { ExcelService } from '../../../../../model/excel/excel.services';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import * as geolib from 'geolib';
-import {isNumber} from 'util';
 import {AuthenticationService} from '../../../../_services';
 import {Admin} from '../../../../../model/admin/admin';
-import {Alerta} from "../../../../../model/alerta/alerta";
-import {GlobalOsm} from "../../../../global.osm";
-import {UtilsVehicles} from "../../../../../model/vehicle/vehicle.utils";
-import {PopupReportComponent} from "./popup.report.component";
+import {GlobalOsm} from '../../../../global.osm';
+import {UtilsVehicles} from '../../../../../model/vehicle/vehicle.utils';
+import {PopupReportComponent} from './popup.report.component';
 
 @Component({
   selector: 'app-filtreport',
@@ -24,89 +22,89 @@ import {PopupReportComponent} from "./popup.report.component";
   styleUrls: ['./filtreport.component.css']
 })
 export class FiltreportComponent implements OnInit {
-  /* general */
-  reportes: any = [];
-  data: any = [];
-  open: any = [];
-  reopen: any = [];
-  report: any = [];
-  comentarios: any = [];
-  coment: any = [];
-  resolved: number = 0;
-  change: any = [];
-  incidencias: any = [];
-  inciden: any = [];
-  incidenSelect: number = 0;
-  haycomentarios: boolean = false;
-  valueDate: any = [];
-  dateSelect: any = '';
-  filtro: boolean = true;
-  guardiaSelect: number = 0;
-  filtroSelect: number = 0;
-  guardias: any = [];
-  guard: any = [];
-  /* vistas */
-  lista: boolean;
-  detalle: boolean;
-  /* comentario */
-  newcoment: string = '';
-  addcomment: boolean = false;
-  /* status */
-  status: number = 0;
-  numElement: number = 10;
-  /* new chart */
-  dataSource: any = {};
-  valores: number[] = [2,2];
-  names: string[] = ["Robo", "Incendio"];
-  datos: any = [{"label": "Robo",
+    /* general */
+    reportes: any = [];
+    data: any = [];
+    open: any = [];
+    reopen: any = [];
+    report: any = [];
+    comentarios: any = [];
+    coment: any = [];
+    resolved: number = 0;
+    change: any = [];
+    incidencias: any = [];
+    inciden: any = [];
+    incidenSelect: number = 0;
+    haycomentarios: boolean = false;
+    valueDate: any = [];
+    dateSelect: any = '';
+    filtro: boolean = true;
+    guardiaSelect: number = 0;
+    filtroSelect: number = 0;
+    guardias: any = [];
+    guard: any = [];
+    /* vistas */
+    lista: boolean;
+    detalle: boolean;
+    /* comentario */
+    newcoment: string = '';
+    addcomment: boolean = false;
+    /* status */
+    status: number = 0;
+    numElement: number = 10;
+    /* new chart */
+    dataSource: any = {};
+    valores: number[] = [2,2];
+    names: string[] = ["Robo", "Incendio"];
+    datos: any = [{"label": "Robo",
                 "value": 2},
                 {"label": "Incendio",
                 "value": 2}];
-  /* exportaciones */
-  contpdf:any = [];
-  info: any = [];
-  /* order table */
-  key: string = 'id';
-  reverse: boolean = true;
-  /* filter chart */
-  rangeday:boolean = true;
-  desde:string = "";
-  hasta:string = "";
-  chartreportes:any = [];
-  chartdata:any = [];
+    /* exportaciones */
+    contpdf:any = [];
+    info: any = [];
+    /* order table */
+    key: string = 'id';
+    reverse: boolean = true;
+    /* filter chart */
+    rangeday:boolean = true;
+    desde:string = "";
+    hasta:string = "";
+    chartreportes:any = [];
+    chartdata:any = [];
 
-  //map
-  map: any;
-  mapchart: any;
-  lat:number= -2.0000;
-  lng:number = -79.0000;
-  viewmap:boolean = false;
+    //map
+    map: any;
+    mapchart: any;
+    lat:number= -2.0000;
+    lng:number = -79.0000;
+    viewmap:boolean = false;
 
-  //fechas
-  desde2:any = "";
-  hasta2:any = "";
-  rangeday2:boolean=true;
-  date:any;
-  month2:any;
-  day2:any;
+    //fechas
+    desde2:any = "";
+    hasta2:any = "";
+    rangeday2:boolean=true;
+    date:any;
+    month2:any;
+    day2:any;
 
-  //dropdow
-  dropdownList1 = [];
-  selectedIncidencias = [];
-  dropdownSettings1 = {};
+    //dropdow
+    dropdownList1 = [];
+    selectedIncidencias = [];
+    dropdownSettings1 = {};
 
-  dropdownList2 = [];
-  selectedGuardias = [];
-  dropdownSettings2 = {};
+    dropdownList2 = [];
+    selectedGuardias = [];
+    dropdownSettings2 = {};
 
-  zoom;
-  center = L.latLng(([ this.lat, this.lng ]));
-  marker = L.marker([this.lat, this.lng], {draggable: false});
-  markerClusterData: any[] = [];
-  markerClusterOptions: L.MarkerClusterGroupOptions;
-  layersControlOptions;
-  baseLayers;
-  options;
+    zoom;
+    center = L.latLng(([ this.lat, this.lng ]));
+    marker = L.marker([this.lat, this.lng], {draggable: false});
+    markerClusterData: any[] = [];
+    markerClusterOptions: L.MarkerClusterGroupOptions;
+    layersControlOptions;
+    baseLayers;
+    options;
 
     constructor(
             private resolver: ComponentFactoryResolver,
@@ -120,90 +118,84 @@ export class FiltreportComponent implements OnInit {
             private excelService: ExcelService,
             private route: ActivatedRoute,
             private authService: AuthenticationService) {
-      this.layersControlOptions = this.globalOSM.layersOptions;
-      this.baseLayers = this.globalOSM.baseLayers;
-      this.options = this.globalOSM.defaultOptions;
-      this.getIncidencias();
-      this.getToday();
-      this.getGuardias();
-      this.setupDropdown1();
-      this.setupDropdown2();
-      this.lista = true;
-      this.detalle = false;
-      this.dataSource = {
-          chart: {
-              "yAxisName": "Cantidad de reportes",
-              "yAxisMaxValue": 5
-          },
-          // Chart Data
-          "data": this.datos
-      };
-  }
+        this.layersControlOptions = this.globalOSM.layersOptions;
+        this.baseLayers = this.globalOSM.baseLayers;
+        this.options = this.globalOSM.defaultOptions;
+        this.getIncidencias();
+        this.getToday();
+        this.getGuardias();
+        this.setupDropdown1();
+        this.setupDropdown2();
+        this.lista = true;
+        this.detalle = false;
+        this.dataSource = {
+            chart: {
+                "yAxisName": "Cantidad de reportes",
+                "yAxisMaxValue": 5
+            },
+            // Chart Data
+            "data": this.datos
+        };
+    }
 
     onMapReady(map: L.Map) {
-      console.log("entra aqui");
-      this.map =  map;
+        this.map = map;
+        this.globalOSM.setupLayer(this.map);
         this.zoom = 12;
         this.center = L.latLng(([ this.lat, this.lng ]));
-      this.marker = L.marker([this.lat, this.lng], {draggable: false});
-      this.layersControlOptions = { position: 'bottomright' };
-      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
-            detectRetina: true,
-            attribution: 'Open Street Map'
-        }).addTo(this.map);
+        this.marker = L.marker([this.lat, this.lng], { icon: L.icon({iconUrl: './assets/alerts/report.png'})} );
         this.marker.addTo(this.map);
     }
 
-  onMapReadyChart(map: L.Map) {
-    this.mapchart = map;
-    this.globalOSM.setupLayer(this.mapchart);
-    this.center = this.globalOSM.center;
-    this.zoom = this.globalOSM.zoom;
-    const southWest = new L.LatLng(-2.100599, -79.560921);
-    const northEast = new L.LatLng(-2.030906, -79.568947);
-    const bounds = new L.LatLngBounds(southWest, northEast);
-    const data: any[] = [];
-    if (this.data.length) {
-      const coors = [];
-      this.data.forEach((report: any) => {
-        const lat = Number(report.latitude);
-        const lng = Number(report.longitude);
-        const maker = L.marker([lat, lng], {icon: L.icon({iconUrl: './assets/alerts/report.png'})});
-        const factory = this.resolver.resolveComponentFactory(PopupReportComponent);
-        const component = factory.create(this.injector);
-        const popupContent = component.location.nativeElement;
-        component.instance.report = report;
-        component.changeDetectorRef.detectChanges();
-        maker.bindPopup(popupContent).openPopup();
-        data.push(maker);
-        coors.push({latitude: lat, longitude: lng});
-        bounds.extend(maker.getLatLng());
-      });
-      this.mapchart.fitBounds(bounds);
-      const geoCenter = geolib.getCenter(coors);
-      this.center = L.latLng([geoCenter.latitude, geoCenter.longitude]);
+    onMapReadyChart(map: L.Map) {
+        this.mapchart = map;
+        this.globalOSM.setupLayer(this.mapchart);
+        this.center = this.globalOSM.center;
+        this.zoom = this.globalOSM.zoom;
+        const southWest = new L.LatLng(-2.100599, -79.560921);
+        const northEast = new L.LatLng(-2.030906, -79.568947);
+        const bounds = new L.LatLngBounds(southWest, northEast);
+        const data: any[] = [];
+        if (this.data.length) {
+            const coors = [];
+            this.data.forEach((report: any) => {
+                const lat = Number(report.latitude);
+                const lng = Number(report.longitude);
+                const maker = L.marker([lat, lng], {icon: L.icon({iconUrl: './assets/alerts/report.png'})});
+                const factory = this.resolver.resolveComponentFactory(PopupReportComponent);
+                const component = factory.create(this.injector);
+                const popupContent = component.location.nativeElement;
+                component.instance.report = report;
+                component.changeDetectorRef.detectChanges();
+                maker.bindPopup(popupContent).openPopup();
+                data.push(maker);
+                coors.push({latitude: lat, longitude: lng});
+                bounds.extend(maker.getLatLng());
+            });
+            this.mapchart.fitBounds(bounds);
+            const geoCenter = geolib.getCenter(coors);
+            this.center = L.latLng([geoCenter.latitude, geoCenter.longitude]);
+        }
+        this.markerClusterData = data;
     }
-    this.markerClusterData = data;
-  }
 
-  sort(key) {
-    this.key = key;
-    this.reverse = !this.reverse;
-  }
+    sort(key) {
+        this.key = key;
+        this.reverse = !this.reverse;
+    }
 
-  selectRange(id){
-      if(id == 1){
-        this.rangeday2 = true;
-        this.desde2 = "";
-        this.hasta2 = "";
-        this.getSearch();
-      }else{
-        this.rangeday2 = false;
-        this.desde2 = "";
-        this.hasta2 = "";
-        this.getSearch();
-      }
+    selectRange(id) {
+        if (id == 1) {
+            this.rangeday2 = true;
+            this.desde2 = "";
+            this.hasta2 = "";
+            this.getSearch();
+        } else {
+            this.rangeday2 = false;
+            this.desde2 = "";
+            this.hasta2 = "";
+            this.getSearch();
+        }
     }
 
     selectRange2(id){
@@ -579,7 +571,7 @@ export class FiltreportComponent implements OnInit {
       if(resolved == 0){
         this.bitacoraService.setReopen(id).then(
           succcess =>{
-            this.getAll();
+            // this.getAll();
           }, error=>{
             if (error.status === 422) {
                     // on some data incorrect
@@ -591,7 +583,7 @@ export class FiltreportComponent implements OnInit {
       }else{
         this.bitacoraService.setClose(id).then(
         success => {
-          this.getAll();
+          // this.getAll();
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -650,14 +642,14 @@ export class FiltreportComponent implements OnInit {
         this.desde2 = '';
         this.hasta2 = '';
         this.filtro = true;
-        this.getAll();
-      }else{
+        // this.getAll();
+      } else {
         this.incidenSelect = 0;
         this.guardiaSelect = 0;
         this.desde2 = '';
         this.hasta2 = '';
         this.filtro = false;
-        this.getAll();
+        // this.getAll();
       }
     }
 
@@ -677,15 +669,15 @@ export class FiltreportComponent implements OnInit {
       var guardia = this.selectedGuardias;
       var incidencia = this.selectedIncidencias;
 
-      //incidencia
-      if(this.filtroSelect == 0){
-        if(this.desde2 == ""){
-          if(this.status == 0){
-            if(incidencia.length == 0){
-              this.getAll();
+      // incidencia
+      if (this.filtroSelect == 0) {
+        if (this.desde2 == '') {
+          if (this.status == 0) {
+            if (incidencia.length == 0) {
+              // this.getAll();
             }else{
               var result = [];
-              for(var i=0;i<incidencia.length;i++){
+              for (let i = 0; i < incidencia.length; i++) {
                   this.bitacoraService.getByIncidenAll(incidencia[i].item_id).then(
                     success => {
                     this.reportes = success;
@@ -1023,7 +1015,7 @@ export class FiltreportComponent implements OnInit {
         if(this.desde2 == ""){
           if(this.status == 0){
             if(guardia.length == 0){
-              this.getAll();
+              // this.getAll();
             }else{
               var result = [];
               for(var i=0;i<guardia.length;i++){

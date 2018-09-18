@@ -29,7 +29,8 @@ map-panel, .info-container {
 }
 
 .add-vehicle-cont {
-    height: 300px;
+    height: auto;
+    max-height: 70% !important;
     overflow: auto;
 }
 

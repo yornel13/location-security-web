@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 
 import { Observable, of } from 'rxjs';
 import { Bitacora } from './bitacora';
+import {ApiResponse} from "../app.response";
 
 
 const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
@@ -42,6 +43,16 @@ export class BitacoraService {
     getAllUnreadReplies() {
         return this.http.get(this.BITAC_URL + '-reply/admin/comment/unread').toPromise()
           .then((response) => response);
+    }
+
+    getAllUnreadReports() {
+        return this.http.get(this.BITAC_URL + '-reply/admin/comment/unread/full').toPromise()
+            .then((response) => response);
+    }
+
+    putReportRead(id) {
+        return this.http.put<ApiResponse>(`${this.BITAC_URL}-reply/admin/report/` + id + `/read`,
+            httpOptions).toPromise().then((response) => response);
     }
 
 // ------------------------ Status en Incidencia ------------------------------------------------------

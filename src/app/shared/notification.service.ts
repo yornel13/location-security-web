@@ -8,4 +8,5 @@ import {ChatLine} from '../../model/chat/chat.line';
 export class NotificationService {
     newNotification = new EventEmitter<Alerta>();
     newMessage = new EventEmitter<ChatLine>();
+    newReply = new EventEmitter<any>();
 }

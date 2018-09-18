@@ -1,24 +1,18 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import { AdminService } from '../../../../../model/admin/admin.service';
-import { Admin } from '../../../../../model/admin/admin';
-import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from 'angularfire2/storage';
+import { AngularFireStorage } from 'angularfire2/storage';
 import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
 
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet-draw';
 import {CercoService} from '../../../../../model/cerco/cerco.service';
 import {Cerco} from '../../../../../model/cerco/cerco';
-import {forEach} from '@angular/router/src/utils/collection';
 import {VehiclesService} from '../../../../../model/vehicle/vehicle.service';
-import {Vehicle} from '../../../../../model/vehicle/vehicle';
-import {CheckboxControlValueAccessor} from '@angular/forms';
 import {ListBounds} from '../../../../../model/cerco/list.bounds';
 import {Bounds} from '../../../../../model/cerco/bounds';
 import {GlobalOsm} from '../../../../global.osm';
-import { ColorPickerModule } from 'ngx-color-picker';
 import * as geolib from 'geolib';
 
 export class VechicleS {
@@ -98,7 +92,7 @@ export class CercoComponent implements OnInit {
     cercoId;
     vehiclesInBound: Bounds[] = [];
 
-    zoom: 12;
+    zoom = 12;
     center = L.latLng(([ -2.071522, -79.607105 ]));
     layersControlOptions;
     baseLayers;
@@ -112,15 +106,16 @@ export class CercoComponent implements OnInit {
 
     nameBoundEdit:any = "";
     colorEdit;
-    filter:string;
+    filter: string;
+    filterValue: string;
 
     constructor (
-            public router: Router,
-            private adminService: AdminService,
-            private storage: AngularFireStorage,
-            private cercoService: CercoService,
-            private vehiclesService: VehiclesService,
-            private globalOSM: GlobalOsm) {
+        public router: Router,
+        private adminService: AdminService,
+        private storage: AngularFireStorage,
+        private cercoService: CercoService,
+        private vehiclesService: VehiclesService,
+        private globalOSM: GlobalOsm) {
         /* Map default options */
         this.layersControlOptions = this.globalOSM.layersOptions;
         this.baseLayers = this.globalOSM.baseLayers;
@@ -265,16 +260,17 @@ export class CercoComponent implements OnInit {
         });
     }
 
-    addVehiclesToBound(id) {
+    addVehiclesToBound() {
         const array = [];
-        console.log(id);
-        this.vehicles.imei.forEach( data => {
-            const vehicler: VechicleS = new VechicleS();
-            vehicler.imei = data;
-            array.push(vehicler);
+        this.vehiclesList.forEach(vehicle => {
+            if (vehicle.checked) {
+                const vehicler: VechicleS = new VechicleS();
+                vehicler.imei = vehicle.imei;
+                array.push(vehicler);
+            }
         });
 
-        this.cercoService.addVehiclesToBound(id, JSON.stringify(array))
+        this.cercoService.addVehiclesToBound(this.cercoId, JSON.stringify(array))
             .then( sucess => {
                 this.getVehiclesInBound(this.selectedBounds);
             },  error => {
@@ -300,7 +296,6 @@ export class CercoComponent implements OnInit {
     }
 
     editBound(cerco: Cerco) {
-        console.log("Entra aqui");
         this.selectedBounds = cerco;
         this.editPolygon = true;
         this.cercoService.getId(cerco.id).then(
@@ -328,7 +323,7 @@ export class CercoComponent implements OnInit {
             name: this.nameBoundEdit,
             points: this.selectedBounds.points,
             color: this.colorEdit
-        }
+        };
         this.cercoService.set(bound).then(
             success => {
                 this.getAllBounds();
@@ -424,7 +419,7 @@ export class CercoComponent implements OnInit {
             this.center = L.latLng(([ centerPoint.latitude, centerPoint.longitude ]));
             this.zoom = this.globalOSM.zoom;
             this.map.fitBounds(this.toEditPolygon.getBounds());
-            this.map.zoom = 20;
+            this.map.zoom = 19;
         }
         /***************** On Edit a bounds *****************/
         if (this.editPolygon) {
@@ -470,5 +465,3 @@ export class CercoComponent implements OnInit {
         });
     }
 }
-
-

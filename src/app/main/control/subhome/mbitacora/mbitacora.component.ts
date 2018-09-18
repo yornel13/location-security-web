@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {MessagingService} from '../../../../shared/messaging.service';
 
 @Component({
   selector: 'app-mbitacora',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MbitacoraComponent implements OnInit {
 
-  constructor() { }
+    unreadReplies: number;
 
-  ngOnInit() {
-  }
+    constructor(private messagingService: MessagingService) { }
+
+    ngOnInit() {
+        this.unreadReplies = this.messagingService.repliesUnread;
+        this.messagingService.repliesUnreadEmitter.subscribe(count => {
+            this.unreadReplies = count;
+        });
+    }
 
 }

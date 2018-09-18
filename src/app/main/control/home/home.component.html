@@ -12,7 +12,7 @@
 				<p class="enlace">Guardias<br><span class="subtitle">Gestión de guardias</span></p>
 			</div>
 		</a>
-		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/home/visitas" [routerLinkActive]="['active']">
+		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/visitas" [routerLinkActive]="['active']">
 			<div class="mx-auto content-control pb-2 pt-3">
 				<i class="fas fa-users icono" style="background-color: #007bff;"></i>
 				<p class="enlace">Visitas<br><span class="subtitle">Visitas de usuarios</span></p>
@@ -26,16 +26,17 @@
 				<p class="enlace">Alertas<br><span class="subtitle">Reportes de alertas</span></p>
 			</div>
 		</a>
-		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/home/bitacora" [routerLinkActive]="['active']">
+		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/bitacora" [routerLinkActive]="['active']">
 			<div class="mx-auto content-control pb-2 pt-3">
 				<i class="fas fa-list-ol icono" style="background-color: #6610f2; padding: 12px !important"></i>
 				<p class="enlace">Bitácora
-          <span *ngIf="unreadReplies > 0" style="background: red; padding: 0 4px; border-radius: 40%; color: white; font-size: .8rem">{{unreadReplies}}</span>
-          <br><span class="subtitle">Reportes de actividades</span>
-        </p>
+                    <span *ngIf="unreadReplies > 0" style="background: red; padding: 0 4px; border-radius: 40%; color: white; font-size: .8rem">{{unreadReplies}}</span>
+                    <br>
+                    <span class="subtitle">Reportes de actividades</span>
+                </p>
 			</div>
 		</a>
-		<a class="col-4 cardcontrol mt-5 link"  routerLink="/u/control/home/vigilancia" [routerLinkActive]="['active']">
+		<a class="col-4 cardcontrol mt-5 link"  routerLink="/u/control/vigilancia" [routerLinkActive]="['active']">
 			<div class="mx-auto content-control pb-2 pt-3">
 				<i class="fas fa-tablet-alt icono" style="background-color: #fd7e14; padding: 12px"></i>
 				<p class="enlace">Vigilancia<br><span class="subtitle">Guardias de vigilancia</span></p>
@@ -43,13 +44,13 @@
 		</a>
 	</div>
 	<div class="row mx-auto">
-		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/home/cerco" [routerLinkActive]="['active']">
+		<a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/cerco" [routerLinkActive]="['active']">
 			<div class="mx-auto content-control pb-2 pt-3">
 				<i class="fas fa-map-marked icono" style="background-color: #20c997; padding: 12px !important"></i>
 				<p class="enlace">Cerco Virtual<br><span class="subtitle">Limitaciones de vehiculos</span></p>
 			</div>
 		</a>
-    <a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/home/historial" [routerLinkActive]="['active']">
+    <a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/historial" [routerLinkActive]="['active']">
       <div class="mx-auto content-control pb-2 pt-3">
         <i class="fas fa-history icono" style="background-color: #6c757d; padding: 12px !important"></i>
         <p class="enlace">Historial<br><span class="subtitle">Historial de Vehículos y Tablets</span></p>

@@ -10,134 +10,135 @@ export class VechicleS {
 }
 
 @Component({
-  selector: 'app-cercogrupo',
-  templateUrl: './cercogrupo.component.html',
-  styleUrls: ['./cercogrupo.component.css']
+    selector: 'app-cercogrupo',
+    templateUrl: './cercogrupo.component.html',
+    styleUrls: ['./cercogrupo.component.css']
 })
 export class CercogrupoComponent {
 
-  lista:boolean = true;
-  detalle:boolean = false;
-  filter:string; 
-  grupos:any = [];
-  data:any = [];
-  cercos:any = [];
-  cercosList:any = [];
-  newname:string = "";
-  editname:string = "";
-  editid:number;
-  detallename:string = "";
-  vehiclesList:any = [];
-  bounds:any = [];
-  vehiclesInBound:any;
-  cercosbuound:any = [];
-  cercosb:any = [];
-  //array
-  cerc = {id: [], name: []};
+    lista:boolean = true;
+    detalle:boolean = false;
+    filter:string;
+    grupos:any = [];
+    data:any = [];
+    cercos:any = [];
+    cercosList:any = [];
+    newname:string = "";
+    editname:string = "";
+    editid:number;
+    detallename:string = "";
+    vehiclesList:any = [];
+    bounds:any = [];
+    vehiclesInBound:any;
+    cercosbuound:any = [];
+    cercosb:any = [];
+    //array
+    cerc = {id: [], name: []};
+    filterValue: string;
 
 
 
-  @ViewChild('vehicleChecked') vehicleChecked: any;
+    @ViewChild('vehicleChecked') vehicleChecked: any;
 
-  constructor(private grupoService: GrupoService, private vehiclesService:VehiclesService, private cercoService: CercoService) { 
-  	this.getAll();
+    constructor(private grupoService: GrupoService, private vehiclesService:VehiclesService, private cercoService: CercoService) {
+        this.getAll();
 
-  }
-
-  getAll(){
-  	this.grupoService.getAll().then(
-        success => {
-            this.grupos = success;
-            this.data = this.grupos.data;
-        }, error => {
-            if (error.status === 422) {
-                // on some data incorrect
-            } else {
-                // on general error
-            }
-        }
-    );
-  }
-
-  guardarGrupo(){
-  	const savegrupo : Grupos = {
-        name: this.newname
     }
-    this.grupoService.add(savegrupo).then(
-        success => {
-            this.getAll();
-            this.newname = "";
-        }, error => {
-            if (error.status === 422) {
-                // on some data incorrect
-            } else {
-                // on general error
-            }
-        }
-    );
-  }
 
-  deleteGrupo(id){
-  	this.grupoService.delete(id).then(
-        success => {
-            this.getAll();
-        }, error => {
-            if (error.status === 422) {
-                // on some data incorrect
-            } else {
-                // on general error
+    getAll(){
+        this.grupoService.getAll().then(
+            success => {
+                this.grupos = success;
+                this.data = this.grupos.data;
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
             }
-        }
-    );
-  }
-
-  editGrupo(grupo){
-  	const editgrupo : Grupos = {
-  		id: grupo.id,
-        name: this.editname
+        );
     }
-    this.grupoService.set(editgrupo).then(
-        success => {
-            this.getAll();
-        }, error => {
-            if (error.status === 422) {
-                // on some data incorrect
-            } else {
-                // on general error
-            }
+
+    guardarGrupo(){
+        const savegrupo : Grupos = {
+            name: this.newname
         }
-    );
-  }
+        this.grupoService.add(savegrupo).then(
+            success => {
+                this.getAll();
+                this.newname = "";
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
 
-  setName(nombre){
-  	this.editname = nombre;
-  }
+    deleteGrupo(id){
+        this.grupoService.delete(id).then(
+            success => {
+                this.getAll();
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
 
-  regresar(){
-  	this.detalle = false;
-  	this.lista = true;
-  }
+    editGrupo(grupo){
+        const editgrupo : Grupos = {
+            id: grupo.id,
+            name: this.editname
+        }
+        this.grupoService.set(editgrupo).then(
+            success => {
+                this.getAll();
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
 
-  getGrupo(grupo){
-  	this.detalle = true;
-  	this.lista = false;
-  	this.editname = grupo.name;
-  	this.editid = grupo.id;
-  	this.getCercosInBound(grupo.id);
-  	this.loadCercosListModal();
-  }
+    setName(nombre){
+        this.editname = nombre;
+    }
+
+    regresar(){
+        this.detalle = false;
+        this.lista = true;
+    }
+
+    getGrupo(grupo){
+        this.detalle = true;
+        this.lista = false;
+        this.editname = grupo.name;
+        this.editid = grupo.id;
+        this.getCercosInBound(grupo.id);
+        this.loadCercosListModal();
+    }
 
     getCercosInBound(id){
-    	this.grupoService.getCercoGrupo(id).then(
-        success => {
-            this.cercosb = success;
-            this.cercosbuound = this.cercosb.data;
-            console.log(this.cercosbuound);
-        });
+        this.grupoService.getCercoGrupo(id).then(
+            success => {
+                this.cercosb = success;
+                this.cercosbuound = this.cercosb.data;
+                console.log(this.cercosbuound);
+            });
     }
 
     loadCercosListModal(){
-    	this.cercoService.getAll().then(
+        this.cercoService.getAll().then(
             success => {
                 this.cercos = success;
                 this.cercosList = this.cercos.data;
@@ -168,16 +169,18 @@ export class CercogrupoComponent {
         });
     }
 
-    addCercosToGrupo(id){
-    	const array = [];
-    	console.log(id);
-        this.cerc.id.forEach( data => {
-            const vehicler: VechicleS = new VechicleS();
-            vehicler.id = data;
-            array.push(vehicler);
+    addCercosToGrupo() {
+        const array = [];
+        this.cercosList.forEach(cerco => {
+            if (cerco.checked) {
+                const vehicler: VechicleS = new VechicleS();
+                vehicler.id = cerco.id;
+                array.push(vehicler);
+            }
+            cerco.checked = false;
         });
 
-        this.grupoService.addCercosToGroup(id, JSON.stringify(array))
+        this.grupoService.addCercosToGroup(this.editid, JSON.stringify(array))
             .then( sucess => {
                 this.getCercosInBound(this.editid);
             },  error => {
@@ -190,16 +193,16 @@ export class CercogrupoComponent {
     }
 
     deleteCerco(id){
-    	this.grupoService.deleteCercoGrupo(id)
-	        .then( sucess => {
-	            this.getCercosInBound(this.editid);
-	        },  error => {
-	            if (error.status === 422) {
-	                // on some data incorrect
-	            } else {
-	                // on general error
-	            }
-	     });
+        this.grupoService.deleteCercoGrupo(id)
+            .then( sucess => {
+                this.getCercosInBound(this.editid);
+            },  error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            });
     }
 
 }

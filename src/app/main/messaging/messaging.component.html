@@ -1,180 +1,180 @@
 <div class="chat-container" >
-	<aside class="chat-aside" >
-		<div class="container-fluid col-md-12 col-md-offset-12" style="height:100% !important; padding: 0; margin: 0;"> <!--DIV COLMD -->
-			<ul class="nav nav-tabs header-aside" style="height: 40px; padding: 0; margin: 0; ">
-				<li class="nav-item">
-					<a class="nav-link active show" data-toggle="tab" href="#guard" style="height: 100%; border-radius: 0; padding-top: 0"><p style="padding-top: 5px; margin: 2px 0; color: #6c757d">Guardias
-            <span *ngIf="guardUnread > 0" style="background: lightcoral; padding: 0 4px; border-radius: 40%; color: white; font-size: .8rem">{{guardUnread}}</span>
-          </p></a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" href="#admin" style="height: 100%; border-radius: 0; padding-top: 0"><p style=" height: 100%; padding-top: 5px; margin: 2px 0; color: #6c757d">Administradores
-            <span *ngIf="adminUnread > 0" style="background: lightcoral; padding: 0 4px; border-radius: 40%; color: white; font-size: .8rem">{{adminUnread}}</span>
-          </p></a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" href="#channel" style="height: 100%; border-radius: 0; padding-top: 0"><p style="height: 100%; padding-top: 5px; margin: 2px; color: #6c757d">Grupos
-            <span *ngIf="channelUnread > 0" style="background: lightcoral; padding: 0 4px; border-radius: 40%; color: white; font-size: .8rem">{{channelUnread}}</span>
-          </p></a>
-				</li>
-			</ul>
-			<div id="myTabContent" class="tab-content" style=""> <!--  MY TAB CONTENT -->
-				<div class="tab-pane scroll-content fade active show" id="guard"> <!-- ID GUARD -->
-					<ul class="list-group"  >
-						<div *ngFor="let user of listContactGuard">
-							<app-item-guard [guard]="user" (click)="openChat(user);"></app-item-guard>
-						</div>
-					</ul>
-				</div> <!-- ID GUARD -->
-					<div class="tab-pane scroll-content fade"  id="admin"> <!-- ID ADMIN -->
-						<ul class="list-group">
-							<div *ngFor="let user of listContactAdmin">
-								<app-item-guard [guard]="user" (click)="openChat(user);"></app-item-guard>
-							</div>
-						</ul>
-					</div> <!-- ID ADMIN -->
-					<div class="tab-pane fade tab-content-groups" id="channel"> <!-- ID CHANNEL -->
-						<div class="create-group" style="padding: 5px 14px 0 5px; margin-bottom: 5px">
-							<ul class="list-group">
-								<form #channelForm="ngForm" (ngSubmit)="newChannel(channelForm.value)" autocomplete="off" style="background-color: #fff; border: 1px #d8d8d8 solid; border-radius: 4px; padding: 8px 15px ">
-									<div class="form-group " >
-										<label for="nameChannelField" style="color: #707070; margin-bottom: 5px ">Nuevo grupo</label>
-										<br>
-										<input [(ngModel)]="nameChannel" type="text" class="form-control" #nameChannelField id="nameChannelField" name="nameChannel" placeholder="Nombre del grupo...">
-										<p *ngIf="emptyField" style="margin: 0; font-size: 10px; padding-right: 3px; float: right; color: palevioletred">Debe asignar un nombre</p>
-									</div>
-									<button type="submit" class="btn btn-primary" [disabled]="loading" *ngIf="!loading disable" style="position: relative;" >Crear</button>
-									<div style="height: 38px; width: 38px;   border: 4px solid #f3f3f3;
- 											   border-top: 4px solid var(--primary-color);" class="loader" *ngIf="loading"></div>
-								</form>
-							</ul>
-						</div>
-						
-						<div class="tab-content-groups">
-							<div class=" scroll-content">
-							<ul class="list-group" *ngFor="let channel of allChannel">
-								<li class="list-group-item group-card no-active_chat" [ngClass]="{active_chat: channel.active}" (click)="openChannel(channel)">
-                  <div style="display: flex; align-items: start">
-                    <div style="width: auto;">
-                      <a class="btn buttonContact" style="margin: 0; padding: 0; line-height: 1rem">{{channel.channel_name}}</a>
-                      <a class="btn buttonContact" style="font-size: 0.9rem; color: gray; margin: 0; padding: 0;">{{channel.channel_update_at | relativeTime}}</a>
-                    </div>
-                    <a class="btn btn-danger fas fa-user-plus" data-toggle="modal" href="#add{{channel.channel_id}}" (click)="getUsers(); filterValue = ''" title="Agregar Usuarios" style="padding: 12px"></a>
-                    <a class="btn btn-primary fa fa-eye" data-toggle="modal" href="#see{{channel.channel_id}}" (click)="viewGroupMembers(channel.channel_id)" title="Ver miembros" style="padding: 12px; margin-left: 5px"></a>
-                  </div>
+    <aside class="chat-aside" >
+        <div class="container-fluid col-md-12 col-md-offset-12" style="height:100% !important; padding: 0; margin: 0;"> <!--DIV COLMD -->
+            <ul class="nav nav-tabs header-aside" style="height: 40px; padding: 0; margin: 0; ">
+                <li class="nav-item">
+                    <a class="nav-link active show" data-toggle="tab" href="#guard" style="height: 100%; border-radius: 0; padding-top: 0"><p style="padding-top: 5px; margin: 2px 0; color: #6c757d">Guardias
+                        <span *ngIf="guardUnread > 0" style="background: lightcoral; padding: 0 4px; border-radius: 40%; color: white; font-size: .8rem">{{guardUnread}}</span>
+                    </p></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#admin" style="height: 100%; border-radius: 0; padding-top: 0"><p style=" height: 100%; padding-top: 5px; margin: 2px 0; color: #6c757d">Administradores
+                        <span *ngIf="adminUnread > 0" style="background: lightcoral; padding: 0 4px; border-radius: 40%; color: white; font-size: .8rem">{{adminUnread}}</span>
+                    </p></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#channel" style="height: 100%; border-radius: 0; padding-top: 0"><p style="height: 100%; padding-top: 5px; margin: 2px; color: #6c757d">Grupos
+                        <span *ngIf="channelUnread > 0" style="background: lightcoral; padding: 0 4px; border-radius: 40%; color: white; font-size: .8rem">{{channelUnread}}</span>
+                    </p></a>
+                </li>
+            </ul>
+            <div id="myTabContent" class="tab-content" style=""> <!--  MY TAB CONTENT -->
+                <div class="tab-pane scroll-content fade active show" id="guard"> <!-- ID GUARD -->
+                    <ul class="list-group"  >
+                        <div *ngFor="let user of listContactGuard">
+                            <app-item-guard [guard]="user" (click)="openChat(user);"></app-item-guard>
+                        </div>
+                    </ul>
+                </div> <!-- ID GUARD -->
+                <div class="tab-pane scroll-content fade"  id="admin"> <!-- ID ADMIN -->
+                    <ul class="list-group">
+                        <div *ngFor="let user of listContactAdmin">
+                            <app-item-guard [guard]="user" (click)="openChat(user);"></app-item-guard>
+                        </div>
+                    </ul>
+                </div> <!-- ID ADMIN -->
+                <div class="tab-pane fade tab-content-groups" id="channel"> <!-- ID CHANNEL -->
+                    <div class="create-group" style="padding: 5px 14px 0 5px; margin-bottom: 5px">
+                        <ul class="list-group">
+                            <form #channelForm="ngForm" (ngSubmit)="newChannel(channelForm.value)" autocomplete="off" style="background-color: #fff; border: 1px #d8d8d8 solid; border-radius: 4px; padding: 8px 15px ">
+                                <div class="form-group " >
+                                    <label for="nameChannelField" style="color: #707070; margin-bottom: 5px ">Nuevo grupo</label>
+                                    <br>
+                                    <input [(ngModel)]="nameChannel" type="text" class="form-control" #nameChannelField id="nameChannelField" name="nameChannel" placeholder="Nombre del grupo...">
+                                    <p *ngIf="emptyField" style="margin: 0; font-size: 10px; padding-right: 3px; float: right; color: palevioletred">Debe asignar un nombre</p>
+                                </div>
+                                <button type="submit" class="btn btn-primary" [disabled]="loading" *ngIf="!loading disable" style="position: relative;" >Crear</button>
+                                <div style="height: 38px; width: 38px;   border: 4px solid #f3f3f3;
+ 											   border-top: 4px solid var(--primary-color);" class="loader" *ngIf="loading"></div>
+                            </form>
+                        </ul>
+                    </div>
 
-								<!--SEE USERS FROM GROUP-->
-								<div class="modal" id="see{{channel.channel_id}}">
-									<div class="modal-dialog" role="document">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h5 class="modal-title">Participantes </h5>
-												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-													<span aria-hidden="true">&times;</span>
-												</button>
-											</div>
-											<div class="modal-body">
-												<form [formGroup]="myForm">
-													<li class="list-group-item list"  style="border: 0; align-items: left; max-height:400px;" *ngFor="let member of groupMembers">
-														{{member.user_name}}
-													</li>
-													
-												</form>
-											</div>
-											<div class="modal-footer">
-												<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-											</div>
-										</div>
-									</div>
-								</div>
-								
-								<!--ADD USERS TO GROUP-->
-								<div class="modal" id="add{{channel.channel_id}}">
-									<div class="modal-dialog" role="document">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h5 class="modal-title">Agregar Participantes</h5>
-												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-													<span aria-hidden="true">&times;</span>
-												</button>
-											</div>
-											<div class="modal-body">
-                        <input type="text" name="searchString" class="form-control" placeholder="Buscar" [(ngModel)]="filterValue">
-												<div class="form-group">
-                          <div *ngFor="let chit of usersToSelect | filterUsers: filterValue">
-                            <label style="padding: 10px">
-                              <input type="checkbox"
-                                     name="users"
-                                     value="{{chit.id}}"
-                                     [(ngModel)]="chit.checked"/>
-                              <a style="padding-left: 16px">{{chit.name}}</a>
-                            </label>
-                          </div>
-												</div>
-											</div>
-											<div class="modal-footer">
-												<button type="button" class="btn btn-primary" (click)="add(channel.channel_id)" data-dismiss="modal">Agregar</button>
-												<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-											</div>
-										</div>
-									</div>
-								</div>
+                    <div class="tab-content-groups">
+                        <div class=" scroll-content">
+                            <ul class="list-group" *ngFor="let channel of allChannel">
+                                <li class="list-group-item group-card no-active_chat" [ngClass]="{active_chat: channel.active}" (click)="openChannel(channel)">
+                                    <div style="display: flex; align-items: start">
+                                        <div style="width: auto;">
+                                            <a class="btn buttonContact" style="margin: 0; padding: 0; line-height: 1rem">{{channel.channel_name}}</a>
+                                            <a class="btn buttonContact" style="font-size: 0.9rem; color: gray; margin: 0; padding: 0;">{{channel.channel_update_at | relativeTime}}</a>
+                                        </div>
+                                        <a class="btn btn-danger fas fa-user-plus" data-toggle="modal" href="#add{{channel.channel_id}}" (click)="getUsers(); filterValue = ''" title="Agregar Usuarios" style="padding: 12px"></a>
+                                        <a class="btn btn-primary fa fa-eye" data-toggle="modal" href="#see{{channel.channel_id}}" (click)="viewGroupMembers(channel.channel_id)" title="Ver miembros" style="padding: 12px; margin-left: 5px"></a>
+                                    </div>
+                                </li>
 
-							</ul>
-						</div>
-						</div>
-					</div> <!-- ID CHANNEL -->
-				</div> <!-- MY TAB CONTENT -->
-			</div>
-	</aside>
+                                <!--SEE USERS FROM GROUP-->
+                                <div class="modal" id="see{{channel.channel_id}}">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Participantes </h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form [formGroup]="myForm">
+                                                    <li class="list-group-item list"  style="border: 0; align-items: left; max-height:400px;" *ngFor="let member of groupMembers">
+                                                        {{member.user_name}}
+                                                    </li>
+
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--ADD USERS TO GROUP-->
+                                <div class="modal" id="add{{channel.channel_id}}">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Agregar Participantes</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <input type="text" name="searchString" class="form-control" placeholder="Buscar" [(ngModel)]="filterValue">
+                                                <div class="form-group">
+                                                    <div *ngFor="let chit of usersToSelect | filterUsers: filterValue">
+                                                        <label style="padding: 10px">
+                                                            <input type="checkbox"
+                                                                   name="users"
+                                                                   value="{{chit.id}}"
+                                                                   [(ngModel)]="chit.checked"/>
+                                                            <a style="padding-left: 16px">{{chit.name}}</a>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" (click)="add(channel.channel_id)" data-dismiss="modal">Agregar</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div> <!-- ID CHANNEL -->
+            </div> <!-- MY TAB CONTENT -->
+        </div>
+    </aside>
 
     <div class="messages-container" *ngIf="showMensajeria">
-      <div style="display: flex; flex-direction: column; justify-items: center; align-items: center; justify-content: center; width: 100%; height: 100%">
-        <img src="./assets/chat_icon.png" alt="chat" style="width: auto; height: 20%;">
-        <p style="color: grey">Mensajeria</p>
-      </div>
-    </div>
-		<div class="messages-container" *ngIf="currentChat != null || currentChannel != null">
-			<!--BUBBLE MESSAGE-->
-			<div class="scroll-content bubbles-container" #scrollMe [scrollTop]="scrollMe.scrollHeight" >
-				<div style="padding: 8px" [ngClass]="(line.sender_id === user.id && line.sender_type === 'ADMIN') ? 'bubble-emitter':  'bubble-sender'"  *ngFor="let line of currentChatLines">
-					<p   style=" margin: 0; font-size: 13px; font-weight: bold" >
-						{{line.sender_name}}:
-					</p>
-					<p  style=" margin: 0 0 0 0; padding: 0 ; font-size: 12px; line-height: 15px" >
-						{{line.text}}
-					</p>
-					<div style="display: flex; margin: 0">
-						<p  style=" margin: 0 0 0 75%; padding: 0 ; font-size: 9px; color: grey; line-height: 8px" >
-							{{line.create_at | date: "longDate"}}
-						</p>
-						<p style=" margin: 0 0 0 5px; padding: 0; font-size: 9px; color: grey; line-height: 8px">
-							{{line.create_at | date: "hh:mm a"}}
-						</p>
-					</div>
-					
-					</div>
-			</div>
-			
-			<!--WRITE MESSAGE-->
-			<div class="loader_chat"  *ngIf="loading_chat"  ></div>
-			<div *ngIf="noMessages && !loading_msg" style="width: 100%; height: 100%; text-align: center; vertical-align: middle; line-height: 0; color: gray">
-        No hay Mensajes
-      </div>
-			<form *ngIf="showChatForm" class="write-container" style="background-color: whitesmoke; " #chatForm="ngForm"  (ngSubmit)="newMessage(chatForm.value)" autocomplete="off">
-			<div style="display: flex; align-items: center">
-				<div class="form-group col-lg-11">
-					<label for="message">Escribir Mensaje</label>
-					<br>
-					<input [(ngModel)]="message" type="text" class="form-control" #messageField id="message" name="message" placeholder="..." (click)="clickMakeAllRead()">
-				</div>
-        <div style="width: 40px; height: 40px;">
-          <button type="submit" style=" align-self: center; margin-top: 5px;" class="btn btn-primary" [disabled]="loading_msg" *ngIf="!loading_msg" ><i class="fa">&#xf1d8;</i></button>
-          <div class="loader_msg"  *ngIf="loading_msg"></div>
+        <div style="display: flex; flex-direction: column; justify-items: center; align-items: center; justify-content: center; width: 100%; height: 100%">
+            <img src="./assets/chat_icon.png" alt="chat" style="width: auto; height: 20%;">
+            <p style="color: grey">Mensajeria</p>
         </div>
-			</div>
-		</form>
-	</div>
+    </div>
+    <div class="messages-container" *ngIf="currentChat != null || currentChannel != null">
+        <!--BUBBLE MESSAGE-->
+        <div class="scroll-content bubbles-container" #scrollMe [scrollTop]="scrollMe.scrollHeight" >
+            <div style="padding: 8px" [ngClass]="(line.sender_id === user.id && line.sender_type === 'ADMIN') ? 'bubble-emitter':  'bubble-sender'"  *ngFor="let line of currentChatLines">
+                <p   style=" margin: 0; font-size: 13px; font-weight: bold" >
+                    {{line.sender_name}}:
+                </p>
+                <p  style=" margin: 0 0 0 0; padding: 0 ; font-size: 12px; line-height: 15px" >
+                    {{line.text}}
+                </p>
+                <div style="display: flex; margin: 0">
+                    <p  style=" margin: 0 0 0 75%; padding: 0 ; font-size: 9px; color: grey; line-height: 8px" >
+                        {{line.create_at | date: "longDate"}}
+                    </p>
+                    <p style=" margin: 0 0 0 5px; padding: 0; font-size: 9px; color: grey; line-height: 8px">
+                        {{line.create_at | date: "hh:mm a"}}
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!--WRITE MESSAGE-->
+        <div class="loader_chat"  *ngIf="loading_chat"  ></div>
+        <div *ngIf="noMessages && !loading_msg" style="width: 100%; height: 100%; text-align: center; vertical-align: middle; line-height: 0; color: gray">
+            No hay Mensajes
+        </div>
+        <form *ngIf="showChatForm" class="write-container" style="background-color: whitesmoke; " #chatForm="ngForm"  (ngSubmit)="newMessage(chatForm.value)" autocomplete="off">
+            <div style="display: flex; align-items: center">
+                <div class="form-group col-lg-11">
+                    <label for="message">Escribir Mensaje</label>
+                    <br>
+                    <input [(ngModel)]="message" type="text" class="form-control" #messageField id="message" name="message" placeholder="..." (click)="clickMakeAllRead()">
+                </div>
+                <div style="width: 40px; height: 40px;">
+                    <button type="submit" style=" align-self: center; margin-top: 5px;" class="btn btn-primary" [disabled]="loading_msg" *ngIf="!loading_msg" ><i class="fa">&#xf1d8;</i></button>
+                    <div class="loader_msg"  *ngIf="loading_msg"></div>
+                </div>
+            </div>
+        </form>
+    </div>
 
 </div>

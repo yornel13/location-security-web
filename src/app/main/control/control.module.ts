@@ -75,6 +75,8 @@ import {PopupReportComponent} from './bitacora/filtreport/popup.report.component
 import {PopupVisitComponent} from './visitas/visitas/popup.visit.component';
 import {PopupWatchtComponent} from './watches/wtodas/popup.watcht.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { AgoTimePipe } from './ago.pipe';
+import {ReportFilterPipe} from './bitacora/report.pipe';
 
 export const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
@@ -95,20 +97,20 @@ export const controlRoutes: Routes = [
                     { path: 'bitacora/reportes', component: ReportetsComponent },
                     { path: 'bitacora/reportfilter/:id', component: FiltreportComponent },
                     { path: 'bitacora/reportfilter', component: FiltreportComponent },
-                    { path: 'guardias/activas', component: WactivasComponent },
-                    { path: 'guardias/todas', component: WtodasComponent },
-                    { path: 'guardias/tablets', component: TabletsComponent },
-                    { path: 'guardias/puestos', component: PuestosComponent },
+                    { path: 'vigilancia/activas', component: WactivasComponent },
+                    { path: 'vigilancia/todas', component: WtodasComponent },
+                    { path: 'vigilancia/tablets', component: TabletsComponent },
+                    { path: 'vigilancia/puestos', component: PuestosComponent },
                     { path: 'historial/vehiculos', component: VehistorialComponent },
                     { path: 'historial/tablets', component: TabhistorialComponent },
                     { path: 'historial/vehiculocerco', component: VehicercohistorialComponent },
                     { path: 'configuracion', component: ConfiguracionComponent },
                     { path: 'home', component: HomeComponent },
-                    { path: 'home/visitas', component: MvisitasComponent },
-                    { path: 'home/bitacora', component: MbitacoraComponent },
-                    { path: 'home/vigilancia', component: MvigilanciaComponent },
-                    { path: 'home/cerco', component: McercoComponent },
-                    { path: 'home/historial', component: MhistorialComponent },
+                    { path: 'visitas', component: MvisitasComponent },
+                    { path: 'bitacora', component: MbitacoraComponent },
+                    { path: 'vigilancia', component: MvigilanciaComponent },
+                    { path: 'cerco', component: McercoComponent },
+                    { path: 'historial', component: MhistorialComponent },
                     { path: 'cerco/virtual', component: CercoComponent },
                     { path: 'cerco/grupos', component: CercogrupoComponent },
                     { path: '', redirectTo: '/u/control/home', pathMatch: 'full' },
@@ -170,7 +172,9 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         PopupTablethComponent,
         PopupReportComponent,
         PopupVisitComponent,
-        PopupWatchtComponent],
+        PopupWatchtComponent,
+        AgoTimePipe,
+        ReportFilterPipe],
     bootstrap: [ ControlComponent ]
 })
 export class ControlModule {}

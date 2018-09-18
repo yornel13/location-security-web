@@ -1,13 +1,13 @@
 <div class="info-container panel panel-default" *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
         <div class="mr-auto row ml-1">
-            <a routerLink="/u/control/home/vigilancia" title="Atrás" style="color: var(--secondary-color)">
+            <a routerLink="/u/control/vigilancia" title="Atrás" style="color: var(--secondary-color)">
                 <i class="fas fa-reply icon-return"></i>
             </a>
             <h3 class="list-title">Puestos</h3>
         </div>
         <div class="ml-auto form-inline">
-        	<div class="btn-group" style="margin-right: 20px;">
+            <div class="btn-group" style="margin-right: 20px;">
                 <a class="btn btn-success" style="color: white" data-toggle="modal" href="#modalnew"><i class="fas fa-plus-circle"></i>
                     Añadir Puesto
                 </a>
@@ -24,12 +24,12 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="form-group mt-4 mb-4">
-                        	<label for="newname" class="ml-1 mr-3"><b>Nombre</b></label>
-			                <input type="text" name="newname" class="form-control" placeholder="Inserte nombre" [(ngModel)]="newname" style="width: 80%; float: right;">
-			                <label for="newaddress" class="ml-1 mr-2"><b style="margin-top: 15px">Dirección</b></label>
-			                <input type="text" name="newaddress" class="form-control" placeholder="Inserte dirección" [(ngModel)]="newaddress" style="width: 80%; float: right; margin-top: 20px">
-			            </div>
+                        <div style="margin-left: 10px" class="form-group mt-4 mb-4">
+                            <label class="ml-1 mr-3"><b>Nombre</b></label>
+                            <input type="text" name="newname" class="form-control" placeholder="Nombre del puesto" [(ngModel)]="newname" style="width: 80%; float: right;">
+                            <label class="ml-1 mr-2"><b style="margin-top: 15px">Dirección</b></label>
+                            <input type="text" name="newaddress" class="form-control" placeholder="Ubicación del puesto" [(ngModel)]="newaddress" style="width: 80%; float: right; margin-top: 20px">
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-success" (click)="guardarPuesto()" data-dismiss="modal">Guardar</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
@@ -42,10 +42,10 @@
     <div class="table mt-2 container-fluid">
         <table class="table table-bordered">
             <thead class="thead-light">
-            <th style="width: 10%">ID</th>
-            <th style="width: 30%">Nombre</th>
-            <th style="width: 30%">Dirección</th>
-            <th style="width: 30%">Acción</th>
+                <th style="width: 10%">ID</th>
+                <th style="width: 30%">Nombre</th>
+                <th style="width: 30%">Dirección</th>
+                <th style="width: 30%">Acción</th>
             </thead>
             <tbody>
             <tr *ngFor="let d of data | filter:filter ">
@@ -79,35 +79,37 @@
                 </div>
                 <!-- Modal Editar -->
                 <div class="modal" tabindex="-1" role="dialog" id="edit{{d.id}}">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header" style="background-color: #ffc107; color: white;">
-                            <h5 class="modal-title">Editar Puesto</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="form-group mt-4 mb-4">
-                        	<div class="form-inline">
-                        		<label for="newname" class="ml-1 mr-3"><b>Nombre</b></label>
-			                	<input type="text" name="newname" class="form-control" placeholder="Inserte nombre" [(ngModel)]="editname" style="width: 80%;">
-                        	</div>
-			                <div class="form-inline mt-2">
-			                	<label for="newaddress" class="ml-1 mr-2"><b>Dirección</b></label>
-			                	<input type="text" name="newaddress" class="form-control" placeholder="Inserte dirección" [(ngModel)]="editaddress" style="width: 80%;">
-			                </div>
-			            </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-warning" (click)="editPuesto(d.id)" data-dismiss="modal">Guardar</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #ffc107; color: white;">
+                                <h5 class="modal-title">Editar Puesto</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="form-group mt-4 mb-4">
+                                <div class="form-inline">
+                                    <label for="newname" class="ml-1 mr-3"><b>Nombre</b></label>
+                                    <input type="text" name="newname" class="form-control" placeholder="Inserte nombre" [(ngModel)]="editname" style="width: 80%;">
+                                </div>
+                                <div class="form-inline mt-2">
+                                    <label for="newaddress" class="ml-1 mr-2"><b>Dirección</b></label>
+                                    <input type="text" name="newaddress" class="form-control" placeholder="Inserte dirección" [(ngModel)]="editaddress" style="width: 80%;">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-warning" (click)="editPuesto(d.id)" data-dismiss="modal">Guardar</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-	            </div>
             </tr>
             </tbody>
         </table>
     </div>
+    <br>
+    <br>
 </div>
 
 <div class="info-container panel panel-default map-panel" *ngIf="detalle">
@@ -118,9 +120,9 @@
         <div class="panel-body mt-2">
             <div class="table-container container">
                 <div class="form-group" style="display: flex;">
-                    <a class="btn btn-info ml-auto" data-toggle="modal" href="#tablet" style="border: none; color: #fff" ><i class="fas fa-plus-circle mr-2"></i>Agregar Tablet</a>
-                    <a class="btn btn-secondary ml-2 mr-3" data-toggle="modal" href="#guardia" style="background-color: #28a745; border: none; color: #fff" ><i class="fas fa-plus-circle mr-2"></i>Agregar Guardia</a>
-                     <!--ADD TABLET MODAL -->
+                    <a class="btn btn-info ml-auto" data-toggle="modal" href="#tablet" (click)="filterValue = ''" style="border: none; color: #fff" ><i class="fas fa-plus-circle mr-2"></i>Agregar Tablet</a>
+                    <a class="btn btn-secondary ml-2 mr-3" data-toggle="modal" href="#guardia" (click)="filterValue = ''" style="background-color: #28a745; border: none; color: #fff" ><i class="fas fa-plus-circle mr-2"></i>Agregar Guardia</a>
+                    <!--ADD TABLET MODAL -->
                     <div class="modal"  tabindex="-1"  role="dialog" id="tablet">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
@@ -128,31 +130,47 @@
                                     <h5 class="modal-title">Añadir Tablets</h5>
                                 </div>
                                 <div class="modal-body scrolled">
-                                        <div style="display: flex; overflow: hidden">
-                                            <h6 style="margin-left: 1%; margin-bottom: 10px">ID</h6>
-                                            <h6 style="margin-left: 29%; margin-bottom: 10px">IMEI</h6>
-                                            <h6 style="margin-left: 49%; margin-bottom: 10px">Agregar</h6>
-                                        </div>
+                                    <div style="display: flex; overflow: hidden">
+                                        <input style="margin-bottom: 8px" type="text" name="searchString" class="form-control" placeholder="Buscar" [(ngModel)]="filterValue">
+                                    </div>
                                     <div class="add-vehicle-cont">
-                                        <table style="width: 100%">
+                                        <table class="table table-bordered">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th width="40px">*</th>
+                                                    <th width="50px">ID</th>
+                                                    <th>Alias</th>
+                                                    <th>IMEI</th>
+                                                </tr>
+                                            </thead>
                                             <tbody>
-                                                <tr *ngFor="let tabs of tabletsList" >
+                                                <tr *ngFor="let tabs of tabletsList | filter: filterValue"
+                                                    (click)="tabs.checked = !tabs.checked"
+                                                    style="cursor: pointer">
+                                                    <td class="checkbox-vehicle">
+                                                        <input
+                                                                #tabletChecked
+                                                                type="checkbox"
+                                                                value="{{tabs.id}}"
+                                                                [(ngModel)]="tabs.checked"
+                                                                [ngModelOptions]="{standalone: true}"/>
+                                                    </td>
                                                     <td>{{tabs.id}}</td>
+                                                    <td>{{tabs.alias}}</td>
                                                     <td>{{tabs.imei}}</td>
-                                                    <td class="checkbox-vehicle"><input  #tabletChecked type="checkbox" id="che" value="{{tabs.id}}" (click)="getTabletsByChecked(tabs)"/></td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-success" (click)="addTabsToPuesto(editid)" data-dismiss="modal">Guardar</button>
+                                    <button type="button" class="btn btn-success" (click)="addTabsToPuesto()" data-dismiss="modal">Guardar</button>
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!--ADD GUARDIA MODAL -->  
+                    <!--ADD GUARDIA MODAL -->
                     <div class="modal"  tabindex="-1"  role="dialog" id="guardia">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
@@ -160,25 +178,41 @@
                                     <h5 class="modal-title">Añadir Guardias</h5>
                                 </div>
                                 <div class="modal-body scrolled">
-                                        <div style="display: flex; overflow: hidden">
-                                            <h6 style="margin-left: 1%; margin-bottom: 10px">ID</h6>
-                                            <h6 style="margin-left: 29%; margin-bottom: 10px">Nombre</h6>
-                                            <h6 style="margin-left: 49%; margin-bottom: 10px">Agregar</h6>
-                                        </div>
+                                    <div style="display: flex; overflow: hidden">
+                                        <input style="margin-bottom: 8px" type="text" name="searchString" class="form-control" placeholder="Buscar" [(ngModel)]="filterValue">
+                                    </div>
                                     <div class="add-vehicle-cont">
-                                        <table style="width: 100%">
+                                        <table class="table table-bordered">
+                                            <thead class="thead-light">
+                                            <tr>
+                                                <th width="40px">*</th>
+                                                <th width="50px">ID</th>
+                                                <th>Cedula</th>
+                                                <th>Nombre</th>
+                                            </tr>
+                                            </thead>
                                             <tbody>
-                                                <tr *ngFor="let guard of guardiasList" >
-                                                    <td>{{guard.id}}</td>
-                                                    <td>{{guard.name}} {{guard.lastname}}</td>
-                                                    <td class="checkbox-vehicle"><input  #guardiaChecked type="checkbox" id="che" value="{{guard.id}}" (click)="getGuardiasByChecked(guard)"  /></td>
-                                                </tr>
+                                            <tr *ngFor="let guard of guardiasList | filter: filterValue"
+                                                (click)="guard.checked = !guard.checked"
+                                                style="cursor: pointer">
+                                                <td class="checkbox-vehicle">
+                                                    <input
+                                                            #tabletChecked
+                                                            type="checkbox"
+                                                            value="{{guard.id}}"
+                                                            [(ngModel)]="guard.checked"
+                                                            [ngModelOptions]="{standalone: true}"/>
+                                                </td>
+                                                <td>{{guard.id}}</td>
+                                                <td>{{guard.dni}}</td>
+                                                <td>{{guard.name}} {{guard.lastname}}</td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-success" (click)="addGuardToPuesto(editid)" data-dismiss="modal">Guardar</button>
+                                    <button type="button" class="btn btn-success" (click)="addGuardToPuesto()" data-dismiss="modal">Guardar</button>
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
                                 </div>
                             </div>
@@ -187,12 +221,12 @@
 
                 </div>
                 <div class="table mt-2 container-fluid">
-                	<div><b>Tablets</b></div>
+                    <div><b>Tablets</b></div>
                     <table class="table table-bordered">
                         <thead  class="thead-light">
-                            <th style="width: 20%">ID</th>
-                            <th style="width: 60%">IMEI</th>
-                            <th style="width: 20%">Eliminar</th>
+                        <th style="width: 20%">ID</th>
+                        <th style="width: 60%">IMEI</th>
+                        <th style="width: 20%">Eliminar</th>
                         </thead>
                         <tbody>
                         <tr *ngFor="let tabs of tabletspuesto">
@@ -220,16 +254,16 @@
                                     </div>
                                 </div>
                             </div>
-                                
+
                         </tr>
                         </tbody>
                     </table>
                     <div><b>Guardias</b></div>
                     <table class="table table-bordered">
                         <thead  class="thead-light">
-                            <th style="width: 20%">ID</th>
-                            <th style="width: 60%">Nombre</th>
-                            <th style="width: 20%">Eliminar</th>
+                        <th style="width: 20%">ID</th>
+                        <th style="width: 60%">Nombre</th>
+                        <th style="width: 20%">Eliminar</th>
                         </thead>
                         <tbody>
                         <tr *ngFor="let guard of guardiaspuesto">
@@ -257,7 +291,7 @@
                                     </div>
                                 </div>
                             </div>
-                                
+
                         </tr>
                         </tbody>
                     </table>

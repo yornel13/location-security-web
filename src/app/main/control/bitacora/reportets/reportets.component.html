@@ -2,23 +2,23 @@
   <div class="info-container panel panel-default"  *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
       <div class="mr-auto row ml-1">
-        <a routerLink="/u/control/home/bitacora" title="Atrás" style="color: var(--secondary-color)">
+        <a routerLink="/u/control/bitacora" title="Atrás" style="color: var(--secondary-color)">
             <i class="fas fa-reply icon-return"></i>
         </a>
-        <h3 class="list-title">Reportes Abiertos</h3>
+        <h3 class="list-title">Reportes con comenterios sin leer</h3>
       </div>
       <div class="ml-auto form-inline" >
-        <div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">
-          <label class="btn btn-outline-secondary" (click)="excelDownload()">
-            <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
-          </label>
-          <label class="btn btn-outline-secondary" (click)="pdfDownload()">
-            <input type="radio" name="options" id="option2" autocomplete="off"> PDF
-          </label>
-          <label class="btn btn-outline-secondary" (click)="print()">
-            <input type="radio" name="options" id="option3" autocomplete="off"> Print
-          </label>
-        </div>
+        <!--<div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">-->
+          <!--<label class="btn btn-outline-secondary" (click)="excelDownload()">-->
+            <!--<input type="radio" name="options" id="option1" autocomplete="off" checked> Excel-->
+          <!--</label>-->
+          <!--<label class="btn btn-outline-secondary" (click)="pdfDownload()">-->
+            <!--<input type="radio" name="options" id="option2" autocomplete="off"> PDF-->
+          <!--</label>-->
+          <!--<label class="btn btn-outline-secondary" (click)="print()">-->
+            <!--<input type="radio" name="options" id="option3" autocomplete="off"> Print-->
+          <!--</label>-->
+        <!--</div>-->
         <button class="btn btn-outline-secondary mr-1" style="display: inline-block;" title="Map de Alertas" (click)="getMapAlertas()"><span class="fas fa-map-marker-alt"></span></button>
     </div>
     </div>
@@ -35,52 +35,53 @@
       </div>
         <div class="ml-auto form-inline">
           <div class="form-group row">
-            <label class="mr-2"><b>Filtrar por:</b></label>
-            <select id="inputState" class="form-control-sm mr-2 filtros" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
-              <option [ngValue]="0">Incidencia</option>
-              <option [ngValue]="1">Guardia</option>
-            </select>
+              <input type="text" name="searchString" class="form-control" placeholder="Buscar" name="search" [(ngModel)]="filter" style="margin-right: 20px;">
+            <!--<label class="mr-2"><b>Filtrar por:</b></label>-->
+            <!--<select id="inputState" class="form-control-sm mr-2 filtros" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">-->
+              <!--<option [ngValue]="0">Incidencia</option>-->
+              <!--<option [ngValue]="1">Guardia</option>-->
+            <!--</select>-->
             <!--<select id="inputState" class="form-control-sm mr-2 filtros" [(ngModel)]="incidenSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="filtro">
               <option [ngValue]="0">Todas</option>
               <option *ngFor="let i of inciden" [ngValue]="i.id">{{i.name}}</option>
             </select>-->
-            <ng-multiselect-dropdown *ngIf="filtro" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
-              [placeholder]="'Selección de Incidencias'"
-              [data]="dropdownList1"
-              [(ngModel)]="selectedIncidencias"
-              [settings]="dropdownSettings1"
-              (onSelect)="onItemSelect1($event)"
-              (onSelectAll)="onSelectAll1($event)"
-              (onDeSelect)="onItemDeSelect1($event)"
-              (onDeSelectAll)="onDeSelectAll1($event)">
-            </ng-multiselect-dropdown>
+            <!--<ng-multiselect-dropdown *ngIf="filtro" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"-->
+              <!--[placeholder]="'Selección de Incidencias'"-->
+              <!--[data]="dropdownList1"-->
+              <!--[(ngModel)]="selectedIncidencias"-->
+              <!--[settings]="dropdownSettings1"-->
+              <!--(onSelect)="onItemSelect1($event)"-->
+              <!--(onSelectAll)="onSelectAll1($event)"-->
+              <!--(onDeSelect)="onItemDeSelect1($event)"-->
+              <!--(onDeSelectAll)="onDeSelectAll1($event)">-->
+            <!--</ng-multiselect-dropdown>-->
             <!--<select id="inputState" class="form-control-sm mr-2 filtros" [(ngModel)]="guardiaSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}"  *ngIf="!filtro">
               <option [ngValue]="0">Todos</option>
               <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
             </select>-->
-            <ng-multiselect-dropdown *ngIf="!filtro" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
-              [placeholder]="'Selección de Guardias'"
-              [data]="dropdownList2"
-              [(ngModel)]="selectedGuardias"
-              [settings]="dropdownSettings2"
-              (onSelect)="onItemSelect2($event)"
-              (onSelectAll)="onSelectAll2($event)"
-              (onDeSelect)="onItemDeSelect2($event)"
-              (onDeSelectAll)="onDeSelectAll2($event)">
-            </ng-multiselect-dropdown>
-            <label for="start" class="mr-2">Fecha</label>
-            <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="desde" (change)="getSearch()" [ngModelOptions]="{standalone: true}">
-            <label for="start" class="mr-2">-</label>
-            <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getSearch()" [ngModelOptions]="{standalone: true}" disabled *ngIf="rangeday">
-            <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="!rangeday">
-            <div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">
-              <label class="btn btn-outline-secondary btn-sm active" (click)="selectRange(1)">
-                <input type="radio" name="options" id="option1" autocomplete="off" checked> Dia
-              </label>
-              <label class="btn btn-outline-secondary btn-sm" (click)="selectRange(2)">
-                <input type="radio" name="options" id="option3" autocomplete="off"> Fechas
-              </label>
-            </div>
+            <!--<ng-multiselect-dropdown *ngIf="!filtro" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"-->
+              <!--[placeholder]="'Selección de Guardias'"-->
+              <!--[data]="dropdownList2"-->
+              <!--[(ngModel)]="selectedGuardias"-->
+              <!--[settings]="dropdownSettings2"-->
+              <!--(onSelect)="onItemSelect2($event)"-->
+              <!--(onSelectAll)="onSelectAll2($event)"-->
+              <!--(onDeSelect)="onItemDeSelect2($event)"-->
+              <!--(onDeSelectAll)="onDeSelectAll2($event)">-->
+            <!--</ng-multiselect-dropdown>-->
+            <!--<label for="start" class="mr-2">Fecha</label>-->
+            <!--<input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="desde" (change)="getSearch()" [ngModelOptions]="{standalone: true}">-->
+            <!--<label for="start" class="mr-2">-</label>-->
+            <!--<input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getSearch()" [ngModelOptions]="{standalone: true}" disabled *ngIf="rangeday">-->
+            <!--<input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="!rangeday">-->
+            <!--<div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">-->
+              <!--<label class="btn btn-outline-secondary btn-sm active" (click)="selectRange(1)">-->
+                <!--<input type="radio" name="options" id="option1" autocomplete="off" checked> Dia-->
+              <!--</label>-->
+              <!--<label class="btn btn-outline-secondary btn-sm" (click)="selectRange(2)">-->
+                <!--<input type="radio" name="options" id="option3" autocomplete="off"> Fechas-->
+              <!--</label>-->
+            <!--</div>-->
           </div>
         </div>
     </div>
@@ -99,29 +100,31 @@
                <th (click)="sort('create_date')">Fecha
                 <span class="fas" *ngIf="key =='create_date'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
                </th>
-               <th (click)="sort('resolved')">Status
-                <span class="fas" *ngIf="key =='resolved'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               <th (click)="sort('unread')"><i class="fas fa-comment"></i>
+                <span class="fas" *ngIf="key =='unread'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
                </th>
                <th>Modificar</th>
                <th>Detalle</th>
              </thead>
              <tbody>
-              <tr *ngFor="let d of data | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
+              <tr *ngFor="let d of data  | reportFilter: filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
                 <td>{{d.id}}</td>
                 <td>{{d.title}}</td>
                 <td>{{d.observation}}</td>
                 <td>{{d.create_date}}</td>
-                <td><span *ngIf="d.resolved == 0" class="text-danger">Cerrado</span><span *ngIf="d.resolved == 1" class="text-success">Abierto</span><span *ngIf="d.resolved == 2" class="text-success">Reabierto</span></td>
-                <td *ngIf="d.resolved != 0">
+                <td>
+                    <span *ngIf="d.unread > 0" style="background: limegreen; padding: 2px 6px; border-radius: 50%; color: white; font-size: .8rem; text-align: right;">{{d.unread}}</span>
+                </td>
+                <td>
                   <button class="btn btn-success" *ngIf="d.resolved == 0" (click)="changeResolve(d.id, d.resolved)">Reabrir</button>
                   <button class="btn btn-danger" *ngIf="d.resolved != 0" (click)="changeResolve(d.id, d.resolved)">Cerrar</button>
                 </td>
                 <td>
-                  <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)"  title="Detalle"><span class="far fa-eye"></span></a>
+                  <a class="btn btn-primary btn-xs" (click)="viewDetail(d)"  title="Detalle"><span class="far fa-eye"></span></a>
                  </td>
                </tr>
                <tr *ngIf="!hay">
-                  <th colspan="8"><h3>No hay reportes abiertos</h3></th>
+                  <th colspan="8"><h3>No hay nuevos comentarios</h3></th>
                </tr>
             </tbody>
           </table>
@@ -190,7 +193,7 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group row">
+              <div *ngIf="report.image_1 || report.image_2 || report.image_3 || report.image_4 || report.image_5" class="form-group row">
                 <label class="col-sm-2 col-form-label">Imagenes</label>
                   <a [hidden]="!report.image_1" data-toggle="modal" href="#image1"><img src="{{report.image_1}}" class="image-detail-gallery"></a>
                   <a [hidden]="!report.image_2" data-toggle="modal" href="#image2"><img src="{{report.image_2}}" class="image-detail-gallery"></a>
@@ -282,50 +285,48 @@
                   <input type="text" readonly class="form-control" id="dni" value="{{report.watch.guard_email}}">
                 </div>
               </div>
-              <hr>
-              <div class="form-group row mt-2">
-                <label for="creation" class="col-sm-9 col-form-label" *ngIf="haycomentarios"><b>Comentarios</b></label>
-                <div class="col-sm-3">
-                  <button class="btn btn-success form-control ml-auto" *ngIf="haycomentarios" (click)="agregarComentario()">Agregar comentario</button>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Tablet</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" value="{{report.watch.tablet_imei}}">
+                    </div>
+                    <label class="col-sm-2 col-form-label">Puesto</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" value="{{report.watch.stand_name}}">
+                    </div>
                 </div>
-              </div>
-              <div class="form-group row mt-2">
-                <label for="creation" class="col-sm-9 col-form-label" *ngIf="!haycomentarios"><b>No hay comentarios</b></label>
-                <div class="col-sm-3">
-                  <button class="btn btn-success form-control ml-auto" *ngIf="!haycomentarios" (click)="agregarComentario()">Agregar comentario</button>
-                </div>
-              </div>
-              <div *ngFor="let c of coment">
+
+
                 <hr>
                 <div class="form-group row mt-2">
-                  <label for="dni" class="col-sm-2 col-form-label">Usuario</label>
-                  <div class="col-sm-4">
-                    <input type="text" readonly class="form-control" id="dni" value="{{c.user_name}}">
-                  </div>
-                  <label for="dni" class="col-sm-2 col-form-label">Fecha</label>
-                  <div class="col-sm-4">
-                    <input type="text" readonly class="form-control" id="dni" value="{{c.create_date}}">
-                  </div>
+                    <label class="col-sm-9 col-form-label"><b>Comentarios</b></label>
+                    <div class="col-sm-3">
+                        <button class="btn btn-success form-control ml-auto" (click)="agregarComentario()">Agregar comentario</button>
+                    </div>
                 </div>
-                <div class="form-group row">
-                  <label for="dni" class="col-sm-2 col-form-label">Comentario</label>
-                  <div class="col-sm-10">
-                    <input type="text" readonly class="form-control" id="dni" value="{{c.text}}">
-                  </div>
+                <div>
+                    <div class="form-group row mt-2" *ngIf="addcomment">
+                        <label class="col-sm-2 col-form-label">Nuevo Comentario</label>
+                        <div class="col-sm-8">
+                            <textarea [(ngModel)]="newcoment" [ngModelOptions]="{standalone: true}" placeholder="Ingrese nuevo comentario" style="width: 100%"></textarea>
+                        </div>
+                        <div class="col-sm-2">
+                            <button class="btn btn-danger" (click)="guardarComentario(report.id)">Guardar</button>
+                        </div>
+                    </div>
                 </div>
-              </div>
+                <div class="form-group">
+                    <div *ngFor="let c of coment">
+                        <div class="bubble-reply">
+                            <p class="user-reply">{{c.user_name}} <span class="text-reply">{{c.text}}</span></p>
+                            <p class="date-reply">{{c.create_date | agoTime}}</p>
+                        </div>
+                    </div>
+                </div>
+
+
+
               <hr>
-              <div>
-                <div class="form-group row mt-2" *ngIf="addcomment">
-                  <label class="col-sm-2 col-form-label">Nuevo Comentario</label>
-                  <div class="col-sm-8">
-                    <textarea [(ngModel)]="newcoment" [ngModelOptions]="{standalone: true}" placeholder="Ingrese nuevo comentario" style="width: 100%"></textarea>
-                  </div>
-                  <div class="col-sm-2">
-                    <button class="btn btn-danger" (click)="guardarComentario(report.id)">Guardar</button>
-                  </div>
-                </div>
-              </div>
               <div class="row mt-4">
                   <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
               </div>

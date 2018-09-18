@@ -29,14 +29,14 @@ export class GlobalOsm {
         })
     };
     readonly LAYER_VALDEZ = {
-      id: 'valdezmap',
-      name: 'Mapa Valdez',
-      enabled: false,
-      layer: L.tileLayer('https://maps.location-world.com/GlobalWMA/{z}/{x}/{y}.png?token=01EC469EB5F64D8DA878042400D3CBA2', {
-        maxZoom: 19,
-        detectRetina: true,
-        attribution: 'Mapa Valdez'
-      })
+        id: 'valdezmap',
+        name: 'Mapa Valdez',
+        enabled: false,
+        layer: L.tileLayer('https://maps.location-world.com/GlobalWMA/{z}/{x}/{y}.png?token=01EC469EB5F64D8DA878042400D3CBA2', {
+            maxZoom: 19,
+            detectRetina: true,
+            attribution: 'Mapa Valdez'
+        })
     };
     readonly LAYER_GOOGLE_STREET = {
         id: 'googlestreets',
@@ -78,7 +78,7 @@ export class GlobalOsm {
 
     readonly layersOptions = { position: 'bottomright' };
 
-    readonly zoom = 12;
+    readonly zoom: number = 12;
 
     readonly center = L.latLng(([ -2.134040, -79.594146 ]));
 

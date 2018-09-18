@@ -15,155 +15,169 @@ export class GuardS {
 }
 
 @Component({
-  selector: 'app-puestos',
-  templateUrl: './puestos.component.html',
-  styleUrls: ['./puestos.component.css']
+    selector: 'app-puestos',
+    templateUrl: './puestos.component.html',
+    styleUrls: ['./puestos.component.css']
 })
 
 export class PuestosComponent {
 
-  lista:boolean = true;
-  detalle:boolean = false;
-  filter:string;
-  puestos:any = [];
-  data:any = [];
-  newaddress:string;
-  newname:string;
-  editname:string;
-  editaddress:string;
-  tablets:any = [];
-  tabletsList:any = [];
-  guardias:any = [];
-  guardiasList:any = [];
-  tabletspuesto:any = [];
-  tabpuesto:any = [];
-  guardiaspuesto:any = [];
-  guardpuesto:any = [];
-  //edit
-  editid:any;
-  editnombre:any;
-  viewpuesto:string;
+    lista:boolean = true;
+    detalle:boolean = false;
+    filter:string;
+    puestos:any = [];
+    data:any = [];
+    newaddress:string;
+    newname:string;
+    editname:string;
+    editaddress:string;
+    tablets:any = [];
+    tabletsList:any = [];
+    guardias:any = [];
+    guardiasList:any = [];
+    tabletspuesto:any = [];
+    tabpuesto:any = [];
+    guardiaspuesto:any = [];
+    guardpuesto:any = [];
+    //edit
+    editid:any;
+    editnombre:any;
+    viewpuesto:string;
+    filterValue: string;
 
-  tabl = {id: [], name: []};
-  guardl = {id: [], name: []};
+    tabl = {id: [], name: []};
+    guardl = {id: [], name: []};
 
-  @ViewChild('tabletChecked') tabletChecked: any;
-  @ViewChild('guardiaChecked') guardiaChecked: any;
+    @ViewChild('tabletChecked') tabletChecked: any;
+    @ViewChild('guardiaChecked') guardiaChecked: any;
 
-  constructor(private puestoService:PuestoService, private tabletService:TabletService, private guardiaService:GuardService) {
-  	this.getAll();
-  }
-
-  getAll(){
-  	this.puestoService.getAll().then(
-        success => {
-            this.puestos = success;
-            this.data = this.puestos.data;
-        }, error => {
-            if (error.status === 422) {
-                // on some data incorrect
-            } else {
-                // on general error
-            }
-        }
-    );
-  }
-
-  guardarPuesto(){
-  	const savepuesto : Puesto = {
-        name: this.newname,
-        address: this.newaddress
+    constructor(
+            private puestoService: PuestoService,
+            private tabletService: TabletService,
+            private guardiaService: GuardService) {
+        this.getAll();
     }
-    this.puestoService.add(savepuesto).then(
-        success => {
-            this.getAll();
-            this.newname = "";
-            this.newaddress = "";
-        }, error => {
-            if (error.status === 422) {
-                // on some data incorrect
-            } else {
-                // on general error
+
+    getAll() {
+        this.puestoService.getAll().then(
+            success => {
+                this.puestos = success;
+                this.data = this.puestos.data;
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
             }
-        }
-    );
-  }
-
-  setValues(puesto){
-  	this.editname = puesto.name;
-  	this.editaddress = puesto.address;
-  }
-
-  regresar(){
-  	this.detalle = false;
-  	this.lista = true;
-  }
-
-  editPuesto(id){
-  	const savepuesto : Puesto = {
-  		id: id,
-        name: this.editname,
-        address: this.editaddress
+        );
     }
-    this.puestoService.set(savepuesto).then(
-        success => {
-            this.getAll();
-        }, error => {
-            if (error.status === 422) {
-                // on some data incorrect
-            } else {
-                // on general error
-            }
+
+    guardarPuesto(){
+        const savepuesto : Puesto = {
+            name: this.newname,
+            address: this.newaddress
         }
-    );
-  }
+        this.puestoService.add(savepuesto).then(
+            success => {
+                this.getAll();
+                this.newname = "";
+                this.newaddress = "";
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
+
+    setValues(puesto){
+        this.editname = puesto.name;
+        this.editaddress = puesto.address;
+    }
+
+    regresar(){
+        this.detalle = false;
+        this.lista = true;
+    }
+
+    editPuesto(id){
+        const savepuesto : Puesto = {
+            id: id,
+            name: this.editname,
+            address: this.editaddress
+        }
+        this.puestoService.set(savepuesto).then(
+            success => {
+                this.getAll();
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
 
     deletePuesto(id){
-    	this.puestoService.delete(id)
-	        .then( sucess => {
-	            this.getAll();
-	        },  error => {
-	            if (error.status === 422) {
-	                // on some data incorrect
-	            } else {
-	                // on general error
-	            }
-	     });
+        this.puestoService.delete(id)
+            .then( sucess => {
+                this.getAll();
+            },  error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            });
     }
 
     viewDetail(puesto){
-	  	this.getTabletPuesto(puesto.id);
-	  	this.loadTabletsListModal();
-	  	this.getGuardiaPuesto(puesto.id);
-	  	this.loadGuardiaListModal();
-	  	this.editid = puesto.id;
-      this.editnombre = puesto.name;
-	  }
+        this.getTabletPuesto(puesto.id);
+        this.loadTabletsListModal();
+        this.getGuardiaPuesto(puesto.id);
+        this.loadGuardiaListModal();
+        this.editid = puesto.id;
+        this.editnombre = puesto.name;
+    }
 
-	getTabletPuesto(id){
-		this.puestoService.getTabletsPuesto(id).then(
-        success => {
-            this.tabpuesto = success;
-            this.tabletspuesto = this.tabpuesto.data;
-            this.detalle = true;
-	  		this.lista = false;
-            console.log(this.tabletspuesto);
-        });
-	}
+    getTabletPuesto(id){
+        this.puestoService.getTabletsPuesto(id).then(
+            success => {
+                this.tabpuesto = success;
+                this.tabletspuesto = this.tabpuesto.data;
+                this.detalle = true;
+                this.lista = false;
+                console.log(this.tabletspuesto);
+            });
+    }
 
-	getGuardiaPuesto(id){
-		this.puestoService.getGuardiasPuesto(id).then(
-        success => {
-            this.guardpuesto = success;
-            this.guardiaspuesto = this.guardpuesto.data;
-        });
-	}
+    getGuardiaPuesto(id){
+        this.puestoService.getGuardiasPuesto(id).then(
+            success => {
+                this.guardpuesto = success;
+                this.guardiaspuesto = this.guardpuesto.data;
+            });
+    }
 
-	loadTabletsListModal(){
-		this.tabletService.getAll().then(
+    loadTabletsListModal() {
+        this.tabletService.getAll().then(
             success => {
                 this.tablets = success;
                 this.tabletsList = this.tablets.data;
+                this.tabletsList.forEach(tablet => {
+                    tablet.checked = false;
+                    let id_string = '' + tablet.id;
+                    if (id_string.length === 1) {
+                        id_string = '00' + id_string;
+                    } else if (id_string.length === 2) {
+                        id_string = '0' + id_string;
+                    }
+                    tablet.alias = 'Tablet ' + id_string;
+                });
                 console.log(this.tabletsList);
             }, error => {
                 if (error.status === 422) {
@@ -173,10 +187,10 @@ export class PuestosComponent {
                 }
             }
         );
-	}
+    }
 
-	loadGuardiaListModal(){
-		this.guardiaService.getAll().then(
+    loadGuardiaListModal(){
+        this.guardiaService.getAll().then(
             success => {
                 this.guardias = success;
                 this.guardiasList = this.guardias.data;
@@ -189,10 +203,10 @@ export class PuestosComponent {
                 }
             }
         );
-	}
+    }
 
-	getTabletsByChecked(puesto){
-		const index = this.tabl.id.indexOf(puesto.id);
+    getTabletsByChecked(puesto){
+        const index = this.tabl.id.indexOf(puesto.id);
         if  (index > -1) {
             this.tabl.id.splice(index, 1);
             this.tabl.name.splice(index, 1);
@@ -206,31 +220,32 @@ export class PuestosComponent {
         this.tabl.id.forEach( data => {
             console.log('cercos-> ', data);
         });
-	}
+    }
 
-	addTabsToPuesto(id){
-		const array = [];
-    	console.log(id);
-        this.tabl.id.forEach( data => {
+    addTabsToPuesto() {
+        const array = [];
+        this.tabletsList.forEach(tabs => {
             const vehicler: TabasS = new TabasS();
-            vehicler.id = data;
-            array.push(vehicler);
+            if (tabs.checked) {
+                vehicler.id = tabs.id;
+                array.push(vehicler);
+            }
+            tabs.checked = false;
         });
+        this.puestoService.addTabletsPuesto(this.editid, JSON.stringify(array))
+            .then( sucess => {
+                this.getTabletPuesto(this.editid);
+            },  error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            });
+    }
 
-	    this.puestoService.addTabletsPuesto(id, JSON.stringify(array))
-	        .then( sucess => {
-	            this.getTabletPuesto(id);
-	        },  error => {
-	            if (error.status === 422) {
-	                // on some data incorrect
-	            } else {
-	                // on general error
-	            }
-	        });
-	}
-
-	getGuardiasByChecked(puesto){
-		const index = this.guardl.id.indexOf(puesto.id);
+    getGuardiasByChecked(puesto){
+        const index = this.guardl.id.indexOf(puesto.id);
         if  (index > -1) {
             this.guardl.id.splice(index, 1);
             this.guardl.name.splice(index, 1);
@@ -244,53 +259,55 @@ export class PuestosComponent {
         this.guardl.id.forEach( data => {
             console.log('cercos-> ', data);
         });
-	}
+    }
 
-	addGuardToPuesto(id){
-		const array = [];
-    	console.log(id);
-        this.guardl.id.forEach( data => {
+    addGuardToPuesto() {
+        const array = [];
+        this.guardiasList.forEach(guard => {
             const vehicler: GuardS = new GuardS();
-            vehicler.id = data;
-            array.push(vehicler);
+            if (guard.checked) {
+                vehicler.id = guard.id;
+                array.push(vehicler);
+            }
+            guard.checked = false;
         });
 
-	    this.puestoService.addGuardiasPuesto(id, JSON.stringify(array))
-	        .then( sucess => {
-	            this.getGuardiaPuesto(this.editid);
-	        },  error => {
-	            if (error.status === 422) {
-	                // on some data incorrect
-	            } else {
-	                // on general error
-	            }
-	        });
-	}
+        this.puestoService.addGuardiasPuesto(this.editid, JSON.stringify(array))
+            .then( sucess => {
+                this.getGuardiaPuesto(this.editid);
+            },  error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            });
+    }
 
-	deleteGuardia(id){
-		this.puestoService.deleteGuardiaPuesto(id)
-	        .then( sucess => {
-	            this.getGuardiaPuesto(this.editid);
-	        },  error => {
-	            if (error.status === 422) {
-	                // on some data incorrect
-	            } else {
-	                // on general error
-	            }
-	     });
-	}
+    deleteGuardia(id){
+        this.puestoService.deleteGuardiaPuesto(id)
+            .then( sucess => {
+                this.getGuardiaPuesto(this.editid);
+            },  error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            });
+    }
 
-	deleteTablet(id){
-		this.puestoService.deleteTabletPuesto(id)
-	        .then( sucess => {
-	            this.getTabletPuesto(this.editid);
-	        },  error => {
-	            if (error.status === 422) {
-	                // on some data incorrect
-	            } else {
-	                // on general error
-	            }
-	     });
-	}
+    deleteTablet(id){
+        this.puestoService.deleteTabletPuesto(id)
+            .then( sucess => {
+                this.getTabletPuesto(this.editid);
+            },  error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            });
+    }
 
 }

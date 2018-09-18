@@ -128,6 +128,7 @@ export class MessagingService {
             }
             if (payload.data.type === 'REPORT') {
                 const reply: any = JSON.parse(payload.data.message.toString());
+                this.notificationService.newReply.emit(reply);
                 this.loadUnreadReplies();
                   const notificationTitle = payload.notification.title;
                   const notificationOptions = {

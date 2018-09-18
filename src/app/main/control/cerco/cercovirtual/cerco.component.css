@@ -38,7 +38,8 @@ app-cerco {
 }
 
 .add-vehicle-cont {
-    height: 300px;
+    height: auto;
+    max-height: 70% !important;
     overflow: auto;
 }
 
