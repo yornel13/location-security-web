@@ -15,14 +15,16 @@
     <div class="table mt-2 container-fluid">
         <table class="table table-bordered">
             <thead class="thead-light">
-            <th style="width: 20%">ID</th>
+            <th style="width: 10%">ID</th>
+            <th style="width: 20%">Alias</th>
             <th style="width: 30%">IMEI</th>
-            <th style="width: 20%">Status</th>
-            <th style="width: 30%">Acción</th>
+            <th style="width: 15%">Estado</th>
+            <th style="width: 25%">Acción</th>
             </thead>
             <tbody>
             <tr *ngFor="let tab of data | filter:filter ">
                 <td>{{tab.id}}</td>
+                <td>{{tab.alias}}</td>
                 <td>{{tab.imei}}</td>
                 <td><span *ngIf="tab.status == 0" class="text-danger">Desactivado</span><span *ngIf="tab.status == 1" class="text-success">Activo</span></td>
                 <td>
@@ -52,5 +54,7 @@
             </tr>
             </tbody>
         </table>
+        <br>
+        <br>
     </div>
 </div>

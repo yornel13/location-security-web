@@ -25,8 +25,6 @@ export class PuestoService {
             .then((response) => response);
     }
 
-
-
     add(puesto: Puesto) {
         return this.http.post(this.PUESTO_URL, puesto, httpOpts).toPromise()
             .then((response) => response);

@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {interval, Observable, of} from 'rxjs';
-import {Tablet} from './tablet';
 import {TabletList} from './tablet.list';
 import {repeatWhen} from 'rxjs/operators';
 

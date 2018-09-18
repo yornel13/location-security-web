@@ -6,214 +6,104 @@ import 'jspdf-autotable';
 import { ExcelService } from '../../../../../model/excel/excel.services';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
+import {GlobalOsm} from "../../../../global.osm";
 
 @Component({
-  selector: 'app-wactivas',
-  templateUrl: './wactivas.component.html',
-  styleUrls: ['./wactivas.component.css']
+    selector: 'app-wactivas',
+    templateUrl: './wactivas.component.html',
+    styleUrls: ['./wactivas.component.css']
 })
 export class WactivasComponent {
-  lista:boolean;
-  detalle:boolean;
-  watches:any = undefined;
-  data:any = undefined;
-  filter:string;
-  //filtro guardia
-  guardias:any = [];
-  guard:any = [];
-  guardiaSelect:number = 0;
-  //filtro fecha
-  dateSelect:string = '';
-  valueDate:any = [];
-  guardia:any = [];
-  hay:boolean;
-  numElement:number = 10;
-  //exportaciones
-  contpdf:any = [];
-  info: any = [];
+    lista:boolean;
+    detalle:boolean;
+    watches:any = undefined;
+    data:any = undefined;
+    filter:string;
+    //filtro guardia
+    guardias:any = [];
+    guard:any = [];
+    guardiaSelect:number = 0;
+    //filtro fecha
+    dateSelect:string = '';
+    valueDate:any = [];
+    guardia:any = [];
+    hay:boolean;
+    numElement:number = 10;
+    //exportaciones
+    contpdf:any = [];
+    info: any = [];
 
-  key: string = 'id'; //set default
-  reverse: boolean = true;
+    key: string = 'id'; //set default
+    reverse: boolean = true;
 
-  //map
-  map: any;
-  mapchart: any;
-  lat:number= -2.0000;
-  lng:number = -79.0000;
-  viewmap:boolean = false;
+    //map
+    map: any;
+    mapchart: any;
+    lat:number= -2.0000;
+    lng:number = -79.0000;
+    viewmap:boolean = false;
 
-  zoom: 12;
-  center = L.latLng(([ this.lat, this.lng ]));
-  marker = L.marker([this.lat, this.lng], {draggable: false});
+    zoom = 14;
+    center = L.latLng(([ this.lat, this.lng ]));
+    marker = L.marker([this.lat, this.lng], {draggable: false});
+    layersControlOptions;
+    baseLayers;
+    options;
 
-  LAYER_OSM = {
-        id: 'openstreetmap',
-        name: 'Open Street Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
-            detectRetina: true,
-            attribution: 'Open Street Map'
-        })
-    };
-    LAYER_GOOGLE_STREET = {
-        id: 'googlestreets',
-        name: 'Google Street Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=marker&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Street Map'
-        })
-    };
-    LAYER_GOOGLE_SATELLITE = {
-        id: 'googlesatellite',
-        name: 'Google Satellite Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Satellite Map'
-        })
-    };
-    LAYER_GOOGLE_TERRAIN = {
-        id: 'googletarrain',
-        name: 'Google Terrain Map',
-        enabled: false,
-        layer: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Google Terrain Map'
-        })
-    };
-
-  constructor(private watchesService:WatchesService, private guardiasService:GuardService, private excelService:ExcelService) {
-  	this.getAll();
-  	this.getGuard();
-  	this.lista = true;
-  	this.detalle = false;
-  }
-
-  // Values to bind to Leaflet Directive
-    layersControlOptions = { position: 'bottomright' };
-    baseLayers = {
-        'Open Street Map': this.LAYER_OSM.layer,
-        'Google Street Map': this.LAYER_GOOGLE_STREET.layer,
-        'Google Satellite Map': this.LAYER_GOOGLE_SATELLITE.layer,
-        'Google Terrain Map': this.LAYER_GOOGLE_TERRAIN.layer
-    };
-    options = {
-        zoom: 12,
-        center: L.latLng(([this.lat, this.lng ]))
-    };
+    constructor(
+            private watchesService: WatchesService,
+            private globalOSM: GlobalOsm,
+            private guardiasService: GuardService,
+            private excelService: ExcelService) {
+        this.layersControlOptions = this.globalOSM.layersOptions;
+        this.baseLayers = this.globalOSM.baseLayers;
+        this.options = this.globalOSM.defaultOptions;
+        this.getAll();
+        this.getGuard();
+        this.lista = true;
+        this.detalle = false;
+    }
 
     onMapReady(map: L.Map) {
-      console.log("entra aqui");
-      this.map =  map;
-        this.zoom = 12;
+        this.map = map;
+        this.globalOSM.setupLayer(this.map);
+        this.zoom = 15;
         this.center = L.latLng(([ this.lat, this.lng ]));
-      this.marker = L.marker([this.lat, this.lng], {draggable: false});
-      this.layersControlOptions = { position: 'bottomright' };
-      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
-            detectRetina: true,
-            attribution: 'Open Street Map'
-        }).addTo(this.map);
+        this.marker = L.marker([this.lat, this.lng], { icon: L.icon({iconUrl: './assets/maps/watch.png'})} );
         this.marker.addTo(this.map);
     }
 
-  sort(key){
-    this.key = key;
-    this.reverse = !this.reverse;
-  }
-
-  getAll() {
-  	this.watchesService.getActive().then(
-        success => {
-            this.watches = success;
-            this.data = this.watches.data;
-            var body = [];
-            var excel = [];
-            var status = "";
-            for(var i=0; i<this.data.length; i++){
-                if(this.data[i].status == 0){
-                  status = "Finalizada";
-                }else if(this.data[i].status == 1){
-                  status = "Activa";
-                }
-                excel.push({'#' : this.data[i].id, 'Nombre del Guardia': this.data[i].guard_name+' '+this.data[i].guard_lastname, 'Cédula del Guardia':this.data[i].guard_dni, 'Hora de inicio':this.data[i].create_date, 'Status':status})
-                body.push([this.data[i].id, this.data[i].guard_name+' '+this.data[i].guard_lastname, this.data[i].guard_dni, this.data[i].create_date, status]);
-                this.data[i].id = Number(this.data[i].id);
-                this.data[i].guard_dni = Number(this.data[i].guard_dni);
-            }
-            this.contpdf = body;
-            this.info = excel;
-            if (this.watches.total == 0){
-              this.hay = false;
-            }else{
-              this.hay = true;
-            }
-        }, error => {
-            if (error.status === 422) {
-                // on some data incorrect
-            } else {
-                // on general error
-            }
-        }
-    );
-  }
-
-
-  regresar() {
-  	this.lista = true;
-  	this.detalle = false;
-    this.viewmap = false;
-  }
-
-  getGuard() {
-  	this.guardiasService.getAll().then(
-        success => {
-            this.guardias = success;
-            this.guard = this.guardias.data;
-        }, error => {
-            if (error.status === 422) {
-                // on some data incorrect
-            } else {
-                // on general error
-            }
-        }
-    );
-  }
-
-  guardFilert(id) {  
-		if(id == 0){
-      this.getAll();
-    }else{
-      this.watchesService.getActiveByGuard(id).then(
-        success => {
-            this.watches = success;
-            this.data = this.watches.data;
-            console.log(this.data);
-        }, error => {
-            if (error.status === 422) {
-                // on some data incorrect
-            } else {
-                // on general error
-            }
-        }
-    ); 
+    sort(key) {
+        this.key = key;
+        this.reverse = !this.reverse;
     }
-  }
 
-  viewDetail(id){
-  	this.watchesService.getById(id).then(
-        success => {
-          this.guardia = success;
-          this.lista = false;
-          this.detalle = true;
-          this.guardia.latitude = this.lat = Number(this.guardia.latitude);
-          this.guardia.longitude = this.lng = Number(this.guardia.longitude);
-          this.zoom = 12;
+    getAll() {
+        this.watchesService.getActive().then(
+            success => {
+                this.watches = success;
+                this.data = this.watches.data;
+                var body = [];
+                var excel = [];
+                var status = "";
+                for(var i=0; i<this.data.length; i++){
+                    if(this.data[i].status == 0){
+                        status = "Finalizada";
+                    }else if(this.data[i].status == 1){
+                        status = "Activa";
+                    }
+                    excel.push({'#' : this.data[i].id, 'Nombre del Guardia': this.data[i].guard_name+' '+this.data[i].guard_lastname, 'Cédula del Guardia':this.data[i].guard_dni, 'Hora de inicio':this.data[i].create_date, 'Status':status})
+                    body.push([this.data[i].id, this.data[i].guard_name+' '+this.data[i].guard_lastname, this.data[i].guard_dni, this.data[i].create_date, status]);
+                    this.data[i].id = Number(this.data[i].id);
+                    this.data[i].guard_dni = Number(this.data[i].guard_dni);
+                }
+                this.contpdf = body;
+                this.info = excel;
+                if (this.watches.total == 0){
+                    this.hay = false;
+                }else{
+                    this.hay = true;
+                }
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -222,9 +112,70 @@ export class WactivasComponent {
                 }
             }
         );
-  }
+    }
 
-  pdfDownload() {
+
+    regresar() {
+        this.lista = true;
+        this.detalle = false;
+        this.viewmap = false;
+    }
+
+    getGuard() {
+        this.guardiasService.getAll().then(
+            success => {
+                this.guardias = success;
+                this.guard = this.guardias.data;
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
+
+    guardFilert(id) {
+        if(id == 0){
+            this.getAll();
+        }else{
+            this.watchesService.getActiveByGuard(id).then(
+                success => {
+                    this.watches = success;
+                    this.data = this.watches.data;
+                    console.log(this.data);
+                }, error => {
+                    if (error.status === 422) {
+                        // on some data incorrect
+                    } else {
+                        // on general error
+                    }
+                }
+            );
+        }
+    }
+
+    viewDetail(id){
+        this.watchesService.getById(id).then(
+            success => {
+                this.guardia = success;
+                this.lista = false;
+                this.detalle = true;
+                this.guardia.latitude = this.lat = Number(this.guardia.latitude);
+                this.guardia.longitude = this.lng = Number(this.guardia.longitude);
+                this.zoom = 12;
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
+
+    pdfDownload() {
         var doc = new jsPDF();
         doc.setFontSize(20)
         doc.text('ICSSE Seguridad', 15, 20)
@@ -239,13 +190,13 @@ export class WactivasComponent {
             body: this.contpdf,
             startY: 41,
             columnStyles: {
-              0: {columnWidth: 10},
-              1: {columnWidth: 'auto'},
-              2: {columnWidth: 'auto'},
-              3: {columnWidth: 'auto'},
-              4: {columnWidth: 20}
+                0: {columnWidth: 10},
+                1: {columnWidth: 'auto'},
+                2: {columnWidth: 'auto'},
+                3: {columnWidth: 'auto'},
+                4: {columnWidth: 20}
             }
-        });   
+        });
         doc.save('guardiasactivas.pdf');
     }
 
@@ -268,21 +219,21 @@ export class WactivasComponent {
             body: this.contpdf,
             startY: 41,
             columnStyles: {
-              0: {columnWidth: 10},
-              1: {columnWidth: 'auto'},
-              2: {columnWidth: 'auto'},
-              3: {columnWidth: 'auto'},
-              4: {columnWidth: 20}
+                0: {columnWidth: 10},
+                1: {columnWidth: 'auto'},
+                2: {columnWidth: 'auto'},
+                3: {columnWidth: 'auto'},
+                4: {columnWidth: 20}
             }
-        });   
+        });
         doc.autoPrint();
         window.open(doc.output('bloburl'), '_blank');
     }
 
     getMapAlertas(){
-      this.zoom = 12;
-      this.lista = false;
-      this.viewmap = true;
+        this.zoom = 12;
+        this.lista = false;
+        this.viewmap = true;
     }
 
     pdfDetalle() {
@@ -402,5 +353,4 @@ export class WactivasComponent {
         excel.push({'Hora de inicio':this.guardia.guard_name, 'Latitud':this.guardia.guard_lastname, 'Longitude':this.guardia.guard_dni, '':this.guardia.guard_email});
         this.excelService.exportAsExcelFile(excel, 'guardiadetail');
     }
-
 }
