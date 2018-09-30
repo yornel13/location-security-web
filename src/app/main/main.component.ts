@@ -100,7 +100,7 @@ export class MainComponent implements OnInit {
                         });
                         {
                             const audio = new Audio();
-                            audio.src = './assets/sounds/import.wav';
+                            audio.src = './assets/sounds/important.mp3';
                             audio.load();
                             audio.play().then();
                         }

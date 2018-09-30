@@ -45,6 +45,11 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import {FilterUsers} from './messaging/filter.users';
 import {RelativeTimePipe} from './messaging/relative.pipe';
 import {CardRecordComponent} from './monitoring/aside/card.record.component';
+import {
+    ToastrModule,
+    ToastNoAnimation,
+    ToastNoAnimationModule
+} from 'ngx-toastr';
 
 export function controlModuleLoader() {
     return ControlModule;
@@ -91,7 +96,8 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
             confirmButtonClass: 'btn btn-primary',
             cancelButtonClass: 'btn'
         }),
-        NgMultiSelectDropDownModule.forRoot()
+        NgMultiSelectDropDownModule.forRoot(),
+        ToastrModule.forRoot()
     ],
     providers: [
         VehiclesService, WatchesService, MainService, TabletService ],

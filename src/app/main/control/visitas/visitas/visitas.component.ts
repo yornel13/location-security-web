@@ -128,6 +128,7 @@ export class VisitasComponent {
         this.setupDropdown3();
         this.setupDropdown4();
     }
+
     onMapReady(map: L.Map) {
         this.map = map;
         this.globalOSM.setupLayer(this.map);

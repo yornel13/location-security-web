@@ -2,6 +2,7 @@
 
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 @import "~@ng-select/ng-select/themes/default.theme.css";
+@import '~ngx-toastr/toastr.css';
 
 *{
     /*Fonts*/

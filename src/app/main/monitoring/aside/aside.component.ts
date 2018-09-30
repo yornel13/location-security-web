@@ -12,6 +12,7 @@ import {Record} from '../../../../model/historial/record';
 import {UtilsVehicles} from '../../../../model/vehicle/vehicle.utils';
 import {Tablet} from '../../../../model/tablet/tablet';
 import {TabhistoryService} from '../../../../model/historial/tabhistory.service';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-aside',
@@ -71,7 +72,8 @@ export class AsideComponent implements OnInit, OnChanges {
             private mapService: GlobalOsm,
             private vehistorialService: VehistorialService,
             private utilVehicle: UtilsVehicles,
-            private tabhistoryService: TabhistoryService) {
+            private tabhistoryService: TabhistoryService,
+            private toastr: ToastrService) {
         this.alertCollection = db.collection<Alerta>('alerts');
     }
 
@@ -266,7 +268,8 @@ export class AsideComponent implements OnInit, OnChanges {
                 }
             }
         } else {
-            // show toast "nothing select"
+            this.toastr.info('Debes seleccionar un dispositivo', 'Historial',
+                { positionClass: 'toast-top-left'});
         }
     }
 
@@ -340,6 +343,11 @@ export class AsideComponent implements OnInit, OnChanges {
         });
         this.records = arrToShow;
         this.mainService.recordsEmitter.emit(this.records);
+        if (arrToShow.length === 0) {
+            this.toastr.info('No hay informacion de historial para los parametros seleccionados', 'Historial',
+                { positionClass: 'toast-top-left'});
+            return;
+        }
     }
 
     selectDevice() {

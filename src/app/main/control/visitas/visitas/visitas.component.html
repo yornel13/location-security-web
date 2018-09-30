@@ -1,149 +1,149 @@
 
-  <div class="info-container panel panel-default" *ngIf="lista">
+<div class="info-container panel panel-default" *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto row ml-1" >
-        <a routerLink="/u/control/visitas" title="Atrás" style="color: var(--secondary-color)">
-            <i class="fas fa-reply icon-return"></i>
-        </a>
-        <h3 class="list-title">Todas las Visitas</h3>
-      </div>
-      <div class="ml-auto row mr-1">
-        <div class="btn-group btn-group-toggle ml-2 mr-2" data-toggle="buttons">
-          <label class="btn btn-outline-secondary" (click)="excelDownload()">
-            <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
-          </label>
-          <label class="btn btn-outline-secondary" (click)="pdfDownload()">
-            <input type="radio" name="options" id="option2" autocomplete="off"> PDF
-          </label>
-          <label class="btn btn-outline-secondary" (click)="print()">
-            <input type="radio" name="options" id="option3" autocomplete="off"> Print
-          </label>
+        <div class="mr-auto row ml-1" >
+            <a routerLink="/u/control/visitas" title="Atrás" style="color: var(--secondary-color)">
+                <i class="fas fa-reply icon-return"></i>
+            </a>
+            <h3 class="list-title">Todas las Visitas</h3>
         </div>
-        <div class="ml-auto form-inline" >
-          <button class="btn btn-outline-secondary mr-1" style="display: inline-block;" title="Map de Alertas" (click)="getMapAlertas()"><span class="fas fa-map-marker-alt"></span></button>
-          <input type="text" name="searchString" class="form-control" placeholder="Buscar" name="search" [(ngModel)]="filter">
+        <div class="ml-auto row mr-1">
+            <div class="btn-group btn-group-toggle ml-2 mr-2" data-toggle="buttons">
+                <label class="btn btn-outline-secondary" (click)="excelDownload()">
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+                </label>
+                <label class="btn btn-outline-secondary" (click)="pdfDownload()">
+                    <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+                </label>
+                <label class="btn btn-outline-secondary" (click)="print()">
+                    <input type="radio" name="options" id="option3" autocomplete="off"> Print
+                </label>
+            </div>
+            <div class="ml-auto form-inline" >
+                <button class="btn btn-outline-secondary mr-1" style="display: inline-block;" title="Map de Alertas" (click)="getMapAlertas()"><span class="fas fa-map-marker-alt"></span></button>
+                <input type="text" name="searchString" class="form-control" placeholder="Buscar" name="search" [(ngModel)]="filter">
+            </div>
         </div>
-      </div>
     </div>
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto row ml-2 form-inline">
+        <div class="mr-auto row ml-2 form-inline">
             <label class="mr-1"><b>Mostrar:</b></label>
             <select id="inputState" class="form-control-sm mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
-              <option [ngValue]="10">10</option>
-              <option [ngValue]="25">25</option>
-              <option [ngValue]="50">50</option>
-              <option [ngValue]="100">100</option>
+                <option [ngValue]="10">10</option>
+                <option [ngValue]="25">25</option>
+                <option [ngValue]="50">50</option>
+                <option [ngValue]="100">100</option>
             </select>
             <label>Elementos</label>
         </div>
     </div>
     <div class="container-fluid row mx-auto mt-2">
         <div class="ml-auto form-inline">
-          <div class="form-group row">
-            <label class="mr-2"><b>Filtrar por:</b></label>
-            <select id="inputState" class="form-control-sm mr-2" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
-              <option [ngValue]="0">Vehículo</option>
-              <option [ngValue]="1">Guardia</option>
-              <option [ngValue]="2">Visitante</option>
-              <option [ngValue]="3">Funcionario</option>
-            </select>
-            <!--<select id="inputState" class="form-control-sm mr-2" [(ngModel)]="vehiculoSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="filtro == 1">
-              <option [ngValue]="0">Todos</option>
-              <option *ngFor="let v of vehi" [ngValue]="v.id">{{v.plate}}</option>
-            </select>-->
-            <ng-multiselect-dropdown *ngIf="filtro == 1" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
-              [placeholder]="'Selección de Vehículos'"
-              [data]="dropdownList1"
-              [(ngModel)]="selectedVehiculos"
-              [settings]="dropdownSettings1"
-              (onSelect)="onItemSelect1($event)"
-              (onSelectAll)="onSelectAll1($event)"
-              (onDeSelect)="onItemDeSelect1($event)"
-              (onDeSelectAll)="onDeSelectAll1($event)">
-            </ng-multiselect-dropdown>
-            <!--<select id="inputState" class="form-control-sm mr-2" [(ngModel)]="guardiaSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}"  *ngIf="filtro == 2">
-              <option [ngValue]="0">Guardias</option>
-              <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
-            </select>-->
-            <ng-multiselect-dropdown *ngIf="filtro == 2" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
-              [placeholder]="'Selección de Guardias'"
-              [data]="dropdownList2"
-              [(ngModel)]="selectedGuardias"
-              [settings]="dropdownSettings2"
-              (onSelect)="onItemSelect2($event)"
-              (onSelectAll)="onSelectAll2($event)"
-              (onDeSelect)="onItemDeSelect2($event)"
-              (onDeSelectAll)="onDeSelectAll2($event)">
-            </ng-multiselect-dropdown>
-            <!--<select id="inputState" class="form-control-sm mr-2" [(ngModel)]="visitanteSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="filtro == 3">
-              <option [ngValue]="0">Visitantes</option>
-              <option *ngFor="let i of visit" [ngValue]="i.id">{{i.name}} {{i.lastname}}</option>
-            </select>-->
-            <ng-multiselect-dropdown *ngIf="filtro == 3" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
-              [placeholder]="'Selección de Visitantes'"
-              [data]="dropdownList3"
-              [(ngModel)]="selectedVisitantes"
-              [settings]="dropdownSettings3"
-              (onSelect)="onItemSelect3($event)"
-              (onSelectAll)="onSelectAll3($event)"
-              (onDeSelect)="onItemDeSelect3($event)"
-              (onDeSelectAll)="onDeSelectAll3($event)">
-            </ng-multiselect-dropdown>
-            <!--<select id="inputState" class="form-control-sm mr-2" [(ngModel)]="funcionarioSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}"  *ngIf="filtro == 4">
-              <option [ngValue]="0">Funcionarios</option>
-              <option *ngFor="let f of funcio" [ngValue]="f.id">{{f.name}} {{f.lastname}}</option>
-            </select>-->
-            <ng-multiselect-dropdown *ngIf="filtro == 4" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
-              [placeholder]="'Selección de Funcionarios'"
-              [data]="dropdownList4"
-              [(ngModel)]="selectedFuncionarios"
-              [settings]="dropdownSettings4"
-              (onSelect)="onItemSelect4($event)"
-              (onSelectAll)="onSelectAll4($event)"
-              (onDeSelect)="onItemDeSelect4($event)"
-              (onDeSelectAll)="onDeSelectAll4($event)">
-            </ng-multiselect-dropdown>
-            <label for="start" class="mr-2">Fecha</label>
-            <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="desde" (change)="getSearch()" [ngModelOptions]="{standalone: true}">
-            <label for="start" class="mr-2">-</label>
-            <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getSearch()" [ngModelOptions]="{standalone: true}" disabled *ngIf="rangeday">
-            <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="!rangeday">
-            <div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">
-              <label class="btn btn-outline-secondary btn-sm active" (click)="selectRange(1)">
-                <input type="radio" name="options" id="option1" autocomplete="off" checked> Dia
-              </label>
-              <label class="btn btn-outline-secondary btn-sm" (click)="selectRange(2)">
-                <input type="radio" name="options" id="option3" autocomplete="off"> Fechas
-              </label>
+            <div class="form-group row">
+                <label class="mr-2"><b>Filtrar por:</b></label>
+                <select id="inputState" class="form-control-sm mr-2" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
+                    <option [ngValue]="0">Vehículo</option>
+                    <option [ngValue]="1">Guardia</option>
+                    <option [ngValue]="2">Visitante</option>
+                    <option [ngValue]="3">Funcionario</option>
+                </select>
+                <!--<select id="inputState" class="form-control-sm mr-2" [(ngModel)]="vehiculoSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="filtro == 1">
+                  <option [ngValue]="0">Todos</option>
+                  <option *ngFor="let v of vehi" [ngValue]="v.id">{{v.plate}}</option>
+                </select>-->
+                <ng-multiselect-dropdown *ngIf="filtro == 1" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
+                                         [placeholder]="'Selección de Vehículos'"
+                                         [data]="dropdownList1"
+                                         [(ngModel)]="selectedVehiculos"
+                                         [settings]="dropdownSettings1"
+                                         (onSelect)="onItemSelect1($event)"
+                                         (onSelectAll)="onSelectAll1($event)"
+                                         (onDeSelect)="onItemDeSelect1($event)"
+                                         (onDeSelectAll)="onDeSelectAll1($event)">
+                </ng-multiselect-dropdown>
+                <!--<select id="inputState" class="form-control-sm mr-2" [(ngModel)]="guardiaSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}"  *ngIf="filtro == 2">
+                  <option [ngValue]="0">Guardias</option>
+                  <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
+                </select>-->
+                <ng-multiselect-dropdown *ngIf="filtro == 2" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
+                                         [placeholder]="'Selección de Guardias'"
+                                         [data]="dropdownList2"
+                                         [(ngModel)]="selectedGuardias"
+                                         [settings]="dropdownSettings2"
+                                         (onSelect)="onItemSelect2($event)"
+                                         (onSelectAll)="onSelectAll2($event)"
+                                         (onDeSelect)="onItemDeSelect2($event)"
+                                         (onDeSelectAll)="onDeSelectAll2($event)">
+                </ng-multiselect-dropdown>
+                <!--<select id="inputState" class="form-control-sm mr-2" [(ngModel)]="visitanteSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="filtro == 3">
+                  <option [ngValue]="0">Visitantes</option>
+                  <option *ngFor="let i of visit" [ngValue]="i.id">{{i.name}} {{i.lastname}}</option>
+                </select>-->
+                <ng-multiselect-dropdown *ngIf="filtro == 3" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
+                                         [placeholder]="'Selección de Visitantes'"
+                                         [data]="dropdownList3"
+                                         [(ngModel)]="selectedVisitantes"
+                                         [settings]="dropdownSettings3"
+                                         (onSelect)="onItemSelect3($event)"
+                                         (onSelectAll)="onSelectAll3($event)"
+                                         (onDeSelect)="onItemDeSelect3($event)"
+                                         (onDeSelectAll)="onDeSelectAll3($event)">
+                </ng-multiselect-dropdown>
+                <!--<select id="inputState" class="form-control-sm mr-2" [(ngModel)]="funcionarioSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}"  *ngIf="filtro == 4">
+                  <option [ngValue]="0">Funcionarios</option>
+                  <option *ngFor="let f of funcio" [ngValue]="f.id">{{f.name}} {{f.lastname}}</option>
+                </select>-->
+                <ng-multiselect-dropdown *ngIf="filtro == 4" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
+                                         [placeholder]="'Selección de Funcionarios'"
+                                         [data]="dropdownList4"
+                                         [(ngModel)]="selectedFuncionarios"
+                                         [settings]="dropdownSettings4"
+                                         (onSelect)="onItemSelect4($event)"
+                                         (onSelectAll)="onSelectAll4($event)"
+                                         (onDeSelect)="onItemDeSelect4($event)"
+                                         (onDeSelectAll)="onDeSelectAll4($event)">
+                </ng-multiselect-dropdown>
+                <label for="start" class="mr-2">Fecha</label>
+                <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="desde" (change)="getSearch()" [ngModelOptions]="{standalone: true}">
+                <label for="start" class="mr-2">-</label>
+                <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getSearch()" [ngModelOptions]="{standalone: true}" disabled *ngIf="rangeday">
+                <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="!rangeday">
+                <div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">
+                    <label class="btn btn-outline-secondary btn-sm active" (click)="selectRange(1)">
+                        <input type="radio" name="options" id="option1" autocomplete="off" checked> Dia
+                    </label>
+                    <label class="btn btn-outline-secondary btn-sm" (click)="selectRange(2)">
+                        <input type="radio" name="options" id="option3" autocomplete="off"> Fechas
+                    </label>
+                </div>
             </div>
-          </div>
         </div>
     </div>
     <div class="table mt-2 container-fluid">
-            <table class="table table-bordered">
-             <thead class="thead-light">
-               <th (click)="sort('id')">ID
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <th (click)="sort('id')">ID
                 <span class="fas" *ngIf="key =='id'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th (click)="sort('plate')">Placa Vehículo
+            </th>
+            <th (click)="sort('plate')">Placa Vehículo
                 <span class="fas" *ngIf="key =='plate'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th (click)="sort('visitor_name')">Visitante
+            </th>
+            <th (click)="sort('visitor_name')">Visitante
                 <span class="fas" *ngIf="key =='visitor_name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th (click)="sort('visitor_dni')">Cédula visitante
+            </th>
+            <th (click)="sort('visitor_dni')">Cédula visitante
                 <span class="fas" *ngIf="key =='visitor_dni'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th (click)="sort('create_date')">Entrada
+            </th>
+            <th (click)="sort('create_date')">Entrada
                 <span class="fas" *ngIf="key =='create_date'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th (click)="sort('finish_date')">Salida
+            </th>
+            <th (click)="sort('finish_date')">Salida
                 <span class="fas" *ngIf="key =='finish_date'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th>Detalle</th>
-             </thead>
-             <tbody>
-              <tr *ngFor="let d of data | filter:filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
+            </th>
+            <th>Detalle</th>
+            </thead>
+            <tbody>
+            <tr *ngFor="let d of data | filter:filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
                 <td>{{d.id}}</td>
                 <td>{{d.plate}}</td>
                 <td>{{d.visitor_name}} {{d.visitor_lastname}}</td>
@@ -151,155 +151,155 @@
                 <td>{{d.create_date}}</td>
                 <td><span *ngIf="d.status != 1">{{d.finish_date}}</span><span *ngIf="d.status == 1">--</span></td>
                 <td>
-                  <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
-                 </td>
-               </tr>
+                    <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
+                </td>
+            </tr>
             </tbody>
-          </table>
-          <div style="text-align: center; padding-right: 40px;">
-              <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
-                    nextLabel="">
-              </pagination-controls>
-          </div>
+        </table>
+        <div style="text-align: center; padding-right: 40px;">
+            <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
+                                 nextLabel="">
+            </pagination-controls>
+        </div>
     </div>
-  </div>
-  <div class="info-container panel panel-default" *ngIf="detalle">
+</div>
+<div class="info-container panel panel-default" *ngIf="detalle">
     <div class="row panel-heading mb-2" style="background-color: #D9D9D9; padding: 10px">
         <div class="mr-auto ml-4">
             <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle de la Visita</h3>
         </div>
         <div class="ml-auto" style="margin-top: 25px; margin-right: 60px;">
             <div class="btn-group btn-group-toggle ml-4" data-toggle="buttons">
-              <label class="btn btn-outline-dark" (click)="excelDetalle()">
-                <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
-              </label>
-              <label class="btn btn-outline-dark" (click)="pdfDetalle()">
-                <input type="radio" name="options" id="option2" autocomplete="off"> PDF
-              </label>
-              <label class="btn btn-outline-dark" (click)="printDetalle()">
-                <input type="radio" name="options" id="option3" autocomplete="off"> Print
-              </label>
+                <label class="btn btn-outline-dark" (click)="excelDetalle()">
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+                </label>
+                <label class="btn btn-outline-dark" (click)="pdfDetalle()">
+                    <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+                </label>
+                <label class="btn btn-outline-dark" (click)="printDetalle()">
+                    <input type="radio" name="options" id="option3" autocomplete="off"> Print
+                </label>
             </div>
         </div>
     </div>
-    <div class="panel-body mt-2">          
-          <div class="table-container container">
+    <div class="panel-body mt-2">
+        <div class="table-container container">
             <form  role="form">
-              <div class="form-group row">
-                <label for="lastname" class="col-sm-2 col-form-label">Entrada</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="lastname" value="{{visi.create_date}}">
+                <div class="form-group row">
+                    <label for="lastname" class="col-sm-2 col-form-label">Entrada</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" id="lastname" value="{{visi.create_date}}">
+                    </div>
+                    <label for="lastname" class="col-sm-2 col-form-label" [hidden]="visi.finish_date == '0000-00-00 00:00:00'">Salida</label>
+                    <div class="col-sm-4" [hidden]="visi.finish_date == '0000-00-00 00:00:00'">
+                        <input type="text" readonly class="form-control" id="lastname" value="{{visi.finish_date}}">
+                    </div>
                 </div>
-                  <label for="lastname" class="col-sm-2 col-form-label" [hidden]="visi.finish_date == '0000-00-00 00:00:00'">Salida</label>
-                  <div class="col-sm-4" [hidden]="visi.finish_date == '0000-00-00 00:00:00'">
-                      <input type="text" readonly class="form-control" id="lastname" value="{{visi.finish_date}}">
-                  </div>
-              </div>
-              <div class="form-group row" [hidden]="visi.finish_date == '0000-00-00 00:00:00'" *ngIf="visi.comment">
-                <label class="col-sm-2 col-form-label">Observación</label>
-                <div class="col-sm-10">
-                  <textarea rows="5" cols="10" readonly class="form-control input">{{visi.comment}}</textarea>
+                <div class="form-group row" [hidden]="visi.finish_date == '0000-00-00 00:00:00'" *ngIf="visi.comment">
+                    <label class="col-sm-2 col-form-label">Observación</label>
+                    <div class="col-sm-10">
+                        <textarea rows="5" cols="10" readonly class="form-control input">{{visi.comment}}</textarea>
+                    </div>
                 </div>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Latitud</label>
-                <div class="col-sm-4">
-                  <input type="number" readonly class="form-control" id="dni" value="{{visi.latitude}}">
+                <div class="form-group row">
+                    <label for="dni" class="col-sm-2 col-form-label">Latitud</label>
+                    <div class="col-sm-4">
+                        <input type="number" readonly class="form-control" id="dni" value="{{visi.latitude}}">
+                    </div>
+                    <label for="dni" class="col-sm-2 col-form-label">Longitud</label>
+                    <div class="col-sm-4">
+                        <input type="number" readonly class="form-control" id="dni" value="{{visi.longitude}}">
+                    </div>
                 </div>
-                <label for="dni" class="col-sm-2 col-form-label">Longitud</label>
-                <div class="col-sm-4">
-                  <input type="number" readonly class="form-control" id="dni" value="{{visi.longitude}}">
+                <div class="form-group row">
+                    <label for="dni" class="col-sm-2 col-form-label">Mapa</label>
+                    <div class="col-sm-10">
+                        <div class="map"
+                             leaflet
+                             [leafletOptions]="options"
+                             [(leafletZoom)]="zoom"
+                             [(leafletCenter)]="center"
+                             [leafletBaseLayers]="baseLayers"
+                             [leafletLayersControlOptions]="layersControlOptions"
+                             (leafletMapReady)="onMapReady($event)">
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Mapa</label>
-                <div class="col-sm-10">
-                  <div class="map"
-                       leaflet
-                       [leafletOptions]="options"
-                       [(leafletZoom)]="zoom"
-                       [(leafletCenter)]="center"
-                       [leafletBaseLayers]="baseLayers"
-                       [leafletLayersControlOptions]="layersControlOptions"
-                       (leafletMapReady)="onMapReady($event)">
-                  </div>
-                </div>
-              </div>
                 <div class="form-group row">
                     <label for="lastname" class="col-sm-2 col-form-label">Materiales</label>
                     <div class="col-sm-8">
                         <input type="text" readonly  class="form-control" style="margin-bottom: 4px" *ngFor="let d of visi.observation" value="{{d}}">
                     </div>
                 </div>
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label"></label>
-                <a [hidden]="!visi.image_1" data-toggle="modal" href="#image1"><img src="{{visi.image_1}}" class="image-detail-gallery"></a>
-                <a [hidden]="!visi.image_2" data-toggle="modal" href="#image2"><img src="{{visi.image_2}}" class="image-detail-gallery"></a>
-                <a [hidden]="!visi.image_3" data-toggle="modal" href="#image3"><img src="{{visi.image_3}}" class="image-detail-gallery"></a>
-                <a [hidden]="!visi.image_4" data-toggle="modal" href="#image4"><img src="{{visi.image_4}}" class="image-detail-gallery"></a>
-                <a [hidden]="!visi.image_5" data-toggle="modal" href="#image5"><img src="{{visi.image_5}}" class="image-detail-gallery"></a>
-              </div>
-              <!--Modal: modalVM-->
-              <div class="modal fade" id="image1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg" role="document">
-                      <!--Content-->
-                      <div class="modal-content">
-                          <!--Body-->
-                          <div class="modal-body mb-0 p-0">
-                               <img src="{{visi.image_1}}" class="image-detail-photo-full">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <!--Modal: modalVM-->
-              <div class="modal fade" id="image2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg" role="document">
-                      <!--Content-->
-                      <div class="modal-content">
-                          <!--Body-->
-                          <div class="modal-body mb-0 p-0">
-                               <img src="{{visi.image_2}}" class="image-detail-photo-full">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <!--Modal: modalVM-->
-              <div class="modal fade" id="image3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg" role="document">
-                      <!--Content-->
-                      <div class="modal-content">
-                          <!--Body-->
-                          <div class="modal-body mb-0 p-0">
-                               <img src="{{visi.image_3}}" class="image-detail-photo-full">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <!--Modal: modalVM-->
-              <div class="modal fade" id="image4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg" role="document">
-                      <!--Content-->
-                      <div class="modal-content">
-                          <!--Body-->
-                          <div class="modal-body mb-0 p-0">
-                               <img src="{{visi.image_4}}" class="image-detail-photo-full">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <!--Modal: modalVM-->
-              <div class="modal fade" id="image5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg" role="document">
-                      <!--Content-->
-                      <div class="modal-content">
-                          <!--Body-->
-                          <div class="modal-body mb-0 p-0">
-                               <img src="{{visi.image_5}}" class="image-detail-photo-full">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <hr>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <a [hidden]="!visi.image_1" data-toggle="modal" href="#image1"><img src="{{visi.image_1}}" class="image-detail-gallery"></a>
+                    <a [hidden]="!visi.image_2" data-toggle="modal" href="#image2"><img src="{{visi.image_2}}" class="image-detail-gallery"></a>
+                    <a [hidden]="!visi.image_3" data-toggle="modal" href="#image3"><img src="{{visi.image_3}}" class="image-detail-gallery"></a>
+                    <a [hidden]="!visi.image_4" data-toggle="modal" href="#image4"><img src="{{visi.image_4}}" class="image-detail-gallery"></a>
+                    <a [hidden]="!visi.image_5" data-toggle="modal" href="#image5"><img src="{{visi.image_5}}" class="image-detail-gallery"></a>
+                </div>
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="image1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{visi.image_1}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="image2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{visi.image_2}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="image3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{visi.image_3}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="image4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{visi.image_4}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="image5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{visi.image_5}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
                 <div *ngIf="visi.vehicle">
                     <div class="form-group row">
                         <label for="creation" class="col-sm-12 col-form-label"><b>Vehiculo</b></label>
@@ -341,121 +341,121 @@
                         </div>
                     </div>
                 </div>
-              <hr>
-              <div class="form-group row">
-                <label for="creation" class="col-sm-12 col-form-label"><b>Funcionario</b></label>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visited.name}}">
+                <hr>
+                <div class="form-group row">
+                    <label for="creation" class="col-sm-12 col-form-label"><b>Funcionario</b></label>
                 </div>
-                <label for="dni" class="col-sm-2 col-form-label">Apellido</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visited.lastname}}">
+                <div class="form-group row">
+                    <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" id="dni" value="{{visi.visited.name}}">
+                    </div>
+                    <label for="dni" class="col-sm-2 col-form-label">Apellido</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" id="dni" value="{{visi.visited.lastname}}">
+                    </div>
                 </div>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Dirección</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visited.address}}">
+                <div class="form-group row">
+                    <label for="dni" class="col-sm-2 col-form-label">Dirección</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" id="dni" value="{{visi.visited.address}}">
+                    </div>
+                    <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" id="dni" value="{{visi.visited.dni}}">
+                    </div>
                 </div>
-                <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visited.dni}}">
+                <hr>
+                <div class="form-group row">
+                    <label for="creation" class="col-sm-12 col-form-label"><b>Visitante</b></label>
                 </div>
-              </div>
-              <hr>
-              <div class="form-group row">
-                <label for="creation" class="col-sm-12 col-form-label"><b>Visitante</b></label>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visitor.name}}">
+                <div class="form-group row">
+                    <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" id="dni" value="{{visi.visitor.name}}">
+                    </div>
+                    <label for="dni" class="col-sm-2 col-form-label">Apellido</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" id="dni" value="{{visi.visitor.lastname}}">
+                    </div>
                 </div>
-                <label for="dni" class="col-sm-2 col-form-label">Apellido</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visitor.lastname}}">
+                <div class="form-group row">
+                    <label for="dni" class="col-sm-2 col-form-label">Compañía</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" id="dni" value="{{visi.visitor.company}}">
+                    </div>
+                    <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" id="dni" value="{{visi.visitor.dni}}">
+                    </div>
                 </div>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Compañía</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visitor.company}}">
+                <div [hidden]="!visi.visitor.photo"  class="form-group row">
+                    <label class="col-sm-2 col-form-label">Imagen</label>
+                    <a data-toggle="modal" href="#visitorphoto"><img src="{{visi.visitor.photo}}" class="image-detail-photo"></a>
                 </div>
-                <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.visitor.dni}}">
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="visitorphoto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{visi.visitor.photo}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div [hidden]="!visi.visitor.photo"  class="form-group row">
-                <label class="col-sm-2 col-form-label">Imagen</label>
-                <a data-toggle="modal" href="#visitorphoto"><img src="{{visi.visitor.photo}}" class="image-detail-photo"></a>
-              </div>
-              <!--Modal: modalVM-->
-              <div class="modal fade" id="visitorphoto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg" role="document">
-                      <!--Content-->
-                      <div class="modal-content">
-                          <!--Body-->
-                          <div class="modal-body mb-0 p-0">
-                               <img src="{{visi.visitor.photo}}" class="image-detail-photo-full">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <hr>
-              <div class="form-group row">
-                <label class="col-sm-12 col-form-label"><b>Registrado por</b></label>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.name}}">
+                <hr>
+                <div class="form-group row">
+                    <label class="col-sm-12 col-form-label"><b>Registrado por</b></label>
                 </div>
-                <label for="dni" class="col-sm-2 col-form-label">Apellido</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.lastname}}">
+                <div class="form-group row">
+                    <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.name}}">
+                    </div>
+                    <label for="dni" class="col-sm-2 col-form-label">Apellido</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.lastname}}">
+                    </div>
                 </div>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.dni}}">
+                <div class="form-group row">
+                    <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.dni}}">
+                    </div>
+                    <label for="dni" class="col-sm-2 col-form-label">Correo</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.email}}">
+                    </div>
                 </div>
-                <label for="dni" class="col-sm-2 col-form-label">Correo</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{visi.guard.email}}">
+                <div class="row mt-4">
+                    <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
                 </div>
-              </div>
-              <div class="row mt-4">
-                  <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
-              </div>
             </form>
-          </div>
         </div>
-  </div>
-  <div class="info-container panel panel-default"  *ngIf="viewmap">
+    </div>
+</div>
+<div class="info-container panel panel-default"  *ngIf="viewmap">
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto row ml-1">
-        <a (click)="regresar()" title="Atrás" style="color: var(--secondary-color)">
-            <i class="fas fa-reply icon-return"></i>
-        </a>
-        <h3 class="list-title">Mapa de todas las Visitas</h3>
-      </div>
+        <div class="mr-auto row ml-1">
+            <a (click)="regresar()" title="Atrás" style="color: var(--secondary-color)">
+                <i class="fas fa-reply icon-return"></i>
+            </a>
+            <h3 class="list-title">Mapa de todas las Visitas</h3>
+        </div>
     </div>
-  <div class="table mt-2 container-fluid">
-    <div class="mapchart"
-         leaflet
-         [leafletOptions]="options"
-         [(leafletZoom)]="zoom"
-         [(leafletCenter)]="center"
-         [leafletBaseLayers]="baseLayers"
-         [leafletLayersControlOptions]="layersControlOptions"
-         [leafletMarkerCluster]="markerClusterData"
-         [leafletMarkerClusterOptions]="markerClusterOptions"
-         (leafletMapReady)="onMapReadyChart($event)">
+    <div class="table mt-2 container-fluid">
+        <div class="mapchart"
+             leaflet
+             [leafletOptions]="options"
+             [(leafletZoom)]="zoom"
+             [(leafletCenter)]="center"
+             [leafletBaseLayers]="baseLayers"
+             [leafletLayersControlOptions]="layersControlOptions"
+             [leafletMarkerCluster]="markerClusterData"
+             [leafletMarkerClusterOptions]="markerClusterOptions"
+             (leafletMapReady)="onMapReadyChart($event)">
+        </div>
     </div>
-  </div>
-  </div>
+</div>
