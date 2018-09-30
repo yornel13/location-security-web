@@ -147,6 +147,7 @@ export class AsideComponent implements OnInit, OnChanges {
 
     solveAlert(alert: Alerta) {
         this.alertCollection.doc(String(alert.id)).update({'status': 0}).then();
+        this.alertService.solveAlert(alert.id).then();
     }
 
     showAlert(alert: Alerta) {
@@ -264,6 +265,8 @@ export class AsideComponent implements OnInit, OnChanges {
                         });
                 }
             }
+        } else {
+            // show toast "nothing select"
         }
     }
 

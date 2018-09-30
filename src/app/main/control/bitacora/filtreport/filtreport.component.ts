@@ -17,6 +17,7 @@ import {UtilsVehicles} from '../../../../../model/vehicle/vehicle.utils';
 import {PopupReportComponent} from './popup.report.component';
 import {MessagingService} from "../../../../shared/messaging.service";
 import {NotificationService} from "../../../../shared/notification.service";
+import {ApiResponse} from "../../../../../model/app.response";
 
 @Component({
     selector: 'app-filtreport',
@@ -159,7 +160,7 @@ export class FiltreportComponent implements OnInit {
     onMapReady(map: L.Map) {
         this.map = map;
         this.globalOSM.setupLayer(this.map);
-        this.zoom = 12;
+        this.zoom = this.globalOSM.fullZoom;
         this.center = L.latLng(([ this.lat, this.lng ]));
         this.marker = L.marker([this.lat, this.lng], { icon: L.icon({iconUrl: './assets/alerts/report.png'})} );
         this.marker.addTo(this.map);
@@ -550,7 +551,7 @@ export class FiltreportComponent implements OnInit {
                 this.report.longitude = this.lng = Number(this.report.longitude);
                 this.lista = false;
                 this.detalle = true;
-                this.zoom = 12;
+                this.zoom = this.globalOSM.fullZoom;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -597,12 +598,12 @@ export class FiltreportComponent implements OnInit {
         this.viewmap = false;
     }
 
-    changeResolve(id, resolved) {
-        if(resolved == 0){
-            this.bitacoraService.setReopen(id).then(
-                succcess =>{
-                    // this.getAll();
-                }, error=>{
+    changeResolve(report, resolved) {
+        if (resolved == 0) {
+            this.bitacoraService.setReopen(report.id).then(
+                (success: ApiResponse) => {
+                    report.resolved = success.result.resolved;
+                }, error => {
                     if (error.status === 422) {
                         // on some data incorrect
                     } else {
@@ -610,10 +611,10 @@ export class FiltreportComponent implements OnInit {
                     }
                 }
             );
-        }else{
-            this.bitacoraService.setClose(id).then(
-                success => {
-                    // this.getAll();
+        } else {
+            this.bitacoraService.setClose(report.id).then(
+                (success: ApiResponse) => {
+                    report.resolved = success.result.resolved;
                 }, error => {
                     if (error.status === 422) {
                         // on some data incorrect
@@ -1518,8 +1519,8 @@ export class FiltreportComponent implements OnInit {
         window.open(doc.output('bloburl'), '_blank');
     }
 
-    getMapAlertas(){
-        this.zoom = 12;
+    getMapAlertas() {
+        this.zoom = this.globalOSM.zoom;
         this.lista = false;
         this.viewmap = true;
     }

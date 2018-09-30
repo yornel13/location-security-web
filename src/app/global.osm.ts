@@ -78,7 +78,8 @@ export class GlobalOsm {
 
     readonly layersOptions = { position: 'bottomright' };
 
-    readonly zoom: number = 12;
+    readonly zoom = 12;
+    readonly fullZoom = 18;
 
     readonly center = L.latLng(([ -2.134040, -79.594146 ]));
 

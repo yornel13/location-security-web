@@ -141,7 +141,7 @@ export class DashboardComponent  {
 
   getReportes() {
     //Abiertos
-    this.bitacoraService.getOpen().then(
+    this.bitacoraService.getOpen().then(   // TODO, no se debe llamar esto
         success => {
             this.reportesOpen = success;
             var uno = this.reportesOpen.total;
