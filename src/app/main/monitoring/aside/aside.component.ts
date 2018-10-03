@@ -13,6 +13,9 @@ import {UtilsVehicles} from '../../../../model/vehicle/vehicle.utils';
 import {Tablet} from '../../../../model/tablet/tablet';
 import {TabhistoryService} from '../../../../model/historial/tabhistory.service';
 import {ToastrService} from 'ngx-toastr';
+import {HistoryPrint} from '../history.print';
+import {ExcelService} from '../../../../model/excel/excel.services';
+import {InfolinePrint} from '../infoline.print';
 
 @Component({
   selector: 'app-aside',
@@ -51,6 +54,7 @@ export class AsideComponent implements OnInit, OnChanges {
     noCards = false;
     showCardContainer = true;
     search: any;
+    searching = false;
     CHECK_ICON_URL = './assets/aside-menu/checked.png';
     alertCollection: AngularFirestoreCollection<Alerta>;
     selectedItem: any;
@@ -73,7 +77,10 @@ export class AsideComponent implements OnInit, OnChanges {
             private vehistorialService: VehistorialService,
             private utilVehicle: UtilsVehicles,
             private tabhistoryService: TabhistoryService,
-            private toastr: ToastrService) {
+            private toastr: ToastrService,
+            private historyPrint: HistoryPrint,
+            private infolinePrint: InfolinePrint,
+            private excelService: ExcelService) {
         this.alertCollection = db.collection<Alerta>('alerts');
     }
 
@@ -114,6 +121,7 @@ export class AsideComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes['vehicles']) {
+            console.log('vehicles is changed');
             if (!this.vehicleWasSetup) {
                 this.setupDevices();
             }
@@ -153,6 +161,8 @@ export class AsideComponent implements OnInit, OnChanges {
     }
 
     showAlert(alert: Alerta) {
+        if (alert.status > 0) { this.solveAlert(alert); }
+
         if (alert.cause === this.mapService.INCIDENCE) {
             const report = JSON.parse(alert.extra);
             this.router.navigate(['/u/control/bitacora/reportfilter/' + report.id]).then();
@@ -234,6 +244,7 @@ export class AsideComponent implements OnInit, OnChanges {
         this.mainService.recordsEmitter.emit(this.records);
         this.mainService.selectedDevice = this.selectedItem;
         if (this.selectedItem !== undefined && this.selectedItem !== null) {
+            this.searching = true;
             if (this.minutes === 0) {
                 const valuesDate = this.date.split('-');
                 const year1 = valuesDate[0];
@@ -276,7 +287,7 @@ export class AsideComponent implements OnInit, OnChanges {
     setupRecordVehicle(histories: Record[]) {
         const millisSeconds = this.minutes * 60 * 1000;
         const arrToShow = [];
-        let date = new Date();
+        const date = new Date();
         // date = new Date(date.getTime() - 3600000); // para igualar con la hora de ecuador, quitar linea
         const dateLong = date.getTime();
         let count = 1;
@@ -305,12 +316,18 @@ export class AsideComponent implements OnInit, OnChanges {
         });
         this.records = arrToShow;
         this.mainService.recordsEmitter.emit(this.records);
+        this.searching = false;
+        if (arrToShow.length === 0) {
+            this.toastr.info('No hay informacion de historial para los parametros seleccionados', 'Historial',
+                { positionClass: 'toast-top-left'});
+            return;
+        }
     }
 
     setupRecordTablet(histories: any[]) {
         const millisSeconds = this.minutes * 60 * 1000;
         const arrToShow = [];
-        let date = new Date();
+        const date = new Date();
         // date = new Date(date.getTime() - 3600000); // para igualar con la hora de ecuador, quitar linea
         const dateLong = date.getTime();
         let count = 1;
@@ -343,11 +360,22 @@ export class AsideComponent implements OnInit, OnChanges {
         });
         this.records = arrToShow;
         this.mainService.recordsEmitter.emit(this.records);
+        this.searching = false;
         if (arrToShow.length === 0) {
             this.toastr.info('No hay informacion de historial para los parametros seleccionados', 'Historial',
                 { positionClass: 'toast-top-left'});
             return;
         }
+    }
+
+    print(type: number) {
+        if (this.selectedItem !== undefined && this.selectedItem !== null) {
+            this.historyPrint.createHistoryPDF(this.records, this.selectedItem, type, this.excelService);
+        }
+    }
+
+    printOnline(type: number) {
+        this.infolinePrint.createOnlinePDF(this.markersData, type, this.excelService);
     }
 
     selectDevice() {

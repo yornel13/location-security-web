@@ -1,127 +1,127 @@
-  <div class="info-container panel panel-default"  *ngIf="lista">
+<div class="info-container panel panel-default"  *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto row ml-1">
-        <a routerLink="/u/control/home" title="Atrás" style="color: var(--secondary-color)">
-            <i class="fas fa-reply icon-return"></i>
-        </a>
-        <h3 class="list-title">Alertas</h3>
-      </div>
-	  <div class="ml-auto form-inline" >
-      <div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">
-        <label class="btn btn-outline-secondary" (click)="excelDownload()">
-          <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
-        </label>
-        <label class="btn btn-outline-secondary" (click)="pdfDownload()">
-          <input type="radio" name="options" id="option2" autocomplete="off"> PDF
-        </label>
-        <label class="btn btn-outline-secondary" (click)="print()">
-          <input type="radio" name="options" id="option3" autocomplete="off"> Print
-        </label>
-      </div>
-		  <button class="btn btn-outline-secondary mr-2" style="display: inline-block;" data-toggle="modal" href="#modalStatic" title="Estadísticas de Alertas"><span class="fas fa-chart-pie"></span></button>
-      <button class="btn btn-outline-secondary mr-1" style="display: inline-block;" title="Map de Alertas" (click)="getMapAlertas()"><span class="fas fa-map-marker-alt"></span></button>
-	  </div>
+        <div class="mr-auto row ml-1">
+            <a routerLink="/u/control/home" title="Atrás" style="color: var(--secondary-color)">
+                <i class="fas fa-reply icon-return"></i>
+            </a>
+            <h3 class="list-title">Alertas</h3>
+        </div>
+        <div class="ml-auto form-inline" >
+            <div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">
+                <label class="btn btn-outline-secondary" (click)="excelDownload()">
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+                </label>
+                <label class="btn btn-outline-secondary" (click)="pdfDownload()">
+                    <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+                </label>
+                <label class="btn btn-outline-secondary" (click)="print()">
+                    <input type="radio" name="options" id="option3" autocomplete="off"> Print
+                </label>
+            </div>
+            <button class="btn btn-outline-secondary mr-2" style="display: inline-block;" data-toggle="modal" href="#modalStatic" title="Estadísticas de Alertas"><span class="fas fa-chart-pie"></span></button>
+            <button class="btn btn-outline-secondary mr-1" style="display: inline-block;" title="Map de Alertas" (click)="getMapAlertas()"><span class="fas fa-map-marker-alt"></span></button>
+        </div>
     </div>
     <div class="modal" tabindex="-1" role="dialog" id="modalStatic">
-	    <div class="modal-dialog" role="document">
-	        <div class="modal-content">
-	            <div class="modal-header" style="background-color: #17a2b8; color: white;">
-	                <h5 class="modal-title">Estadísticas de alertas</h5>
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                    <span aria-hidden="true">&times;</span>
-	                </button>
-	            </div>
-	            <div class="modal-body">
-	             <div style="display: block;">
-  			          <fusioncharts
-                    width="450px"
-                    height="260px"
-                    type="Column2d"
-                    [dataSource]="dataSource">
-                </fusioncharts>
-			        </div>
-	            </div>
-	        </div>
-	    </div>  
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #17a2b8; color: white;">
+                    <h5 class="modal-title">Estadísticas de alertas</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div style="display: block;">
+                        <fusioncharts
+                                width="450px"
+                                height="260px"
+                                type="Column2d"
+                                [dataSource]="dataSource">
+                        </fusioncharts>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto row ml-2 form-inline">
-          <label class="mr-1"><b>Mostrar:</b></label>
-          <select id="inputState" class="form-control-sm mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
-            <option [ngValue]="10">10</option>
-            <option [ngValue]="25">25</option>
-            <option [ngValue]="50">50</option>
-            <option [ngValue]="100">100</option>
-          </select>
-          <label>Elementos</label>
-      </div>
-      <div class="ml-auto form-inline">
-        <div class="form-group row">
-          <label class="mr-2"><b>Tipo:</b></label>
-          <select id="inputState" class="form-control-sm mr-2 filtros" [(ngModel)]="causaSelect" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
-              <option [ngValue]="0">Todas</option>
-              <option [ngValue]="1">SOS</option>
-              <option [ngValue]="2">Caída</option>
-              <option [ngValue]="5">Incidencia</option>
-              <option [ngValue]="3">Salida del Cerco</option>
-              <option [ngValue]="4">General</option>
-          </select>
-          <!--
-          <label class="mr-2"><b>Guardia:</b></label>
-          <select id="inputState" class="form-control-sm mr-2 filtros" [(ngModel)]="guardiaSelect" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
-            <option [ngValue]="0">Todos</option>
-            <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
-          </select>
-          -->
-            <ng-multiselect-dropdown style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
-              [placeholder]="'Selección de Guardias'"
-              [data]="dropdownList"
-              [(ngModel)]="selectedGuardias"
-              [settings]="dropdownSettings"
-              (onSelect)="onItemSelect($event)"
-              (onSelectAll)="onSelectAll($event)"
-              (onDeSelect)="onItemDeSelect($event)"
-              (onDeSelectAll)="onDeSelectAll($event)">
-            </ng-multiselect-dropdown>
-          <label for="start" class="mr-2">Fecha</label>
-            <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="desde" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
-          <label for="start" class="mr-2">-</label>
-          <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getAlerts()" [ngModelOptions]="{standalone: true}" disabled *ngIf="rangeday">
-          <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getAlerts()" [ngModelOptions]="{standalone: true}" *ngIf="!rangeday">
-          <div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">
-            <label class="btn btn-outline-secondary btn-sm active" (click)="selectRange(1)">
-              <input type="radio" name="options" id="option1" autocomplete="off" checked> Dia
-            </label>
-            <label class="btn btn-outline-secondary btn-sm" (click)="selectRange(2)">
-              <input type="radio" name="options" id="option3" autocomplete="off"> Fechas
-            </label>
-          </div>
+        <div class="mr-auto row ml-2 form-inline">
+            <label class="mr-1"><b>Mostrar:</b></label>
+            <select id="inputState" class="form-control-sm mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
+                <option [ngValue]="10">10</option>
+                <option [ngValue]="25">25</option>
+                <option [ngValue]="50">50</option>
+                <option [ngValue]="100">100</option>
+            </select>
+            <label>Elementos</label>
         </div>
-      </div>
+        <div class="ml-auto form-inline">
+            <div class="form-group row">
+                <label class="mr-2"><b>Tipo:</b></label>
+                <select id="inputState" class="form-control-sm mr-2 filtros" [(ngModel)]="causaSelect" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
+                    <option [ngValue]="0">Todas</option>
+                    <option [ngValue]="1">SOS</option>
+                    <option [ngValue]="2">Caída</option>
+                    <option [ngValue]="5">Incidencia</option>
+                    <option [ngValue]="3">Salida del Cerco</option>
+                    <option [ngValue]="4">General</option>
+                </select>
+                <!--
+                <label class="mr-2"><b>Guardia:</b></label>
+                <select id="inputState" class="form-control-sm mr-2 filtros" [(ngModel)]="guardiaSelect" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
+                  <option [ngValue]="0">Todos</option>
+                  <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
+                </select>
+                -->
+                <ng-multiselect-dropdown style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
+                                         [placeholder]="'Selección de Guardias'"
+                                         [data]="dropdownList"
+                                         [(ngModel)]="selectedGuardias"
+                                         [settings]="dropdownSettings"
+                                         (onSelect)="onItemSelect($event)"
+                                         (onSelectAll)="onSelectAll($event)"
+                                         (onDeSelect)="onItemDeSelect($event)"
+                                         (onDeSelectAll)="onDeSelectAll($event)">
+                </ng-multiselect-dropdown>
+                <label for="start" class="mr-2">Fecha</label>
+                <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="desde" (change)="getAlerts()" [ngModelOptions]="{standalone: true}">
+                <label for="start" class="mr-2">-</label>
+                <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getAlerts()" [ngModelOptions]="{standalone: true}" disabled *ngIf="rangeday">
+                <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getAlerts()" [ngModelOptions]="{standalone: true}" *ngIf="!rangeday">
+                <div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">
+                    <label class="btn btn-outline-secondary btn-sm active" (click)="selectRange(1)">
+                        <input type="radio" name="options" id="option1" autocomplete="off" checked> Dia
+                    </label>
+                    <label class="btn btn-outline-secondary btn-sm" (click)="selectRange(2)">
+                        <input type="radio" name="options" id="option3" autocomplete="off"> Fechas
+                    </label>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="table mt-2 container-fluid">
-            <table class="table table-bordered">
-             <thead class="thead-light">
-               <th (click)="sort('id')">ID
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <th (click)="sort('id')">ID
                 <span class="fas" *ngIf="key =='id'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th (click)="sort('cause')">Causa
+            </th>
+            <th (click)="sort('cause')">Causa
                 <span class="fas" *ngIf="key =='cause'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th (click)="sort('message')">Descripción
+            </th>
+            <th (click)="sort('message')">Descripción
                 <span class="fas" *ngIf="key =='message'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th (click)="sort('guard_name')">Generado por
+            </th>
+            <th (click)="sort('guard_name')">Generado por
                 <span class="fas" *ngIf="key =='guard_name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th (click)="sort('create_date')">Fecha
+            </th>
+            <th (click)="sort('create_date')">Fecha
                 <span class="fas" *ngIf="key =='create_date'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th>Aceptar</th>
-               <th>Detalle</th>
-             </thead>
-             <tbody>
-              <tr *ngFor="let d of data | orderBy: key : reverse  | paginate: { itemsPerPage: numElement, currentPage: p }">
+            </th>
+            <th>Aceptar</th>
+            <th>Detalle</th>
+            </thead>
+            <tbody>
+            <tr *ngFor="let d of data | orderBy: key : reverse  | paginate: { itemsPerPage: numElement, currentPage: p }">
                 <td>{{d.id}}</td>
                 <td>
                     <span *ngIf="d.cause == 'SOS1'">SOS</span>
@@ -134,121 +134,127 @@
                 <td>{{d.guard_name}} {{d.guard_lastname}}</td>
                 <td>{{d.create_date}}</td>
                 <td>
-                  <button class="btn btn-success" *ngIf="d.status == 1" (click)="solveAlert(d.id)"><span class="fas fa-check"></span></button>
+                    <button class="btn btn-success" *ngIf="d.status == 1" (click)="solveAlert(d.id)"><span class="fas fa-check"></span></button>
                 </td>
                 <td>
-                  <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)"  title="Detalle"><span class="far fa-eye"></span></a>
-                 </td>
-               </tr>
+                    <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)"  title="Detalle"><span class="far fa-eye"></span></a>
+                </td>
+            </tr>
             </tbody>
-          </table>
-          <div style="text-align: center; padding-right: 40px;">
-              <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
-                    nextLabel="">
-              </pagination-controls>
-          </div>
+        </table>
+        <div style="text-align: center; padding-right: 40px;">
+            <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
+                                 nextLabel="">
+            </pagination-controls>
+        </div>
     </div>
-  </div>
-  <div class="info-container panel panel-default" *ngIf="detalle">
+</div>
+<div class="info-container panel panel-default" *ngIf="detalle">
     <div class="row panel-heading mb-2" style="background-color: #D9D9D9; padding: 10px">
-      <div class="mr-auto ml-4">
-          <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle Alerta</h3>
-      </div>
-      <div class="ml-auto" style="margin-top: 25px; margin-right: 60px;">
-          <div class="btn-group btn-group-toggle ml-4" data-toggle="buttons">
-            <label class="btn btn-outline-dark" (click)="excelDetalle()">
-              <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
-            </label>
-            <label class="btn btn-outline-dark" (click)="pdfDetalle()">
-              <input type="radio" name="options" id="option2" autocomplete="off"> PDF
-            </label>
-            <label class="btn btn-outline-dark" (click)="printDetalle()">
-              <input type="radio" name="options" id="option3" autocomplete="off"> Print
-            </label>
-          </div>
-      </div>
-  </div>
-    <div class="panel-body mt-2">          
-          <div class="table-container container">
+        <div class="mr-auto ml-4">
+            <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle Alerta</h3>
+        </div>
+        <div class="ml-auto" style="margin-top: 25px; margin-right: 60px;">
+            <div class="btn-group btn-group-toggle ml-4" data-toggle="buttons">
+                <label class="btn btn-outline-dark" (click)="excelDetalle()">
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+                </label>
+                <label class="btn btn-outline-dark" (click)="pdfDetalle()">
+                    <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+                </label>
+                <label class="btn btn-outline-dark" (click)="printDetalle()">
+                    <input type="radio" name="options" id="option3" autocomplete="off"> Print
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body mt-2">
+        <div class="table-container container">
             <form  role="form">
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Causa</label>
-                <div class="col-sm-10">
-                    <input *ngIf="detailcause.cause == 'SOS1'" type="text" readonly class="form-control" value="SOS">
-                    <input *ngIf="detailcause.cause == 'DROP'" type="text" readonly class="form-control" value="Caida">
-                    <input *ngIf="detailcause.cause == 'OUT_BOUNDS'" type="text" readonly class="form-control" value="Salida del cerco">
-                    <input *ngIf="detailcause.cause == 'GENERAL'" type="text" readonly class="form-control" value="General">
-                    <input *ngIf="detailcause.cause == 'INCIDENCE'" type="text" readonly class="form-control" value="Reporte de Incidencia">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Imei</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control" value="{{detailcause.imei}}">
+                    </div>
                 </div>
-              </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Causa</label>
+                    <div class="col-sm-10">
+                        <input *ngIf="detailcause.cause == 'SOS1'" type="text" readonly class="form-control" value="SOS">
+                        <input *ngIf="detailcause.cause == 'DROP'" type="text" readonly class="form-control" value="Caida">
+                        <input *ngIf="detailcause.cause == 'OUT_BOUNDS'" type="text" readonly class="form-control" value="Salida del cerco">
+                        <input *ngIf="detailcause.cause == 'GENERAL'" type="text" readonly class="form-control" value="General">
+                        <input *ngIf="detailcause.cause == 'INCIDENCE'" type="text" readonly class="form-control" value="Reporte de Incidencia">
+                    </div>
+                </div>
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Descripción</label>
                     <div class="col-sm-10">
                         <textarea rows="5" cols="10" readonly class="form-control input">{{detailcause.message}}</textarea>
                     </div>
                 </div>
-              <div class="form-group row">
-                <label for="fecha" class="col-sm-2 col-form-label">Fecha</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="fecha" value="{{detailcause.create_date}}">
+                <div class="form-group row">
+                    <label for="fecha" class="col-sm-2 col-form-label">Fecha</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" id="fecha" value="{{detailcause.create_date}}">
+                    </div>
+                    <label for="descrip" class="col-sm-2 col-form-label">Estado</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" id="descrip" value="Aceptada" *ngIf="detailcause.status == 0">
+                        <input type="text" readonly class="form-control" id="descrip" value="Sin aceptar" *ngIf="detailcause.status == 1">
+                    </div>
                 </div>
-                <label for="descrip" class="col-sm-2 col-form-label">Estado</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="descrip" value="Aceptada" *ngIf="detailcause.status == 0">
-                  <input type="text" readonly class="form-control" id="descrip" value="Sin aceptar" *ngIf="detailcause.status == 1">
+                <div class="form-group row">
+                    <label for="lat" class="col-sm-2 col-form-label">Latitud</label>
+                    <div class="col-sm-4">
+                        <input type="number" readonly class="form-control" id="lat" value="{{detailcause.latitude}}">
+                    </div>
+                    <label for="lng" class="col-sm-2 col-form-label">Longitud</label>
+                    <div class="col-sm-4">
+                        <input type="number" readonly class="form-control" id="lng" value="{{detailcause.longitude}}">
+                    </div>
                 </div>
-              </div>
-              <div class="form-group row">
-                <label for="lat" class="col-sm-2 col-form-label">Latitud</label>
-                <div class="col-sm-4">
-                  <input type="number" readonly class="form-control" id="lat" value="{{detailcause.latitude}}">
+                <div class="form-group row">
+                    <label for="dni" class="col-sm-2 col-form-label">Mapa</label>
+                    <div class="col-sm-10">
+                        <div class="map"
+                             leaflet
+                             [leafletOptions]="options"
+                             [(leafletZoom)]="zoom"
+                             [(leafletCenter)]="center"
+                             [leafletBaseLayers]="baseLayers"
+                             [leafletLayersControlOptions]="layersControlOptions"
+                             (leafletMapReady)="onMapReady($event)">
+                        </div>
+                    </div>
                 </div>
-                <label for="lng" class="col-sm-2 col-form-label">Longitud</label>
-                <div class="col-sm-4">
-                  <input type="number" readonly class="form-control" id="lng" value="{{detailcause.longitude}}">
+                <div class="row mt-4">
+                    <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
                 </div>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Mapa</label>
-                <div class="col-sm-10">
-                  <div class="map"
-                       leaflet
-                       [leafletOptions]="options"
-                       [(leafletZoom)]="zoom"
-                       [(leafletCenter)]="center"
-                       [leafletBaseLayers]="baseLayers"
-                       [leafletLayersControlOptions]="layersControlOptions"
-                       (leafletMapReady)="onMapReady($event)">
-                  </div>
-                </div>
-              </div>
-              <div class="row mt-4">
-                  <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
-              </div>
             </form>
-          </div>
         </div>
-  </div>
-  <div class="info-container panel panel-default"  *ngIf="viewmap">
+    </div>
+</div>
+<div class="info-container panel panel-default"  *ngIf="viewmap">
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto row ml-1">
-        <a (click)="regresar()" title="Atrás" style="color: var(--secondary-color)">
-            <i class="fas fa-reply icon-return"></i>
-        </a>
-        <h3 class="list-title">Mapa de Alertas</h3>
-      </div>
+        <div class="mr-auto row ml-1">
+            <a (click)="regresar()" title="Atrás" style="color: var(--secondary-color)">
+                <i class="fas fa-reply icon-return"></i>
+            </a>
+            <h3 class="list-title">Mapa de Alertas</h3>
+        </div>
     </div>
-  <div class="table mt-2 container-fluid">
-    <div class="mapchart"
-         leaflet
-         [leafletOptions]="options"
-         [(leafletZoom)]="zoom"
-         [(leafletCenter)]="center"
-         [leafletBaseLayers]="baseLayers"
-         [leafletLayersControlOptions]="layersControlOptions"
-         [leafletMarkerCluster]="markerClusterData"
-         [leafletMarkerClusterOptions]="markerClusterOptions"
-         (leafletMapReady)="onMapReadyChart($event)">
+    <div class="table mt-2 container-fluid">
+        <div class="mapchart"
+             leaflet
+             [leafletOptions]="options"
+             [(leafletZoom)]="zoom"
+             [(leafletCenter)]="center"
+             [leafletBaseLayers]="baseLayers"
+             [leafletLayersControlOptions]="layersControlOptions"
+             [leafletMarkerCluster]="markerClusterData"
+             [leafletMarkerClusterOptions]="markerClusterOptions"
+             (leafletMapReady)="onMapReadyChart($event)">
+        </div>
     </div>
-  </div>
-  </div>
+</div>

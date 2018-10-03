@@ -175,7 +175,37 @@ export class WactivasComponent {
         );
     }
 
+    getMapAlertas(){
+        this.zoom = 12;
+        this.lista = false;
+        this.viewmap = true;
+    }
+
+    setupPdfAndExcelData() {
+        const body = [];
+        const excel = [];
+        for (let i = 0; i < this.data.length; i++) {
+            excel.push({
+                'Puesto' : this.data[i].stand_name,
+                'Nombre del Guardia': this.data[i].guard_name + ' ' + this.data[i].guard_lastname,
+                'Cédula del Guardia': this.data[i].guard_dni,
+                'Hora de inicio': this.data[i].create_date,
+            });
+            body.push([
+                this.data[i].stand_name,
+                this.data[i].guard_name + ' ' + this.data[i].guard_lastname,
+                this.data[i].guard_dni,
+                this.data[i].create_date,
+            ]);
+            this.data[i].id = Number(this.data[i].id);
+            this.data[i].guard_dni = Number(this.data[i].guard_dni);
+        }
+        this.contpdf = body;
+        this.info = excel;
+    }
+
     pdfDownload() {
+        this.setupPdfAndExcelData();
         var doc = new jsPDF();
         doc.setFontSize(20)
         doc.text('ICSSE Seguridad', 15, 20)
@@ -186,25 +216,26 @@ export class WactivasComponent {
         doc.text('Guardias Activas', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
-            head: [['#', 'Nombre del Guardia', 'Cédula del Guardia', 'Hora de inicio', 'Status']],
+            head: [['Puesto', 'Nombre del Guardia', 'Cédula del Guardia', 'Hora de inicio']],
             body: this.contpdf,
             startY: 41,
             columnStyles: {
-                0: {columnWidth: 10},
-                1: {columnWidth: 'auto'},
-                2: {columnWidth: 'auto'},
-                3: {columnWidth: 'auto'},
-                4: {columnWidth: 20}
+                0: {cellWidth: 'auto'},
+                1: {cellWidth: 'auto'},
+                2: {cellWidth: 'auto'},
+                3: {cellWidth: 'auto'},
             }
         });
         doc.save('guardiasactivas.pdf');
     }
 
     excelDownload() {
+        this.setupPdfAndExcelData();
         this.excelService.exportAsExcelFile(this.info, 'guardiasactivas');
     }
 
     print() {
+        this.setupPdfAndExcelData();
         var doc = new jsPDF();
         doc.setFontSize(20)
         doc.text('ICSSE Seguridad', 15, 20)
@@ -215,25 +246,18 @@ export class WactivasComponent {
         doc.text('Guardias Activas', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
-            head: [['#', 'Nombre del Guardia', 'Cédula del Guardia', 'Hora de inicio', 'Status']],
+            head: [['Puesto', 'Nombre del Guardia', 'Cédula del Guardia', 'Hora de inicio']],
             body: this.contpdf,
             startY: 41,
             columnStyles: {
-                0: {columnWidth: 10},
-                1: {columnWidth: 'auto'},
-                2: {columnWidth: 'auto'},
-                3: {columnWidth: 'auto'},
-                4: {columnWidth: 20}
+                0: {cellWidth: 'auto'},
+                1: {cellWidth: 'auto'},
+                2: {cellWidth: 'auto'},
+                3: {cellWidth: 'auto'},
             }
         });
         doc.autoPrint();
         window.open(doc.output('bloburl'), '_blank');
-    }
-
-    getMapAlertas(){
-        this.zoom = 12;
-        this.lista = false;
-        this.viewmap = true;
     }
 
     pdfDetalle() {
@@ -285,6 +309,17 @@ export class WactivasComponent {
         doc.text('Correo: ', 100, 84);
         doc.setFontType("normal");
         doc.text(this.guardia.guard_email, 119, 84);
+
+        doc.setFontType("bold");
+        doc.text('Puesto: ', 15, 91);
+        doc.setFontType("normal");
+        doc.text(this.guardia.stand_name, 34, 91);
+
+
+        doc.setFontType("bold");
+        doc.text('Tablet: ', 15, 98);
+        doc.setFontType("normal");
+        doc.text(this.guardia.tablet_imei, 34, 98);
 
         doc.save('guardiaDetail.pdf');
 
@@ -339,6 +374,17 @@ export class WactivasComponent {
         doc.text('Correo: ', 100, 84);
         doc.setFontType("normal");
         doc.text(this.guardia.guard_email, 119, 84);
+
+        doc.setFontType("bold");
+        doc.text('Puesto: ', 15, 91);
+        doc.setFontType("normal");
+        doc.text(this.guardia.stand_name, 34, 91);
+
+
+        doc.setFontType("bold");
+        doc.text('Tablet: ', 15, 98);
+        doc.setFontType("normal");
+        doc.text(this.guardia.tablet_imei, 34, 98);
 
         doc.autoPrint();
         window.open(doc.output('bloburl'), '_blank');

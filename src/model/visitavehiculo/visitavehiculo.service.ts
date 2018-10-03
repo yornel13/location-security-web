@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, of } from 'rxjs';
-import  { Vvehiculo } from './visitavehiculo';
+import { Vvehiculo } from './visitavehiculo';
 
 const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
-const httpOptions2 = { headers: new HttpHeaders({ 'Content-Type': 'application/json, Origin', 'Access-Control-Allow-Origin':'*' })};
 
 @Injectable()
 export class VisitaVehiculoService {

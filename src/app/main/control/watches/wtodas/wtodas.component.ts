@@ -487,7 +487,48 @@ export class WtodasComponent {
         );
     }
 
+    getMapAlertas() {
+        this.zoom = 12;
+        this.lista = false;
+        this.viewmap = true;
+    }
+
+    setupPdfAndExcelData() {
+        const body = [];
+        const excel = [];
+        let status = '';
+        for (let i = 0; i < this.data.length; i++) {
+            if (this.data[i].status === '0') {
+                status = 'Finalizada';
+            } else {
+                status = 'Activa';
+                this.data[i].update_date = '--';
+            }
+            excel.push({
+                'Puesto' : this.data[i].stand_name,
+                'Nombre del Guardia': this.data[i].guard_name + ' ' + this.data[i].guard_lastname,
+                'Cédula del Guardia': this.data[i].guard_dni,
+                'Hora de inicio': this.data[i].create_date,
+                'Hora de finalización': this.data[i].update_date === '0000-00-0000:00:00' ? '--' : this.data[i].update_date,
+                'Estado': status
+            });
+            body.push([
+                this.data[i].stand_name,
+                this.data[i].guard_name + ' ' + this.data[i].guard_lastname,
+                this.data[i].guard_dni,
+                this.data[i].create_date,
+                this.data[i].update_date,
+                status
+            ]);
+            this.data[i].id = Number(this.data[i].id);
+            this.data[i].guard_dni = Number(this.data[i].guard_dni);
+        }
+        this.contpdf = body;
+        this.info = excel;
+    }
+
     pdfDownload() {
+        this.setupPdfAndExcelData();
         var doc = new jsPDF();
         doc.setFontSize(20)
         doc.text('ICSSE Seguridad', 15, 20)
@@ -498,26 +539,28 @@ export class WtodasComponent {
         doc.text('Todas las Guardias', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
-            head: [['#', 'Nombre del Guardia', 'Cédula del Guardia', 'Hora de inicio', 'Hora de finalización', 'Status']],
+            head: [['Puesto', 'Nombre del Guardia', 'Cédula del Guardia', 'Hora de inicio', 'Hora de finalización', 'Estado']],
             body: this.contpdf,
             startY: 41,
             columnStyles: {
-                0: {columnWidth: 10},
-                1: {columnWidth: 'auto'},
-                2: {columnWidth: 'auto'},
-                3: {columnWidth: 'auto'},
-                4: {columnWidth: 'auto'},
-                5: {columnWidth: 20}
+                0: {cellWidth: 20},
+                1: {cellWidth: 'auto'},
+                2: {cellWidth: 'auto'},
+                3: {cellWidth: 'auto'},
+                4: {cellWidth: 'auto'},
+                5: {cellWidth: 20}
             }
         });
         doc.save('guardias.pdf');
     }
 
     excelDownload() {
+        this.setupPdfAndExcelData();
         this.excelService.exportAsExcelFile(this.info, 'guardias');
     }
 
     print() {
+        this.setupPdfAndExcelData();
         var doc = new jsPDF();
         doc.setFontSize(20)
         doc.text('ICSSE Seguridad', 15, 20)
@@ -528,29 +571,23 @@ export class WtodasComponent {
         doc.text('Todas las Guardias', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
-            head: [['#', 'Nombre del Guardia', 'Cédula del Guardia', 'Hora de inicio', 'Hora de finalización', 'Status']],
+            head: [['Puesto', 'Nombre del Guardia', 'Cédula del Guardia', 'Hora de inicio', 'Hora de finalización', 'Estado']],
             body: this.contpdf,
             startY: 41,
             columnStyles: {
-                0: {columnWidth: 10},
-                1: {columnWidth: 'auto'},
-                2: {columnWidth: 'auto'},
-                3: {columnWidth: 'auto'},
-                4: {columnWidth: 'auto'},
-                5: {columnWidth: 20}
+                0: {cellWidth: 20},
+                1: {cellWidth: 'auto'},
+                2: {cellWidth: 'auto'},
+                3: {cellWidth: 'auto'},
+                4: {cellWidth: 'auto'},
+                5: {cellWidth: 20}
             }
         });
         doc.autoPrint();
         window.open(doc.output('bloburl'), '_blank');
     }
 
-    getMapAlertas(){
-        this.zoom = 12;
-        this.lista = false;
-        this.viewmap = true;
-    }
-
-    pdfDetalle() {
+    getPdfDetails(): jsPDF {
         var doc = new jsPDF();
         doc.setFontSize(20)
         doc.text('ICSSE Seguridad', 15, 20)
@@ -610,70 +647,28 @@ export class WtodasComponent {
         doc.setFontType("normal");
         doc.text(this.guardia.guard_email, 119, 84);
 
+        doc.setFontType("bold");
+        doc.text('Puesto: ', 15, 91);
+        doc.setFontType("normal");
+        doc.text(this.guardia.stand_name, 34, 91);
+
+
+        doc.setFontType("bold");
+        doc.text('Tablet: ', 15, 98);
+        doc.setFontType("normal");
+        doc.text(this.guardia.tablet_imei, 34, 98);
+
+        return doc;
+    }
+
+    pdfDetalle() {
+        const doc = this.getPdfDetails();
         doc.save('guardiaDetail.pdf');
 
     }
 
     printDetalle() {
-        var doc = new jsPDF();
-        doc.setFontSize(20)
-        doc.text('ICSSE Seguridad', 15, 20)
-        doc.setFontSize(12)
-        doc.setTextColor(100)
-        var d = new Date();
-        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
-        doc.text('Guardia', 15, 27)
-        doc.text('Hora de impresión: '+ fecha, 15, 34);
-        //inserting data
-        doc.setTextColor(0);
-        doc.setFontType("bold");
-        doc.text('Hora de inicio: ', 15, 50);
-        doc.setFontType("normal");
-        doc.text(this.guardia.create_date, 50, 50);
-        doc.setFontType("bold");
-        doc.text('Hora de finalización: ', 100, 50);
-        doc.setFontType("normal");
-        var time = "";
-        if(this.guardia.status == 0){
-            time = this.guardia.update_date;
-        }else{
-            time = "--";
-        }
-        doc.text(time, 147, 50);
-
-        doc.setFontType("bold");
-        doc.text('Latitud: ', 15, 57);
-        doc.setFontType("normal");
-        doc.text(this.guardia.latitude.toString(), 36, 57);
-        doc.setFontType("bold");
-        doc.text('Longitud: ', 100, 57);
-        doc.setFontType("normal");
-        doc.text(this.guardia.longitude.toString(), 123, 57);
-
-        //guardia
-        doc.line(10, 63, 200, 63);
-
-        doc.setFontType("bold");
-        doc.text('Guardia', 15, 70);
-
-        doc.setFontType("bold");
-        doc.text('Nombre: ', 15, 77);
-        doc.setFontType("normal");
-        doc.text(this.guardia.guard_name, 34, 77);
-        doc.setFontType("bold");
-        doc.text('Apellido: ', 100, 77);
-        doc.setFontType("normal");
-        doc.text(this.guardia.guard_lastname, 123, 77);
-
-        doc.setFontType("bold");
-        doc.text('Cédula: ', 15, 84);
-        doc.setFontType("normal");
-        doc.text(this.guardia.guard_dni, 34, 84);
-        doc.setFontType("bold");
-        doc.text('Correo: ', 100, 84);
-        doc.setFontType("normal");
-        doc.text(this.guardia.guard_email, 119, 84);
-
+        const doc = this.getPdfDetails();
         doc.autoPrint();
         window.open(doc.output('bloburl'), '_blank');
 

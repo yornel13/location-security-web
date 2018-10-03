@@ -1,4 +1,4 @@
-<div class="vehicle-card" (click)="focusMarker(vehicle.latitude, vehicle.longitude)">
+<div class="vehicle-card" (click)="focusMarker(vehicle.latitude, vehicle.longitude, vehicle)">
     <div class="card-header" style="padding: 16px">
         <span class="card-alias ps">{{vehicle.alias}}</span>
         <span class="card-imei ps"><b>IMEI {{vehicle.imei}}</b></span>
@@ -17,7 +17,7 @@
                  [ngClass]="{'inactive':vehicle.device_status=='OFFOROUTOFCOVERAGE'}">{{devices_status}}
             </div>
         </div>
-        <p class="date-s ps">Fecha: {{vehicle.generated_time | date : "medium" : 'UTC-9'}}</p>
+        <p class="date-s ps">Fecha: {{vehicle.generated_time | date : "medium"}}</p>
     </div>
 </div>
 

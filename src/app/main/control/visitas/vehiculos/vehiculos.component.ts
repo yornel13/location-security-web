@@ -65,7 +65,7 @@ export class VehiculosComponent {
           var excel = [];
           for(var i=0; i<this.data.length; i++){
               this.data[i].id = Number(this.data[i].id);
-              excel.push({'#' : this.data[i].id, 'Placa': this.data[i].plate, 'Vehiculo':this.data[i].vehicle, 'Modelo':this.data[i].model, 'Color':this.data[i].type})
+              excel.push({'#' : this.data[i].id, 'Placa': this.data[i].plate, 'Vehiculo':this.data[i].vehicle, 'Marca':this.data[i].model, 'Color':this.data[i].type})
               body.push([this.data[i].id, this.data[i].plate, this.data[i].vehicle, this.data[i].model, this.data[i].type])
           }
           this.contpdf = body;
@@ -195,15 +195,15 @@ export class VehiculosComponent {
         doc.text('Vehículos Visitantes', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
-            head: [['#', 'Placa', 'Vehiculo', 'Modelo', 'Color']],
+            head: [['#', 'Placa', 'Vehiculo', 'Marca', 'Color']],
             body: this.contpdf,
             startY: 41,
             columnStyles: {
-              0: {columnWidth: 10},
-              1: {columnWidth: 'auto'},
-              2: {columnWidth: 'auto'},
-              3: {columnWidth: 'auto'},
-              4: {columnWidth: 'auto'}
+              0: {cellWidth: 18},
+              1: {cellWidth: 'auto'},
+              2: {cellWidth: 'auto'},
+              3: {cellWidth: 'auto'},
+              4: {cellWidth: 'auto'}
             }
         });   
         doc.save('vehiculos.pdf');
@@ -224,15 +224,15 @@ export class VehiculosComponent {
         doc.text('Vehículos Visitantes', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34)
         doc.autoTable({
-            head: [['#', 'Placa', 'Vehiculo', 'Modelo', 'Color']],
+            head: [['#', 'Placa', 'Vehiculo', 'Marca', 'Color']],
             body: this.contpdf,
             startY: 41,
             columnStyles: {
-              0: {columnWidth: 10},
-              1: {columnWidth: 'auto'},
-              2: {columnWidth: 'auto'},
-              3: {columnWidth: 'auto'},
-              4: {columnWidth: 'auto'}
+              0: {cellWidth: 18},
+              1: {cellWidth: 'auto'},
+              2: {cellWidth: 'auto'},
+              3: {cellWidth: 'auto'},
+              4: {cellWidth: 'auto'}
             }
         });   
         doc.autoPrint();
@@ -261,7 +261,7 @@ export class VehiculosComponent {
         doc.text(this.vehi.vehicle, 125, 100);
 
         doc.setFontType("bold");
-        doc.text('Modelo: ', 15, 107);
+        doc.text('Marca: ', 15, 107);
         doc.setFontType("normal");
         doc.text(this.vehi.model, 34, 107);
         doc.setFontType("bold");
@@ -278,11 +278,15 @@ export class VehiculosComponent {
         doc.setFontType("normal");
         doc.text(this.vehi.update_date, 146, 114);
 
-        this.toDataURL(this.vehi.photo).then(dataUrl => {
-            var imgData = dataUrl;
-            doc.addImage(imgData, 'JPEG', 15, 45, 40, 40);
+        if (this.vehi.photo) {
+            this.toDataURL(this.vehi.photo).then(dataUrl => {
+                var imgData = dataUrl;
+                doc.addImage(imgData, 'JPEG', 15, 45, 40, 40);
+                doc.save('vehiculoDetail.pdf');
+            });
+        } else {
             doc.save('vehiculoDetail.pdf');
-          });
+        }
         
     }
 
@@ -292,7 +296,7 @@ export class VehiculosComponent {
         const reader = new FileReader()
         reader.onloadend = () => resolve(reader.result)
         reader.onerror = reject
-        reader.readAsDataURL(blob)
+        reader.readAsDataURL(blob);
       }));
 
     printDetalle() {
@@ -317,7 +321,7 @@ export class VehiculosComponent {
         doc.text(this.vehi.vehicle, 125, 100);
 
         doc.setFontType("bold");
-        doc.text('Modelo: ', 15, 107);
+        doc.text('Marca: ', 15, 107);
         doc.setFontType("normal");
         doc.text(this.vehi.model, 34, 107);
         doc.setFontType("bold");
@@ -334,18 +338,23 @@ export class VehiculosComponent {
         doc.setFontType("normal");
         doc.text(this.vehi.update_date, 146, 114);
 
-        this.toDataURL(this.vehi.photo).then(dataUrl => {
-            var imgData = dataUrl;
-            doc.addImage(imgData, 'JPEG', 15, 45, 40, 40);
+        if (this.vehi.photo) {
+            this.toDataURL(this.vehi.photo).then(dataUrl => {
+                var imgData = dataUrl;
+                doc.addImage(imgData, 'JPEG', 15, 45, 40, 40);
+                doc.autoPrint();
+                window.open(doc.output('bloburl'), '_blank');
+            });
+        } else {
             doc.autoPrint();
             window.open(doc.output('bloburl'), '_blank');
-          });
+        }
         
     }
 
     excelDetalle() {
         var excel = [];
-        excel = [{'#' : this.vehi.id, 'Placa': this.vehi.plate, 'Vehículo':this.vehi.vehicle, 'Modelo':this.vehi.model, 'Color':this.vehi.type, 'Fecha de creación':this.vehi.create_date, 'Última actualización':this.vehi.update_date}];
+        excel = [{'#' : this.vehi.id, 'Placa': this.vehi.plate, 'Vehículo':this.vehi.vehicle, 'Marca':this.vehi.model, 'Color':this.vehi.type, 'Fecha de creación':this.vehi.create_date, 'Última actualización':this.vehi.update_date}];
         this.excelService.exportAsExcelFile(excel, 'vehiculDetail');
     }
 

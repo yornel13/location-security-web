@@ -50,6 +50,8 @@ import {
     ToastNoAnimation,
     ToastNoAnimationModule
 } from 'ngx-toastr';
+import {HistoryPrint} from './monitoring/history.print';
+import {InfolinePrint} from './monitoring/infoline.print';
 
 export function controlModuleLoader() {
     return ControlModule;
@@ -100,7 +102,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
         ToastrModule.forRoot()
     ],
     providers: [
-        VehiclesService, WatchesService, MainService, TabletService ],
+        VehiclesService, WatchesService, MainService, TabletService, HistoryPrint, InfolinePrint ],
     entryComponents: [ PopupVehicleComponent, PopupWatchComponent, PopupAlertComponent, CardVehicleComponent,
         CardTabletComponent, ItemGuardComponent, CardTabletComponent ],
     declarations: [

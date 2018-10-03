@@ -1464,68 +1464,44 @@ export class FiltreportComponent implements OnInit {
         };
     }
 
-    pdfDownload() {
-        var doc = new jsPDF();
-        doc.setFontSize(20)
-        doc.text('ICSSE Seguridad', 15, 20)
-        doc.setFontSize(12)
-        doc.setTextColor(100)
-        var d = new Date();
-        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
-        doc.text('Todos los Reportes', 15, 27)
-        doc.text('Hora de impresión: '+ fecha, 15, 34)
-        doc.autoTable({
-            head: [['#', 'Título', 'Observación', 'Fecha', 'Status']],
-            body: this.contpdf,
-            startY: 41,
-            columnStyles: {
-                0: {columnWidth: 10},
-                1: {columnWidth: 'auto'},
-                2: {columnWidth: 'auto'},
-                3: {columnWidth: 'auto'},
-                4: {columnWidth: 20}
-            }
-        });
-        doc.save('reportes.pdf');
-    }
-
-    excelDownload() {
-        this.excelService.exportAsExcelFile(this.info, 'reportes');
-    }
-
-    print() {
-        var doc = new jsPDF();
-        doc.setFontSize(20)
-        doc.text('ICSSE Seguridad', 15, 20)
-        doc.setFontSize(12)
-        doc.setTextColor(100)
-        var d = new Date();
-        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
-        doc.text('Todos los Reportes', 15, 27)
-        doc.text('Hora de impresión: '+ fecha, 15, 34)
-        doc.autoTable({
-            head: [['#', 'Título', 'Observación', 'Fecha', 'Status']],
-            body: this.contpdf,
-            startY: 41,
-            columnStyles: {
-                0: {columnWidth: 10},
-                1: {columnWidth: 'auto'},
-                2: {columnWidth: 'auto'},
-                3: {columnWidth: 'auto'},
-                4: {columnWidth: 20}
-            }
-        });
-        doc.autoPrint();
-        window.open(doc.output('bloburl'), '_blank');
-    }
-
     getMapAlertas() {
         this.zoom = this.globalOSM.zoom;
         this.lista = false;
         this.viewmap = true;
     }
 
-    pdfDetalle() {
+    setupPdfAndExcelData() {
+        const body = [];
+        const excel = [];
+        let resolve = '';
+        for (let i = 0; i < this.data.length; i++) {
+            this.data[i].id = Number(this.data[i].id);
+            if (this.data[i].resolved === 0) {
+                resolve = 'Cerrado';
+            } else {
+                resolve = 'Abierto';
+            }
+            excel.push({
+                'Puesto' : this.data[i].stand_name,
+                'Título': this.data[i].title,
+                'Observación': this.data[i].observation,
+                'Fecha': this.data[i].create_date,
+                'Estado': resolve
+            });
+            body.push([
+                this.data[i].stand_name,
+                this.data[i].title,
+                this.data[i].observation,
+                this.data[i].create_date,
+                resolve
+            ]);
+        }
+        this.contpdf = body;
+        this.info = excel;
+    }
+
+    pdfDownload() {
+        this.setupPdfAndExcelData();
         var doc = new jsPDF();
         doc.setFontSize(20)
         doc.text('ICSSE Seguridad', 15, 20)
@@ -1533,8 +1509,65 @@ export class FiltreportComponent implements OnInit {
         doc.setTextColor(100)
         var d = new Date();
         var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Todos los Reportes', 15, 27)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['Puesto', 'Título', 'Observación', 'Fecha', 'Status']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+                0: {cellWidth: 20},
+                1: {cellWidth: 24},
+                2: {cellWidth: 'auto'},
+                3: {cellWidth: 20},
+                4: {cellWidth: 20}
+            }
+        });
+        doc.save('reportes.pdf');
+    }
+
+    excelDownload() {
+        this.setupPdfAndExcelData();
+        this.excelService.exportAsExcelFile(this.info, 'reportes');
+    }
+
+    print() {
+        this.setupPdfAndExcelData();
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Todos los Reportes', 15, 27)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['Puesto', 'Título', 'Observación', 'Fecha', 'Status']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+                0: {cellWidth: 20},
+                1: {cellWidth: 24},
+                2: {cellWidth: 'auto'},
+                3: {cellWidth: 20},
+                4: {cellWidth: 20}
+            }
+        });
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
+    }
+
+    async getPdfDetails(type: number) { // 1: for save pdf, 2 for show print
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
         doc.text('Reporte Abierto', 15, 27)
-        doc.text('Hora de impresión: '+ fecha, 15, 34);
+        doc.text('Hora de impresión: ' + fecha, 15, 34);
         //inserting data
         doc.setTextColor(0);
         doc.setFontType("bold");
@@ -1546,7 +1579,7 @@ export class FiltreportComponent implements OnInit {
         doc.text('Observación: ', 15, 57);
         doc.setFontType("normal");
         var splitTitle = doc.splitTextToSize(this.report.observation, 120);
-        //doc.text(15, 20, splitTitle);
+        // doc.text(15, 20, splitTitle);
         doc.text(splitTitle, 50, 57);
 
         doc.setFontType("bold");
@@ -1558,118 +1591,110 @@ export class FiltreportComponent implements OnInit {
         doc.setFontType("normal");
         doc.text(this.report.longitude.toString(), 123, 71);
 
-        //guardia
-        doc.line(10, 77, 200, 77);
+        let extraTop = 0;
 
-        doc.setFontType("bold");
-        doc.text('Guardia', 15, 84);
-
-        doc.setFontType("bold");
-        doc.text('Nombre: ', 15, 91);
-        doc.setFontType("normal");
-        doc.text(this.report.watch.guard_name, 34, 91);
-        doc.setFontType("bold");
-        doc.text('Apellido: ', 100, 91);
-        doc.setFontType("normal");
-        doc.text(this.report.watch.guard_lastname, 123, 91);
-
-        doc.setFontType("bold");
-        doc.text('Cédula: ', 15, 98);
-        doc.setFontType("normal");
-        doc.text(this.report.watch.guard_dni, 34, 98);
-        doc.setFontType("bold");
-        doc.text('Correo: ', 100, 98);
-        doc.setFontType("normal");
-        doc.text(this.report.watch.guard_email, 119, 98);
-
-        doc.line(10, 105, 200, 105);
-        for(var i=0; i < this.coment.length; i++){
-            doc.setFontType("bold");
-            doc.text('Comentario: #'+(i+1)+' ', 15, 112+i*(14));
-            doc.setFontType("normal");
-            doc.text(this.coment[i].text, 50, 112+i*(14));
-            doc.setFontType("bold");
-            doc.text('Usuario: ', 100, 112+i*(14));
-            doc.setFontType("normal");
-            doc.text(this.coment[i].user_name, 119, 112+i*(14));
+        if (this.report.image_1) {
+            let marginLeft = 15;
+            const marginTop = 79;
+            marginLeft = await this.getReportPhoto(this.report.image_1, doc, marginLeft, marginTop);
+            marginLeft = await this.getReportPhoto(this.report.image_2, doc, marginLeft, marginTop);
+            await this.getReportPhoto(this.report.image_3, doc, marginLeft, marginTop);
+            extraTop = 40;
         }
+        if (this.report.image_4) {
+            let marginLeft = 15;
+            const marginTop = 118;
+            marginLeft = await this.getReportPhoto(this.report.image_4, doc, marginLeft, marginTop);
+            await this.getReportPhoto(this.report.image_5, doc, marginLeft, marginTop);
+            extraTop = 80;
+        }
+        // guardia
+        doc.line(10, 77 + extraTop, 200, 77 + extraTop);
 
-        doc.save('reporteabiertoDetail.pdf');
+        doc.setFontType("bold");
+        doc.text('Guardia', 15, 84 + extraTop);
 
+        doc.setFontType("bold");
+        doc.text('Nombre: ', 15, 91 + extraTop);
+        doc.setFontType("normal");
+        doc.text(this.report.watch.guard_name, 34, 91 + extraTop);
+        doc.setFontType("bold");
+        doc.text('Apellido: ', 100, 91 + extraTop);
+        doc.setFontType("normal");
+        doc.text(this.report.watch.guard_lastname, 123, 91 + extraTop);
+
+        doc.setFontType("bold");
+        doc.text('Cédula: ', 15, 98 + extraTop);
+        doc.setFontType("normal");
+        doc.text(this.report.watch.guard_dni, 34, 98 + extraTop);
+        doc.setFontType("bold");
+        doc.text('Correo: ', 100, 98 + extraTop);
+        doc.setFontType("normal");
+        doc.text(this.report.watch.guard_email, 119, 98 + extraTop);
+
+        doc.setFontType("bold");
+        doc.text('Puesto: ', 15, 105 + extraTop);
+        doc.setFontType("normal");
+        doc.text(this.report.watch.guard_email, 34, 105 + extraTop);
+        doc.line(10, 112 + extraTop, 200, 112 + extraTop);
+        for (var i = 0; i < this.coment.length; i++) {
+            doc.setFontType("bold");
+            doc.text('Comentario: #' + (i + 1) + ' ', 15, (119 + i * (14)) + extraTop);
+            doc.setFontType("normal");
+            doc.text(this.coment[i].text, 50, (119 + i * (14)) + extraTop);
+            doc.setFontType("bold");
+            doc.text('Usuario: ', 100, (119 + i * (14)) + extraTop);
+            doc.setFontType("normal");
+            doc.text(this.coment[i].user_name, 119, (119 + i * (14)) + extraTop);
+        }
+        if (type === 1) {
+            doc.save('reporteabiertoDetail.pdf');
+        }
+        if (type === 2) {
+            doc.autoPrint();
+            window.open(doc.output('bloburl'), '_blank');
+        }
+    }
+
+    async getReportPhoto(url: string, doc: jsPDF, marginLeft: number, marginTop: number) {
+        if (url) {
+            let photo = null;
+            await this.toDataURL(url).then(dataUrl => {
+                photo = dataUrl;
+            });
+            const img1 = new Image();
+            const promise = new Promise(function (resolve, reject) {
+                img1.onload = () => {
+                    const height = 35;
+                    const width = img1.width / (img1.height / height);
+                    doc.addImage(photo, 'JPEG', marginLeft, marginTop, width, height);
+                    resolve(photo);
+                    marginLeft =  marginLeft + width + 5;
+                };
+            });
+            img1.src = String(photo);
+            await promise.then();
+        }
+        return marginLeft;
+    }
+
+    toDataURL = url => fetch(url)
+        .then(response => response.blob())
+        .then(blob => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                resolve(reader.result);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        }))
+
+    pdfDetalle() {
+        this.getPdfDetails(1).then();
     }
 
     printDetalle() {
-        var doc = new jsPDF();
-        doc.setFontSize(20)
-        doc.text('ICSSE Seguridad', 15, 20)
-        doc.setFontSize(12)
-        doc.setTextColor(100)
-        var d = new Date();
-        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
-        doc.text('Reporte Abierto', 15, 27)
-        doc.text('Hora de impresión: '+ fecha, 15, 34);
-        //inserting data
-        doc.setTextColor(0);
-        doc.setFontType("bold");
-        doc.text('Incidencia: ', 15, 50);
-        doc.setFontType("normal");
-        doc.text(this.report.title, 42, 50);
-
-        doc.setFontType("bold");
-        doc.text('Observación: ', 15, 57);
-        doc.setFontType("normal");
-        var splitTitle = doc.splitTextToSize(this.report.observation, 120);
-        //doc.text(15, 20, splitTitle);
-        doc.text(splitTitle, 50, 57);
-
-        doc.setFontType("bold");
-        doc.text('Latitud: ', 15, 71);
-        doc.setFontType("normal");
-        doc.text(this.report.latitude.toString(), 36, 71);
-        doc.setFontType("bold");
-        doc.text('Longitud: ', 100, 71);
-        doc.setFontType("normal");
-        doc.text(this.report.longitude.toString(), 123, 71);
-
-        //guardia
-        doc.line(10, 77, 200, 77);
-
-        doc.setFontType("bold");
-        doc.text('Guardia', 15, 84);
-
-        doc.setFontType("bold");
-        doc.text('Nombre: ', 15, 91);
-        doc.setFontType("normal");
-        doc.text(this.report.watch.guard_name, 34, 91);
-        doc.setFontType("bold");
-        doc.text('Apellido: ', 100, 91);
-        doc.setFontType("normal");
-        doc.text(this.report.watch.guard_lastname, 123, 91);
-
-        doc.setFontType("bold");
-        doc.text('Cédula: ', 15, 98);
-        doc.setFontType("normal");
-        doc.text(this.report.watch.guard_dni, 34, 98);
-        doc.setFontType("bold");
-        doc.text('Correo: ', 100, 98);
-        doc.setFontType("normal");
-        doc.text(this.report.watch.guard_email, 119, 98);
-
-        doc.line(10, 105, 200, 105);
-        for(var i=0; i < this.coment.length; i++){
-            doc.setFontType("bold");
-            doc.text('Comentario: #'+(i+1)+' ', 15, 112+i*(14));
-            doc.setFontType("normal");
-            doc.text(this.coment[i].text, 50, 112+i*(14));
-            doc.setFontType("bold");
-            doc.text('Usuario: ', 100, 112+i*(14));
-            doc.setFontType("normal");
-            doc.text(this.coment[i].user_name, 119, 112+i*(14));
-        }
-
-        doc.autoPrint();
-        window.open(doc.output('bloburl'), '_blank');
-
+        this.getPdfDetails(2).then();
     }
 
     excelDetalle() {

@@ -15,6 +15,7 @@ export class MainService {
     selectedDevice: any;
 
     marker = new EventEmitter<any>();
+    vehicle = new EventEmitter<any>();
     alertsEmitter = new EventEmitter<Alerta[]>();
     alerts0Emitter = new EventEmitter<Alerta[]>();
     alerts1Emitter = new EventEmitter<Alerta[]>();

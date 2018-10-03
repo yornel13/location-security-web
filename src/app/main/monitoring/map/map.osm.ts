@@ -1,10 +1,10 @@
 import {
-  Component,
-  ComponentFactoryResolver,
-  Injector,
-  Input,
-  OnChanges, OnInit,
-  SimpleChanges
+    Component,
+    ComponentFactoryResolver,
+    Injector,
+    Input,
+    OnChanges, OnInit,
+    SimpleChanges
 } from '@angular/core';
 import { Vehicle } from '../../../../model/vehicle/vehicle';
 import { PopupVehicleComponent } from './popup.vehicle.component';
@@ -21,7 +21,7 @@ import {Cerco} from '../../../../model/cerco/cerco';
 import {Tablet} from '../../../../model/tablet/tablet';
 import {Record} from '../../../../model/historial/record';
 import {PopupHistoryComponent} from '../../control/historial/vehistorial/popup.history.component';
-import {PopupTablethComponent} from "../../control/historial/tabhistorial/popup.tableth.component";
+import {PopupTablethComponent} from '../../control/historial/tabhistorial/popup.tableth.component';
 
 @Component({
     selector : 'app-map-osm',
@@ -96,42 +96,48 @@ export class MapOsmComponent implements OnChanges, OnInit {
     }
 
     subscribeToClick() {
-      this.mainService.marker.subscribe(
-        (data: any) => {
-          this.zoom = 18;
-          this.center = data;
-        });
+        this.mainService.marker.subscribe(
+            (data: any) => {
+                this.zoom = 18;
+                this.center = data;
+            });
+        // this.mainService.vehicle.subscribe(
+        //     vehicle => {
+        //         const latlng = L.latLng({lat: vehicle.latitude , lng: vehicle.longitude});
+        //         this.zoom = 18;
+        //         this.center = latlng;
+        // });
     }
 
     setupDropdown() {
-      this.dropdownList = [];
-      this.selectedItems = [];
-      this.dropdownSettings = {
-        singleSelection: false,
-        idField: 'item_id',
-        textField: 'item_text',
-        selectAllText: 'Seleccionar todo',
-        unSelectAllText: 'Deseleccionar todo',
-        searchPlaceholderText: 'Buscar...',
-        itemsShowLimit: 5,
-        allowSearchFilter: true
-      };
+        this.dropdownList = [];
+        this.selectedItems = [];
+        this.dropdownSettings = {
+            singleSelection: false,
+            idField: 'item_id',
+            textField: 'item_text',
+            selectAllText: 'Seleccionar todo',
+            unSelectAllText: 'Deseleccionar todo',
+            searchPlaceholderText: 'Buscar...',
+            itemsShowLimit: 5,
+            allowSearchFilter: true
+        };
     }
 
     onItemSelect(item: any) {
-      this.selectBounds(item.item_id);
+        this.selectBounds(item.item_id);
     }
 
     onItemDeSelect(item: any) {
-      this.deselectBounds(item.item_id);
+        this.deselectBounds(item.item_id);
     }
 
     onSelectAll(items: any) {
-      this.selectAll();
+        this.selectAll();
     }
 
     onDeSelectAll(items: any) {
-      this.deselectAll();
+        this.deselectAll();
     }
 
     subscribeToAlerts() {
@@ -253,57 +259,57 @@ export class MapOsmComponent implements OnChanges, OnInit {
     }
 
     getGroups() {
-      this.groupService.getAll().then(
-          (success: any) => {
-        this.groupsBounds = success.data;
-        const data = [];
-        this.groupsBounds.forEach(group => {
-          data.push({ item_id: group.id, item_text: group.name });
-        });
-        this.dropdownList = data;
-      });
+        this.groupService.getAll().then(
+            (success: any) => {
+                this.groupsBounds = success.data;
+                const data = [];
+                this.groupsBounds.forEach(group => {
+                    data.push({ item_id: group.id, item_text: group.name });
+                });
+                this.dropdownList = data;
+            });
     }
 
     selectBounds(id: number) {
-      if (id > 0) {
-        this.groupService.getCercoGrupo(id).then(
-          (success: any) => {
-            const polygons = [];
-            const editableLayers = new L.FeatureGroup();
-            this.bounds = success.data;
-              this.bounds.forEach(cerco => {
-                const coors = JSON.parse(cerco.points);
-                this.map.addLayer(editableLayers);
-                const polygon = L.polygon([[]]).setLatLngs(coors);
-                polygon.options.color = cerco.color;
-                editableLayers.addLayer(polygon);
-                polygons.push(polygon);
-            });
-            this.groupsPolygons.push({ id: id, editableLayers: editableLayers});
-          });
-      }
+        if (id > 0) {
+            this.groupService.getCercoGrupo(id).then(
+                (success: any) => {
+                    const polygons = [];
+                    const editableLayers = new L.FeatureGroup();
+                    this.bounds = success.data;
+                    this.bounds.forEach(cerco => {
+                        const coors = JSON.parse(cerco.points);
+                        this.map.addLayer(editableLayers);
+                        const polygon = L.polygon([[]]).setLatLngs(coors);
+                        polygon.options.color = cerco.color;
+                        editableLayers.addLayer(polygon);
+                        polygons.push(polygon);
+                    });
+                    this.groupsPolygons.push({ id: id, editableLayers: editableLayers});
+                });
+        }
     }
 
     selectAll() {
-      this.groupsBounds.forEach(group => {
-        this.selectBounds(group.id);
-      });
+        this.groupsBounds.forEach(group => {
+            this.selectBounds(group.id);
+        });
     }
 
     deselectBounds(id: number) {
-      let removePolygon: any = {};
-      this.groupsPolygons.forEach(groupPolygon => {
-        if (groupPolygon.id === id) {
-          removePolygon = groupPolygon;
-        }
-      });
-      removePolygon.editableLayers.remove();
+        let removePolygon: any = {};
+        this.groupsPolygons.forEach(groupPolygon => {
+            if (groupPolygon.id === id) {
+                removePolygon = groupPolygon;
+            }
+        });
+        removePolygon.editableLayers.remove();
     }
 
     deselectAll() {
-      this.groupsPolygons.forEach(groupPolygon => {
-          groupPolygon.editableLayers.remove();
-      });
+        this.groupsPolygons.forEach(groupPolygon => {
+            groupPolygon.editableLayers.remove();
+        });
     }
 
     ngOnChanges(changes: SimpleChanges) {

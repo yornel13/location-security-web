@@ -93,11 +93,24 @@
     height: 20px;
 }
 
-.btn-search {
+.btn-print-o {
     padding: 2px 8px;
     position: absolute;
     left: 292px;
-    background-color: whitesmoke;
+}
+
+.btn-print {
+    padding: 2px 8px;
+    position: absolute;
+    left: 252px;
+}
+
+.btn-search {
+    padding: 3px 8px;
+    position: absolute;
+    left: 292px;
+    background-color: white;
+    border: whitesmoke;
 }
 
 .cards-container{
@@ -191,4 +204,18 @@
 
 .nav-link {
     cursor: pointer;
+}
+
+.loader_msg:after {
+    content: " ";
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    border: 3px solid #d5d5d5;
+    border-radius: 50%;
+    border-top: 3px solid var(--primary-color);
+    -webkit-animation: loader_msg 1s linear infinite;
+    animation: loader_msg 1s linear infinite;
+    align-items: center;
+    margin: 5px;
 }

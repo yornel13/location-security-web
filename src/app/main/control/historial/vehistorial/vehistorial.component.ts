@@ -9,303 +9,301 @@ import * as geolib from 'geolib';
 import {GlobalOsm} from '../../../../global.osm';
 import {UtilsVehicles} from '../../../../../model/vehicle/vehicle.utils';
 import {PopupHistoryComponent} from './popup.history.component';
-import {PolylineOptions} from "leaflet";
-import {LatLngExpression} from "leaflet";
 
 @Component({
-  selector: 'app-vehistorial',
-  templateUrl: './vehistorial.component.html',
-  styleUrls: ['./vehistorial.component.css']
+    selector: 'app-vehistorial',
+    templateUrl: './vehistorial.component.html',
+    styleUrls: ['./vehistorial.component.css']
 })
 export class VehistorialComponent {
 
-  lista:boolean=true;
-  detalle:boolean = false;
-  historial:boolean = false;
-  vehicles:any = [];
-  data:any = [];
-  filter:string;
-  p: number = 1;
-  numElement:number = 10;
-  vehiculo:any = {};
-  fecha:string;
-  contpdf:any = [];
-  info: any = [];
-  contpdf2:any = [];
-  info2: any = [];
-  history: any = [];
-  imei:any;
-  loadh:boolean = true;
+    lista:boolean=true;
+    detalle:boolean = false;
+    historial:boolean = false;
+    vehicles:any = [];
+    data:any = [];
+    filter:string;
+    p: number = 1;
+    numElement:number = 10;
+    vehiculo:any = {};
+    fecha:string;
+    contpdf:any = [];
+    info: any = [];
+    contpdf2:any = [];
+    info2: any = [];
+    history: any = [];
+    imei:any;
+    loadh:boolean = true;
 
-  date:string = "";
-  day2:any;
-  month2:any;
-  objvehi:any;
+    date:string = "";
+    day2:any;
+    month2:any;
+    objvehi:any;
 
-  //map
-  map: any;
-  mapchart: any;
-  lat:number= -2.0000;
-  lng:number = -79.0000;
-  viewmap:boolean = false;
+    //map
+    map: any;
+    mapchart: any;
+    lat:number= -2.0000;
+    lng:number = -79.0000;
+    viewmap:boolean = false;
 
-  zoom;
-  center = L.latLng(([ this.lat, this.lng ]));
-  marker = L.marker([this.lat, this.lng], {draggable: false});
+    zoom;
+    center = L.latLng(([ this.lat, this.lng ]));
+    marker = L.marker([this.lat, this.lng], {draggable: false});
 
-  markerClusterData: any[] = [];
-  markerClusterOptions: L.MarkerClusterGroupOptions;
-  layersControlOptions;
-  baseLayers;
-  options;
+    markerClusterData: any[] = [];
+    markerClusterOptions: L.MarkerClusterGroupOptions;
+    layersControlOptions;
+    baseLayers;
+    options;
 
-  constructor(
-      private resolver: ComponentFactoryResolver,
-      private vehistorialService: VehistorialService,
-      private excelService: ExcelService,
-      private globalOSM: GlobalOsm,
-      private injector: Injector,
-      private utilVehicle: UtilsVehicles) {
-    this.layersControlOptions = this.globalOSM.layersOptions;
-    this.baseLayers = this.globalOSM.baseLayers;
-    this.options = this.globalOSM.defaultOptions;
-    this.getAll();
-  }
-
-  onMapReady(map: L.Map) {
-    this.map =  map;
-    this.globalOSM.setupLayer(this.map);
-    this.center = this.globalOSM.center;
-    this.zoom = this.globalOSM.zoom;
-  }
-
-  onMapReadyH(map: L.Map) {
-    this.mapchart =  map;
-    this.globalOSM.setupLayer(this.mapchart);
-    this.center = this.globalOSM.center;
-    this.zoom = this.globalOSM.zoom;
-    const southWest = new L.LatLng(-2.100599, -79.560921);
-    const northEast = new L.LatLng(-2.030906, -79.568947);
-      const bounds = new L.LatLngBounds(southWest, northEast);
-    const data: any[] = [];
-    if (this.history.length) {
-      const coors = [];
-      const points = [];
-      this.history.forEach(record => {
-        const lat = Number(record.latitude);
-        const lng = Number(record.longitude);
-        const maker = L.marker([lat, lng], this.getIcon(record));
-        const factory = this.resolver.resolveComponentFactory(PopupHistoryComponent);
-        const component = factory.create(this.injector);
-        const popupContent = component.location.nativeElement;
-        component.instance.record = record;
-        component.changeDetectorRef.detectChanges();
-        maker.bindPopup(popupContent).openPopup();
-        data.push(maker);
-        coors.push({latitude: lat, longitude: lng});
-        points.push(L.latLng(lat, lng));
-        bounds.extend(maker.getLatLng());
-      });
-      const polyline = L.polyline(points);
-      const editableLayers = new L.FeatureGroup();
-      this.mapchart.addLayer(editableLayers);
-      editableLayers.addLayer(polyline);
-
-      this.mapchart.fitBounds(bounds);
-      const geoCenter = geolib.getCenter(coors);
-      this.center = L.latLng([geoCenter.latitude, geoCenter.longitude]);
+    constructor(
+        private resolver: ComponentFactoryResolver,
+        private vehistorialService: VehistorialService,
+        private excelService: ExcelService,
+        private globalOSM: GlobalOsm,
+        private injector: Injector,
+        private utilVehicle: UtilsVehicles) {
+        this.layersControlOptions = this.globalOSM.layersOptions;
+        this.baseLayers = this.globalOSM.baseLayers;
+        this.options = this.globalOSM.defaultOptions;
+        this.getAll();
     }
-    this.markerClusterData = data;
-  }
 
-  getIcon(history: any): any {
-    let iconDefault = this.utilVehicle.processVehicle(this.objvehi).iconUrl;
-    const icon = this.utilVehicle.getHistoryIcon(history);
-    if (icon != null) {
-      iconDefault = icon;
+    onMapReady(map: L.Map) {
+        this.map =  map;
+        this.globalOSM.setupLayer(this.map);
+        this.center = this.globalOSM.center;
+        this.zoom = this.globalOSM.zoom;
     }
-    return {icon: L.icon({iconUrl: iconDefault})};
-  }
 
-  centerMap(history: any) {
-    this.zoom = 19;
-    this.center = L.latLng(([ history.latitude, history.longitude ]));
-  }
+    onMapReadyH(map: L.Map) {
+        this.mapchart =  map;
+        this.globalOSM.setupLayer(this.mapchart);
+        this.center = this.globalOSM.center;
+        this.zoom = this.globalOSM.zoom;
+        const southWest = new L.LatLng(-2.100599, -79.560921);
+        const northEast = new L.LatLng(-2.030906, -79.568947);
+        const bounds = new L.LatLngBounds(southWest, northEast);
+        const data: any[] = [];
+        if (this.history.length) {
+            const coors = [];
+            const points = [];
+            this.history.forEach(record => {
+                const lat = Number(record.latitude);
+                const lng = Number(record.longitude);
+                const maker = L.marker([lat, lng], this.getIcon(record));
+                const factory = this.resolver.resolveComponentFactory(PopupHistoryComponent);
+                const component = factory.create(this.injector);
+                const popupContent = component.location.nativeElement;
+                component.instance.record = record;
+                component.changeDetectorRef.detectChanges();
+                maker.bindPopup(popupContent).openPopup();
+                data.push(maker);
+                coors.push({latitude: lat, longitude: lng});
+                points.push(L.latLng(lat, lng));
+                bounds.extend(maker.getLatLng());
+            });
+            const polyline = L.polyline(points);
+            const editableLayers = new L.FeatureGroup();
+            this.mapchart.addLayer(editableLayers);
+            editableLayers.addLayer(polyline);
 
-  getAll(){
-  	this.vehistorialService.getAll().then(
-        success => {
-            this.vehicles = success;
-            this.data = this.vehicles.data.reverse();
-            var body = [];
-            var excel = [];
-            for(var i=0; i<this.data.length; i++){
-                //this.data[i].id = Number(this.data[i].id);
-                //this.data[i].dni = Number(this.data[i].dni);
-                excel.push({'#' : this.data[i].id, 'IMEI': this.data[i].imei, 'Alias':this.data[i].alias, 'Placa':this.data[i].automotor_plate, 'Grupo':this.data[i].group_name, 'Fecha':this.data[i].generated_time})
-                body.push([this.data[i].id, this.data[i].imei, this.data[i].alias, this.data[i].automotor_plate, this.data[i].group_name, this.data[i].generated_time])
+            this.mapchart.fitBounds(bounds);
+            const geoCenter = geolib.getCenter(coors);
+            this.center = L.latLng([geoCenter.latitude, geoCenter.longitude]);
+        }
+        this.markerClusterData = data;
+    }
+
+    getIcon(history: any): any {
+        let iconDefault = this.utilVehicle.processVehicle(this.objvehi).iconUrl;
+        const icon = this.utilVehicle.getHistoryIcon(history);
+        if (icon != null) {
+            iconDefault = icon;
+        }
+        return {icon: L.icon({iconUrl: iconDefault})};
+    }
+
+    centerMap(history: any) {
+        this.zoom = 19;
+        this.center = L.latLng(([ history.latitude, history.longitude ]));
+    }
+
+    getAll(){
+        this.vehistorialService.getAll().then(
+            success => {
+                this.vehicles = success;
+                this.data = this.vehicles.data.reverse();
+                var body = [];
+                var excel = [];
+                for(var i=0; i<this.data.length; i++){
+                    //this.data[i].id = Number(this.data[i].id);
+                    //this.data[i].dni = Number(this.data[i].dni);
+                    excel.push({'#' : this.data[i].id, 'IMEI': this.data[i].imei, 'Alias':this.data[i].alias, 'Placa':this.data[i].automotor_plate, 'Grupo':this.data[i].group_name, 'Fecha':this.data[i].generated_time})
+                    body.push([this.data[i].id, this.data[i].imei, this.data[i].alias, this.data[i].automotor_plate, this.data[i].group_name, this.data[i].generated_time])
+                }
+                this.contpdf = body;
+                this.info = excel;
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
             }
-            this.contpdf = body;
-            this.info = excel;
-        }, error => {
-            if (error.status === 422) {
-                // on some data incorrect
-            } else {
-                // on general error
+        );
+    }
+
+    regresar(){
+        this.detalle = false;
+        this.historial = false;
+        this.lista = true;
+    }
+
+    verDetalle(vehi){
+        this.vehistorialService.getImei(vehi.imei).then(
+            success => {
+                this.vehiculo = success;
+                console.log(this.vehiculo);
+                this.vehiculo.latitude = this.lat = Number(this.vehiculo.latitude);
+                this.vehiculo.longitude = this.lng = Number(this.vehiculo.longitude);
+                this.zoom = 12;
+                this.lista = false;
+                this.detalle = true;
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
             }
+        );
+    }
+
+    verhistorial(vehi){
+        this.zoom = 12;
+        this.objvehi = vehi;
+        this.loadh = false;
+        this.lista = false;
+        this.detalle = false;
+        this.historial = true;
+
+        var d = new Date();
+        var day = d.getDate();
+        var month = d.getMonth()+1;
+        var year = d.getFullYear();
+
+        if(day < 10){
+            this.day2 = "0"+day;
+        }else{
+            this.day2 = day;
         }
-    );
-  }
 
-  regresar(){
-  	this.detalle = false;
-  	this.historial = false;
-  	this.lista = true;
-  }
+        if(month < 10){
+            this.month2 = "0"+month;
+        }else{
+            this.month2 = month;
+        }
 
-  verDetalle(vehi){
-  	this.vehistorialService.getImei(vehi.imei).then(
-        success => {
-            this.vehiculo = success;
-            console.log(this.vehiculo);
-            this.vehiculo.latitude = this.lat = Number(this.vehiculo.latitude);
-        	this.vehiculo.longitude = this.lng = Number(this.vehiculo.longitude);
-        	this.zoom = 12;
-            this.lista = false;
-            this.detalle = true;
-        }, error => {
-            if (error.status === 422) {
-                // on some data incorrect
-            } else {
-                // on general error
+        this.imei = vehi.imei;
+        this.date = year+"-"+this.month2+"-"+this.day2;
+
+        this.vehistorialService.getHistoryImeiDate(vehi.imei, year, month, day).then(
+            (success) => {
+                this.history = success;
+                this.loadh = true;
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
             }
+        );
+    }
+
+    getHistory(date){
+        this.zoom = 12;
+        if(date == ""){
+            this.verhistorial(this.objvehi);
+        }else{
+            var fecha1 = String(date);
+            var valuesdate1 = fecha1.split('-');
+            var year1 = valuesdate1[0];
+            var month1 = valuesdate1[1];
+            var day1 = valuesdate1[2];
+
+            this.loadh = false;
+            this.vehistorialService.getHistoryImeiDate(this.imei, year1, month1, day1).then(
+                success => {
+                    this.history = success;
+                    this.loadh = true;
+                }, error => {
+                    if (error.status === 422) {
+                        // on some data incorrect
+                    } else {
+                        // on general error
+                    }
+                }
+            );
         }
-    );
-  }
+    }
 
-  verhistorial(vehi){
-  	this.zoom = 12;
-  	this.objvehi = vehi;
-  	this.loadh = false;
-  	this.lista = false;
-    this.detalle = false;
-    this.historial = true;
-
-  	var d = new Date();
-  	var day = d.getDate();
-  	var month = d.getMonth()+1;
-  	var year = d.getFullYear();
-
-  	if(day < 10){
-  		this.day2 = "0"+day;
-  	}else{
-  		this.day2 = day;
-  	}
-
-  	if(month < 10){
-  		this.month2 = "0"+month;
-  	}else{
-  		this.month2 = month;
-  	}
-
-  	this.imei = vehi.imei;
-  	this.date = year+"-"+this.month2+"-"+this.day2;
-
-  	this.vehistorialService.getHistoryImeiDate(vehi.imei, year, month, day).then(
-      (success) => {
-            this.history = success;
-            this.loadh = true;
-        }, error => {
-            if (error.status === 422) {
-                // on some data incorrect
-            } else {
-                // on general error
+    pdfDownload(){
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Historial de vehiculos', 15, 27)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'IMEI', 'Alias', 'Placa', 'Grupo', 'Fecha']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+                0: {cellWidth: 10},
+                1: {cellWidth: 40},
+                2: {cellWidth: 'auto'},
+                3: {cellWidth: 'auto'},
+                4: {cellWidth: 'auto'},
+                5: {cellWidth: 'auto'}
             }
-        }
-    );
-  }
+        });
+        doc.save('vehistorial.pdf');
+    }
 
-  getHistory(date){
-  	this.zoom = 12;
-  	if(date == ""){
-  		this.verhistorial(this.objvehi);
-  	}else{
-  		var fecha1 = String(date);
-		var valuesdate1 = fecha1.split('-');
-		var year1 = valuesdate1[0];
-		var month1 = valuesdate1[1];
-		var day1 = valuesdate1[2];
+    print(){
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Historial de vehiculos', 15, 27)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'IMEI', 'Alias', 'Placa', 'Grupo', 'Fecha']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+                0: {cellWidth: 10},
+                1: {cellWidth: 40},
+                2: {cellWidth: 'auto'},
+                3: {cellWidth: 'auto'},
+                4: {cellWidth: 'auto'},
+                5: {cellWidth: 'auto'}
+            }
+        });
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
+    }
 
-		this.loadh = false;
-		this.vehistorialService.getHistoryImeiDate(this.imei, year1, month1, day1).then(
-	        success => {
-	            this.history = success;
-	            this.loadh = true;
-	        }, error => {
-	            if (error.status === 422) {
-	                // on some data incorrect
-	            } else {
-	                // on general error
-	            }
-	        }
-	    );
-  	}
-  }
-
-  pdfDownload(){
-  	var doc = new jsPDF();
-    doc.setFontSize(20)
-    doc.text('ICSSE Seguridad', 15, 20)
-    doc.setFontSize(12)
-    doc.setTextColor(100)
-    var d = new Date();
-    var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
-    doc.text('Historial de vehiculos', 15, 27)
-    doc.text('Hora de impresión: '+ fecha, 15, 34)
-    doc.autoTable({
-        head: [['#', 'IMEI', 'Alias', 'Placa', 'Grupo', 'Fecha']],
-        body: this.contpdf,
-        startY: 41,
-        columnStyles: {
-          0: {cellWidth: 10},
-          1: {cellWidth: 40},
-          2: {cellWidth: 'auto'},
-          3: {cellWidth: 'auto'},
-          4: {cellWidth: 'auto'},
-          5: {cellWidth: 'auto'}
-        }
-    });   
-    doc.save('vehistorial.pdf');
-  }
-
-  print(){
-  	var doc = new jsPDF();
-    doc.setFontSize(20)
-    doc.text('ICSSE Seguridad', 15, 20)
-    doc.setFontSize(12)
-    doc.setTextColor(100)
-    var d = new Date();
-    var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
-    doc.text('Historial de vehiculos', 15, 27)
-    doc.text('Hora de impresión: '+ fecha, 15, 34)
-    doc.autoTable({
-        head: [['#', 'IMEI', 'Alias', 'Placa', 'Grupo', 'Fecha']],
-        body: this.contpdf,
-        startY: 41,
-        columnStyles: {
-          0: {cellWidth: 10},
-          1: {cellWidth: 40},
-          2: {cellWidth: 'auto'},
-          3: {cellWidth: 'auto'},
-          4: {cellWidth: 'auto'},
-          5: {cellWidth: 'auto'}
-        }
-    });
-    doc.autoPrint();
-    window.open(doc.output('bloburl'), '_blank');
-  }
-
-  excelDownload() {
+    excelDownload() {
         this.excelService.exportAsExcelFile(this.info, 'vehistorial');
     }
 
@@ -352,11 +350,11 @@ export class VehistorialComponent {
         doc.text('Encendido: ', 15, 66);
         var ence = "";
         if(this.vehiculo.ignition_state == 0){
-        	ence = "ON"
+            ence = "ON"
         }else if(this.vehiculo.ignition_state == 1){
-        	ence = "OFF"
+            ence = "OFF"
         }else{
-        	ence = "--"
+            ence = "--"
         }
         doc.setFontType("normal");
         doc.text(ence, 40, 66);
@@ -365,9 +363,9 @@ export class VehistorialComponent {
         doc.setFontType("normal");
         var mov = "";
         if(this.vehiculo.movement_state == 1){
-        	mov = "SI"
+            mov = "SI"
         }else if(this.vehiculo.movement_state == 0){
-        	mov = "NO"
+            mov = "NO"
         }
         doc.text(mov, 127, 66);
 
@@ -407,7 +405,7 @@ export class VehistorialComponent {
         doc.setFontType("normal");
         doc.text(this.vehiculo.odometer.toString(), 149, 92);
 
-        doc.save('vehistorialDetail.pdf');        
+        doc.save('vehistorialDetail.pdf');
     }
 
     printDetalle() {
@@ -453,11 +451,11 @@ export class VehistorialComponent {
         doc.text('Encendido: ', 15, 66);
         var ence = "";
         if(this.vehiculo.ignition_state == 0){
-        	ence = "ON"
+            ence = "ON"
         }else if(this.vehiculo.ignition_state == 1){
-        	ence = "OFF"
+            ence = "OFF"
         }else{
-        	ence = "--"
+            ence = "--"
         }
         doc.setFontType("normal");
         doc.text(ence, 40, 66);
@@ -466,9 +464,9 @@ export class VehistorialComponent {
         doc.setFontType("normal");
         var mov = "";
         if(this.vehiculo.movement_state == 1){
-        	mov = "SI"
+            mov = "SI"
         }else if(this.vehiculo.movement_state == 0){
-        	mov = "NO"
+            mov = "NO"
         }
         doc.text(mov, 127, 66);
 
@@ -509,7 +507,7 @@ export class VehistorialComponent {
         doc.text(this.vehiculo.odometer.toString(), 149, 92);
 
         doc.autoPrint();
-    	window.open(doc.output('bloburl'), '_blank');      
+        window.open(doc.output('bloburl'), '_blank');
     }
 
     excelDetalle() {
@@ -523,18 +521,18 @@ export class VehistorialComponent {
         excel.push({'Parametro' : 'Longitud', 'Valor': this.vehiculo.longitude});
         var ence = "";
         if(this.vehiculo.ignition_state == 0){
-        	ence = "ON"
+            ence = "ON"
         }else if(this.vehiculo.ignition_state == 1){
-        	ence = "OFF"
+            ence = "OFF"
         }else{
-        	ence = "--"
+            ence = "--"
         }
         excel.push({'Parametro' : 'Encendido', 'Valor': ence});
         var mov = "";
         if(this.vehiculo.movement_state == 1){
-        	mov = "SI"
+            mov = "SI"
         }else if(this.vehiculo.movement_state == 0){
-        	mov = "NO"
+            mov = "NO"
         }
         excel.push({'Parametro' : 'Movimiento', 'Valor': mov});
         excel.push({'Parametro' : 'Velocidad', 'Valor': this.vehiculo.speed});
@@ -549,80 +547,80 @@ export class VehistorialComponent {
     }
 
     pdfHistorial(){
-      var doc = new jsPDF();
-      doc.setFontSize(20);
-      doc.text('ICSSE Seguridad', 15, 20);
-      doc.setFontSize(12);
-      doc.setTextColor(100);
-      var d = new Date();
-      var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
-      doc.text('Historial de vehiculo #'+ this.objvehi.id, 15, 27);
-      doc.text('Hora de impresión: '+ fecha, 15, 34);
-      var body = [];
-      if(this.history.length){
-        for(var i=0; i<this.history.length; i++){
-          body.push([i, this.history[i].address, this.history[i].date, this.history[i].time, this.history[i].alert_message, this.history[i].internal_battery_level]);
+        var doc = new jsPDF();
+        doc.setFontSize(20);
+        doc.text('ICSSE Seguridad', 15, 20);
+        doc.setFontSize(12);
+        doc.setTextColor(100);
+        var d = new Date();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Historial de vehiculo #'+ this.objvehi.id, 15, 27);
+        doc.text('Hora de impresión: '+ fecha, 15, 34);
+        var body = [];
+        if(this.history.length){
+            for(var i=0; i<this.history.length; i++){
+                body.push([i, this.history[i].address, this.history[i].date, this.history[i].time, this.history[i].alert_message, this.history[i].internal_battery_level]);
+            }
+            this.contpdf2 = body;
         }
-        this.contpdf2 = body;
-      }
-      doc.autoTable({
-          head: [['#', 'Dirección', 'Fecha', 'Hora', 'Mensaje', 'Nivel de batería']],
-          body: this.contpdf2,
-          startY: 41,
-          columnStyles: {
-            0: {cellWidth: 10},
-            1: {cellWidth: 40},
-            2: {cellWidth: 'auto'},
-            3: {cellWidth: 'auto'},
-            4: {cellWidth: 40},
-            5: {cellWidth: 'auto'}
-          }
-      });  
-      doc.save('vehistorial.pdf');
+        doc.autoTable({
+            head: [['#', 'Dirección', 'Fecha', 'Hora', 'Mensaje', 'Nivel de batería']],
+            body: this.contpdf2,
+            startY: 41,
+            columnStyles: {
+                0: {cellWidth: 10},
+                1: {cellWidth: 40},
+                2: {cellWidth: 'auto'},
+                3: {cellWidth: 'auto'},
+                4: {cellWidth: 40},
+                5: {cellWidth: 'auto'}
+            }
+        });
+        doc.save('vehistorial.pdf');
     }
 
-  printHistorial(){
-    var doc = new jsPDF();
-    doc.setFontSize(20);
-    doc.text('ICSSE Seguridad', 15, 20);
-    doc.setFontSize(12);
-    doc.setTextColor(100);
-    var d = new Date();
-    var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
-    doc.text('Historial de vehiculo #'+ this.objvehi.id, 15, 27);
-    doc.text('Hora de impresión: '+ fecha, 15, 34);
-    var body = [];
-    if(this.history.length){
-      for(var i=0; i<this.history.length; i++){
-        body.push([i, this.history[i].address, this.history[i].date, this.history[i].time, this.history[i].alert_message, this.history[i].internal_battery_level]);
-      }
-      this.contpdf2 = body;
-    }
-    doc.autoTable({
-        head: [['#', 'Dirección', 'Fecha', 'Hora', 'Mensaje', 'Nivel de batería']],
-        body: this.contpdf2,
-        startY: 41,
-        columnStyles: {
-          0: {cellWidth: 10},
-          1: {cellWidth: 40},
-          2: {cellWidth: 'auto'},
-          3: {cellWidth: 'auto'},
-          4: {cellWidth: 40},
-          5: {cellWidth: 'auto'}
+    printHistorial(){
+        var doc = new jsPDF();
+        doc.setFontSize(20);
+        doc.text('ICSSE Seguridad', 15, 20);
+        doc.setFontSize(12);
+        doc.setTextColor(100);
+        var d = new Date();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Historial de vehiculo #'+ this.objvehi.id, 15, 27);
+        doc.text('Hora de impresión: '+ fecha, 15, 34);
+        var body = [];
+        if(this.history.length){
+            for(var i=0; i<this.history.length; i++){
+                body.push([i, this.history[i].address, this.history[i].date, this.history[i].time, this.history[i].alert_message, this.history[i].internal_battery_level]);
+            }
+            this.contpdf2 = body;
         }
-    });   
-    doc.autoPrint();
-    window.open(doc.output('bloburl'), '_blank');
-  }
+        doc.autoTable({
+            head: [['#', 'Dirección', 'Fecha', 'Hora', 'Mensaje', 'Nivel de batería']],
+            body: this.contpdf2,
+            startY: 41,
+            columnStyles: {
+                0: {cellWidth: 10},
+                1: {cellWidth: 40},
+                2: {cellWidth: 'auto'},
+                3: {cellWidth: 'auto'},
+                4: {cellWidth: 40},
+                5: {cellWidth: 'auto'}
+            }
+        });
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
+    }
 
     excelHistorial() {
-      var body = [];
-      if(this.history.length){
-        for(var i=0; i<this.history.length; i++){
-          body.push({'#': i, 'Dirección' : this.history[i].address, 'Fecha':this.history[i].date, 'Hora':this.history[i].time, 'Nivel de batería':this.history[i].internal_battery_level, 'Mensaje':this.history[i].alert_message});
+        var body = [];
+        if(this.history.length){
+            for(var i=0; i<this.history.length; i++){
+                body.push({'#': i, 'Dirección' : this.history[i].address, 'Fecha':this.history[i].date, 'Hora':this.history[i].time, 'Nivel de batería':this.history[i].internal_battery_level, 'Mensaje':this.history[i].alert_message});
+            }
+            this.info2 = body;
         }
-        this.info2 = body;
-      }
         this.excelService.exportAsExcelFile(this.info2, 'vehistorial');
     }
 

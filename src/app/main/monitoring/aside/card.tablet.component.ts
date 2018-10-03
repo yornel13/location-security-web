@@ -16,14 +16,14 @@ export class CardTabletComponent implements OnInit {
     date: Date;
 
 
-    constructor(private asideService: MainService) {}
+    constructor(private mainService: MainService) {}
 
     focusMarker(lat, lng) {
         console.log('lat: ', lat, 'lng: ', lng);
         this.latlng.lat = lat;
         this.latlng.lng = lng;
         this.markerFocused.emit(this.latlng);
-        this.asideService.marker.emit(this.latlng);
+        this.mainService.marker.emit(this.latlng);
     }
 
   ngOnInit() {

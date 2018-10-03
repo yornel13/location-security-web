@@ -39,6 +39,8 @@ import { ReportetsComponent } from './bitacora/reportets/reportets.component';
 import { FiltreportComponent } from './bitacora/filtreport/filtreport.component';
 import { VisitasComponent } from './visitas/visitas/visitas.component';
 import { VisitasactivasComponent } from './visitas/visitasactivas/visitasactivas.component';
+import {VehiculostiposComponent} from './visitas/vehiculostipos/vehiculostipos.component';
+import {VehiclestypesService} from '../../../model/vehicletsypes/vehiclestypes.service';
 
 import { FilterPipeModule } from 'ngx-filter-pipe';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
@@ -77,6 +79,7 @@ import {PopupWatchtComponent} from './watches/wtodas/popup.watcht.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { AgoTimePipe } from './ago.pipe';
 import {ReportFilterPipe} from './bitacora/report.pipe';
+import {VisitPrint} from './visitas/visit.print';
 
 export const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
@@ -93,6 +96,7 @@ export const controlRoutes: Routes = [
                     { path: 'visitas/vehiculos', component: VehiculosComponent },
                     { path: 'visitas/visitantes', component: VisitantesComponent },
                     { path: 'visitas/funcionarios', component: FuncionariosComponent },
+                    { path: 'visitas/tipos', component: VehiculostiposComponent },
                     { path: 'bitacora/incidencias', component: IncidenciasComponent },
                     { path: 'bitacora/reportes', component: ReportetsComponent },
                     { path: 'bitacora/reportfilter/:id', component: FiltreportComponent },
@@ -142,12 +146,12 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         NgMultiSelectDropDownModule
     ],
     providers: [
-        GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService, ExcelService, PuestoService,
+        GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService, ExcelService, PuestoService, VehiclestypesService,
         IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService, AlertaService, CercoService, GrupoService,
-        VehistorialService, TabhistoryService, SalidascercoService ],
+        VehistorialService, TabhistoryService, SalidascercoService, VisitPrint ],
     entryComponents: [ PopupHistoryComponent, PopupTablethComponent, PopupReportComponent, PopupVisitComponent, PopupWatchtComponent ],
     declarations: [
-        GuardiaComponent, AdminComponent, ControlComponent,
+        GuardiaComponent, AdminComponent, ControlComponent, VehiculostiposComponent,
         VehiculosComponent, VisitantesComponent, FuncionariosComponent, IncidenciasComponent,
         ReportetsComponent, FiltreportComponent, VisitasComponent, VisitasactivasComponent,
         AsideControlComponent,

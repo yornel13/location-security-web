@@ -202,11 +202,11 @@ export class VisitantesComponent {
             body: this.contpdf,
             startY: 41,
             columnStyles: {
-              0: {columnWidth: 10},
-              1: {columnWidth: 'auto'},
-              2: {columnWidth: 'auto'},
-              3: {columnWidth: 'auto'},
-              4: {columnWidth: 'auto'}
+              0: {cellWidth: 18},
+              1: {cellWidth: 'auto'},
+              2: {cellWidth: 'auto'},
+              3: {cellWidth: 'auto'},
+              4: {cellWidth: 'auto'}
             }
         });   
         doc.save('visitantes.pdf');
@@ -231,11 +231,11 @@ export class VisitantesComponent {
             body: this.contpdf,
             startY: 41,
             columnStyles: {
-              0: {columnWidth: 10},
-              1: {columnWidth: 'auto'},
-              2: {columnWidth: 'auto'},
-              3: {columnWidth: 'auto'},
-              4: {columnWidth: 'auto'}
+              0: {cellWidth: 18},
+              1: {cellWidth: 'auto'},
+              2: {cellWidth: 'auto'},
+              3: {cellWidth: 'auto'},
+              4: {cellWidth: 'auto'}
             }
         });   
         doc.autoPrint();
@@ -281,11 +281,15 @@ export class VisitantesComponent {
         doc.setFontType("normal");
         doc.text(this.visi.update_date, 146, 114);
 
-        this.toDataURL(this.visi.photo).then(dataUrl => {
-            var imgData = dataUrl;
-            doc.addImage(imgData, 'JPEG', 15, 45, 40, 40);
+        if (this.visi.photo) {
+            this.toDataURL(this.visi.photo).then(dataUrl => {
+                var imgData = dataUrl;
+                doc.addImage(imgData, 'JPEG', 15, 45, 40, 40);
+                doc.save('visitanteDetail.pdf');
+            });
+        } else {
             doc.save('visitanteDetail.pdf');
-          });
+        }
         
     }
 
@@ -295,7 +299,7 @@ export class VisitantesComponent {
         const reader = new FileReader()
         reader.onloadend = () => resolve(reader.result)
         reader.onerror = reject
-        reader.readAsDataURL(blob)
+        reader.readAsDataURL(blob);
       }));
 
     printDetalle() {
@@ -337,13 +341,17 @@ export class VisitantesComponent {
         doc.setFontType("normal");
         doc.text(this.visi.update_date, 146, 114);
 
-        this.toDataURL(this.visi.photo).then(dataUrl => {
-            var imgData = dataUrl;
-            doc.addImage(imgData, 'JPEG', 15, 45, 40, 40);
+        if (this.visi.photo) {
+            this.toDataURL(this.visi.photo).then(dataUrl => {
+                var imgData = dataUrl;
+                doc.addImage(imgData, 'JPEG', 15, 45, 40, 40);
+                doc.autoPrint();
+                window.open(doc.output('bloburl'), '_blank');
+            });
+        } else {
             doc.autoPrint();
             window.open(doc.output('bloburl'), '_blank');
-          });
-        
+        }
     }
 
     excelDetalle() {

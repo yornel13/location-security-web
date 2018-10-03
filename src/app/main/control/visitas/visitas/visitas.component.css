@@ -93,3 +93,8 @@
     padding: 6px;
     font-size: 1.8rem
 }
+
+hr {
+    color: gray;
+    margin-bottom: 8px;
+}

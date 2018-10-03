@@ -25,6 +25,7 @@ export class MainComponent implements OnInit {
     alerts: Alerta[] = [];
     alerts0: Alerta[] = [];
     alerts1: Alerta[] = [];
+    audio = new Audio();
     readonly alertCollection: AngularFirestoreCollection<Alerta>;
 
     isVisible: boolean;
@@ -97,12 +98,15 @@ export class MainComponent implements OnInit {
                             if (result.value) {
                                 this.showAlert(alert);
                             }
+                            this.audio.pause();
+                            this.audio.currentTime = 0;
                         });
                         {
-                            const audio = new Audio();
-                            audio.src = './assets/sounds/important.mp3';
-                            audio.load();
-                            audio.play().then();
+                            this.audio = new Audio();
+                            this.audio.src = './assets/sounds/important.mp3';
+                            this.audio.load();
+                            this.audio.loop = true;
+                            this.audio.play().then();
                         }
                     }
                 }

@@ -1,0 +1,63 @@
+map-panel, .info-container {
+    height: 100%;
+    overflow-y:scroll;
+}
+
+.map-bounds-container{
+
+    top: 120px;
+    left: 60px;
+    right: 0;
+    bottom: 10px;
+}
+
+.map-bounds{
+    height: 500px;
+    width: 100%;
+}
+
+.name-bounds-f {
+    /*position: relative;*/
+    /*z-index: 99;*/
+}
+
+
+.back-save-btn {
+    margin-bottom: 3%;
+    /*position: absolute;*/
+    /*top: 89.5%;*/
+}
+
+.add-vehicle-cont {
+    height: auto;
+    max-height: 70% !important;
+    overflow: auto;
+}
+
+.checkbox-vehicle {
+    overflow: hidden;
+}
+
+.container-fluid {
+    padding-top: 4px;
+}
+
+.thead-light>th {
+    cursor: pointer;
+}
+
+.list-title {
+    color: var(--secondary-color);
+    margin-left: 2vw;
+    margin-top: 4px;
+}
+
+.icon-return {
+    padding: 6px;
+    font-size: 1.8rem
+}
+
+#map {
+    height: 500px;
+    width: 100%;
+}

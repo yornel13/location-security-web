@@ -229,7 +229,7 @@ export class AlertasComponent implements OnInit {
                     }
 
                     excel.push({'#' : this.data[i].id, 'Causa': cause, 'Descripción':this.data[i].message, 'Generado por':this.data[i].guard_name+' '+this.data[i].guard_lastname, 'Fecha':this.data[i].create_date, 'Status':status})
-                    body.push([this.data[i].id, cause, this.data[i].message, this.data[i].guard_name+' '+this.data[i].guard_lastname, this.data[i].create_date, status])
+                    body.push([this.data[i].id, cause, this.data[i].message, this.data[i].guard_name+' '+this.data[i].guard_lastname, this.data[i].create_date, status]);
                 }
                 this.contpdf = body;
                 this.info = excel;
@@ -656,70 +656,99 @@ export class AlertasComponent implements OnInit {
         }
     }
 
-    pdfDownload() {
-        var doc = new jsPDF();
-        doc.setFontSize(20)
-        doc.text('ICSSE Seguridad', 15, 20)
-        doc.setFontSize(12)
-        doc.setTextColor(100)
-        var d = new Date();
-        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
-        doc.text('Alertas', 15, 27)
-        doc.text('Hora de impresión: '+ fecha, 15, 34)
-        doc.autoTable({
-            head: [['#', 'Causa', 'Descripción', 'Generado por', 'Fecha', 'Status']],
-            body: this.contpdf,
-            startY: 41,
-            columnStyles: {
-                0: {columnWidth: 10},
-                1: {columnWidth: 20},
-                2: {columnWidth: 'auto'},
-                3: {columnWidth: 'auto'},
-                4: {columnWidth: 'auto'},
-                5: {columnWidth: 20},
-            }
-        });
-        doc.save('alertas.pdf');
-    }
-
-    excelDownload() {
-        this.excelService.exportAsExcelFile(this.info, 'visitas');
-    }
-
-    print() {
-        var doc = new jsPDF();
-        doc.setFontSize(20)
-        doc.text('ICSSE Seguridad', 15, 20)
-        doc.setFontSize(12)
-        doc.setTextColor(100)
-        var d = new Date();
-        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
-        doc.text('Alertas', 15, 27)
-        doc.text('Hora de impresión: '+ fecha, 15, 34)
-        doc.autoTable({
-            head: [['#', 'Causa', 'Descripción', 'Generado por', 'Fecha', 'Status']],
-            body: this.contpdf,
-            startY: 41,
-            columnStyles: {
-                0: {columnWidth: 10},
-                1: {columnWidth: 20},
-                2: {columnWidth: 'auto'},
-                3: {columnWidth: 'auto'},
-                4: {columnWidth: 'auto'},
-                5: {columnWidth: 20},
-            }
-        });
-        doc.autoPrint();
-        window.open(doc.output('bloburl'), '_blank');
-    }
-
     getMapAlertas() {
         this.zoom = 12;
         this.lista = false;
         this.viewmap = true;
     }
 
-    pdfDetalle() {
+    getListPdf(): jsPDF {
+        var doc = new jsPDF();
+        doc.setFontSize(20)
+        doc.text('ICSSE Seguridad', 15, 20)
+        doc.setFontSize(12)
+        doc.setTextColor(100)
+        var d = new Date();
+        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        doc.text('Alertas', 15, 27)
+        doc.text('Hora de impresión: '+ fecha, 15, 34)
+        doc.autoTable({
+            head: [['#', 'Causa', 'Descripción', 'Generado por', 'Fecha']],
+            body: this.contpdf,
+            startY: 41,
+            columnStyles: {
+                0: {cellWidth: 18},
+                1: {cellWidth: 20},
+                2: {cellWidth: 'auto'},
+                3: {cellWidth: 'auto'},
+                4: {cellWidth: 'auto'},
+            }
+        });
+        return doc;
+    }
+
+    excelDownload() {
+        this.setupPdfAndExcelData();
+        this.excelService.exportAsExcelFile(this.info, 'visitas');
+    }
+
+    pdfDownload() {
+        this.setupPdfAndExcelData();
+        const doc = this.getListPdf();
+        doc.save('alertas.pdf');
+    }
+
+    print() {
+        this.setupPdfAndExcelData();
+        const doc = this.getListPdf();
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
+    }
+
+    setupPdfAndExcelData() {
+        const body = [];
+        const excel = [];
+        let status = '';
+        let cause = '';
+        for (let i = 0; i < this.data.length; i++) {
+            this.data[i].id = Number(this.data[i].id);
+
+            if (this.data[i].status === 1) {
+                status = 'Activa';
+            } else {
+                status = 'Aceptada';
+            }
+
+            if (this.data[i].cause === 'SOS1') {
+                cause = 'SOS';
+            } else if (this.data[i].cause === 'DROP') {
+                cause = 'Caída';
+            } else if (this.data[i].cause === 'OUT_BOUNDS') {
+                cause = 'Salida del cerco';
+            } else if (this.data[i].cause === 'GENERAL') {
+                cause = 'General';
+            }
+            excel.push({
+                '#' : this.data[i].id,
+                'Causa': cause,
+                'Descripción': this.data[i].message,
+                'Generado por': (this.data[i].guard_name ? this.data[i].guard_name + ' ' + this.data[i].guard_lastname : ''),
+                'Fecha': this.data[i].create_date,
+                'Status': status,
+            });
+            body.push([
+                this.data[i].id,
+                cause,
+                this.data[i].message,
+                this.data[i].guard_name ? this.data[i].guard_name + ' ' + this.data[i].guard_lastname : '',
+                this.data[i].create_date
+            ]);
+        }
+        this.contpdf = body;
+        this.info = excel;
+    }
+
+    getPdfDetails(): jsPDF {
         var doc = new jsPDF();
         doc.setFontSize(20)
         doc.text('ICSSE Seguridad', 15, 20)
@@ -728,7 +757,7 @@ export class AlertasComponent implements OnInit {
         var d = new Date();
         var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Alertas del sistema', 15, 27)
-        doc.text('Hora de impresión: '+ fecha, 15, 34);
+        doc.text('Hora de impresión: ' + fecha, 15, 34);
         //inserting data
         doc.setTextColor(0);
         doc.setFontType("bold");
@@ -736,16 +765,16 @@ export class AlertasComponent implements OnInit {
         doc.setFontType("normal");
         doc.text(this.detailcause.cause, 32, 50);
         doc.setFontType("bold");
-        doc.text('Descripción: ', 100, 50);
+        doc.text('Descripción: ', 15, 57);
         doc.setFontType("normal");
-        doc.text(this.detailcause.message, 129, 50);
+        doc.text(this.detailcause.message, 42, 57);
 
         doc.setFontType("bold");
-        doc.text('Fecha: ', 15, 57);
+        doc.text('Fecha: ', 15, 64);
         doc.setFontType("normal");
-        doc.text(this.detailcause.create_date, 32, 57);
+        doc.text(this.detailcause.create_date, 32, 64);
         doc.setFontType("bold");
-        doc.text('Status: ', 100, 57);
+        doc.text('Status: ', 100, 64);
         doc.setFontType("normal");
         var status = "";
         if (this.detailcause.status == 0){
@@ -753,65 +782,39 @@ export class AlertasComponent implements OnInit {
         }else{
             status = "Activa";
         }
-        doc.text(status, 119, 57);
+        doc.text(status, 119, 64);
 
         doc.setFontType("bold");
-        doc.text('Latitud: ', 15, 64);
+        doc.text('Latitud: ', 15, 71);
         doc.setFontType("normal");
-        doc.text(this.detailcause.latitude.toString(), 36, 64);
+        doc.text(this.detailcause.latitude.toString(), 36, 71);
         doc.setFontType("bold");
-        doc.text('Longitud: ', 100, 64);
+        doc.text('Longitud: ', 100, 71);
         doc.setFontType("normal");
-        doc.text(this.detailcause.longitude.toString(), 123, 64);
+        doc.text(this.detailcause.longitude.toString(), 123, 71);
 
+        doc.setFontType("bold");
+        doc.text('Imei: ', 15, 78);
+        doc.setFontType("normal");
+        doc.text(this.detailcause.imei, 36, 78);
+
+        if (this.detailcause.guard) {
+            doc.setFontType("bold");
+            doc.text('Guardia: ', 15, 85);
+            doc.setFontType("normal");
+            doc.text(this.detailcause.guard.name + ' ' + this.detailcause.guard.lastname, 36, 85);
+        }
+
+        return doc;
+    }
+
+    pdfDetalle() {
+        const doc = this.getPdfDetails();
         doc.save('alertaDetail.pdf');
     }
 
     printDetalle() {
-        var doc = new jsPDF();
-        doc.setFontSize(20)
-        doc.text('ICSSE Seguridad', 15, 20)
-        doc.setFontSize(12)
-        doc.setTextColor(100)
-        var d = new Date();
-        var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
-        doc.text('Alertas del sistema', 15, 27)
-        doc.text('Hora de impresión: '+ fecha, 15, 34);
-        //inserting data
-        doc.setTextColor(0);
-        doc.setFontType("bold");
-        doc.text('Causa: ', 15, 50);
-        doc.setFontType("normal");
-        doc.text(this.detailcause.cause, 32, 50);
-        doc.setFontType("bold");
-        doc.text('Descripción: ', 100, 50);
-        doc.setFontType("normal");
-        doc.text(this.detailcause.message, 129, 50);
-
-        doc.setFontType("bold");
-        doc.text('Fecha: ', 15, 57);
-        doc.setFontType("normal");
-        doc.text(this.detailcause.create_date, 32, 57);
-        doc.setFontType("bold");
-        doc.text('Status: ', 100, 57);
-        doc.setFontType("normal");
-        var status = "";
-        if (this.detailcause.status == 0){
-            status = "Finalizado";
-        }else{
-            status = "Activa";
-        }
-        doc.text(status, 119, 57);
-
-        doc.setFontType("bold");
-        doc.text('Latitud: ', 15, 64);
-        doc.setFontType("normal");
-        doc.text(this.detailcause.latitude.toString(), 36, 64);
-        doc.setFontType("bold");
-        doc.text('Longitud: ', 100, 64);
-        doc.setFontType("normal");
-        doc.text(this.detailcause.longitude.toString(), 123, 64);
-
+        const doc = this.getPdfDetails();
         doc.autoPrint();
         window.open(doc.output('bloburl'), '_blank');
 

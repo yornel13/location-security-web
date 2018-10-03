@@ -9,13 +9,13 @@
       </div>
       <div class="ml-auto form-inline" >
         <!--<div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">-->
-          <!--<label class="btn btn-outline-secondary" (click)="excelDownload()">-->
+          <!--<label class="btn btn-outline-secondary" (click)="excelList()">-->
             <!--<input type="radio" name="options" id="option1" autocomplete="off" checked> Excel-->
           <!--</label>-->
-          <!--<label class="btn btn-outline-secondary" (click)="pdfDownload()">-->
+          <!--<label class="btn btn-outline-secondary" (click)="pdfList()">-->
             <!--<input type="radio" name="options" id="option2" autocomplete="off"> PDF-->
           <!--</label>-->
-          <!--<label class="btn btn-outline-secondary" (click)="print()">-->
+          <!--<label class="btn btn-outline-secondary" (click)="printList()">-->
             <!--<input type="radio" name="options" id="option3" autocomplete="off"> Print-->
           <!--</label>-->
         <!--</div>-->
@@ -88,8 +88,8 @@
     <div class="table mt-2 container-fluid">
             <table class="table table-bordered">
              <thead class="thead-light">
-               <th (click)="sort('id')">ID
-                <span class="fas" *ngIf="key =='id'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+               <th (click)="sort('stand_name')">Puesto
+                <span class="fas" *ngIf="key =='stand_name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
                </th>
                <th (click)="sort('title')">Título
                 <span class="fas" *ngIf="key =='title'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
@@ -108,7 +108,7 @@
              </thead>
              <tbody>
               <tr *ngFor="let d of data  | reportFilter: filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
-                <td>{{d.id}}</td>
+                <td>{{d.stand_name}}</td>
                 <td>{{d.title}}</td>
                 <td>{{d.observation}}</td>
                 <td>{{d.create_date}}</td>

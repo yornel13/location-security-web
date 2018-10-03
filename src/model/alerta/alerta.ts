@@ -1,3 +1,5 @@
+import {Guard} from "../guard/guard";
+
 export interface Alerta {
     id?: number;
     guard_id?: string;
@@ -10,5 +12,6 @@ export interface Alerta {
     longitude?: string;
     create_date?: string;
     update_date?: string;
+    guard?: Guard;
     status?: number;
 }

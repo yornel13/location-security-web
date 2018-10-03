@@ -367,11 +367,11 @@ export class AdminComponent {
             body: this.contpdf,
             startY: 41,
             columnStyles: {
-              0: {columnWidth: 10},
-              1: {columnWidth: 'auto'},
-              2: {columnWidth: 'auto'},
-              3: {columnWidth: 'auto'},
-              4: {columnWidth: 'auto'}
+              0: {cellWidth: 10},
+              1: {cellWidth: 'auto'},
+              2: {cellWidth: 'auto'},
+              3: {cellWidth: 'auto'},
+              4: {cellWidth: 'auto'}
             }
         });   
         doc.save('adminstradores.pdf');
@@ -396,11 +396,11 @@ export class AdminComponent {
             body: this.contpdf,
             startY: 41,
             columnStyles: {
-              0: {columnWidth: 10},
-              1: {columnWidth: 'auto'},
-              2: {columnWidth: 'auto'},
-              3: {columnWidth: 'auto'},
-              4: {columnWidth: 'auto'}
+              0: {cellWidth: 10},
+              1: {cellWidth: 'auto'},
+              2: {cellWidth: 'auto'},
+              3: {cellWidth: 'auto'},
+              4: {cellWidth: 'auto'}
             }
         });   
         doc.autoPrint();
@@ -446,12 +446,15 @@ export class AdminComponent {
         doc.setFontType("normal");
         doc.text(this.admin.update_date, 146, 114);
 
-        this.toDataURL(this.admin.photo).then(dataUrl => {
-            var imgData = dataUrl;
-            doc.addImage(imgData, 'JPEG', 15, 45, 40, 40);
+        if (this.admin.photo) {
+            this.toDataURL(this.admin.photo).then(dataUrl => {
+                var imgData = dataUrl;
+                doc.addImage(imgData, 'JPEG', 15, 45, 40, 40);
+                doc.save('adminDetail.pdf');
+            });
+        } else {
             doc.save('adminDetail.pdf');
-          });
-        
+        }
     }
 
     toDataURL = url => fetch(url)
@@ -502,13 +505,17 @@ export class AdminComponent {
         doc.setFontType("normal");
         doc.text(this.admin.update_date, 146, 114);
 
-        this.toDataURL(this.admin.photo).then(dataUrl => {
-            var imgData = dataUrl;
-            doc.addImage(imgData, 'JPEG', 15, 45, 40, 40);
+        if (this.admin.photo) {
+            this.toDataURL(this.admin.photo).then(dataUrl => {
+                var imgData = dataUrl;
+                doc.addImage(imgData, 'JPEG', 15, 45, 40, 40);
+                doc.autoPrint();
+                window.open(doc.output('bloburl'), '_blank');
+            });
+        } else {
             doc.autoPrint();
             window.open(doc.output('bloburl'), '_blank');
-          });
-        
+        }
     }
 
     excelDetalle() {
