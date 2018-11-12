@@ -52,6 +52,8 @@ import {
 } from 'ngx-toastr';
 import {HistoryPrint} from './monitoring/history.print';
 import {InfolinePrint} from './monitoring/infoline.print';
+import {HTTP_INTERCEPTORS} from "../../../node_modules/@angular/common/http";
+import {ErrorInterceptor, JwtInterceptor} from "../_helpers";
 
 export function controlModuleLoader() {
     return ControlModule;
@@ -102,6 +104,8 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
         ToastrModule.forRoot()
     ],
     providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         VehiclesService, WatchesService, MainService, TabletService, HistoryPrint, InfolinePrint ],
     entryComponents: [ PopupVehicleComponent, PopupWatchComponent, PopupAlertComponent, CardVehicleComponent,
         CardTabletComponent, ItemGuardComponent, CardTabletComponent ],

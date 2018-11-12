@@ -1,8 +1,22 @@
 <div>
     <div>
-        <h6 class="ppp" style="margin-bottom: 6px" *ngIf="alert.guard_id">{{title}}</h6>
-        <p class="ps" style="font-size: 1rem; margin-top: 0; padding-top: 0; color: cornflowerblue; line-height: 1.2rem">{{alert.message}}</p>
+        <div *ngIf="report != null">
+            <h6 class="ppp" style="margin-bottom: 6px" *ngIf="alert.guard_id">{{report.title}}</h6>
+            <p *ngIf="report.incidence.level == '1'" class="ps" style="font-size: 1rem; margin-top: 0; padding-top: 0; color: cornflowerblue; line-height: 1.2rem">{{report.observation}}</p>
+            <p *ngIf="report.incidence.level == '2'" class="ps" style="font-size: 1rem; margin-top: 0; padding-top: 0; color: red; line-height: 1.2rem">{{report.observation}}</p>
+        </div>
+        <div *ngIf="report == null">
+            <h6 class="ppp" style="margin-bottom: 6px" *ngIf="alert.guard_id">{{title}}</h6>
+            <p class="ps" style="font-size: 1rem; margin-top: 0; padding-top: 0; color: cornflowerblue; line-height: 1.2rem">{{alert.message}}</p>
+        </div>
+        <br *ngIf="report != null">
         <p class="ps" *ngIf="alert.imei" style="font-size: 0.8rem"><b>IMEI:</b> {{alert.imei}}</p>
+        <p class="ps" *ngIf="report != null" style="font-size: 0.8rem; line-height: .9rem;"><b>Puesto:</b> {{report.watch.stand_name}}</p>
+        <br *ngIf="report != null">
         <p class="ps" style="font-size: 1.1rem"><b>{{date | date : "medium"}}</b></p>
+        <div class="container-alert" *ngIf="report != null">
+            <img class="image-alert" src="{{reportIcon}}">
+            <p class="alert-message ps"> {{alert.message}}</p>
+        </div>
     </div>
 </div>

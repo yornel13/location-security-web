@@ -54,44 +54,44 @@ export class AuthenticationService {
     }
 
     login(dni: string, password: string) {
-        return this.http.post(`${environment.BASIC_URL}/auth/admin`, {
-                    dni: dni,
-                    password: password
-            }, httpOptions).toPromise()
-            .then((response) => response);
+        return this.http.post(`${environment.BASIC_URL}/auth/admin`,
+            {
+                dni: dni,
+                password: password
+            })
+            .toPromise().then((response) => response);
     }
 
     verify(tokenSession: string) {
-        const httpHeaders = new HttpHeaders()
-            .set('Content-Type', 'application/json')
-            .set('APP-TOKEN', tokenSession);
-        return this.http.get(`${environment.BASIC_URL}/auth/verify`, {headers: httpHeaders})
+        this.setTokenSession(tokenSession);
+        return this.http.get(`${environment.BASIC_URL}/auth/verify`)
             .pipe(map((data: Admin) => {
                 if (data !== null && data !== undefined) {
                     this.user = data;
                     this.setUser(JSON.stringify(data));
-                    this.setTokenSession(tokenSession);
                 }
             })).toPromise().then((response) => response);
     }
 
     logout() {
-        console.log(this.getTokenSession());
-        const httpHeaders = new HttpHeaders()
-            .set('Content-Type', 'application/json')
-            .set('APP-TOKEN', this.getTokenSession());
-        return this.http.post(`${environment.BASIC_URL}/auth/logout`, null, {headers: httpHeaders})
+        return this.http.post(`${environment.BASIC_URL}/auth/logout`,
+            null)
             .pipe(map((data: ApiResponse) => {
                 console.log(data);
             })).toPromise().then((response) => response);
     }
 
     webRegister(tokenFire: String, tokenSession: String, adminId: number) {
-        return this.http.post(`${environment.BASIC_URL}/messenger/register/web`, {
-            registration_id: tokenFire,
-            session: tokenSession,
-            admin_id: adminId},
-          httpOptions)
+        return this.http.post(`${environment.BASIC_URL}/messenger/register/web`,
+            {
+                registration_id: tokenFire,
+                session: tokenSession,
+                admin_id: adminId
+            })
         .toPromise().then((response) => response);
+    }
+
+    getHeader() {
+        return new HttpHeaders();
     }
 }

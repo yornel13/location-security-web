@@ -62,11 +62,14 @@ export class VisitPrint {
         doc.setTextColor(100);
         doc.text('Visita: #' + visit.id, this.leftL, this.getPaddingTop(padding, this.top));
         doc.text('Hora de impresión: ' + this.getCurrentTime(), this.leftL, this.getPaddingTop(padding, this.top));
+        if (visit.stand_name !== null) {
+            doc.text('Puesto: ' + visit.stand_name, this.leftL, this.getPaddingTop(padding, this.top));
+        }
         this.getPaddingTop(padding, this.top);
     }
 
     async getPdfExit(visit: any, doc: jsPDF, padding: Margin) {
-        if (visit.finish_date !== '0000-00-00 00:00:00') {
+        if (visit.finish_date !== '0000-00-00 00:00:00' && visit.finish_date !== null) {
             doc.setTextColor(0);
             doc.setFontType('bold');
             doc.text('Salida ', this.leftL, this.getPaddingTop(padding, this.top));
@@ -363,11 +366,11 @@ export class VisitPrint {
         doc.text('Visitas', 15, 27)
         doc.text('Hora de impresión: ' + this.getCurrentTime(), 15, 34)
         doc.autoTable({
-            head: [['#', 'Placa', 'Cédula', 'Visitante', 'Entrada', 'Salida']],
+            head: [['Puesto', 'Placa', 'Cédula', 'Visitante', 'Entrada', 'Salida']],
             body: this.getPrintListBody(visits, type),
             startY: 41,
             columnStyles: {
-                0: {cellWidth: 18},
+                0: {cellWidth: 28},
                 1: {cellWidth: 'auto'},
                 2: {cellWidth: 28},
                 3: {cellWidth: 'auto'},
@@ -383,20 +386,20 @@ export class VisitPrint {
         const excel = [];
         visits.forEach((visit: any) => {
             body.push([
-                visit.id,
+                visit.stand_name,
                 (visit.plate ? visit.plate : '-'),
                 visit.visitor_dni,
                 visit.visitor_name + ' ' + visit.visitor_lastname,
                 visit.create_date,
-                (visit.finish_date === '0000-00-00 00:00:00' ? '-' : visit.finish_date)
+                (visit.finish_date === '0000-00-00 00:00:00' || visit.finish_date === null ? '-' : visit.finish_date)
             ]);
             excel.push({
-                '#' : visit.id,
+                'Puesto' : visit.stand_name,
                 'Placa': (visit.plate ? visit.plate : '-'),
                 'Cédula': visit.visitor_dni,
                 'Visitante': visit.visitor_name + ' ' + visit.visitor_lastname,
                 'Entrada': visit.create_date,
-                'Salida': (visit.finish_date === '0000-00-00 00:00:00' ? '-' : visit.finish_date)
+                'Salida': (visit.finish_date === '0000-00-00 00:00:00' || visit.finish_date === null ? '-' : visit.finish_date)
             });
         });
         if (type === 1) {

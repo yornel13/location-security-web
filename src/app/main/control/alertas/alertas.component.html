@@ -111,8 +111,8 @@
             <th (click)="sort('message')">Descripción
                 <span class="fas" *ngIf="key =='message'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
             </th>
-            <th (click)="sort('guard_name')">Generado por
-                <span class="fas" *ngIf="key =='guard_name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            <th (click)="sort('guard.name')">Generado por
+                <span class="fas" *ngIf="key =='guard.name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
             </th>
             <th (click)="sort('create_date')">Fecha
                 <span class="fas" *ngIf="key =='create_date'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
@@ -131,10 +131,10 @@
                     <span *ngIf="d.cause == 'INCIDENCE'">Incidencia</span>
                 </td>
                 <td>{{d.message}}</td>
-                <td>{{d.guard_name}} {{d.guard_lastname}}</td>
+                <td>{{d.guard ? d.guard.name : ''}} {{d.guard ? d.guard.lastname : ''}}</td>
                 <td>{{d.create_date}}</td>
                 <td>
-                    <button class="btn btn-success" *ngIf="d.status == 1" (click)="solveAlert(d.id)"><span class="fas fa-check"></span></button>
+                    <button class="btn btn-success" *ngIf="d.status == 1" (click)="solveAlert(d)"><span class="fas fa-check"></span></button>
                 </td>
                 <td>
                     <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)"  title="Detalle"><span class="far fa-eye"></span></a>
@@ -194,14 +194,20 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="fecha" class="col-sm-2 col-form-label">Fecha</label>
+                    <label class="col-sm-2 col-form-label">Fecha</label>
                     <div class="col-sm-4">
                         <input type="text" readonly class="form-control" id="fecha" value="{{detailcause.create_date}}">
                     </div>
-                    <label for="descrip" class="col-sm-2 col-form-label">Estado</label>
-                    <div class="col-sm-4">
-                        <input type="text" readonly class="form-control" id="descrip" value="Aceptada" *ngIf="detailcause.status == 0">
-                        <input type="text" readonly class="form-control" id="descrip" value="Sin aceptar" *ngIf="detailcause.status == 1">
+                    <label class="col-sm-2 col-form-label">Estado</label>
+                    <div class="col-sm-2">
+                        <input type="text" readonly class="form-control" value="Aceptada" *ngIf="detailcause.status == 0">
+                        <input type="text" readonly class="form-control" value="Sin aceptar" *ngIf="detailcause.status == 1">
+                    </div>
+                    <div *ngIf="detailcause.status == 1">
+                        <!--<label class="col-sm-2 col-form-label">Aceptar</label>-->
+                        <div class="col-sm-2" >
+                            <button class="btn btn-success" (click)="solveAlert(detailcause)"><span class="fas fa-check"></span></button>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group row">

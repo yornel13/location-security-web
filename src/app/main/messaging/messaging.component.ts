@@ -348,7 +348,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
     }
 
     openChat(user: any) {
-        this.clearSelected()
+        this.clearSelected();
         user.active = true;
         this.userSelected = user;
         this.loading_chat = true;

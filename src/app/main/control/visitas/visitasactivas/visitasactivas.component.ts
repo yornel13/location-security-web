@@ -32,8 +32,7 @@ export class VisitasactivasComponent {
     detalle:boolean;
     nomat:boolean;
     //filtro
-    filtroSelect:number = 0;
-    filtro:number = 1;
+    filtroSelect = 0;
     //guardias
     guardias:any = [];
     guard:any = [];
@@ -58,7 +57,7 @@ export class VisitasactivasComponent {
     contpdf:any = [];
     info: any = [];
     key: string = 'id'; //set default
-    reverse: boolean = true;
+    reverse: boolean = false;
 
     //map
     map: any;
@@ -120,6 +119,7 @@ export class VisitasactivasComponent {
         this.setupDropdown2();
         this.setupDropdown3();
         this.setupDropdown4();
+        this.sort('create_date');
     }
 
     onMapReady(map: L.Map) {
@@ -231,7 +231,7 @@ export class VisitasactivasComponent {
         var vehiculo = this.selectedVehiculos;
         if(this.dateSelect == ''){
             if( vehiculo.length == 0){
-                this.getActives();
+                this.data = [];
             }else{
                 var result = [];
                 for(var i=0;i<vehiculo.length;i++){
@@ -260,7 +260,7 @@ export class VisitasactivasComponent {
         var guardia = this.selectedGuardias;
         if(this.dateSelect == ''){
             if(guardia.length == 0){
-                this.getActives();
+                this.data = [];
             }else{
                 var result = [];
                 for(var i=0;i<guardia.length;i++){
@@ -289,7 +289,7 @@ export class VisitasactivasComponent {
         var visitante = this.selectedVisitantes;
         if(this.dateSelect == ''){
             if(visitante.length == 0){
-                this.getActives();
+                this.data = [];
             }else{
                 var result = []
                 for(var i=0;i<visitante.length;i++){
@@ -318,7 +318,7 @@ export class VisitasactivasComponent {
         var funcionario = this.selectedFuncionarios;
         if(this.dateSelect == ''){
             if(funcionario.length == 0){
-                this.getActives();
+                this.data = [];
             }else{
                 var result = [];
                 for(var i=0;i<funcionario.length;i++){
@@ -345,30 +345,32 @@ export class VisitasactivasComponent {
 
 
     selectFilert(id){
-        if(id == 0){
-            this.filtro = 1;
+        if(id == 1){
             this.guardiaSelect = 0;
             this.visitanteSelect = 0;
             this.funcionarioSelect = 0;
             this.getByVehiculo();
-        }else if(id == 1){
-            this.filtro = 2;
+        }else if(id == 2){
             this.vehiculoSelect = 0;
             this.visitanteSelect = 0;
             this.funcionarioSelect = 0;
             this.getByGuardia();
-        }else if(id == 2){
-            this.filtro = 3;
+        }else if(id == 3){
             this.vehiculoSelect = 0;
             this.guardiaSelect = 0;
             this.funcionarioSelect = 0;
             this.getByVisitante();
-        }else if(id == 3){
-            this.filtro = 4;
+        }else if(id == 4){
             this.vehiculoSelect = 0;
             this.guardiaSelect = 0;
             this.funcionarioSelect = 0;
             this.getByFuncionario();
+        } else {
+            this.guardiaSelect = 0;
+            this.visitanteSelect = 0;
+            this.funcionarioSelect = 0;
+            this.vehiculoSelect = 0;
+            this.getActives();
         }
     }
 

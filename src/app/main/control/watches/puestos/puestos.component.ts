@@ -168,16 +168,6 @@ export class PuestosComponent {
             success => {
                 this.tablets = success;
                 this.tabletsList = this.tablets.data;
-                this.tabletsList.forEach(tablet => {
-                    tablet.checked = false;
-                    let id_string = '' + tablet.id;
-                    if (id_string.length === 1) {
-                        id_string = '00' + id_string;
-                    } else if (id_string.length === 2) {
-                        id_string = '0' + id_string;
-                    }
-                    tablet.alias = 'Tablet ' + id_string;
-                });
                 console.log(this.tabletsList);
             }, error => {
                 if (error.status === 422) {

@@ -16,6 +16,7 @@ import {ToastrService} from 'ngx-toastr';
 import {HistoryPrint} from '../history.print';
 import {ExcelService} from '../../../../model/excel/excel.services';
 import {InfolinePrint} from '../infoline.print';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-aside',
@@ -81,7 +82,7 @@ export class AsideComponent implements OnInit, OnChanges {
             private historyPrint: HistoryPrint,
             private infolinePrint: InfolinePrint,
             private excelService: ExcelService) {
-        this.alertCollection = db.collection<Alerta>('alerts');
+        this.alertCollection = db.collection<Alerta>(environment.ALERTS_PATH);
     }
 
     ngOnInit() {
@@ -158,11 +159,10 @@ export class AsideComponent implements OnInit, OnChanges {
     solveAlert(alert: Alerta) {
         this.alertCollection.doc(String(alert.id)).update({'status': 0}).then();
         this.alertService.solveAlert(alert.id).then();
+        this.showAlert(alert);
     }
 
     showAlert(alert: Alerta) {
-        if (alert.status > 0) { this.solveAlert(alert); }
-
         if (alert.cause === this.mapService.INCIDENCE) {
             const report = JSON.parse(alert.extra);
             this.router.navigate(['/u/control/bitacora/reportfilter/' + report.id]).then();
@@ -264,13 +264,22 @@ export class AsideComponent implements OnInit, OnChanges {
                         });
                 }
             } else {
+                const date = new Date();
+                const dayD = date.getDate();
+                const monthD = date.getMonth() + 1;
+                const yearD = date.getFullYear();
+
+                const day = dayD < 10 ? '0' + dayD : dayD;
+                const month = monthD < 10 ? '0' + monthD : monthD;
+                const year = yearD;
+
                 if (this.selectedItem.group_name !== 'Tablet Guardia') {
-                    this.vehistorialService.getHistoryImei(this.selectedItem.imei)
+                    this.vehistorialService.getHistoryImeiDate(this.selectedItem.imei, year, month, day)
                         .then((histories: Record[]) => {
                             this.setupRecordVehicle(histories);
                         });
                 } else {
-                    this.tabhistoryService.getHistoryImei(this.selectedItem.imei)
+                    this.tabhistoryService.getHistoryImeiDate(this.selectedItem.imei, year, month, day, year, month, day)
                         .then((value: any) => {
                             const histories = value.data;
                             histories.reverse();

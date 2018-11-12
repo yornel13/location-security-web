@@ -9,6 +9,7 @@ import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { ExcelService } from '../../../../model/excel/excel.services';
 import { OrderPipe } from 'ngx-order-pipe';
+import {ToastrService} from "ngx-toastr";
 
 @Component({
     selector: 'app-admin',
@@ -65,7 +66,12 @@ export class AdminComponent {
     reverse: boolean = true;
     
 
-    constructor(public router:Router, private adminService:AdminService, private storage: AngularFireStorage, private excelService:ExcelService) {
+    constructor(
+        public router: Router,
+        private adminService: AdminService,
+        private storage: AngularFireStorage,
+        private excelService: ExcelService,
+        private toastr: ToastrService) {
         this.getAll();
         this.lista = true;
         this.detalle = false;
@@ -179,9 +185,25 @@ export class AdminComponent {
                 this.editar = true;
             }, error => {
                 if (error.status === 422) {
-                    // on some data incorrect
+                    if (error.error.errors) {
+                        for (const key in error.error.errors) {
+                            let title = key;
+                            if (title === 'name') { title = 'Nombre'; }
+                            if (title === 'lastname') { title = 'Apellido'; }
+                            if (title === 'dni') { title = 'Cedula'; }
+                            if (title === 'email') { title = 'Correo'; }
+                            this.toastr.info(error.error.errors[key][0], title,
+                                { positionClass: 'toast-bottom-center'});
+                        }
+                    } else {
+                        this.toastr.info(error.error.message, 'Error',
+                            { positionClass: 'toast-bottom-center'});
+                    }
+                    this.errorSaveData = true;
                 } else {
-                    // on general error
+                    this.toastr.info(error.message, 'Error',
+                        { positionClass: 'toast-bottom-center'});
+                    this.errorSave = true;
                 }
             }
         );
@@ -228,23 +250,25 @@ export class AdminComponent {
                 this.errorEdit = false;
             }, error => {
                 if (error.status === 422) {
-                    // on some data incorrect
-                    if(error.error.errors.name){
-                        this.errorEditMsg = "Nombres: " + error.error.errors.name[0];
+                    if (error.error.errors) {
+                        for (const key in error.error.errors) {
+                            let title = key;
+                            if (title === 'name') { title = 'Nombre'; }
+                            if (title === 'lastname') { title = 'Apellido'; }
+                            if (title === 'dni') { title = 'Cedula'; }
+                            if (title === 'email') { title = 'Correo'; }
+                            this.toastr.info(error.error.errors[key][0], title,
+                                { positionClass: 'toast-bottom-center'});
+                        }
+                    } else {
+                        this.toastr.info(error.error.message, 'Error',
+                            { positionClass: 'toast-bottom-center'});
                     }
-                    if(error.error.errors.lastname){
-                        this.errorEditMsg = "Apellidos "+error.error.errors.lastname[0];
-                    }
-                    if(error.error.errors.email){
-                        this.errorEditMsg = "Correo: " + error.error.errors.email[0];
-                    }
-                    if(error.error.errors.dni){
-                        this.errorEditMsg = "Cedula: "+error.error.errors.dni[0];
-                    }
-                    this.errorEditData = true;
+                    this.errorSaveData = true;
                 } else {
-                    // on general error
-                    this.errorEdit = true;
+                    this.toastr.info(error.message, 'Error',
+                        { positionClass: 'toast-bottom-center'});
+                    this.errorSave = true;
                 }
             }
         );
@@ -283,22 +307,24 @@ export class AdminComponent {
                 this.errorSaveData = false;
             }, error => {
                 if (error.status === 422) {
-                    // on some data incorrect
-                    if(error.error.errors.name){
-                        this.errorEditMsg = "Nombres: " + error.error.errors.name[0];
-                    }
-                    if(error.error.errors.lastname){
-                        this.errorEditMsg = "Apellidos "+error.error.errors.lastname[0];
-                    }
-                    if(error.error.errors.email){
-                        this.errorEditMsg = "Correo: " + error.error.errors.email[0];
-                    }
-                    if(error.error.errors.dni){
-                        this.errorEditMsg = "Cedula: "+error.error.errors.dni[0];
+                    if (error.error.errors) {
+                        for (const key in error.error.errors) {
+                            let title = key;
+                            if (title === 'name') { title = 'Nombre'; }
+                            if (title === 'lastname') { title = 'Apellido'; }
+                            if (title === 'dni') { title = 'Cedula'; }
+                            if (title === 'email') { title = 'Correo'; }
+                            this.toastr.info(error.error.errors[key][0], title,
+                                { positionClass: 'toast-bottom-center'});
+                        }
+                    } else {
+                        this.toastr.info(error.error.message, 'Error',
+                            { positionClass: 'toast-bottom-center'});
                     }
                     this.errorSaveData = true;
                 } else {
-                    // on general error
+                    this.toastr.info(error.message, 'Error',
+                        { positionClass: 'toast-bottom-center'});
                     this.errorSave = true;
                 }
             }

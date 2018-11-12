@@ -88,12 +88,12 @@
                                 </button>
                             </div>
                             <div class="form-group mt-4 mb-4">
-                                <div class="form-inline">
-                                    <label for="newname" class="ml-1 mr-3"><b>Nombre</b></label>
+                                <div style="margin-left: 15px" class="form-inline">
+                                    <label class="ml-1 mr-3"><b>Nombre</b></label>
                                     <input type="text" name="newname" class="form-control" placeholder="Inserte nombre" [(ngModel)]="editname" style="width: 80%;">
                                 </div>
-                                <div class="form-inline mt-2">
-                                    <label for="newaddress" class="ml-1 mr-2"><b>Dirección</b></label>
+                                <div style="margin-left: 15px" class="form-inline mt-2">
+                                    <label class="ml-1 mr-2"><b>Dirección</b></label>
                                     <input type="text" name="newaddress" class="form-control" placeholder="Inserte dirección" [(ngModel)]="editaddress" style="width: 80%;">
                                 </div>
                             </div>
@@ -224,13 +224,13 @@
                     <div><b>Tablets</b></div>
                     <table class="table table-bordered">
                         <thead  class="thead-light">
-                        <th style="width: 20%">ID</th>
+                        <th style="width: 20%">Alias</th>
                         <th style="width: 60%">IMEI</th>
                         <th style="width: 20%">Eliminar</th>
                         </thead>
                         <tbody>
                         <tr *ngFor="let tabs of tabletspuesto">
-                            <td>{{tabs.id}}</td>
+                            <td>{{tabs.alias}}</td>
                             <td>{{tabs.imei}}</td>
                             <td>
                                 <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{tabs.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
@@ -261,13 +261,13 @@
                     <div><b>Guardias</b></div>
                     <table class="table table-bordered">
                         <thead  class="thead-light">
-                        <th style="width: 20%">ID</th>
+                        <th style="width: 20%">Cédula</th>
                         <th style="width: 60%">Nombre</th>
                         <th style="width: 20%">Eliminar</th>
                         </thead>
                         <tbody>
                         <tr *ngFor="let guard of guardiaspuesto">
-                            <td>{{guard.id}}</td>
+                            <td>{{guard.dni}}</td>
                             <td>{{guard.name}} {{guard.lastname}}</td>
                             <td>
                                 <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{guard.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>

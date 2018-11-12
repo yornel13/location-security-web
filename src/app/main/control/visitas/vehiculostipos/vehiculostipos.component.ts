@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import {Grupos} from '../../../../../model/grupos/grupos';
 import {VehiclestypesService} from '../../../../../model/vehicletsypes/vehiclestypes.service';
 import {Vehiclestypes} from '../../../../../model/vehicletsypes/vehiclestypes';
+import {ExcelService} from "../../../../../model/excel/excel.services";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
     selector: 'app-vehiculostipos',
@@ -33,7 +35,8 @@ export class VehiculostiposComponent {
     @ViewChild('vehicleChecked') vehicleChecked: any;
 
     constructor(
-            private typesService: VehiclestypesService) {
+            private typesService: VehiclestypesService,
+            private toastr: ToastrService) {
         this.getAll();
 
     }
@@ -79,6 +82,8 @@ export class VehiculostiposComponent {
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
+                    this.toastr.info(error.error.message, 'Error',
+                        { positionClass: 'toast-bottom-center'});
                 } else {
                     // on general error
                 }

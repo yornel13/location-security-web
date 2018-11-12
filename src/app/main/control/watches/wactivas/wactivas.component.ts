@@ -6,7 +6,7 @@ import 'jspdf-autotable';
 import { ExcelService } from '../../../../../model/excel/excel.services';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
-import {GlobalOsm} from "../../../../global.osm";
+import {GlobalOsm} from '../../../../global.osm';
 
 @Component({
     selector: 'app-wactivas',
@@ -92,10 +92,21 @@ export class WactivasComponent {
                     }else if(this.data[i].status == 1){
                         status = "Activa";
                     }
-                    excel.push({'#' : this.data[i].id, 'Nombre del Guardia': this.data[i].guard_name+' '+this.data[i].guard_lastname, 'Cédula del Guardia':this.data[i].guard_dni, 'Hora de inicio':this.data[i].create_date, 'Status':status})
-                    body.push([this.data[i].id, this.data[i].guard_name+' '+this.data[i].guard_lastname, this.data[i].guard_dni, this.data[i].create_date, status]);
+                    excel.push({
+                        '#' : this.data[i].id,
+                        'Nombre del Guardia': this.data[i].guard.name + ' ' + this.data[i].guard.lastname,
+                        'Cédula del Guardia': this.data[i].guard.dni,
+                        'Hora de inicio': this.data[i].create_date,
+                        'Status': status
+                    })
+                    body.push([
+                        this.data[i].id,
+                        this.data[i].guard.name + ' ' + this.data[i].guard.lastname,
+                        this.data[i].guard.dni,
+                        this.data[i].create_date,
+                        status]);
                     this.data[i].id = Number(this.data[i].id);
-                    this.data[i].guard_dni = Number(this.data[i].guard_dni);
+                    this.data[i].guard.dni = Number(this.data[i].guard.dni);
                 }
                 this.contpdf = body;
                 this.info = excel;
@@ -187,18 +198,18 @@ export class WactivasComponent {
         for (let i = 0; i < this.data.length; i++) {
             excel.push({
                 'Puesto' : this.data[i].stand_name,
-                'Nombre del Guardia': this.data[i].guard_name + ' ' + this.data[i].guard_lastname,
-                'Cédula del Guardia': this.data[i].guard_dni,
+                'Nombre del Guardia': this.data[i].guard.name + ' ' + this.data[i].guard.lastname,
+                'Cédula del Guardia': this.data[i].guard.dni,
                 'Hora de inicio': this.data[i].create_date,
             });
             body.push([
                 this.data[i].stand_name,
-                this.data[i].guard_name + ' ' + this.data[i].guard_lastname,
-                this.data[i].guard_dni,
+                this.data[i].guard.name + ' ' + this.data[i].guard.lastname,
+                this.data[i].guard.dni,
                 this.data[i].create_date,
             ]);
             this.data[i].id = Number(this.data[i].id);
-            this.data[i].guard_dni = Number(this.data[i].guard_dni);
+            this.data[i].guard.dni = Number(this.data[i].guard.dni);
         }
         this.contpdf = body;
         this.info = excel;
@@ -295,20 +306,20 @@ export class WactivasComponent {
         doc.setFontType("bold");
         doc.text('Nombre: ', 15, 77);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard_name, 34, 77);
+        doc.text(this.guardia.guard.name, 34, 77);
         doc.setFontType("bold");
         doc.text('Apellido: ', 100, 77);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard_lastname, 123, 77);
+        doc.text(this.guardia.guard.lastname, 123, 77);
 
         doc.setFontType("bold");
         doc.text('Cédula: ', 15, 84);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard_dni, 34, 84);
+        doc.text(this.guardia.guard.dni, 34, 84);
         doc.setFontType("bold");
         doc.text('Correo: ', 100, 84);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard_email, 119, 84);
+        doc.text(this.guardia.guard.email, 119, 84);
 
         doc.setFontType("bold");
         doc.text('Puesto: ', 15, 91);
@@ -360,20 +371,20 @@ export class WactivasComponent {
         doc.setFontType("bold");
         doc.text('Nombre: ', 15, 77);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard_name, 34, 77);
+        doc.text(this.guardia.guard.name, 34, 77);
         doc.setFontType("bold");
         doc.text('Apellido: ', 100, 77);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard_lastname, 123, 77);
+        doc.text(this.guardia.guard.lastname, 123, 77);
 
         doc.setFontType("bold");
         doc.text('Cédula: ', 15, 84);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard_dni, 34, 84);
+        doc.text(this.guardia.guard.dni, 34, 84);
         doc.setFontType("bold");
         doc.text('Correo: ', 100, 84);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard_email, 119, 84);
+        doc.text(this.guardia.guard.email, 119, 84);
 
         doc.setFontType("bold");
         doc.text('Puesto: ', 15, 91);
@@ -396,7 +407,7 @@ export class WactivasComponent {
         excel = [{'Hora de inicio' : this.guardia.create_date, 'Latitud': this.guardia.latitude.toString(), 'Longitud':this.guardia.longitude.toString(), '':''}];
         excel.push({'Hora de inicio':'Guardia'});
         excel.push({'Hora de inicio':'Nombre', 'Latitud':'Apellido', 'Longitude':'Cédula', '':'Correo'});
-        excel.push({'Hora de inicio':this.guardia.guard_name, 'Latitud':this.guardia.guard_lastname, 'Longitude':this.guardia.guard_dni, '':this.guardia.guard_email});
+        excel.push({'Hora de inicio':this.guardia.guard.name, 'Latitud':this.guardia.guard.lastname, 'Longitude':this.guardia.guard.dni, '':this.guardia.guard.email});
         this.excelService.exportAsExcelFile(excel, 'guardiadetail');
     }
 }

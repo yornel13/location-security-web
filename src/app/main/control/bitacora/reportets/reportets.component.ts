@@ -112,15 +112,13 @@ export class ReportetsComponent {
         this.layersControlOptions = this.globalOSM.layersOptions;
         this.baseLayers = this.globalOSM.baseLayers;
         this.options = this.globalOSM.defaultOptions;
-        this.getToday();
-        this.getIncidencias();
-        this.getGuardias();
+        this.getUnread();
         this.lista = true;
         this.detalle = false;
         this.setupDropdown1();
         this.setupDropdown2();
         this.notificationService.newReply.subscribe(reply => {
-            this.getToday();
+            this.getUnread();
             if (this.detalle) {
                 if (+this.report.id === +reply.report_id) {
                     this.coment.unshift(reply);
@@ -178,41 +176,7 @@ export class ReportetsComponent {
         this.reverse = !this.reverse;
     }
 
-    selectRange(id){
-        if(id == 1){
-            this.rangeday = true;
-            this.desde = "";
-            this.hasta = "";
-            this.getSearch();
-        }else{
-            this.rangeday = false;
-            this.desde = "";
-            this.hasta = "";
-            this.getSearch();
-        }
-    }
-
-    getToday(){
-        var d = new Date();
-        var day = d.getDate();
-        var month = d.getMonth()+1;
-        var year = d.getFullYear();
-
-        if(day < 10){
-            this.day2 = "0"+day;
-        }else{
-            this.day2 = day;
-        }
-
-        if(month < 10){
-            this.month2 = "0"+month;
-        }else{
-            this.month2 = month;
-        }
-
-        this.date = year+"-"+this.month2+"-"+this.day2;
-        this.desde =this.date;
-
+    getUnread() {
         this.bitacoraService.getAllUnreadReports().then(
             success => {
                 this.reportes = success;
@@ -230,43 +194,6 @@ export class ReportetsComponent {
             }
         );
 
-    }
-
-    getOpenAll() {
-        this.bitacoraService.getOpenAll().then(
-            success => {
-                this.reportes = success;
-                this.data = this.reportes.data;
-                var body = [];
-                var excel = [];
-                var resolve = "";
-                for(var i=0; i<this.data.length; i++){
-                    if(this.data[i].resolved == 0){
-                        resolve = "Cerrado";
-                    }else if(this.data[i].resolved == 1){
-                        resolve = "Abierto";
-                    }else{
-                        resolve = "Reabierto";
-                    }
-                    this.data[i].id = Number(this.data[i].id);
-                    excel.push({'#' : this.data[i].id, 'Título': this.data[i].title, 'Observación':this.data[i].observation, 'Fecha':this.data[i].create_date, 'Status':resolve})
-                    body.push([this.data[i].id, this.data[i].title, this.data[i].observation, this.data[i].create_date, resolve])
-                }
-                this.contpdf = body;
-                this.info = excel;
-                if(this.reportes.total == 0){
-                    this.hay = false;
-                }else{
-                    this.hay = true;
-                }
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
     }
 
     viewDetail(d) {
@@ -329,11 +256,11 @@ export class ReportetsComponent {
     }
 
     changeResolve(id, resolved) {
-        if(resolved == 0){
+        if(resolved == 0) {
             this.bitacoraService.setReopen(id).then(
-                succcess =>{
-                    this.getOpenAll();
-                }, error=>{
+                succcess => {
+                    this.getUnread();
+                }, error => {
                     if (error.status === 422) {
                         // on some data incorrect
                     } else {
@@ -341,10 +268,10 @@ export class ReportetsComponent {
                     }
                 }
             );
-        }else{
+        } else {
             this.bitacoraService.setClose(id).then(
                 success => {
-                    this.getOpenAll();
+                    this.getUnread();
                 }, error => {
                     if (error.status === 422) {
                         // on some data incorrect
@@ -356,296 +283,7 @@ export class ReportetsComponent {
         }
     }
 
-    getSearch(){
-        var fecha1 = String(this.desde);
-        var valuesdate1 = fecha1.split('-');
-        var year1 = valuesdate1[0];
-        var month1 = valuesdate1[1];
-        var day1 = valuesdate1[2];
-
-        var fecha2 = String(this.hasta);
-        var valuesdate2 = fecha2.split('-');
-        var year2 = valuesdate2[0];
-        var month2 = valuesdate2[1];
-        var day2 = valuesdate2[2];
-
-        var guardia = this.selectedGuardias;
-        var incidencia = this.selectedIncidencias;
-
-        //Incidencias
-        if(this.filtroSelect == 0){
-            if(this.desde == ""){
-                if(incidencia.length == 0){
-                    this.getOpenAll();
-                }else{
-                    var result = [];
-                    for(var i=0;i<incidencia.length;i++){
-                        this.bitacoraService.getByIncidenciaOpen(incidencia[i].item_id).then(
-                            success => {
-                                this.reportes = success;
-                                result = result.concat(this.reportes.data);
-                                this.data = result;
-                                for(var i=0; i<this.data.length; i++){
-                                    this.data[i].id = Number(this.data[i].id);
-                                }
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
-                    }
-                }
-            }else{
-                if(this.rangeday){
-                    if(incidencia.length == 0){
-                        this.bitacoraService.getOpenDate(year1, month1, day1, year1, month1, day1).then(
-                            success => {
-                                this.reportes = success;
-                                this.data = this.reportes.data;
-                                for(var i=0; i<this.data.length; i++){
-                                    this.data[i].id = Number(this.data[i].id);
-                                }
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
-                    }else{
-                        var result = [];
-                        for(var i=0;i<incidencia.length;i++){
-                            this.bitacoraService.getByIncidenciaOpenDate(incidencia[i].item_id, year1, month1, day1, year1, month1, day1).then(
-                                success => {
-                                    this.reportes = success;
-                                    result = result.concat(this.reportes.data);
-                                    this.data = result;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    }
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
-                        }
-                    }
-                }else{
-                    if(incidencia.length == 0){
-                        this.bitacoraService.getOpenDate(year1, month1, day1, year2, month2, day2).then(
-                            success => {
-                                this.reportes = success;
-                                this.data = this.reportes.data;
-                                for(var i=0; i<this.data.length; i++){
-                                    this.data[i].id = Number(this.data[i].id);
-                                }
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
-                    }else{
-                        var result = [];
-                        for(var i=0;i<incidencia.length;i++){
-                            this.bitacoraService.getByIncidenciaOpenDate(incidencia[i].item_id, year1, month1, day1, year2, month2, day2).then(
-                                success => {
-                                    this.reportes = success;
-                                    result = result.concat(this.reportes.data);
-                                    this.data = result;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    }
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
-                        }
-                    }
-                }
-            }
-        }
-        //Guardias
-        if(this.filtroSelect == 1){
-            if(this.desde == ""){
-                if(guardia.length == 0){
-                    this.getOpenAll();
-                }else{
-                    var result = [];
-                    for(var i=0;i<guardia.length;i++){
-                        this.bitacoraService.getByGuardiaOpen(guardia[i].item_id).then(
-                            success => {
-                                this.reportes = success;
-                                result = result.concat(this.reportes.data);
-                                this.data = result;
-                                for(var i=0; i<this.data.length; i++){
-                                    this.data[i].id = Number(this.data[i].id);
-                                }
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
-                    }
-                }
-            }else{
-                if(this.rangeday){
-                    if(guardia.length == 0){
-                        this.bitacoraService.getOpenDate(year1, month1, day1, year1, month1, day1).then(
-                            success => {
-                                this.reportes = success;
-                                this.data = this.reportes.data;
-                                for(var i=0; i<this.data.length; i++){
-                                    this.data[i].id = Number(this.data[i].id);
-                                }
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
-                    }else{
-                        var result = [];
-                        for(var i=0;i<guardia.length;i++){
-                            this.bitacoraService.getByGuardiaOpenDate(guardia[i].item_id, year1, month1, day1, year1, month1, day1).then(
-                                success => {
-                                    this.reportes = success;
-                                    result = result.concat(this.reportes.data);
-                                    this.data = result;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    }
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
-                        }
-                    }
-                }else{
-                    if(guardia.length == 0){
-                        this.bitacoraService.getOpenDate(year1, month1, day1, year2, month2, day2).then(
-                            success => {
-                                this.reportes = success;
-                                this.data = this.reportes.data;
-                                for(var i=0; i<this.data.length; i++){
-                                    this.data[i].id = Number(this.data[i].id);
-                                }
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
-                    }else{
-                        var result = [];
-                        for(var i=0;i<guardia.length;i++){
-                            this.bitacoraService.getByGuardiaOpenDate(guardia[i].item_id, year1, month1, day1, year2, month2, day2).then(
-                                success => {
-                                    this.reportes = success;
-                                    result = result.concat(this.reportes.data);
-                                    this.data = result;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    }
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    getIncidencias() {
-        this.incidenciaService.getAll().then(
-            success => {
-                this.incidencias = success;
-                this.inciden = this.incidencias.data;
-                const datag = [];
-                this.inciden.forEach(inciden => {
-                    datag.push({ item_id: inciden.id, item_text: inciden.name });
-                });
-                this.dropdownList1 = datag;
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
-    }
-
-    getGuardias() {
-        this.guardiaService.getAll().then(
-            success => {
-                this.guardias = success;
-                this.guard = this.guardias.data;
-                const datag = [];
-                this.guard.forEach(guard => {
-                    datag.push({ item_id: guard.id, item_text: guard.name+' '+guard.lastname });
-                });
-                this.dropdownList2 = datag;
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
-    }
-
-    selectFilert(filter) {
-        if (filter == 0){
-            this.guardiaSelect = 0;
-            this.incidenSelect = 0;
-            this.desde = '';
-            this.hasta = '';
-            this.filtro = true;
-            this.getOpenAll();
-        }else{
-            this.incidenSelect = 0;
-            this.guardiaSelect = 0;
-            this.desde = '';
-            this.hasta = '';
-            this.filtro = false;
-            this.getOpenAll();
-        }
-    }
-
-    agregarComentario(){
+    agregarComentario() {
         this.addcomment = true;
     }
 
@@ -676,15 +314,6 @@ export class ReportetsComponent {
         );
     }
 
-    //configuración de los selects
-    onItemSelect1 (item:any) {
-        this.getSearch();
-    }
-
-    onItemDeSelect1(item:any){
-        this.getSearch();
-    }
-
     setupDropdown1() {
         this.dropdownList1 = [];
         this.selectedIncidencias = [];
@@ -699,14 +328,6 @@ export class ReportetsComponent {
             allowSearchFilter: true,
             enableCheckAll: false,
         };
-    }
-    //configuración de los selects
-    onItemSelect2 (item:any) {
-        this.getSearch();
-    }
-
-    onItemDeSelect2 (item:any){
-        this.getSearch();
     }
 
     setupDropdown2() {
@@ -796,7 +417,13 @@ export class ReportetsComponent {
         var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Reporte Abierto', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34);
-        //inserting data
+        // inserting data
+        doc.setTextColor(0);
+        doc.setFontType("bold");
+        doc.text('Fecha de creación: ', 15, 43);
+        doc.setFontType("normal");
+        doc.text(this.report.create_date, 58, 43);
+
         doc.setTextColor(0);
         doc.setFontType("bold");
         doc.text('Incidencia: ', 15, 50);
@@ -828,20 +455,20 @@ export class ReportetsComponent {
         doc.setFontType("bold");
         doc.text('Nombre: ', 15, 91);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_name, 34, 91);
+        doc.text(this.report.watch.guard.name, 34, 91);
         doc.setFontType("bold");
         doc.text('Apellido: ', 100, 91);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_lastname, 123, 91);
+        doc.text(this.report.watch.guard.lastname, 123, 91);
 
         doc.setFontType("bold");
         doc.text('Cédula: ', 15, 98);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_dni, 34, 98);
+        doc.text(this.report.watch.guard.dni, 34, 98);
         doc.setFontType("bold");
         doc.text('Correo: ', 100, 98);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_email, 119, 98);
+        doc.text(this.report.watch.guard.email, 119, 98);
 
         doc.line(10, 105, 200, 105);
         for(var i=0; i < this.coment.length; i++){
@@ -869,7 +496,13 @@ export class ReportetsComponent {
         var fecha = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
         doc.text('Reporte Abierto', 15, 27)
         doc.text('Hora de impresión: '+ fecha, 15, 34);
-        //inserting data
+        // inserting data
+        doc.setTextColor(0);
+        doc.setFontType("bold");
+        doc.text('Fecha de creación: ', 15, 43);
+        doc.setFontType("normal");
+        doc.text(this.report.create_date, 58, 43);
+
         doc.setTextColor(0);
         doc.setFontType("bold");
         doc.text('Incidencia: ', 15, 50);
@@ -901,31 +534,31 @@ export class ReportetsComponent {
         doc.setFontType("bold");
         doc.text('Nombre: ', 15, 91);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_name, 34, 91);
+        doc.text(this.report.watch.guard.name, 34, 91);
         doc.setFontType("bold");
         doc.text('Apellido: ', 100, 91);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_lastname, 123, 91);
+        doc.text(this.report.watch.guard.lastname, 123, 91);
 
         doc.setFontType("bold");
         doc.text('Cédula: ', 15, 98);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_dni, 34, 98);
+        doc.text(this.report.watch.guard.dni, 34, 98);
         doc.setFontType("bold");
         doc.text('Correo: ', 100, 98);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_email, 119, 98);
+        doc.text(this.report.watch.guard.email, 119, 98);
 
         doc.line(10, 105, 200, 105);
-        for(var i=0; i < this.coment.length; i++){
+        for(var i=0; i < this.coment.length; i++) {
             doc.setFontType("bold");
-            doc.text('Comentario: #'+(i+1)+' ', 15, 112+i*(14));
+            doc.text('Comentario: #'+(i+1)+' ', 15, 112+7+i*(21));
             doc.setFontType("normal");
-            doc.text(this.coment[i].text, 50, 112+i*(14));
+            doc.text(this.coment[i].text, 50, 112+7+i*(21));
             doc.setFontType("bold");
-            doc.text('Usuario: ', 100, 112+i*(14));
+            doc.text('Usuario: ', 100, 112+i*(21));
             doc.setFontType("normal");
-            doc.text(this.coment[i].user_name, 119, 112+i*(14));
+            doc.text(this.coment[i].user_name, 119, 112+i*(21));
         }
 
         doc.autoPrint();
@@ -935,10 +568,14 @@ export class ReportetsComponent {
 
     excelDetalle() {
         var excel = [];
-        excel = [{'Incidencia' : this.report.title, 'Observacion' : this.report.observation, 'Latitud': this.report.latitude.toString(), 'Longitud':this.report.longitude.toString()}];
+        excel = [{'Incidencia' : this.report.title, 'Observacion' : this.report.observation, 'Latitud': this.report.latitude.toString(), 'Longitud': this.report.longitude.toString(), 'Fecha': this.report.create_date }];
         excel.push({'Incidencia':'Guardia'});
         excel.push({'Incidencia':'Nombre', 'Observacion':'Apellido', 'Latitud':'Cédula', 'Longitud':'Correo'});
-        excel.push({'Incidencia':this.report.watch.guard_name, 'Observacion':this.report.watch.guard_lastname, 'Latitud':this.report.watch.guard_dni, 'Longitud':this.report.watch.guard_email});
+        excel.push({
+            'Incidencia': this.report.watch.guard.name,
+            'Observacion': this.report.watch.guard.lastname,
+            'Latitud': this.report.watch.guard.dni,
+            'Longitud': this.report.watch.guard.email});
         excel.push({'Incidencia':'Comentarios'});
         for(var i=0; i < this.coment.length; i++){
             excel.push({'Incidencia':this.coment[i].text, 'Observacion':this.coment[i].user_name});

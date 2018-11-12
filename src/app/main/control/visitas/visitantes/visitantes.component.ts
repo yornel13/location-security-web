@@ -6,6 +6,7 @@ import { Visitantes } from '../../../../../model/vistavisitantes/visitantes';
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { ExcelService } from '../../../../../model/excel/excel.services';
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-visitantes',
@@ -43,7 +44,10 @@ export class VisitantesComponent {
   key: string = 'id'; //set default
   reverse: boolean = true;
   
-  constructor(public router:Router, private visitanteService:VisitanteService, private excelService:ExcelService) {
+  constructor(public router:Router,
+              private visitanteService:VisitanteService,
+              private excelService:ExcelService,
+              private toastr: ToastrService) {
     this.getAll();
   	this.lista = true;
     this.detalle = false;
@@ -179,6 +183,8 @@ export class VisitantesComponent {
                 if (error.status === 422) {
                     // on some data incorrect
                     this.errorDeleteData = true;
+                    this.toastr.info(error.error.message, 'Error',
+                        { positionClass: 'toast-bottom-center'});
                 } else {
                     // on general error
                     this.errorDelete = true;

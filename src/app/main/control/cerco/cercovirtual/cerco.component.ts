@@ -14,6 +14,7 @@ import {ListBounds} from '../../../../../model/cerco/list.bounds';
 import {Bounds} from '../../../../../model/cerco/bounds';
 import {GlobalOsm} from '../../../../global.osm';
 import * as geolib from 'geolib';
+import {TabletService} from '../../../../../model/tablet/tablet.service';
 
 export class VechicleS {
     imei: string;
@@ -71,7 +72,7 @@ export class CercoComponent implements OnInit {
     drawing: boolean;
     polygon = L.polygon([]);
     onArea;
-    map;
+    map: L.Map;
     drawPluginOptions;
     editableLayers;
 
@@ -83,6 +84,7 @@ export class CercoComponent implements OnInit {
 
 
     bounds: Bounds[];
+    tabletsInBounds: Bounds[] = [];
     cercos: any = undefined;
     toEditPolygon =  L.polygon([]);
     editPolygon = false;
@@ -92,7 +94,10 @@ export class CercoComponent implements OnInit {
     cercoId;
     vehiclesInBound: Bounds[] = [];
 
-    zoom = 12;
+    tablets: any = [];
+    tabletsList: any = []
+
+    zoom: number;
     center = L.latLng(([ -2.071522, -79.607105 ]));
     layersControlOptions;
     baseLayers;
@@ -104,9 +109,10 @@ export class CercoComponent implements OnInit {
     defaultColor = '#97009c';
     pointsToSave;
 
-    nameBoundEdit:any = "";
+    nameBoundEdit: any = '';
     colorEdit;
     filter: string;
+    filterT: string;
     filterValue: string;
 
     constructor (
@@ -115,11 +121,13 @@ export class CercoComponent implements OnInit {
         private storage: AngularFireStorage,
         private cercoService: CercoService,
         private vehiclesService: VehiclesService,
+        private tabletService: TabletService,
         private globalOSM: GlobalOsm) {
         /* Map default options */
         this.layersControlOptions = this.globalOSM.layersOptions;
         this.baseLayers = this.globalOSM.baseLayers;
         this.options = this.globalOSM.defaultOptions;
+        this.zoom = this.globalOSM.zoom;
     }
 
     ngOnInit() {
@@ -158,7 +166,6 @@ export class CercoComponent implements OnInit {
                     }
 
                     const coords = JSON.stringify(this.pointsToSave);
-                    console.log(coords);
                     const bound: Cerco = {
                         name: this.nameBound,
                         points: coords,
@@ -193,12 +200,25 @@ export class CercoComponent implements OnInit {
     }
 
     getVehiclesInBound(cerco: Cerco) {
+        this.createCenterInCerco(cerco);
         this.selectedBounds = cerco;
         this.cercoId = cerco.id;
         this.nameBound = cerco.name;
+        this.cercoService.getTabletsInBound(cerco.id).then(
+            (success: ListBounds) => {
+                this.tabletsInBounds = success.data;
+                this.loadTabletsListModal();
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            }
+        );
         this.cercoService.getVehiclesInBound(cerco.id).then(
             (success: ListBounds) => {
-                this.bounds = success.data;
+                this.vehiclesInBound = success.data;
                 this.loadVehicleListModal();
                 this.vehiclesBoundView = true;
                 this.lista = false;
@@ -212,7 +232,6 @@ export class CercoComponent implements OnInit {
                 }
             }
         );
-
         this.cercoService.getId(cerco.id).then(
             success => {
                 this.selectedBounds = success;
@@ -230,34 +249,15 @@ export class CercoComponent implements OnInit {
         this.vehiclesService.getVehiclesList().then(
             success => {
                 this.vehiclesList = success.data;
-                this.bounds.forEach(vBounds => {
-                    this.vehiclesList.forEach(vehicle => {
-                        if (vehicle.imei == vBounds.imei) {
-                            vBounds.alias = vehicle.alias;
-                        }
-                    });
-                });
-                this.vehiclesInBound = this.bounds;
+                // this.bounds.forEach(vBounds => {
+                //     this.vehiclesList.forEach(vehicle => {
+                //         if (vehicle.imei == vBounds.imei) {
+                //             vBounds.alias = vehicle.alias;
+                //         }
+                //     });
+                // });
+                // this.vehiclesInBound = this.bounds;
             });
-    }
-
-
-
-    getVehicleByChecked(vehicle) {
-        const index = this.vehicles.imei.indexOf(vehicle.imei);
-        if  (index > -1) {
-            this.vehicles.imei.splice(index, 1);
-            this.vehicles.alias.splice(index, 1);
-            console.log('se borro', vehicle.imei);
-
-        } else {
-            this.vehicles.imei.push(vehicle.imei);
-            this.vehicles.alias.push(vehicle.alias);
-            console.log('se agrego!', this.vehicles.imei);
-        }
-        this.vehicles.imei.forEach( data => {
-            console.log('vehiculos-> ', data);
-        });
     }
 
     addVehiclesToBound() {
@@ -282,6 +282,28 @@ export class CercoComponent implements OnInit {
             });
     }
 
+    addTabletToBound() {
+        const array = [];
+        this.tabletsList.forEach(tablet => {
+            if (tablet.checked) {
+                const vehicler = new VechicleS();
+                vehicler.imei = tablet.imei;
+                array.push(vehicler);
+            }
+        });
+
+        this.cercoService.addTabletsToBound(this.cercoId, JSON.stringify(array))
+            .then( sucess => {
+                this.getVehiclesInBound(this.selectedBounds);
+            },  error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
+                }
+            });
+    }
+
     returnList() {
         this.lista = true;
         this.vehiclesBoundView = false;
@@ -293,9 +315,14 @@ export class CercoComponent implements OnInit {
         this.alertError = false;
         this.alertSuccess = false;
         this.selectedBounds = null;
+
+        if (this.map !== undefined) {
+            this.map.remove();
+        }
     }
 
     editBound(cerco: Cerco) {
+        this.createCenterInCerco(cerco);
         this.selectedBounds = cerco;
         this.editPolygon = true;
         this.cercoService.getId(cerco.id).then(
@@ -346,7 +373,7 @@ export class CercoComponent implements OnInit {
         this.lista = false;
         this.vehiclesBoundView = false;
         this.editBoundView = false;
-        this.nameBound = "";
+        this.nameBound = '';
     }
 
     deleteBound(id) {
@@ -362,6 +389,21 @@ export class CercoComponent implements OnInit {
                 } else {
                     // on general error
                     this.errorDelete = true;
+                }
+            }
+        );
+    }
+
+    loadTabletsListModal() {
+        this.tabletService.getAll().then(
+            success => {
+                this.tablets = success;
+                this.tabletsList = this.tablets.data;
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    // on general error
                 }
             }
         );
@@ -385,6 +427,24 @@ export class CercoComponent implements OnInit {
             });
     }
 
+    deleteTabletFromBound(tablet) {
+        this.cercoService.deleteTabletFromBound(tablet.id)
+            .then(success => {
+                const index = this.tabletsInBounds.indexOf(tablet, 0);
+                if (index > -1) {
+                    this.tabletsInBounds.splice(index, 1);
+                }
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                    this.errorDeleteData = true;
+                } else {
+                    // on general error
+                    this.errorDelete = true;
+                }
+            });
+    }
+
     selectColor() {
         this.drawPluginOptions.draw.polygon.shapeOptions.color = this.colorSelected;
     }
@@ -392,7 +452,7 @@ export class CercoComponent implements OnInit {
 //    ------------------------------------------------------------------------------------
 
     onMapReady(map: L.Map) {
-        this.map =  map;
+        this.map = map;
         this.globalOSM.setupLayer(this.map);
         /***************** On Create new bounds *****************/
         if (this.createBoundView) {
@@ -415,11 +475,9 @@ export class CercoComponent implements OnInit {
             this.toEditPolygon = L.polygon([[]]).setLatLngs(coords);
             this.toEditPolygon.options.color = this.selectedBounds.color;
             this.editableLayers.addLayer(this.toEditPolygon);
-            const centerPoint = geolib.getCenter(coords);
-            this.center = L.latLng(([ centerPoint.latitude, centerPoint.longitude ]));
-            this.zoom = this.globalOSM.zoom;
-            this.map.fitBounds(this.toEditPolygon.getBounds());
-            this.map.zoom = 19;
+            /*** Zoom ***/
+            const bounds = new L.LatLngBounds(coords);
+            this.map.fitBounds(bounds);
         }
         /***************** On Edit a bounds *****************/
         if (this.editPolygon) {
@@ -430,17 +488,20 @@ export class CercoComponent implements OnInit {
             this.toEditPolygon.options.color = this.selectedBounds.color;
             this.editableLayers.addLayer(this.toEditPolygon);
             this.map.addLayer(this.editableLayers);
-            const centerPoint = geolib.getCenter(coords);
-            this.center = L.latLng(([ centerPoint.latitude, centerPoint.longitude ]));
-            this.zoom = this.globalOSM.zoom;
-            this.map.fitBounds(this.toEditPolygon.getBounds());
+            /*** Zoom ***/
+            const bounds = new L.LatLngBounds(coords);
+            this.map.fitBounds(bounds);
         }
+    }
 
+    createCenterInCerco(cerco: Cerco) {
+        const coords = JSON.parse(cerco.points);
+        const centerPoint = geolib.getCenter(coords);
+        this.center = L.latLng(([ centerPoint.latitude, centerPoint.longitude ]));
     }
 
     actionControls() {
-        this.map.on('draw:created', e => {
-            console.log(e.layerType);
+        this.map.on('draw:created', (e: any) => {
             this.figure = e.layer;
             this.editableLayers.addLayer(e.layer);
         });
@@ -458,7 +519,6 @@ export class CercoComponent implements OnInit {
             this.polygonDrawed = true;
             this.drawing = false;
             this.pointsToSave = this.figure.editing.latlngs[0][0];
-            console.log(JSON.stringify(this.pointsToSave));
         });
         this.map.on('draw:deleted', e => {
             console.log('deleted');

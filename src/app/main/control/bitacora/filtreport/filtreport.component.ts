@@ -15,9 +15,9 @@ import {Admin} from '../../../../../model/admin/admin';
 import {GlobalOsm} from '../../../../global.osm';
 import {UtilsVehicles} from '../../../../../model/vehicle/vehicle.utils';
 import {PopupReportComponent} from './popup.report.component';
-import {MessagingService} from "../../../../shared/messaging.service";
-import {NotificationService} from "../../../../shared/notification.service";
-import {ApiResponse} from "../../../../../model/app.response";
+import {MessagingService} from '../../../../shared/messaging.service';
+import {NotificationService} from '../../../../shared/notification.service';
+import {ApiResponse} from '../../../../../model/app.response';
 
 @Component({
     selector: 'app-filtreport',
@@ -41,9 +41,8 @@ export class FiltreportComponent implements OnInit {
     haycomentarios: boolean = false;
     valueDate: any = [];
     dateSelect: any = '';
-    filtro: boolean = true;
     guardiaSelect: number = 0;
-    filtroSelect: number = 0;
+    filtroSelect = 0;
     guardias: any = [];
     guard: any = [];
     /* vistas */
@@ -68,7 +67,7 @@ export class FiltreportComponent implements OnInit {
     info: any = [];
     /* order table */
     key: string = 'id';
-    reverse: boolean = true;
+    reverse: boolean = false;
     /* filter chart */
     rangeday:boolean = true;
     desde:string = "";
@@ -155,6 +154,7 @@ export class FiltreportComponent implements OnInit {
                 }
             }
         });
+        this.sort('create_date');
     }
 
     onMapReady(map: L.Map) {
@@ -667,21 +667,23 @@ export class FiltreportComponent implements OnInit {
     }
 
     selectFilert(filter) {
-        if (filter == 0){
+        if (this.filtroSelect === 1) {
             this.guardiaSelect = 0;
             this.incidenSelect = 0;
-            this.desde2 = '';
-            this.hasta2 = '';
-            this.filtro = true;
-            // this.getAll();
+            // this.desde2 = '';
+            // this.hasta2 = '';
+        } else if (this.filtroSelect === 2) {
+            this.incidenSelect = 0;
+            this.guardiaSelect = 0;
+            // this.desde2 = '';
+            // this.hasta2 = '';
         } else {
             this.incidenSelect = 0;
             this.guardiaSelect = 0;
-            this.desde2 = '';
-            this.hasta2 = '';
-            this.filtro = false;
-            // this.getAll();
+            // this.desde2 = '';
+            // this.hasta2 = '';
         }
+        this.getSearch();
     }
 
     getSearch() {
@@ -700,42 +702,17 @@ export class FiltreportComponent implements OnInit {
         var guardia = this.selectedGuardias;
         var incidencia = this.selectedIncidencias;
 
-        // incidencia
+        // sin filtrar
         if (this.filtroSelect == 0) {
             if (this.desde2 == '') {
-                if (this.status == 0) {
-                    if (incidencia.length == 0) {
-                        // this.getAll();
-                    }else{
-                        var result = [];
-                        for (let i = 0; i < incidencia.length; i++) {
-                            this.bitacoraService.getByIncidenAll(incidencia[i].item_id).then(
-                                success => {
-                                    this.reportes = success;
-                                    result = result.concat(this.reportes.data);
-                                    this.data = result;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    }
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
-                        }
-                    }
-                }else if(this.status == 1){
-                    if(incidencia.length == 0){
-                        this.bitacoraService.getOpenAll().then(
+                this.data = [];
+            } else {
+                if(this.rangeday2){
+                    if (this.status == 0) {
+                        this.bitacoraService.getByDate(year1, month1, day1, year1, month1, day1).then(
                             success => {
                                 this.reportes = success;
                                 this.data = this.reportes.data;
-                                for(var i=0; i<this.data.length; i++){
-                                    this.data[i].id = Number(this.data[i].id);
-                                };
                             }, error => {
                                 if (error.status === 422) {
                                     // on some data incorrect
@@ -744,36 +721,11 @@ export class FiltreportComponent implements OnInit {
                                 }
                             }
                         );
-                    }else{
-                        var result = [];
-                        for(var i=0;i<incidencia.length;i++){
-                            this.bitacoraService.getByIncidenciaOpen(incidencia[i].item_id).then(
-                                success => {
-                                    this.reportes = success;
-                                    result = result.concat(this.reportes.data);
-                                    this.data = result;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    }
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
-                        }
-                    }
-                }else if(this.status == 2){
-                    if(incidencia.length == 0){
-                        this.bitacoraService.getCloseAll().then(
+                    } else if(this.status == 1){
+                        this.bitacoraService.getOpenDate(year1, month1, day1, year1, month1, day1).then(
                             success => {
                                 this.reportes = success;
                                 this.data = this.reportes.data;
-                                for(var i=0; i<this.data.length; i++){
-                                    this.data[i].id = Number(this.data[i].id);
-                                };
                             }, error => {
                                 if (error.status === 422) {
                                     // on some data incorrect
@@ -782,48 +734,75 @@ export class FiltreportComponent implements OnInit {
                                 }
                             }
                         );
-                    }else{
-                        var result = [];
-                        for(var i=0;i<incidencia.length;i++){
-                            this.bitacoraService.getByIncidenciaClose(incidencia[i].item_id).then(
-                                success => {
-                                    this.reportes = success;
-                                    result = result.concat(this.reportes.data);
-                                    this.data = result;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    };
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
+                    } else if(this.status == 2){
+                        this.bitacoraService.getCloseDate(year1, month1, day1, year1, month1, day1).then(
+                            success => {
+                                this.reportes = success;
+                                this.data = this.reportes.data;
+                            }, error => {
+                                if (error.status === 422) {
+                                    // on some data incorrect
+                                } else {
+                                    // on general error
                                 }
-                            );
-                        }
+                            }
+                        );
+                    }
+                } else {
+                    if(this.status == 0) {
+                        this.bitacoraService.getByDate(year1, month1, day1, year2, month2, day2).then(
+                            success => {
+                                this.reportes = success;
+                                this.data = this.reportes.data;
+                            }, error => {
+                                if (error.status === 422) {
+                                    // on some data incorrect
+                                } else {
+                                    // on general error
+                                }
+                            }
+                        );
+                    } else if(this.status == 1){
+                        this.bitacoraService.getOpenDate(year1, month1, day1, year2, month2, day2).then(
+                            success => {
+                                this.reportes = success;
+                                this.data = this.reportes.data;
+                            }, error => {
+                                if (error.status === 422) {
+                                    // on some data incorrect
+                                } else {
+                                    // on general error
+                                }
+                            }
+                        );
+                    } else if(this.status == 2){
+                        this.bitacoraService.getCloseDate(year1, month1, day1, year2, month2, day2).then(
+                            success => {
+                                this.reportes = success;
+                                this.data = this.reportes.data;
+                            }, error => {
+                                if (error.status === 422) {
+                                    // on some data incorrect
+                                } else {
+                                    // on general error
+                                }
+                            }
+                        );
                     }
                 }
-            }else{
+            }
+        }
+
+        // incidencia
+        if (this.filtroSelect == 1) {
+            if (this.desde2 == '') {
+                this.data = [];
+            } else {
                 if(this.rangeday2){
                     if(this.status == 0){
-                        if(incidencia.length == 0){
-                            this.bitacoraService.getByDate(year1, month1, day1, year1, month1, day1).then(
-                                success => {
-                                    this.reportes = success;
-                                    this.data = this.reportes.data;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    };
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
-                        }else{
+                        if(incidencia.length == 0) {
+                            this.data = [];
+                        } else{
                             var result = [];
                             for(var i=0;i<incidencia.length;i++){
                                 this.bitacoraService.getByIncidenciaDate(incidencia[i].item_id, year1, month1, day1, year1, month1, day1).then(
@@ -846,21 +825,7 @@ export class FiltreportComponent implements OnInit {
                         }
                     }else if(this.status == 1){
                         if(incidencia.length == 0){
-                            this.bitacoraService.getOpenDate(year1, month1, day1, year1, month1, day1).then(
-                                success => {
-                                    this.reportes = success;
-                                    this.data = this.reportes.data;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    };
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
+                            this.data = [];
                         }else{
                             var result = [];
                             for(var i=0;i<incidencia.length;i++){
@@ -884,22 +849,8 @@ export class FiltreportComponent implements OnInit {
                         }
                     }else if(this.status == 2){
                         if(incidencia.length == 0){
-                            this.bitacoraService.getCloseDate(year1, month1, day1, year1, month1, day1).then(
-                                success => {
-                                    this.reportes = success;
-                                    this.data = this.reportes.data;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    };
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
-                        }else{
+                            this.data = [];
+                        } else {
                             var result = [];
                             for(var i=0;i<incidencia.length;i++){
                                 this.bitacoraService.getByIncidenciaCloseDate(incidencia[i].item_id, year1, month1, day1, year1, month1, day1).then(
@@ -921,24 +872,10 @@ export class FiltreportComponent implements OnInit {
                             }
                         }
                     }
-                }else{
+                } else {
                     if(this.status == 0){
                         if(incidencia.length == 0){
-                            this.bitacoraService.getByDate(year1, month1, day1, year2, month2, day2).then(
-                                success => {
-                                    this.reportes = success;
-                                    this.data = this.reportes.data;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    };
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
+                            this.data = [];
                         }else{
                             var result = [];
                             for(var i=0;i<incidencia.length;i++){
@@ -962,21 +899,7 @@ export class FiltreportComponent implements OnInit {
                         }
                     }else if(this.status == 1){
                         if(incidencia.length == 0){
-                            this.bitacoraService.getOpenDate(year1, month1, day1, year2, month2, day2).then(
-                                success => {
-                                    this.reportes = success;
-                                    this.data = this.reportes.data;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    };
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
+                            this.data = [];
                         }else{
                             var result = [];
                             for(var i=0;i<incidencia.length;i++){
@@ -1000,21 +923,7 @@ export class FiltreportComponent implements OnInit {
                         }
                     }else if(this.status == 2){
                         if(incidencia.length == 0){
-                            this.bitacoraService.getCloseDate(year1, month1, day1, year2, month2, day2).then(
-                                success => {
-                                    this.reportes = success;
-                                    this.data = this.reportes.data;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    };
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
+                            this.data = [];
                         }else{
                             var result = [];
                             for(var i=0;i<incidencia.length;i++){
@@ -1041,129 +950,15 @@ export class FiltreportComponent implements OnInit {
             }
         }
 
-        //guardias
-        if(this.filtroSelect == 1){
+        // guardias
+        if(this.filtroSelect == 2){
             if(this.desde2 == ""){
-                if(this.status == 0){
-                    if(guardia.length == 0){
-                        // this.getAll();
-                    }else{
-                        var result = [];
-                        for(var i=0;i<guardia.length;i++){
-                            this.bitacoraService.getByGuardiaAll(guardia[i].item_id).then(
-                                success => {
-                                    this.reportes = success;
-                                    result = result.concat(this.reportes.data);
-                                    this.data = result;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    };
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
-                        }
-                    }
-                }else if(this.status == 1){
-                    if(guardia.length == 0){
-                        this.bitacoraService.getOpenAll().then(
-                            success => {
-                                this.reportes = success;
-                                this.data = this.reportes.data;
-                                for(var i=0; i<this.data.length; i++){
-                                    this.data[i].id = Number(this.data[i].id);
-                                };
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
-                    }else{
-                        var result = [];
-                        for(var i=0;i<guardia.length;i++){
-                            this.bitacoraService.getByGuardiaOpen(guardia[i].item_id).then(
-                                success => {
-                                    this.reportes = success;
-                                    result = result.concat(this.reportes.data);
-                                    this.data = result;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    };
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
-                        }
-                    }
-                }else if(this.status == 2){
-                    if(guardia.length == 0){
-                        this.bitacoraService.getCloseAll().then(
-                            success => {
-                                this.reportes = success;
-                                this.data = this.reportes.data;
-                                for(var i=0; i<this.data.length; i++){
-                                    this.data[i].id = Number(this.data[i].id);
-                                };
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
-                    }else{
-                        var result = [];
-                        for(var i=0;i<guardia.length;i++){
-                            this.bitacoraService.getByGuardiaClose(guardia[i].item_id).then(
-                                success => {
-                                    this.reportes = success;
-                                    result = result.concat(this.reportes.data);
-                                    this.data = result;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    };
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
-                        }
-                    }
-                }
+                this.data = [];
             }else{
                 if(this.rangeday2){
                     if(this.status == 0){
                         if(guardia.length == 0){
-                            this.bitacoraService.getByDate(year1, month1, day1, year1, month1, day1).then(
-                                success => {
-                                    this.reportes = success;
-                                    this.data = this.reportes.data;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    };
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
+                            this.data = [];
                         }else{
                             var result = [];
                             for(var i=0;i<guardia.length;i++){
@@ -1187,21 +982,7 @@ export class FiltreportComponent implements OnInit {
                         }
                     }else if(this.status == 1){
                         if(guardia.length == 0){
-                            this.bitacoraService.getOpenDate(year1, month1, day1, year1, month1, day1).then(
-                                success => {
-                                    this.reportes = success;
-                                    this.data = this.reportes.data;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    };
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
+                            this.data = [];
                         }else{
                             var result = [];
                             for(var i=0;i<guardia.length;i++){
@@ -1225,21 +1006,7 @@ export class FiltreportComponent implements OnInit {
                         }
                     }else if(this.status == 2){
                         if(guardia.length == 0){
-                            this.bitacoraService.getCloseDate(year1, month1, day1, year1, month1, day1).then(
-                                success => {
-                                    this.reportes = success;
-                                    this.data = this.reportes.data;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    };
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
+                            this.data = [];
                         }else{
                             var result = [];
                             for(var i=0;i<guardia.length;i++){
@@ -1265,21 +1032,7 @@ export class FiltreportComponent implements OnInit {
                 }else{
                     if(this.status == 0){
                         if(guardia.length == 0){
-                            this.bitacoraService.getByDate(year1, month1, day1, year2, month2, day2).then(
-                                success => {
-                                    this.reportes = success;
-                                    this.data = this.reportes.data;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    };
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
+                            this.data = [];
                         }else{
                             var result = [];
                             for(var i=0;i<guardia.length;i++){
@@ -1303,21 +1056,7 @@ export class FiltreportComponent implements OnInit {
                         }
                     }else if(this.status == 1){
                         if(guardia.length == 0){
-                            this.bitacoraService.getOpenDate(year1, month1, day1, year2, month2, day2).then(
-                                success => {
-                                    this.reportes = success;
-                                    this.data = this.reportes.data;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    };
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
+                            this.data = [];
                         }else{
                             var result = [];
                             for(var i=0;i<guardia.length;i++){
@@ -1341,21 +1080,7 @@ export class FiltreportComponent implements OnInit {
                         }
                     }else if(this.status == 2){
                         if(guardia.length == 0){
-                            this.bitacoraService.getCloseDate(year1, month1, day1, year2, month2, day2).then(
-                                success => {
-                                    this.reportes = success;
-                                    this.data = this.reportes.data;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    };
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
+                            this.data = [];
                         }else{
                             var result = [];
                             for(var i=0;i<guardia.length;i++){
@@ -1482,14 +1207,14 @@ export class FiltreportComponent implements OnInit {
                 resolve = 'Abierto';
             }
             excel.push({
-                'Puesto' : this.data[i].stand_name,
+                'Puesto' : this.data[i].watch.stand_name,
                 'Título': this.data[i].title,
                 'Observación': this.data[i].observation,
                 'Fecha': this.data[i].create_date,
                 'Estado': resolve
             });
             body.push([
-                this.data[i].stand_name,
+                this.data[i].watch.stand_name,
                 this.data[i].title,
                 this.data[i].observation,
                 this.data[i].create_date,
@@ -1568,11 +1293,17 @@ export class FiltreportComponent implements OnInit {
         var fecha = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
         doc.text('Reporte Abierto', 15, 27)
         doc.text('Hora de impresión: ' + fecha, 15, 34);
-        //inserting data
+        // inserting data
         doc.setTextColor(0);
-        doc.setFontType("bold");
+        doc.setFontType('bold');
+        doc.text('Fecha de creación: ', 15, 43);
+        doc.setFontType('normal');
+        doc.text(this.report.create_date, 58, 43);
+
+        doc.setTextColor(0);
+        doc.setFontType('bold');
         doc.text('Incidencia: ', 15, 50);
-        doc.setFontType("normal");
+        doc.setFontType('normal');
         doc.text(this.report.title, 42, 50);
 
         doc.setFontType("bold");
@@ -1617,25 +1348,25 @@ export class FiltreportComponent implements OnInit {
         doc.setFontType("bold");
         doc.text('Nombre: ', 15, 91 + extraTop);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_name, 34, 91 + extraTop);
+        doc.text(this.report.watch.guard.name, 34, 91 + extraTop);
         doc.setFontType("bold");
         doc.text('Apellido: ', 100, 91 + extraTop);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_lastname, 123, 91 + extraTop);
+        doc.text(this.report.watch.guard.lastname, 123, 91 + extraTop);
 
         doc.setFontType("bold");
         doc.text('Cédula: ', 15, 98 + extraTop);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_dni, 34, 98 + extraTop);
+        doc.text(this.report.watch.guard.dni, 34, 98 + extraTop);
         doc.setFontType("bold");
         doc.text('Correo: ', 100, 98 + extraTop);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_email, 119, 98 + extraTop);
+        doc.text(this.report.watch.guard.email, 119, 98 + extraTop);
 
         doc.setFontType("bold");
         doc.text('Puesto: ', 15, 105 + extraTop);
         doc.setFontType("normal");
-        doc.text(this.report.watch.guard_email, 34, 105 + extraTop);
+        doc.text(this.report.watch.stand_name, 34, 105 + extraTop);
         doc.line(10, 112 + extraTop, 200, 112 + extraTop);
         for (var i = 0; i < this.coment.length; i++) {
             doc.setFontType("bold");
@@ -1699,13 +1430,33 @@ export class FiltreportComponent implements OnInit {
 
     excelDetalle() {
         var excel = [];
-        excel = [{'Incidencia' : this.report.title, 'Observacion' : this.report.observation, 'Latitud': this.report.latitude.toString(), 'Longitud':this.report.longitude.toString()}];
-        excel.push({'Incidencia':'Guardia'});
-        excel.push({'Incidencia':'Nombre', 'Observacion':'Apellido', 'Latitud':'Cédula', 'Longitud':'Correo'});
-        excel.push({'Incidencia':this.report.watch.guard_name, 'Observacion':this.report.watch.guard_lastname, 'Latitud':this.report.watch.guard_dni, 'Longitud':this.report.watch.guard_email});
-        excel.push({'Incidencia':'Comentarios'});
-        for(var i=0; i < this.coment.length; i++){
-            excel.push({'Incidencia':this.coment[i].text, 'Observacion':this.coment[i].user_name});
+        excel = [{
+            'Incidencia' : this.report.title,
+            'Observacion' : this.report.observation,
+            'Latitud': this.report.latitude.toString(),
+            'Longitud': this.report.longitude.toString(),
+            'Fecha': this.report.create_date
+        }];
+        excel.push({
+            'Incidencia': 'Guardia'
+        });
+        excel.push({
+            'Incidencia': 'Nombre',
+            'Observacion': 'Apellido',
+            'Latitud': 'Cédula',
+            'Longitud': 'Correo'});
+        excel.push({
+            'Incidencia': this.report.watch.guard.name,
+            'Observacion': this.report.watch.guard.lastname,
+            'Latitud': this.report.watch.guard.dni,
+            'Longitud': this.report.watch.guard.email});
+        excel.push({
+            'Incidencia': 'Comentarios'
+        });
+        for(var i=0; i < this.coment.length; i++) {
+            excel.push({
+                'Incidencia': this.coment[i].text,
+                'Observacion': this.coment[i].user_name});
         }
         this.excelService.exportAsExcelFile(excel, 'reporteabiertodetail');
     }

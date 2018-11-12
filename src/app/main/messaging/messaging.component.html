@@ -56,8 +56,8 @@
                                 <li class="list-group-item group-card no-active_chat" [ngClass]="{active_chat: channel.active}" (click)="openChannel(channel)">
                                     <div style="display: flex; align-items: start">
                                         <div style="width: auto;">
-                                            <a class="btn buttonContact" style="margin: 0; padding: 0; line-height: 1rem">{{channel.channel_name}}</a>
-                                            <a class="btn buttonContact" style="font-size: 0.9rem; color: gray; margin: 0; padding: 0;">{{channel.channel_update_at | relativeTime}}</a>
+                                            <a class="btn buttonContact" style="margin: 0; padding: 0; line-height: 1rem">{{channel.channel.name}}</a>
+                                            <a class="btn buttonContact" style="font-size: 0.9rem; color: gray; margin: 0; padding: 0;">{{channel.channel.update_at | relativeTime}}</a>
                                         </div>
                                         <a class="btn btn-danger fas fa-user-plus" data-toggle="modal" href="#add{{channel.channel_id}}" (click)="getUsers(); filterValue = ''" title="Agregar Usuarios" style="padding: 12px"></a>
                                         <a class="btn btn-primary fa fa-eye" data-toggle="modal" href="#see{{channel.channel_id}}" (click)="viewGroupMembers(channel.channel_id)" title="Ver miembros" style="padding: 12px; margin-left: 5px"></a>

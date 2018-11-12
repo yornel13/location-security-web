@@ -1,72 +1,85 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-
-import { catchError, tap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
-import {WatchList} from './watch.list';
-
-const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
+import {AuthenticationService} from '../../app/_services';
 
 @Injectable()
 export class WatchesService {
 
     private WATCH_URL = environment.BASIC_URL + '/watch';
-    private activePath = '/active/1';
-    constructor (private http: HttpClient) {}
 
-    getWatchesActive(): Observable<WatchList> {
-        return this.http.get<WatchList>(this.WATCH_URL + this.activePath);
-    }
+
+    constructor (
+        private http: HttpClient,
+        private authService: AuthenticationService) {}
 
     getAll() {
-        return this.http.get(this.WATCH_URL).toPromise()
-            .then((response) => response);
+        return this.http.get(this.WATCH_URL,
+            {
+                headers: this.authService.getHeader()
+            })
+            .toPromise().then((response) => response);
     }
 
     getActive() {
-        return this.http.get(this.WATCH_URL + '/active/1').toPromise()
-            .then((response) => response);
+        return this.http.get(this.WATCH_URL + '/active/1',
+            {
+                headers: this.authService.getHeader()
+            })
+            .toPromise().then((response) => response);
     }
 
     getActiveByGuard(id) {
-        return this.http.get(this.WATCH_URL + '/guard/' + id + '/active/1').toPromise()
-            .then((response) => response);
+        return this.http.get(this.WATCH_URL + '/guard/' + id + '/active/1',
+            {
+                headers: this.authService.getHeader()
+            })
+            .toPromise().then((response) => response);
     }
 
     getByGuard(id) {
-        return this.http.get(this.WATCH_URL + '/guard/' + id).toPromise()
-            .then((response) => response);
+        return this.http.get(this.WATCH_URL + '/guard/' + id,
+            {
+                headers: this.authService.getHeader()
+            })
+            .toPromise().then((response) => response);
     }
 
     getByDate(year, month, day, year1, month1, day1) {
-        return this.http.get(this.WATCH_URL + '/date/' + year + '/' + month + '/' + day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
-            .then((response) => response);
+        return this.http.get(this.WATCH_URL
+            + '/date/' + year + '/' + month + '/' + day
+            + '/to/' + year1 + '/' + month1 + '/' + day1,
+            {
+                headers: this.authService.getHeader()
+            })
+            .toPromise().then((response) => response);
     }
 
     getByGuardDate(id, year, month, day, year1, month1, day1) {
-        return this.http.get(this.WATCH_URL + '/guard/' + id + '/date/' + year + '/' + month + '/' + day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
-            .then((response) => response);
+        return this.http.get(this.WATCH_URL + '/guard/' + id
+            + '/date/' + year + '/' + month + '/' + day
+            + '/to/' + year1 + '/' + month1 + '/' + day1,
+            {
+                headers: this.authService.getHeader()
+            })
+            .toPromise().then((response) => response);
     }
 
     getByStandDate(id, year, month, day, year1, month1, day1) {
-        return this.http.get(this.WATCH_URL + '/stand/' + id + '/date/' + year + '/' + month + '/' + day+'/to/'+year1+'/'+month1+'/'+day1).toPromise()
-            .then((response) => response);
+        return this.http.get(this.WATCH_URL + '/stand/' + id
+            + '/date/' + year + '/' + month + '/' + day
+            + '/to/' + year1 + '/' + month1 + '/' + day1,
+            {
+                headers: this.authService.getHeader()
+            })
+            .toPromise().then((response) => response);
     }
 
-    getById(id){
-        return this.http.get(this.WATCH_URL + '/' + id).toPromise()
-            .then((response) => response);
-    }
-
-    private handleError<T> (operation = 'operation', result?: T) {
-        return (error: any): Observable<T> => {
-            console.error(error);
-            return of(result as T);
-        };
-    }
-
-    private log(message: string) {
-        console.log('WatchesService: ' + message);
+    getById(id) {
+        return this.http.get(this.WATCH_URL + '/' + id,
+            {
+                headers: this.authService.getHeader()
+            })
+            .toPromise().then((response) => response);
     }
 }

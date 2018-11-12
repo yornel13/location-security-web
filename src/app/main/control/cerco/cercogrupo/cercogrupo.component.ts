@@ -1,8 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {GrupoService} from '../../../../../model/grupos/grupo.service';
 import {Grupos} from '../../../../../model/grupos/grupos';
 import {VehiclesService} from '../../../../../model/vehicle/vehicle.service';
 import {CercoService} from '../../../../../model/cerco/cerco.service';
+import {GlobalOsm} from '../../../../global.osm';
+import * as L from 'leaflet';
 
 export class VechicleS {
     id: number;
@@ -36,16 +38,31 @@ export class CercogrupoComponent {
     cerc = {id: [], name: []};
     filterValue: string;
 
-
+    layersControlOptions;
+    baseLayers;
+    options;
+    zoom: number;
+    map: L.Map;
+    editableLayers;
+    groupsPolygons: any = [];
+    center = L.latLng(([ -2.071522, -79.607105 ]));
 
     @ViewChild('vehicleChecked') vehicleChecked: any;
 
-    constructor(private grupoService: GrupoService, private vehiclesService:VehiclesService, private cercoService: CercoService) {
+    constructor(
+            private grupoService: GrupoService,
+            private vehiclesService: VehiclesService,
+            private cercoService: CercoService,
+            private globalOSM: GlobalOsm) {
         this.getAll();
-
+        this.layersControlOptions = this.globalOSM.layersOptions;
+        this.baseLayers = this.globalOSM.baseLayers;
+        this.options = this.globalOSM.defaultOptions;
+        this.zoom = this.globalOSM.zoom;
+        this.regresar();
     }
 
-    getAll(){
+    getAll() {
         this.grupoService.getAll().then(
             success => {
                 this.grupos = success;
@@ -60,14 +77,14 @@ export class CercogrupoComponent {
         );
     }
 
-    guardarGrupo(){
-        const savegrupo : Grupos = {
+    guardarGrupo() {
+        const savegrupo: Grupos = {
             name: this.newname
-        }
+        };
         this.grupoService.add(savegrupo).then(
             success => {
                 this.getAll();
-                this.newname = "";
+                this.newname = '';
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -78,7 +95,7 @@ export class CercogrupoComponent {
         );
     }
 
-    deleteGrupo(id){
+    deleteGrupo(id) {
         this.grupoService.delete(id).then(
             success => {
                 this.getAll();
@@ -92,11 +109,11 @@ export class CercogrupoComponent {
         );
     }
 
-    editGrupo(grupo){
-        const editgrupo : Grupos = {
+    editGrupo(grupo) {
+        const editgrupo: Grupos = {
             id: grupo.id,
             name: this.editname
-        }
+        };
         this.grupoService.set(editgrupo).then(
             success => {
                 this.getAll();
@@ -110,16 +127,49 @@ export class CercogrupoComponent {
         );
     }
 
-    setName(nombre){
+    setBoundsToMap(bounds: any[]) {
+        const polygons = [];
+        const editableLayers = new L.FeatureGroup();
+        let zoomBound: L.LatLngBounds = null;
+        bounds.forEach(cerco => {
+            const coors = JSON.parse(cerco.points);
+            this.map.addLayer(editableLayers);
+            const polygon = L.polygon([[]]).setLatLngs(coors);
+            polygon.options.color = cerco.color;
+            editableLayers.addLayer(polygon);
+            polygons.push(polygon);
+            if (zoomBound == null) {
+                zoomBound = new L.LatLngBounds(coors);
+            } else {
+                zoomBound.extend(coors);
+            }
+        });
+        this.groupsPolygons.push({ id: 1, editableLayers: editableLayers});
+        /*** Zoom & Center ***/
+        if (zoomBound != null && this.map !== undefined) {
+            this.map.fitBounds(zoomBound);
+            this.center = L.latLng(([ zoomBound.getCenter().lat, zoomBound.getCenter().lng ]));
+        }
+    }
+
+    onMapReady(map: L.Map) {
+        this.map = map;
+        this.globalOSM.setupLayer(this.map);
+    }
+
+    setName(nombre) {
         this.editname = nombre;
     }
 
-    regresar(){
+    regresar() {
         this.detalle = false;
         this.lista = true;
+        if (this.map !== undefined) {
+            this.map.remove();
+        }
     }
 
-    getGrupo(grupo){
+    getGrupo(grupo) {
         this.detalle = true;
         this.lista = false;
         this.editname = grupo.name;
@@ -128,16 +178,17 @@ export class CercogrupoComponent {
         this.loadCercosListModal();
     }
 
-    getCercosInBound(id){
+    getCercosInBound(id) {
         this.grupoService.getCercoGrupo(id).then(
             success => {
                 this.cercosb = success;
                 this.cercosbuound = this.cercosb.data;
                 console.log(this.cercosbuound);
+                this.setBoundsToMap(this.cercosbuound);
             });
     }
 
-    loadCercosListModal(){
+    loadCercosListModal() {
         this.cercoService.getAll().then(
             success => {
                 this.cercos = success;
@@ -150,23 +201,6 @@ export class CercogrupoComponent {
                 }
             }
         );
-    }
-
-    getCercosByChecked(cerco) {
-        const index = this.cerc.id.indexOf(cerco.id);
-        if  (index > -1) {
-            this.cerc.id.splice(index, 1);
-            this.cerc.name.splice(index, 1);
-            console.log('se borro', cerco.id);
-
-        } else {
-            this.cerc.id.push(cerco.id);
-            this.cerc.name.push(cerco.name);
-            console.log('se agrego!', this.cerc.id);
-        }
-        this.cerc.id.forEach( data => {
-            console.log('cercos-> ', data);
-        });
     }
 
     addCercosToGrupo() {
@@ -192,7 +226,7 @@ export class CercogrupoComponent {
             });
     }
 
-    deleteCerco(id){
+    deleteCerco(id) {
         this.grupoService.deleteCercoGrupo(id)
             .then( sucess => {
                 this.getCercosInBound(this.editid);

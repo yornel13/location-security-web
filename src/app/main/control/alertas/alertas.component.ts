@@ -13,6 +13,7 @@ import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firesto
 import {PopupAlertComponent} from '../../monitoring/map/popup.alert.component';
 import {GlobalOsm} from '../../../global.osm';
 import {UtilsVehicles} from '../../../../model/vehicle/vehicle.utils';
+import {environment} from '../../../../environments/environment';
 
 
 @Component({
@@ -33,8 +34,7 @@ export class AlertasComponent implements OnInit {
     cuase:any = [];
     detailcause: Alerta;
     //filtros
-    filtroSelect:number = 0;
-    causaSelect:number = 0;
+    causaSelect = 5;
     causaElegida:string = "ALL";
     guardiaSelect:number = 0;
     filtro:boolean = true;
@@ -50,7 +50,7 @@ export class AlertasComponent implements OnInit {
     info: any = [];
 
     key: string = 'id'; //set default
-    reverse: boolean = true;
+    reverse: boolean = false;
 
     //map
     map: any;
@@ -96,7 +96,8 @@ export class AlertasComponent implements OnInit {
         this.options = this.globalOSM.defaultOptions;
         this.getGuardias();
         this.setupDropdown();
-        this.getToday();
+        this.putTodayFecha();
+        this.getAlerts();
         this.doughnutChartData = [3, 3, 0];
         this.regresar();
 
@@ -120,7 +121,8 @@ export class AlertasComponent implements OnInit {
                 "value": this.valores[2]
             }]
         };
-        this.alertCollection = db.collection<Alerta>('alerts');
+        this.alertCollection = db.collection<Alerta>(environment.ALERTS_PATH);
+        this.sort('create_date');
     }
 
     onMapReady(map: L.Map) {
@@ -228,8 +230,20 @@ export class AlertasComponent implements OnInit {
                         cause = "General";
                     }
 
-                    excel.push({'#' : this.data[i].id, 'Causa': cause, 'Descripción':this.data[i].message, 'Generado por':this.data[i].guard_name+' '+this.data[i].guard_lastname, 'Fecha':this.data[i].create_date, 'Status':status})
-                    body.push([this.data[i].id, cause, this.data[i].message, this.data[i].guard_name+' '+this.data[i].guard_lastname, this.data[i].create_date, status]);
+                    excel.push({
+                        '#' : this.data[i].id,
+                        'Causa': cause,
+                        'Descripción': this.data[i].message,
+                        'Generado por': this.data[i].guard ? this.data[i].guard.name + ' ' + this.data[i].guard.lastname : '',
+                        'Fecha': this.data[i].create_date,
+                        'Status': status
+                    });
+                    body.push([
+                        this.data[i].id,
+                        cause,
+                        this.data[i].message,
+                        this.data[i].guard ? this.data[i].guard.name + ' ' + this.data[i].guard.lastname : '',
+                        this.data[i].create_date, status]);
                 }
                 this.contpdf = body;
                 this.info = excel;
@@ -241,6 +255,28 @@ export class AlertasComponent implements OnInit {
                 }
             }
         );
+    }
+
+    putTodayFecha() {
+        var d = new Date();
+        var day = d.getDate();
+        var month = d.getMonth()+1;
+        var year = d.getFullYear();
+
+        if(day < 10){
+            this.day2 = "0"+day;
+        }else{
+            this.day2 = day;
+        }
+
+        if(month < 10){
+            this.month2 = "0"+month;
+        }else{
+            this.month2 = month;
+        }
+
+        this.date = year+"-"+this.month2+"-"+this.day2;
+        this.desde =this.date;
     }
 
     getToday(){
@@ -349,7 +385,7 @@ export class AlertasComponent implements OnInit {
         this.getAlerts();
     }
 
-    onItemDeSelect(item:any){
+    onItemDeSelect(item:any) {
         this.getAlerts();
     }
 
@@ -369,12 +405,14 @@ export class AlertasComponent implements OnInit {
         };
     }
 
-
-    solveAlert(id) {
-        this.alertaService.solveAlert(id).then(
-            success => {
-                this.alertCollection.doc(String(id)).update({'status': 0}).then();
-                this.getAlerts();
+    solveAlert(alert: Alerta) {
+        this.alertaService.solveAlert(alert.id).then(
+            (success: any) => {
+                this.alertCollection.doc(String(alert.id)).update({'status': 0}).then();
+                alert.status = success.result.status;
+                if (this.lista) {
+                    this.getAlerts();
+                }
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -727,12 +765,14 @@ export class AlertasComponent implements OnInit {
                 cause = 'Salida del cerco';
             } else if (this.data[i].cause === 'GENERAL') {
                 cause = 'General';
+            } else if (this.data[i].cause === 'INCIDENCE') {
+                cause = 'Incidencia';
             }
             excel.push({
                 '#' : this.data[i].id,
                 'Causa': cause,
                 'Descripción': this.data[i].message,
-                'Generado por': (this.data[i].guard_name ? this.data[i].guard_name + ' ' + this.data[i].guard_lastname : ''),
+                'Generado por': (this.data[i].guard ? this.data[i].guard.name + ' ' + this.data[i].guard.lastname : ''),
                 'Fecha': this.data[i].create_date,
                 'Status': status,
             });
@@ -740,7 +780,7 @@ export class AlertasComponent implements OnInit {
                 this.data[i].id,
                 cause,
                 this.data[i].message,
-                this.data[i].guard_name ? this.data[i].guard_name + ' ' + this.data[i].guard_lastname : '',
+                this.data[i].guard ? this.data[i].guard.name + ' ' + this.data[i].guard.lastname : '',
                 this.data[i].create_date
             ]);
         }

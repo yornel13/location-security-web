@@ -17,13 +17,14 @@ export class GlobalOsm {
     readonly SOS1 = 'SOS1';
     readonly INCIDENCE_LEVEL_1 = 'INCIDENCE_LEVEL_1';
     readonly INCIDENCE_LEVEL_2 = 'INCIDENCE_LEVEL_2';
+    readonly maxZoom: number = 19;
 
     readonly LAYER_OSM = {
         id: 'openstreetmap',
         name: 'Open Street Map',
         enabled: false,
         layer: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
+            maxZoom: this.maxZoom,
             detectRetina: true,
             attribution: 'Open Street Map'
         })
@@ -33,7 +34,7 @@ export class GlobalOsm {
         name: 'Mapa Valdez',
         enabled: false,
         layer: L.tileLayer('https://maps.location-world.com/GlobalWMA/{z}/{x}/{y}.png?token=01EC469EB5F64D8DA878042400D3CBA2', {
-            maxZoom: 19,
+            maxZoom: this.maxZoom,
             detectRetina: true,
             attribution: 'Mapa Valdez'
         })
@@ -43,7 +44,7 @@ export class GlobalOsm {
         name: 'Google Street Map',
         enabled: false,
         layer: L.tileLayer('http://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-            maxZoom: 19,
+            maxZoom: this.maxZoom,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
             attribution: 'Google Street Map'
         })
@@ -53,7 +54,7 @@ export class GlobalOsm {
         name: 'Google Satellite Map',
         enabled: false,
         layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-            maxZoom: 19,
+            maxZoom: this.maxZoom,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
             attribution: 'Google Satellite Map'
         })
@@ -63,7 +64,7 @@ export class GlobalOsm {
         name: 'Google Terrain Map',
         enabled: false,
         layer: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-            maxZoom: 19,
+            maxZoom: this.maxZoom,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
             attribution: 'Google Terrain Map'
         })
@@ -78,13 +79,13 @@ export class GlobalOsm {
 
     readonly layersOptions = { position: 'bottomright' };
 
-    readonly zoom = 12;
-    readonly fullZoom = 18;
+    readonly zoom: number = 12;
+    readonly fullZoom: number = 18;
 
     readonly center = L.latLng(([ -2.134040, -79.594146 ]));
 
     readonly defaultOptions = {
-        zoom: 12,
+        zoom: this.zoom,
         center: L.latLng(([ -2.134040, -79.594146 ])),
         editable: true
     };
@@ -120,7 +121,7 @@ export class GlobalOsm {
 
     setupLayer(map: L.Map) {
         L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
+            maxZoom: this.maxZoom,
             detectRetina: true,
             attribution: 'Open Street Map'
         }).addTo(map);

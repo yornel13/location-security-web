@@ -42,16 +42,17 @@
             <div class="form-group row">
                 <label class="mr-2"><b>Filtrar por:</b></label>
                 <select id="inputState" class="form-control-sm mr-2" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
-                    <option [ngValue]="0">Vehículo</option>
-                    <option [ngValue]="1">Guardia</option>
-                    <option [ngValue]="2">Visitante</option>
-                    <option [ngValue]="3">Funcionario</option>
+                    <option [ngValue]="0">Sin filtrar</option>
+                    <option [ngValue]="1">Vehículo</option>
+                    <option [ngValue]="2">Guardia</option>
+                    <option [ngValue]="3">Visitante</option>
+                    <option [ngValue]="4">Funcionario</option>
                 </select>
                 <!--<select id="inputState" class="form-control-sm mr-2" [(ngModel)]="vehiculoSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="filtro == 1">
                   <option [ngValue]="0">Todos</option>
                   <option *ngFor="let v of vehi" [ngValue]="v.id">{{v.plate}}</option>
                 </select>-->
-                <ng-multiselect-dropdown *ngIf="filtro == 1" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
+                <ng-multiselect-dropdown *ngIf="filtroSelect == 1" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
                                          [placeholder]="'Selección de Vehículos'"
                                          [data]="dropdownList1"
                                          [(ngModel)]="selectedVehiculos"
@@ -65,7 +66,7 @@
                   <option [ngValue]="0">Guardias</option>
                   <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
                 </select>-->
-                <ng-multiselect-dropdown *ngIf="filtro == 2" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
+                <ng-multiselect-dropdown *ngIf="filtroSelect == 2" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
                                          [placeholder]="'Selección de Guardias'"
                                          [data]="dropdownList2"
                                          [(ngModel)]="selectedGuardias"
@@ -79,7 +80,7 @@
                   <option [ngValue]="0">Visitantes</option>
                   <option *ngFor="let i of visit" [ngValue]="i.id">{{i.name}} {{i.lastname}}</option>
                 </select>-->
-                <ng-multiselect-dropdown *ngIf="filtro == 3" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
+                <ng-multiselect-dropdown *ngIf="filtroSelect == 3" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
                                          [placeholder]="'Selección de Visitantes'"
                                          [data]="dropdownList3"
                                          [(ngModel)]="selectedVisitantes"
@@ -93,7 +94,7 @@
                   <option [ngValue]="0">Funcionarios</option>
                   <option *ngFor="let f of funcio" [ngValue]="f.id">{{f.name}} {{f.lastname}}</option>
                 </select>-->
-                <ng-multiselect-dropdown *ngIf="filtro == 4" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
+                <ng-multiselect-dropdown *ngIf="filtroSelect == 4" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"
                                          [placeholder]="'Selección de Funcionarios'"
                                          [data]="dropdownList4"
                                          [(ngModel)]="selectedFuncionarios"
@@ -122,17 +123,17 @@
     <div class="table mt-2 container-fluid">
         <table class="table table-bordered">
             <thead class="thead-light">
-            <th (click)="sort('id')">ID
-                <span class="fas" *ngIf="key =='id'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            <th (click)="sort('stand_name')">Puesto
+                <span class="fas" *ngIf="key =='stand_name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
             </th>
-            <th (click)="sort('plate')">Placa Vehículo
-                <span class="fas" *ngIf="key =='plate'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            <th (click)="sort('vehicle.plate')">Placa Vehículo
+                <span class="fas" *ngIf="key =='vehicle.plate'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
             </th>
-            <th (click)="sort('visitor_name')">Visitante
-                <span class="fas" *ngIf="key =='visitor_name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            <th (click)="sort('visitor.name')">Visitante
+                <span class="fas" *ngIf="key =='visitor.name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
             </th>
-            <th (click)="sort('visitor_dni')">Cédula visitante
-                <span class="fas" *ngIf="key =='visitor_dni'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            <th (click)="sort('visitor.dni')">Cédula visitante
+                <span class="fas" *ngIf="key =='visitor.dni'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
             </th>
             <th (click)="sort('create_date')">Entrada
                 <span class="fas" *ngIf="key =='create_date'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
@@ -144,10 +145,10 @@
             </thead>
             <tbody>
             <tr *ngFor="let d of data | filter:filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
-                <td>{{d.id}}</td>
-                <td>{{d.plate}}</td>
-                <td>{{d.visitor_name}} {{d.visitor_lastname}}</td>
-                <td>{{d.visitor_dni}}</td>
+                <td>{{d.stand_name}}</td>
+                <td>{{d.vehicle.plate}}</td>
+                <td>{{d.visitor.name}} {{d.visitor.lastname}}</td>
+                <td>{{d.visitor.dni}}</td>
                 <td>{{d.create_date}}</td>
                 <td><span *ngIf="d.status != 1">{{d.finish_date}}</span><span *ngIf="d.status == 1">--</span></td>
                 <td>

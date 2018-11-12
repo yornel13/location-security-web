@@ -10,23 +10,20 @@ export class UtilsVehicles {
     }
 
     processVehicle(vehicle: Vehicle): Vehicle {
-        switch (vehicle.model_name) {
-            case 'Queclink GV300W_Ins':
-                if (vehicle.alias.search('MOVIL')) {
-                    vehicle.iconUrl = './assets/maps/water.png';
-                } else {
-                    vehicle.iconUrl = './assets/maps/truck.png';
-                }
-                break;
-            case 'Queclink GMT100N':
-                vehicle.iconUrl = './assets/maps/motorcycle.png';
-                break;
-            case 'GL300N':
-                vehicle.iconUrl = './assets/maps/cellphone.png';
-                break;
-            case 'GMT100':
-                vehicle.iconUrl = './assets/maps/motor-del.png';
-                break;
+        if (vehicle.model_name.includes('GV300W')) {
+            if (vehicle.alias.search('MOVIL')) {
+                vehicle.iconUrl = './assets/maps/water.png';
+            } else {
+                vehicle.iconUrl = './assets/maps/truck.png';
+            }
+        } else if (vehicle.model_name.includes('GMT100N')) {
+            vehicle.iconUrl = './assets/maps/motorcycle.png';
+        } else if (vehicle.model_name.includes('GL300N')) {
+            vehicle.iconUrl = './assets/maps/cellphone.png';
+        } else if (vehicle.model_name.includes('GMT100')) {
+            vehicle.iconUrl = './assets/maps/motor-del.png';
+        } else {
+            vehicle.iconUrl = './assets/maps/visitor.png';
         }
         return vehicle;
     }

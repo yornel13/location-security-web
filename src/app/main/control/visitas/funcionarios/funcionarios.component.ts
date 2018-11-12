@@ -6,6 +6,7 @@ import { Funcionario } from '../../../../../model/funcionarios/funcionario';
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { ExcelService } from '../../../../../model/excel/excel.services';
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-funcionarios',
@@ -52,7 +53,11 @@ export class FuncionariosComponent {
   key: string = 'id'; //set default
   reverse: boolean = true;
 
-  constructor(public router:Router, private funcionarioService:FuncionarioService, private excelService:ExcelService) { 
+  constructor(
+      public router:Router,
+      private funcionarioService:FuncionarioService,
+      private excelService:ExcelService,
+      private toastr: ToastrService) {
   	this.getAll();
     this.lista = true;
     this.detalle = false;
@@ -239,6 +244,8 @@ export class FuncionariosComponent {
                 if (error.status === 422) {
                     // on some data incorrect
                     this.errorDeleteData = true;
+                    this.toastr.info(error.error.message, 'Error',
+                        { positionClass: 'toast-bottom-center'});
                 } else {
                     // on general error
                     this.errorDelete = true;

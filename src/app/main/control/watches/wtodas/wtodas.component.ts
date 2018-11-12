@@ -18,29 +18,29 @@ import {PuestoService} from '../../../../../model/puestos/puestos.service';
     styleUrls: ['./wtodas.component.css']
 })
 export class WtodasComponent {
-    lista:boolean;
-    detalle:boolean;
-    watches:any = undefined;
-    data:any = undefined;
-    filter:string;
-    //filtro guardia
+    lista: boolean;
+    detalle: boolean;
+    watches: any = undefined;
+    data: any = undefined;
+    filter: string;
+    // filtro guardia
     guardias: any = [];
     guard: any = [];
     puestos: any[] = [];
     guardiaSelect = 0;
     puestoSelect = 0;
-    //filtro fecha
-    dateSelect:string = '';
-    valueDate:any = [];
-    guardia:any = [];
-    numElement:number = 10;
-    //exportaciones
-    contpdf:any = [];
+    // filtro fecha
+    dateSelect: string = '';
+    valueDate: any = [];
+    guardia: any = [];
+    numElement: number = 10;
+    // exportaciones
+    contpdf: any = [];
     info: any = [];
 
     filtroSelect = 0;
     key = 'id'; // set default
-    reverse = true;
+    reverse = false;
 
     //map
     map: any;
@@ -92,6 +92,7 @@ export class WtodasComponent {
         this.setupDropdown();
         this.lista = true;
         this.detalle = false;
+        this.sort('create_date');
     }
 
     onMapReady(map: L.Map) {
@@ -172,10 +173,21 @@ export class WtodasComponent {
                         status = "Activa";
                         this.data[i].update_date = "--";
                     }
-                    excel.push({'#' : this.data[i].id, 'Nombre del Guardia': this.data[i].guard_name+' '+this.data[i].guard_lastname, 'Cédula del Guardia':this.data[i].guard_dni, 'Hora de inicio':this.data[i].create_date, 'Hora de finalización':this.data[i].update_date, 'Status':status})
-                    body.push([this.data[i].id, this.data[i].guard_name+' '+this.data[i].guard_lastname, this.data[i].guard_dni, this.data[i].create_date, this.data[i].update_date, status]);
+                    excel.push({
+                        '#' : this.data[i].id,
+                        'Nombre del Guardia': this.data[i].guard.name + ' ' + this.data[i].guard.lastname,
+                        'Cédula del Guardia': this.data[i].guard.dni,
+                        'Hora de inicio': this.data[i].create_date,
+                        'Hora de finalización': this.data[i].update_date, 'Status': status
+                    });
+                    body.push([
+                        this.data[i].id,
+                        this.data[i].guard.name + ' ' + this.data[i].guard.lastname,
+                        this.data[i].guard.dni,
+                        this.data[i].create_date,
+                        this.data[i].update_date, status]);
                     this.data[i].id = Number(this.data[i].id);
-                    this.data[i].guard_dni = Number(this.data[i].guard_dni);
+                    this.data[i].guard.dni = Number(this.data[i].guard.dni);
                 }
                 this.contpdf = body;
                 this.info = excel;
@@ -506,16 +518,16 @@ export class WtodasComponent {
             }
             excel.push({
                 'Puesto' : this.data[i].stand_name,
-                'Nombre del Guardia': this.data[i].guard_name + ' ' + this.data[i].guard_lastname,
-                'Cédula del Guardia': this.data[i].guard_dni,
+                'Nombre del Guardia': this.data[i].guard.name + ' ' + this.data[i].guard.lastname,
+                'Cédula del Guardia': this.data[i].guard.dni,
                 'Hora de inicio': this.data[i].create_date,
-                'Hora de finalización': this.data[i].update_date === '0000-00-0000:00:00' ? '--' : this.data[i].update_date,
+                'Hora de finalización': this.data[i].update_date === '0000-00-0000:00:00' || this.data[i].update_date === null ? '--' : this.data[i].update_date,
                 'Estado': status
             });
             body.push([
                 this.data[i].stand_name,
-                this.data[i].guard_name + ' ' + this.data[i].guard_lastname,
-                this.data[i].guard_dni,
+                this.data[i].guard.name + ' ' + this.data[i].guard.lastname,
+                this.data[i].guard.dni,
                 this.data[i].create_date,
                 this.data[i].update_date,
                 status
@@ -632,20 +644,20 @@ export class WtodasComponent {
         doc.setFontType("bold");
         doc.text('Nombre: ', 15, 77);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard_name, 34, 77);
+        doc.text(this.guardia.guard.name, 34, 77);
         doc.setFontType("bold");
         doc.text('Apellido: ', 100, 77);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard_lastname, 123, 77);
+        doc.text(this.guardia.guard.lastname, 123, 77);
 
         doc.setFontType("bold");
         doc.text('Cédula: ', 15, 84);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard_dni, 34, 84);
+        doc.text(this.guardia.guard.dni, 34, 84);
         doc.setFontType("bold");
         doc.text('Correo: ', 100, 84);
         doc.setFontType("normal");
-        doc.text(this.guardia.guard_email, 119, 84);
+        doc.text(this.guardia.guard.email, 119, 84);
 
         doc.setFontType("bold");
         doc.text('Puesto: ', 15, 91);
@@ -685,7 +697,7 @@ export class WtodasComponent {
         excel = [{'Hora de inicio' : this.guardia.create_date, 'Hora de finalización' : time, 'Latitud': this.guardia.latitude.toString(), 'Longitud':this.guardia.longitude.toString()}];
         excel.push({'Hora de inicio':'Guardia'});
         excel.push({'Hora de inicio':'Nombre', 'Hora de finalización':'Apellido', 'Latitud':'Cédula', 'Longitud':'Correo'});
-        excel.push({'Hora de inicio':this.guardia.guard_name, 'Hora de finalización':this.guardia.guard_lastname, 'Latitud':this.guardia.guard_dni, 'Longitud':this.guardia.guard_email});
+        excel.push({'Hora de inicio':this.guardia.guard.name, 'Hora de finalización':this.guardia.guard.lastname, 'Latitud':this.guardia.guard.dni, 'Longitud':this.guardia.guard.email});
         this.excelService.exportAsExcelFile(excel, 'guardiadetail');
     }
 

@@ -3,6 +3,7 @@ import {AuthenticationService} from '../../_services';
 import {Router} from '@angular/router';
 import {Admin} from '../../../model/admin/admin';
 import {MessagingService} from '../../shared/messaging.service';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
     selector: 'app-header',
@@ -19,7 +20,8 @@ export class HeaderComponent implements OnInit {
     constructor(
         private authService: AuthenticationService,
         private router: Router,
-        private messagingService: MessagingService) { }
+        private messagingService: MessagingService,
+        private toastr: ToastrService) { }
 
     ngOnInit() {
         const admin: Admin = this.authService.getUser();
@@ -65,11 +67,24 @@ export class HeaderComponent implements OnInit {
         this.authService.logout().then(
             success => {
                 this.authService.cleanStore();
-                this.router.navigate(['/login']).then();
+                this.showToastExpire();
+                location.replace('/login');
+                // this.router.navigate(['/login']).then( on => {
+                //     location.replace('/login');
+                // });
             },
             error => {
                 this.authService.cleanStore();
-                this.router.navigate(['/login']).then();
+                this.showToastExpire();
+                location.replace('/login');
+                // this.router.navigate(['/login']).then(on => {
+                //     location.reload(true);
+                // });
             });
+    }
+
+    showToastExpire() {
+        this.toastr.info('Sesión Finalizada', 'Error',
+            { positionClass: 'toast-center-center'});
     }
 }

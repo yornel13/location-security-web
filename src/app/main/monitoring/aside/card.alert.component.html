@@ -18,7 +18,7 @@
         <p class="alert-title ps" *ngIf="alert.cause != 'GENERAL'">{{title}}</p>
         <div style="display: flex">
             <!--<button class="btn btn-warning" (click)="showAlert.emit(alert); $event.stopPropagation()" title="Ver alerta"><span class="fas fa-eye"></span></button>-->
-            <button class="btn btn-success" (click)="showAlert.emit(alert); $event.stopPropagation()" title="Aceptar alerta"><span class="fas fa-check"></span></button>
+            <button class="btn btn-success" (click)="solveAlert.emit(alert); $event.stopPropagation()" title="Aceptar alerta"><span class="fas fa-check"></span></button>
         </div>
     </div>
     <div class="card-body">

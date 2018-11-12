@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MainService} from '../../main.service';
-import {Record} from '../../../../model/historial/record';
 
 @Component({
     selector: 'app-card-record',

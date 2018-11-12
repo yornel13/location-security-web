@@ -6,70 +6,74 @@ import { Vvehiculo } from '../../../../../model/visitavehiculo/visitavehiculo';
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { ExcelService } from '../../../../../model/excel/excel.services';
+import {ToastrService} from "ngx-toastr";
 
 @Component({
-  selector: 'app-vehiculos',
-  templateUrl: './vehiculos.component.html',
-  styleUrls: ['./vehiculos.component.css']
+    selector: 'app-vehiculos',
+    templateUrl: './vehiculos.component.html',
+    styleUrls: ['./vehiculos.component.css']
 })
 export class VehiculosComponent {
-  //general
-  vehiculos:any = undefined;
-  data:any = undefined;
-  vehi:any = [];
-  //vistas vehiculos
-  lista:boolean;
-  detalle:boolean;
-  crear:boolean;
-  editar:boolean;
-  //editar
-  placa:string;
-  vehiculo:string;
-  modelo:string;
-  tipo:string;
-  idEdit:number;
-  errorEdit:boolean = false;
-  errorEditData:boolean = false;
-  errorEditMsg:string;
-  //eliminar
-  errorDelete:boolean = false;
-  errorDeleteData:boolean = false;
-  filter:string;
-  numElement:number = 10;
-  //exportaciones
-  contpdf:any = [];
-  info: any = [];
+    //general
+    vehiculos:any = undefined;
+    data:any = undefined;
+    vehi:any = [];
+    //vistas vehiculos
+    lista:boolean;
+    detalle:boolean;
+    crear:boolean;
+    editar:boolean;
+    //editar
+    placa:string;
+    vehiculo:string;
+    modelo:string;
+    tipo:string;
+    idEdit:number;
+    errorEdit:boolean = false;
+    errorEditData:boolean = false;
+    errorEditMsg:string;
+    //eliminar
+    errorDelete:boolean = false;
+    errorDeleteData:boolean = false;
+    filter:string;
+    numElement:number = 10;
+    //exportaciones
+    contpdf:any = [];
+    info: any = [];
 
-  key: string = 'id'; //set default
-  reverse: boolean = true;
+    key: string = 'id'; //set default
+    reverse: boolean = true;
 
-  constructor(public router:Router, private vehiculoService:VisitaVehiculoService, private excelService:ExcelService) {
-  	this.getAll();
-  	this.lista = true;
-    this.detalle = false;
-    this.crear = false;
-    this.editar = false;
-  }
+    constructor(public router:Router,
+                private vehiculoService:VisitaVehiculoService,
+                private excelService:ExcelService,
+                private toastr: ToastrService) {
+        this.getAll();
+        this.lista = true;
+        this.detalle = false;
+        this.crear = false;
+        this.editar = false;
+    }
 
-  sort(key){
-    this.key = key;
-    this.reverse = !this.reverse;
-  }
+    sort(key){
+        this.key = key;
+        this.reverse = !this.reverse;
+    }
 
-  getAll() {
-    	this.vehiculoService.getAll().then(
-    		success => {
-    			this.vehiculos = success;
-    			this.data = this.vehiculos.data;
-          var body = [];
-          var excel = [];
-          for(var i=0; i<this.data.length; i++){
-              this.data[i].id = Number(this.data[i].id);
-              excel.push({'#' : this.data[i].id, 'Placa': this.data[i].plate, 'Vehiculo':this.data[i].vehicle, 'Marca':this.data[i].model, 'Color':this.data[i].type})
-              body.push([this.data[i].id, this.data[i].plate, this.data[i].vehicle, this.data[i].model, this.data[i].type])
-          }
-          this.contpdf = body;
-          this.info = excel;
+    getAll() {
+        this.vehiculoService.getAll().then(
+            success => {
+                this.vehiculos = success;
+                this.data = this.vehiculos.data;
+                var body = [];
+                var excel = [];
+                for(var i=0; i<this.data.length; i++){
+                    this.data[i].id = Number(this.data[i].id);
+                    excel.push({'#' : this.data[i].id, 'Placa': this.data[i].plate, 'Vehiculo':this.data[i].vehicle, 'Marca':this.data[i].model, 'Color':this.data[i].type})
+                    body.push([this.data[i].id, this.data[i].plate, this.data[i].vehicle, this.data[i].model, this.data[i].type])
+                }
+                this.contpdf = body;
+                this.info = excel;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -80,14 +84,14 @@ export class VehiculosComponent {
         );
     }
 
-   viewDetail(id) {
-      this.vehiculoService.getId(id).then(
-        success => {
-          this.vehi = success;
-          this.lista = false;
-          this.detalle = true;
-          this.crear = false;
-          this.editar = false;
+    viewDetail(id) {
+        this.vehiculoService.getId(id).then(
+            success => {
+                this.vehi = success;
+                this.lista = false;
+                this.detalle = true;
+                this.crear = false;
+                this.editar = false;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -99,26 +103,26 @@ export class VehiculosComponent {
     }
 
     regresar() {
-      this.lista = true;
-      this.detalle = false;
-      this.crear = false;
-      this.editar = false;
-      this.errorEditData = false;
+        this.lista = true;
+        this.detalle = false;
+        this.crear = false;
+        this.editar = false;
+        this.errorEditData = false;
     }
 
     editarVisitVehiculo(id) {
-      this.vehiculoService.getId(id).then(
-        success => {
-          this.vehi = success;
-          this.placa = this.vehi.plate;
-          this.vehiculo = this.vehi.vehicle;
-          this.modelo = this.vehi.model;
-          this.tipo = this.vehi.type;
-          this.idEdit = this.vehi.id;
-          this.lista = false;
-          this.detalle = false;
-          this.crear = false;
-          this.editar = true;
+        this.vehiculoService.getId(id).then(
+            success => {
+                this.vehi = success;
+                this.placa = this.vehi.plate;
+                this.vehiculo = this.vehi.vehicle;
+                this.modelo = this.vehi.model;
+                this.tipo = this.vehi.type;
+                this.idEdit = this.vehi.id;
+                this.lista = false;
+                this.detalle = false;
+                this.crear = false;
+                this.editar = true;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -130,31 +134,31 @@ export class VehiculosComponent {
     }
 
     saveEdit() {
-      const editvehiculo : Vvehiculo = {
-        id: this.idEdit,
-        plate: this.placa,
-        model: this.modelo,
-        vehicle: this.vehiculo,
-        type: this.tipo
-      };
-      this.vehiculoService.set(editvehiculo).then(
-        success => {
-          this.getAll();
-          this.regresar();
-          this.errorEditData = false;
-          this.errorEdit = false;
+        const editvehiculo : Vvehiculo = {
+            id: this.idEdit,
+            plate: this.placa,
+            model: this.modelo,
+            vehicle: this.vehiculo,
+            type: this.tipo
+        };
+        this.vehiculoService.set(editvehiculo).then(
+            success => {
+                this.getAll();
+                this.regresar();
+                this.errorEditData = false;
+                this.errorEdit = false;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
                     console.log(error);
                     if(error.error.errors.plate){
-                      this.errorEditMsg = error.error.errors.plate[0];
+                        this.errorEditMsg = error.error.errors.plate[0];
                     }
                     if(error.error.errors.model){
-                      this.errorEditMsg = error.error.errors.model[0];
+                        this.errorEditMsg = error.error.errors.model[0];
                     }
                     if(error.error.errors.type){
-                      this.errorEditMsg = error.error.errors.type[0];
+                        this.errorEditMsg = error.error.errors.type[0];
                     }
                     this.errorEditData = true;
                 } else {
@@ -166,16 +170,17 @@ export class VehiculosComponent {
     }
 
     deleteVehiculo(id) {
-      this.vehiculoService.delete(id).then(
-        success => {
-          this.getAll();
-          this.regresar();
-          this.errorDeleteData = false;
-          this.errorDelete = false;
+        this.vehiculoService.delete(id).then(
+            success => {
+                this.getAll();
+                this.regresar();
+                this.errorDeleteData = false;
+                this.errorDelete = false;
             }, error => {
                 if (error.status === 422) {
-                    // on some data incorrect
                     this.errorDeleteData = true;
+                    this.toastr.info(error.error.message, 'Error',
+                        { positionClass: 'toast-bottom-center'});
                 } else {
                     // on general error
                     this.errorDelete = true;
@@ -199,13 +204,13 @@ export class VehiculosComponent {
             body: this.contpdf,
             startY: 41,
             columnStyles: {
-              0: {cellWidth: 18},
-              1: {cellWidth: 'auto'},
-              2: {cellWidth: 'auto'},
-              3: {cellWidth: 'auto'},
-              4: {cellWidth: 'auto'}
+                0: {cellWidth: 18},
+                1: {cellWidth: 'auto'},
+                2: {cellWidth: 'auto'},
+                3: {cellWidth: 'auto'},
+                4: {cellWidth: 'auto'}
             }
-        });   
+        });
         doc.save('vehiculos.pdf');
     }
 
@@ -228,13 +233,13 @@ export class VehiculosComponent {
             body: this.contpdf,
             startY: 41,
             columnStyles: {
-              0: {cellWidth: 18},
-              1: {cellWidth: 'auto'},
-              2: {cellWidth: 'auto'},
-              3: {cellWidth: 'auto'},
-              4: {cellWidth: 'auto'}
+                0: {cellWidth: 18},
+                1: {cellWidth: 'auto'},
+                2: {cellWidth: 'auto'},
+                3: {cellWidth: 'auto'},
+                4: {cellWidth: 'auto'}
             }
-        });   
+        });
         doc.autoPrint();
         window.open(doc.output('bloburl'), '_blank');
     }
@@ -287,17 +292,17 @@ export class VehiculosComponent {
         } else {
             doc.save('vehiculoDetail.pdf');
         }
-        
+
     }
 
     toDataURL = url => fetch(url)
-      .then(response => response.blob())
-      .then(blob => new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onloadend = () => resolve(reader.result)
-        reader.onerror = reject
-        reader.readAsDataURL(blob);
-      }));
+        .then(response => response.blob())
+        .then(blob => new Promise((resolve, reject) => {
+            const reader = new FileReader()
+            reader.onloadend = () => resolve(reader.result)
+            reader.onerror = reject
+            reader.readAsDataURL(blob);
+        }));
 
     printDetalle() {
         var doc = new jsPDF();
@@ -349,7 +354,7 @@ export class VehiculosComponent {
             doc.autoPrint();
             window.open(doc.output('bloburl'), '_blank');
         }
-        
+
     }
 
     excelDetalle() {

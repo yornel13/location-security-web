@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TabletService } from '../../../../../model/tablet/tablet.service';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
     selector: 'app-tablets',
@@ -12,8 +13,11 @@ export class TabletsComponent  {
     tablets: any;
     data: any[] = [];
     filter: string;
+    editAlias: string;
 
-    constructor(private tabletService: TabletService) {
+    constructor(
+            private tabletService: TabletService,
+            private toastr: ToastrService) {
         this.getAll();
     }
 
@@ -22,18 +26,11 @@ export class TabletsComponent  {
             success => {
                 this.tablets = success;
                 this.data = this.tablets.data;
-                this.data.forEach(tablet => {
-                    let id_string = '' + tablet.id;
-                    if (id_string.length === 1) {
-                        id_string = '00' + id_string;
-                    } else if (id_string.length === 2) {
-                        id_string = '0' + id_string;
-                    }
-                    tablet.alias = 'Tablet ' + id_string;
-                });
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
+                    this.toastr.info(error.error.message, 'Error',
+                        { positionClass: 'toast-bottom-center'});
                 } else {
                     // on general error
                 }
@@ -41,13 +38,19 @@ export class TabletsComponent  {
         );
     }
 
-    activarTablet(id){
+    setValues(tablet) {
+        this.editAlias = tablet.alias;
+    }
+
+    activarTablet(id) {
         this.tabletService.setStatus(id, 1).then(
             success => {
                 this.getAll();
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
+                    this.toastr.info(error.error.message, 'Error',
+                        { positionClass: 'toast-bottom-center'});
                 } else {
                     // on general error
                 }
@@ -55,13 +58,31 @@ export class TabletsComponent  {
         );
     }
 
-    desactivarTablet(id){
+    edit(id) {
+        this.tabletService.setAlias(id, this.editAlias).then(
+            success => {
+                this.getAll();
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                    this.toastr.info(error.error.message, 'Error',
+                        { positionClass: 'toast-bottom-center'});
+                } else {
+                    // on general error
+                }
+            }
+        );
+    }
+
+    desactivarTablet(id) {
         this.tabletService.setStatus(id, 0).then(
             success => {
                 this.getAll();
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
+                    this.toastr.info(error.error.message, 'Error',
+                        { positionClass: 'toast-bottom-center'});
                 } else {
                     // on general error
                 }
@@ -76,6 +97,8 @@ export class TabletsComponent  {
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
+                    this.toastr.info(error.error.message, 'Error',
+                        { positionClass: 'toast-bottom-center'});
                 } else {
                     // on general error
                 }

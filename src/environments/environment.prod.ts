@@ -1,8 +1,9 @@
 export const environment = {
-    production: false,
-    BASIC_URL: 'https://www.icsseseguridad.com/api/public',
-    // BASIC_URL: './api/public',
-    // BASIC_URL: 'http://icsseseguridad.com/test/public',
+    production: true,
+    BASIC_URL: './api/public', // production
+    ALERTS_PATH: 'alert',
+    // BASIC_URL: 'https://www.icsseseguridad.com/api/public', // test real url
+    // BASIC_URL: 'http://bitacoraseguridad.com/api/public', // test url
     firebase: {
         apiKey: 'AIzaSyAzFM4z3GoUE3pFiwpcUBSMm-6PxMNxxaQ',
         authDomain: 'icsseseguridad-6f751.firebaseapp.com',
@@ -11,4 +12,5 @@ export const environment = {
         storageBucket: 'icsseseguridad-6f751.appspot.com',
         messagingSenderId: '962881875237'
     },
-}
+    MONITORING_REFRESH_INTERVAL: 15000
+};

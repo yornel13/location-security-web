@@ -30,6 +30,7 @@
                 <td>
                     <a class="btn btn-info" *ngIf="tab.status == 0" (click)="activarTablet(tab.id)" style="display: inline-block; margin-right: 10px; width: 100px">Activar</a>
                     <a class="btn btn-secondary"  *ngIf="tab.status == 1" (click)="desactivarTablet(tab.id)" style="display: inline-block; margin-right: 10px;  width: 100px">Desactivar</a>
+                    <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="setValues(tab)" data-toggle="modal" href="#edit{{tab.id}}" title="Editar"><span class="fas fa-edit"></span></a>
                     <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{tab.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
                 </td>
                 <div class="modal" tabindex="-1" role="dialog" id="modal{{tab.id}}">
@@ -46,6 +47,29 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" (click)="deleteTablet(tab.id)" data-dismiss="modal">Eliminar</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Editar -->
+                <div class="modal" tabindex="-1" role="dialog" id="edit{{tab.id}}">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #ffc107; color: white;">
+                                <h5 class="modal-title">Editar Tablet</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="form-group mt-4 mb-4">
+                                <div style="margin-left: 15px" class="form-inline">
+                                    <label class="ml-1 mr-3"><b>Alias</b></label>
+                                    <input type="text" name="newname" class="form-control" placeholder="Ingrese un alias" [(ngModel)]="editAlias" style="width: 80%;">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-warning" (click)="edit(tab.id)" data-dismiss="modal">Guardar</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
                             </div>
                         </div>

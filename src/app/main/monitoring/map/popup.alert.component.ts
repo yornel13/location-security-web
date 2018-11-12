@@ -12,6 +12,8 @@ export class PopupAlertComponent implements OnInit {
     alert: Alerta;
     title: string;
     date: Date;
+    report: any = null;
+    reportIcon = './assets/alerts/report.png';
 
     constructor(private mapService: GlobalOsm) {}
 
@@ -36,6 +38,10 @@ export class PopupAlertComponent implements OnInit {
           this.title = 'Finalizacion de guardia';
         } else {
             this.title = 'Incidencia';
+        }
+        if (this.alert.cause === 'INCIDENCE') {
+            this.report = JSON.parse(this.alert.extra);
+        } else {
         }
         this.date = new Date(this.alert.create_date);
     }

@@ -33,7 +33,7 @@
                 <td>
                     <a class="btn btn-info" *ngIf="cerco.active == 0" (click)="activarAdmin(cerco.id)" style="display: inline-block; margin-right: 10px; width: 100px">Activar</a>
                     <a class="btn btn-secondary" *ngIf="cerco.active == 1" (click)="desactivarAdmin(cerco.id)" style="display: inline-block; margin-right: 10px;  width: 100px">Desactivar</a>
-                    <a class="btn btn-primary btn-xs" (click)="getVehiclesInBound(cerco)" style="display: inline-block; margin-right: 10px;" title="Map"><span class="far fa-eye"></span></a>
+                    <a class="btn btn-primary btn-xs" (click)="getVehiclesInBound(cerco)" style="display: inline-block; margin-right: 10px;" title="Ver"><span class="far fa-eye"></span></a>
                     <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editBound(cerco)" title="Editar"><span class="fas fa-edit"></span></a>
                     <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{cerco.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
                 </td>
@@ -193,12 +193,10 @@
                     </div>
                 </div>
                 <div class="form-group col " style="display: flex; justify-content: space-between">
-                    <div class="col-sm-5">
-                        <input type="text" name="searchString" class="form-control" placeholder="Buscar Vehículo" name="search" [(ngModel)]="filter">
-                    </div>
-                    <a class="btn btn-secondary" data-toggle="modal" href="#algo" style="background-color: #28a745; border: none; color: #fff" ><i class="fas fa-plus-circle mr-2"></i>Agregar vehiculo</a>
+                    <a class="btn btn-info ml-auto" data-toggle="modal" href="#tablet" (click)="filterValue = ''" style="border: none; color: #fff" ><i class="fas fa-plus-circle mr-2"></i>Agregar Tablet</a>
+                    <a class="btn btn-secondary" data-toggle="modal" href="#vehicle" style="background-color: #28a745; border: none; color: #fff; margin-left: 10px" ><i class="fas fa-plus-circle mr-2"></i>Agregar vehiculo</a>
                     <!--ADD VEHICLE MODAL -->
-                    <div class="modal"  tabindex="-1"  role="dialog" id="algo">
+                    <div class="modal"  tabindex="-1"  role="dialog" id="vehicle">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header" style="background-color: #c82333; color: white;">
@@ -245,8 +243,60 @@
                             </div>
                         </div>
                     </div>
+                    <!--ADD TABLET MODAL -->
+                    <div class="modal"  tabindex="-1"  role="dialog" id="tablet">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #c82333; color: white;">
+                                    <h5 class="modal-title">Añadir Tablets</h5>
+                                </div>
+                                <div class="modal-body scrolled">
+                                    <div style="display: flex; overflow: hidden">
+                                        <input style="margin-bottom: 8px" type="text" name="searchString" class="form-control" placeholder="Buscar" [(ngModel)]="filterValue">
+                                    </div>
+                                    <div class="add-vehicle-cont">
+                                        <table class="table table-bordered">
+                                            <thead class="thead-light">
+                                            <tr>
+                                                <th width="40px">*</th>
+                                                <th width="50px">ID</th>
+                                                <th>Alias</th>
+                                                <th>IMEI</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr *ngFor="let tabs of tabletsList | filter: filterValue"
+                                                (click)="tabs.checked = !tabs.checked"
+                                                style="cursor: pointer">
+                                                <td class="checkbox-vehicle">
+                                                    <input
+                                                            #tabletChecked
+                                                            type="checkbox"
+                                                            value="{{tabs.id}}"
+                                                            [(ngModel)]="tabs.checked"
+                                                            [ngModelOptions]="{standalone: true}"/>
+                                                </td>
+                                                <td>{{tabs.id}}</td>
+                                                <td>{{tabs.alias}}</td>
+                                                <td>{{tabs.imei}}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-success" (click)="addTabletToBound()" data-dismiss="modal">Guardar</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="table mt-2 container-fluid">
+                    <div><b>Vehiculos</b></div>
+                    <div class="col-sm-5" style="margin-left: -15px; margin-bottom: 8px">
+                        <input type="text" name="searchString" class="form-control" placeholder="Buscar Vehículo" name="search" [(ngModel)]="filter">
+                    </div>
                     <table class="table table-bordered">
                         <thead  class="thead-light">
                         <th>IMEI</th>
@@ -264,13 +314,13 @@
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header" style="background-color: #c82333; color: white;">
-                                            <h5 class="modal-title">Eliminar Cerco Virtual</h5>
+                                            <h5 class="modal-title">Eliminar</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <p>¿Está seguro que desea eliminar el cerco '{{''}}' ?</p>
+                                            <p>¿Está seguro que desea eliminar el vehiculo '{{vehicle.alias}}' del cerco?</p>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-danger" (click)="deleteVehicleFromBound(vehicle)" data-dismiss="modal">Eliminar</button>
@@ -279,7 +329,46 @@
                                     </div>
                                 </div>
                             </div>
-
+                        </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <div><b>Tablets</b></div>
+                    <div class="col-sm-5" style="margin-left: -15px; margin-bottom: 8px">
+                        <input type="text" name="searchString" class="form-control" placeholder="Buscar tablet" name="search" [(ngModel)]="filterT">
+                    </div>
+                    <table class="table table-bordered">
+                        <thead  class="thead-light">
+                        <th>IMEI</th>
+                        <th>Alias</th>
+                        <th>Eliminar</th>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let tablet of tabletsInBounds  | filter:filterT">
+                            <td>{{tablet.imei}}</td>
+                            <td>{{tablet.alias}}</td>
+                            <td>
+                                <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{tablet.imei}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
+                            </td>
+                            <div class="modal" tabindex="-1" role="dialog" id="modal{{tablet.imei}}">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color: #c82333; color: white;">
+                                            <h5 class="modal-title">Eliminar</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>¿Está seguro que desea eliminar la tablet '{{tablet.alias}}' del cerco?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" (click)="deleteTabletFromBound(tablet)" data-dismiss="modal">Eliminar</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </tr>
                         </tbody>
                     </table>

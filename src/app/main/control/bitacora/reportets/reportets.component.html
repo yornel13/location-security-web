@@ -1,114 +1,57 @@
 
-  <div class="info-container panel panel-default"  *ngIf="lista">
+<div class="info-container panel panel-default"  *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto row ml-1">
-        <a routerLink="/u/control/bitacora" title="Atrás" style="color: var(--secondary-color)">
-            <i class="fas fa-reply icon-return"></i>
-        </a>
-        <h3 class="list-title">Reportes con comenterios sin leer</h3>
-      </div>
-      <div class="ml-auto form-inline" >
-        <!--<div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">-->
-          <!--<label class="btn btn-outline-secondary" (click)="excelList()">-->
-            <!--<input type="radio" name="options" id="option1" autocomplete="off" checked> Excel-->
-          <!--</label>-->
-          <!--<label class="btn btn-outline-secondary" (click)="pdfList()">-->
-            <!--<input type="radio" name="options" id="option2" autocomplete="off"> PDF-->
-          <!--</label>-->
-          <!--<label class="btn btn-outline-secondary" (click)="printList()">-->
-            <!--<input type="radio" name="options" id="option3" autocomplete="off"> Print-->
-          <!--</label>-->
-        <!--</div>-->
-        <button class="btn btn-outline-secondary mr-1" style="display: inline-block;" title="Map de Alertas" (click)="getMapAlertas()"><span class="fas fa-map-marker-alt"></span></button>
-    </div>
+        <div class="mr-auto row ml-1">
+            <a routerLink="/u/control/bitacora" title="Atrás" style="color: var(--secondary-color)">
+                <i class="fas fa-reply icon-return"></i>
+            </a>
+            <h3 class="list-title">Reportes con comenterios sin leer</h3>
+        </div>
+        <div class="ml-auto form-inline" >
+            <button class="btn btn-outline-secondary mr-1" style="display: inline-block;" title="Map de Alertas" (click)="getMapAlertas()"><span class="fas fa-map-marker-alt"></span></button>
+        </div>
     </div>
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto row ml-2 form-inline">
-          <label class="mr-1"><b>Mostrar:</b></label>
-          <select id="inputState" class="form-control-sm mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
-            <option [ngValue]="10">10</option>
-            <option [ngValue]="25">25</option>
-            <option [ngValue]="50">50</option>
-            <option [ngValue]="100">100</option>
-          </select>
-          <label>Elementos</label>
-      </div>
+        <div class="mr-auto row ml-2 form-inline">
+            <label class="mr-1"><b>Mostrar:</b></label>
+            <select id="inputState" class="form-control-sm mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
+                <option [ngValue]="10">10</option>
+                <option [ngValue]="25">25</option>
+                <option [ngValue]="50">50</option>
+                <option [ngValue]="100">100</option>
+            </select>
+            <label>Elementos</label>
+        </div>
         <div class="ml-auto form-inline">
-          <div class="form-group row">
-              <input type="text" name="searchString" class="form-control" placeholder="Buscar" name="search" [(ngModel)]="filter" style="margin-right: 20px;">
-            <!--<label class="mr-2"><b>Filtrar por:</b></label>-->
-            <!--<select id="inputState" class="form-control-sm mr-2 filtros" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">-->
-              <!--<option [ngValue]="0">Incidencia</option>-->
-              <!--<option [ngValue]="1">Guardia</option>-->
-            <!--</select>-->
-            <!--<select id="inputState" class="form-control-sm mr-2 filtros" [(ngModel)]="incidenSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="filtro">
-              <option [ngValue]="0">Todas</option>
-              <option *ngFor="let i of inciden" [ngValue]="i.id">{{i.name}}</option>
-            </select>-->
-            <!--<ng-multiselect-dropdown *ngIf="filtro" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"-->
-              <!--[placeholder]="'Selección de Incidencias'"-->
-              <!--[data]="dropdownList1"-->
-              <!--[(ngModel)]="selectedIncidencias"-->
-              <!--[settings]="dropdownSettings1"-->
-              <!--(onSelect)="onItemSelect1($event)"-->
-              <!--(onSelectAll)="onSelectAll1($event)"-->
-              <!--(onDeSelect)="onItemDeSelect1($event)"-->
-              <!--(onDeSelectAll)="onDeSelectAll1($event)">-->
-            <!--</ng-multiselect-dropdown>-->
-            <!--<select id="inputState" class="form-control-sm mr-2 filtros" [(ngModel)]="guardiaSelect" (change)="getSearch()" [ngModelOptions]="{standalone: true}"  *ngIf="!filtro">
-              <option [ngValue]="0">Todos</option>
-              <option *ngFor="let g of guard" [ngValue]="g.id">{{g.name}} {{g.lastname}}</option>
-            </select>-->
-            <!--<ng-multiselect-dropdown *ngIf="!filtro" style="margin-right: 20px; background-color: white; border-radius: 6px; min-width: 300px"-->
-              <!--[placeholder]="'Selección de Guardias'"-->
-              <!--[data]="dropdownList2"-->
-              <!--[(ngModel)]="selectedGuardias"-->
-              <!--[settings]="dropdownSettings2"-->
-              <!--(onSelect)="onItemSelect2($event)"-->
-              <!--(onSelectAll)="onSelectAll2($event)"-->
-              <!--(onDeSelect)="onItemDeSelect2($event)"-->
-              <!--(onDeSelectAll)="onDeSelectAll2($event)">-->
-            <!--</ng-multiselect-dropdown>-->
-            <!--<label for="start" class="mr-2">Fecha</label>-->
-            <!--<input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="desde" (change)="getSearch()" [ngModelOptions]="{standalone: true}">-->
-            <!--<label for="start" class="mr-2">-</label>-->
-            <!--<input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getSearch()" [ngModelOptions]="{standalone: true}" disabled *ngIf="rangeday">-->
-            <!--<input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="!rangeday">-->
-            <!--<div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">-->
-              <!--<label class="btn btn-outline-secondary btn-sm active" (click)="selectRange(1)">-->
-                <!--<input type="radio" name="options" id="option1" autocomplete="off" checked> Dia-->
-              <!--</label>-->
-              <!--<label class="btn btn-outline-secondary btn-sm" (click)="selectRange(2)">-->
-                <!--<input type="radio" name="options" id="option3" autocomplete="off"> Fechas-->
-              <!--</label>-->
-            <!--</div>-->
-          </div>
+            <div class="form-group row">
+                <input type="text" name="searchString" class="form-control" placeholder="Buscar" name="search" [(ngModel)]="filter" style="margin-right: 20px;">
+            </div>
         </div>
     </div>
     <div class="table mt-2 container-fluid">
-            <table class="table table-bordered">
-             <thead class="thead-light">
-               <th (click)="sort('stand_name')">Puesto
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <th (click)="sort('stand_name')">Puesto
                 <span class="fas" *ngIf="key =='stand_name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th (click)="sort('title')">Título
+            </th>
+            <th (click)="sort('title')">Título
                 <span class="fas" *ngIf="key =='title'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th (click)="sort('observation')">Observación
+            </th>
+            <th (click)="sort('observation')">Observación
                 <span class="fas" *ngIf="key =='observation'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th (click)="sort('create_date')">Fecha
+            </th>
+            <th (click)="sort('create_date')">Fecha
                 <span class="fas" *ngIf="key =='create_date'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th (click)="sort('unread')"><i class="fas fa-comment"></i>
+            </th>
+            <th (click)="sort('unread')"><i class="fas fa-comment"></i>
                 <span class="fas" *ngIf="key =='unread'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th>Modificar</th>
-               <th>Detalle</th>
-             </thead>
-             <tbody>
-              <tr *ngFor="let d of data  | reportFilter: filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
-                <td>{{d.stand_name}}</td>
+            </th>
+            <th>Modificar</th>
+            <th>Detalle</th>
+            </thead>
+            <tbody>
+            <tr *ngFor="let d of data  | reportFilter: filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
+                <td>{{d.watch.stand_name}}</td>
                 <td>{{d.title}}</td>
                 <td>{{d.observation}}</td>
                 <td>{{d.create_date}}</td>
@@ -116,175 +59,181 @@
                     <span *ngIf="d.unread > 0" style="background: limegreen; padding: 2px 6px; border-radius: 50%; color: white; font-size: .8rem; text-align: right;">{{d.unread}}</span>
                 </td>
                 <td>
-                  <button class="btn btn-success" *ngIf="d.resolved == 0" (click)="changeResolve(d.id, d.resolved)">Reabrir</button>
-                  <button class="btn btn-danger" *ngIf="d.resolved != 0" (click)="changeResolve(d.id, d.resolved)">Cerrar</button>
+                    <button class="btn btn-success" *ngIf="d.resolved == 0" (click)="changeResolve(d.id, d.resolved)">Reabrir</button>
+                    <button class="btn btn-danger" *ngIf="d.resolved != 0" (click)="changeResolve(d.id, d.resolved)">Cerrar</button>
                 </td>
                 <td>
-                  <a class="btn btn-primary btn-xs" (click)="viewDetail(d)"  title="Detalle"><span class="far fa-eye"></span></a>
-                 </td>
-               </tr>
-               <tr *ngIf="!hay">
-                  <th colspan="8"><h3>No hay nuevos comentarios</h3></th>
-               </tr>
+                    <a class="btn btn-primary btn-xs" (click)="viewDetail(d)"  title="Detalle"><span class="far fa-eye"></span></a>
+                </td>
+            </tr>
+            <tr *ngIf="!hay">
+                <th colspan="8"><h3>No hay nuevos comentarios</h3></th>
+            </tr>
             </tbody>
-          </table>
-          <div style="text-align: center; padding-right: 40px;">
-              <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
-                    nextLabel="">
-              </pagination-controls>
-          </div>
+        </table>
+        <div style="text-align: center; padding-right: 40px;">
+            <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
+                                 nextLabel="">
+            </pagination-controls>
+        </div>
     </div>
-  </div>
-  <div class="info-container panel panel-default" *ngIf="detalle">
+</div>
+<div class="info-container panel panel-default" *ngIf="detalle">
     <div class="row panel-heading mb-2" style="background-color: #D9D9D9; padding: 10px">
         <div class="mr-auto ml-4">
             <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle Reporte</h3>
         </div>
         <div class="ml-auto" style="margin-top: 25px; margin-right: 60px;">
             <div class="btn-group btn-group-toggle ml-4" data-toggle="buttons">
-              <label class="btn btn-outline-dark" (click)="excelDetalle()">
-                <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
-              </label>
-              <label class="btn btn-outline-dark" (click)="pdfDetalle()">
-                <input type="radio" name="options" id="option2" autocomplete="off"> PDF
-              </label>
-              <label class="btn btn-outline-dark" (click)="printDetalle()">
-                <input type="radio" name="options" id="option3" autocomplete="off"> Print
-              </label>
+                <label class="btn btn-outline-dark" (click)="excelDetalle()">
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+                </label>
+                <label class="btn btn-outline-dark" (click)="pdfDetalle()">
+                    <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+                </label>
+                <label class="btn btn-outline-dark" (click)="printDetalle()">
+                    <input type="radio" name="options" id="option3" autocomplete="off"> Print
+                </label>
             </div>
         </div>
     </div>
-    <div class="panel-body mt-2">          
-          <div class="table-container container">
+    <div class="panel-body mt-2">
+        <div class="table-container container">
             <form  role="form">
-              <div class="form-group row">
-                <label for="name" class="col-sm-2 col-form-label">Incidencia</label>
-                <div class="col-sm-10">
-                  <input type="text" readonly class="form-control" id="name" value="{{report.title}}">
+                <div class="form-group row">
+                    <label for="name" class="col-sm-2 col-form-label">Incidencia</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control" id="name" value="{{report.title}}">
+                    </div>
                 </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Observación</label>
-                <div class="col-sm-10">
-                  <textarea rows="6" cols="10" readonly class="form-control input">{{report.observation}}</textarea>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Observación</label>
+                    <div class="col-sm-10">
+                        <textarea rows="6" cols="10" readonly class="form-control input">{{report.observation}}</textarea>
+                    </div>
                 </div>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Latitud</label>
-                <div class="col-sm-4">
-                  <input type="number" readonly class="form-control" id="dni" value="{{report.latitude}}">
+                <div class="form-group row">
+                    <label for="name" class="col-sm-2 col-form-label">Fecha</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control" value="{{report.create_date}}">
+                    </div>
                 </div>
-                <label for="dni" class="col-sm-2 col-form-label">Longitud</label>
-                <div class="col-sm-4">
-                  <input type="number" readonly class="form-control" id="dni" value="{{report.longitude}}">
+                <div class="form-group row">
+                    <label for="dni" class="col-sm-2 col-form-label">Latitud</label>
+                    <div class="col-sm-4">
+                        <input type="number" readonly class="form-control" id="dni" value="{{report.latitude}}">
+                    </div>
+                    <label for="dni" class="col-sm-2 col-form-label">Longitud</label>
+                    <div class="col-sm-4">
+                        <input type="number" readonly class="form-control" id="dni" value="{{report.longitude}}">
+                    </div>
                 </div>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Mapa</label>
-                <div class="col-sm-10">
-                  <div class="map"
-                       leaflet
-                       [leafletOptions]="options"
-                       [(leafletZoom)]="zoom"
-                       [(leafletCenter)]="center"
-                       [leafletBaseLayers]="baseLayers"
-                       [leafletLayersControlOptions]="layersControlOptions"
-                       (leafletMapReady)="onMapReady($event)">
-                  </div>
+                <div class="form-group row">
+                    <label for="dni" class="col-sm-2 col-form-label">Mapa</label>
+                    <div class="col-sm-10">
+                        <div class="map"
+                             leaflet
+                             [leafletOptions]="options"
+                             [(leafletZoom)]="zoom"
+                             [(leafletCenter)]="center"
+                             [leafletBaseLayers]="baseLayers"
+                             [leafletLayersControlOptions]="layersControlOptions"
+                             (leafletMapReady)="onMapReady($event)">
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div *ngIf="report.image_1 || report.image_2 || report.image_3 || report.image_4 || report.image_5" class="form-group row">
-                <label class="col-sm-2 col-form-label">Imagenes</label>
-                  <a [hidden]="!report.image_1" data-toggle="modal" href="#image1"><img src="{{report.image_1}}" class="image-detail-gallery"></a>
-                  <a [hidden]="!report.image_2" data-toggle="modal" href="#image2"><img src="{{report.image_2}}" class="image-detail-gallery"></a>
-                  <a [hidden]="!report.image_3" data-toggle="modal" href="#image3"><img src="{{report.image_3}}" class="image-detail-gallery"></a>
-                  <a [hidden]="!report.image_4" data-toggle="modal" href="#image4"><img src="{{report.image_4}}" class="image-detail-gallery"></a>
-                  <a [hidden]="!report.image_5" data-toggle="modal" href="#image5"><img src="{{report.image_5}}" class="image-detail-gallery"></a>
-              </div>
-              <!--Modal: modalVM-->
-              <div class="modal fade" id="image1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg" role="document">
-                      <!--Content-->
-                      <div class="modal-content">
-                          <!--Body-->
-                          <div class="modal-body mb-0 p-0">
-                               <img src="{{report.image_1}}" class="image-detail-photo-full">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <!--Modal: modalVM-->
-              <div class="modal fade" id="image2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg" role="document">
-                      <!--Content-->
-                      <div class="modal-content">
-                          <!--Body-->
-                          <div class="modal-body mb-0 p-0">
-                               <img src="{{report.image_2}}" class="image-detail-photo-full">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <!--Modal: modalVM-->
-              <div class="modal fade" id="image3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg" role="document">
-                      <!--Content-->
-                      <div class="modal-content">
-                          <!--Body-->
-                          <div class="modal-body mb-0 p-0">
-                               <img src="{{report.image_3}}" class="image-detail-photo-full">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <!--Modal: modalVM-->
-              <div class="modal fade" id="image4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg" role="document">
-                      <!--Content-->
-                      <div class="modal-content">
-                          <!--Body-->
-                          <div class="modal-body mb-0 p-0">
-                               <img src="{{report.image_4}}" class="image-detail-photo-full">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <!--Modal: modalVM-->
-              <div class="modal fade" id="image5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg" role="document">
-                      <!--Content-->
-                      <div class="modal-content">
-                          <!--Body-->
-                          <div class="modal-body mb-0 p-0">
-                               <img src="{{report.image_5}}" class="image-detail-photo-full">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <hr>
-              <div class="form-group row">
-                <label for="creation" class="col-sm-12 col-form-label"><b>Guardia</b></label>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{report.watch.guard_name}}">
+                <div *ngIf="report.image_1 || report.image_2 || report.image_3 || report.image_4 || report.image_5" class="form-group row">
+                    <label class="col-sm-2 col-form-label">Imagenes</label>
+                    <a [hidden]="!report.image_1" data-toggle="modal" href="#image1"><img src="{{report.image_1}}" class="image-detail-gallery"></a>
+                    <a [hidden]="!report.image_2" data-toggle="modal" href="#image2"><img src="{{report.image_2}}" class="image-detail-gallery"></a>
+                    <a [hidden]="!report.image_3" data-toggle="modal" href="#image3"><img src="{{report.image_3}}" class="image-detail-gallery"></a>
+                    <a [hidden]="!report.image_4" data-toggle="modal" href="#image4"><img src="{{report.image_4}}" class="image-detail-gallery"></a>
+                    <a [hidden]="!report.image_5" data-toggle="modal" href="#image5"><img src="{{report.image_5}}" class="image-detail-gallery"></a>
                 </div>
-                <label for="dni" class="col-sm-2 col-form-label">Apellido</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{report.watch.guard_lastname}}">
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="image1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{report.image_1}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{report.watch.guard_dni}}">
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="image2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{report.image_2}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <label for="dni" class="col-sm-2 col-form-label">Correo</label>
-                <div class="col-sm-4">
-                  <input type="text" readonly class="form-control" id="dni" value="{{report.watch.guard_email}}">
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="image3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{report.image_3}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="image4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{report.image_4}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="image5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{report.image_5}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group row">
+                    <label class="col-sm-12 col-form-label"><b>Guardia</b></label>
+                </div>
+                <div class="form-group row">
+                    <label for="dni" class="col-sm-2 col-form-label">Nombre</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" value="{{report.watch.guard.name}}">
+                    </div>
+                    <label for="dni" class="col-sm-2 col-form-label">Apellido</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" value="{{report.watch.guard.lastname}}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" value="{{report.watch.guard.dni}}">
+                    </div>
+                    <label for="dni" class="col-sm-2 col-form-label">Correo</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control" value="{{report.watch.guard.email}}">
+                    </div>
+                </div>
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Tablet</label>
                     <div class="col-sm-4">
@@ -326,35 +275,35 @@
 
 
 
-              <hr>
-              <div class="row mt-4">
-                  <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
-              </div>
+                <hr>
+                <div class="row mt-4">
+                    <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
+                </div>
             </form>
-          </div>
         </div>
-  </div>
-  <div class="info-container panel panel-default"  *ngIf="viewmap">
+    </div>
+</div>
+<div class="info-container panel panel-default"  *ngIf="viewmap">
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto row ml-1">
-        <a (click)="regresar()" title="Atrás" style="color: var(--secondary-color)">
-            <i class="fas fa-reply icon-return"></i>
-        </a>
-        <h3 class="list-title">Mapa de Reportes Abiertos</h3>
-      </div>
+        <div class="mr-auto row ml-1">
+            <a (click)="regresar()" title="Atrás" style="color: var(--secondary-color)">
+                <i class="fas fa-reply icon-return"></i>
+            </a>
+            <h3 class="list-title">Mapa de Reportes Abiertos</h3>
+        </div>
     </div>
-  <div class="table mt-2 container-fluid">
-    <div class="mapchart"
-         leaflet
-         [leafletOptions]="options"
-         [(leafletZoom)]="zoom"
-         [(leafletCenter)]="center"
-         [leafletBaseLayers]="baseLayers"
-         [leafletLayersControlOptions]="layersControlOptions"
-         (leafletMapReady)="onMapReadyChart($event)">
+    <div class="table mt-2 container-fluid">
+        <div class="mapchart"
+             leaflet
+             [leafletOptions]="options"
+             [(leafletZoom)]="zoom"
+             [(leafletCenter)]="center"
+             [leafletBaseLayers]="baseLayers"
+             [leafletLayersControlOptions]="layersControlOptions"
+             (leafletMapReady)="onMapReadyChart($event)">
+        </div>
     </div>
-  </div>
-  </div>
+</div>
 
 
 

@@ -80,6 +80,8 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { AgoTimePipe } from './ago.pipe';
 import {ReportFilterPipe} from './bitacora/report.pipe';
 import {VisitPrint} from './visitas/visit.print';
+import {HTTP_INTERCEPTORS} from "../../../../node_modules/@angular/common/http";
+import {ErrorInterceptor, JwtInterceptor} from "../../_helpers";
 
 export const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
@@ -146,8 +148,12 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         NgMultiSelectDropDownModule
     ],
     providers: [
-        GuardService, AdminService, VisitaVehiculoService, VisitanteService, FuncionarioService, ExcelService, PuestoService, VehiclestypesService,
-        IncidenciasService, BitacoraService, VisitasService, ConfiguracionService, BannerService, AlertaService, CercoService, GrupoService,
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        GuardService, AdminService, VisitaVehiculoService, VisitanteService,
+        FuncionarioService, ExcelService, PuestoService, VehiclestypesService,
+        IncidenciasService, BitacoraService, VisitasService, ConfiguracionService,
+        BannerService, AlertaService, CercoService, GrupoService,
         VehistorialService, TabhistoryService, SalidascercoService, VisitPrint ],
     entryComponents: [ PopupHistoryComponent, PopupTablethComponent, PopupReportComponent, PopupVisitComponent, PopupWatchtComponent ],
     declarations: [

@@ -19,7 +19,7 @@ export class VehiclesService {
   constructor (private http: HttpClient) {}
 
   getVehicles(): Observable<VehicleList> {
-    return this.http.get<VehicleList>(this.VEHICLE_URL).pipe(repeatWhen(() => interval(10000)));
+    return this.http.get<VehicleList>(this.VEHICLE_URL).pipe(repeatWhen(() => interval(environment.MONITORING_REFRESH_INTERVAL)));
   }
 
   getVehiclesList() {

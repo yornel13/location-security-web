@@ -8,6 +8,7 @@ import {Router} from '@angular/router';
 import {AlertaService} from '../../model/alerta/alerta.service';
 import {MainService} from './main.service';
 import {AuthenticationService} from '../_services';
+import {environment} from '../../environments/environment';
 
 
 @Component({
@@ -38,7 +39,7 @@ export class MainComponent implements OnInit {
         private mainService: MainService,
         private db: AngularFirestore,
         private authService: AuthenticationService) {
-        this.alertCollection = db.collection<Alerta>('alerts',
+        this.alertCollection = db.collection<Alerta>(environment.ALERTS_PATH,
             ref => ref.orderBy('status', 'desc').orderBy('id', 'desc').limit(10));
         this.isVisible = true;
     }
@@ -69,7 +70,7 @@ export class MainComponent implements OnInit {
     getAlerts() {
         this.alertCollection.stateChanges().subscribe(data => {
             console.log('updating alerts...');
-            if (data.length <= 2) {
+            if (data.length > 0 && data.length <= 2) {
                 let type;
                 let alert;
                 if (data.length === 2) {
@@ -160,7 +161,7 @@ export class MainComponent implements OnInit {
     }
 
     solveAlert(alert: Alerta) {
-        this.alertCollection.doc(String(alert.id)).update({'status': 0}).then();
+            // this.alertCollection.doc(String(alert.id)).update({'status': 0}).then();
         // this.alertService.solveAlert(alert.id).then(
         // success => {
         //     this.alertCollection.doc(String(alert.id)).update({'status': 0}).then();

@@ -1,4 +1,4 @@
-import {Guard} from "../guard/guard";
+import {Guard} from '../guard/guard';
 
 export interface Alerta {
     id?: number;
