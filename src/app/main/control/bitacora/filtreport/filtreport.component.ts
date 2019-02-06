@@ -52,7 +52,7 @@ export class FiltreportComponent implements OnInit {
     newcoment: string = '';
     addcomment: boolean = false;
     /* status */
-    status: number = 0;
+    status = 0;
     numElement: number = 10;
     /* new chart */
     dataSource: any = {};
@@ -74,6 +74,8 @@ export class FiltreportComponent implements OnInit {
     hasta:string = "";
     chartreportes:any = [];
     chartdata:any = [];
+    isLoading = false;
+    resultListSelected = [];
 
     //map
     map: any;
@@ -107,6 +109,7 @@ export class FiltreportComponent implements OnInit {
     layersControlOptions;
     baseLayers;
     options;
+    private selectReport: any;
 
     constructor(
             private resolver: ComponentFactoryResolver,
@@ -208,11 +211,13 @@ export class FiltreportComponent implements OnInit {
             this.rangeday2 = true;
             this.desde2 = "";
             this.hasta2 = "";
+            this.dismissLoading();
             this.getSearch();
         } else {
             this.rangeday2 = false;
             this.desde2 = "";
             this.hasta2 = "";
+            this.dismissLoading();
             this.getSearch();
         }
     }
@@ -229,74 +234,6 @@ export class FiltreportComponent implements OnInit {
             this.hasta = "";
             this.getChartDate();
         }
-    }
-
-    getAll() {
-        this.bitacoraService.getAll().then(
-            success => {
-                this.reportes = success;
-                this.data = this.reportes.data;
-                console.log(this.data);
-                this.incidenciaService.getAll().then(
-                    success => {
-                        this.incidencias = success;
-                        this.inciden = this.incidencias.data;
-                        //exports files
-                        var body = [];
-                        var excel = [];
-                        var resolve = "";
-                        for(var i=0; i<this.data.length; i++){
-                            this.data[i].id = Number(this.data[i].id);
-                            if(this.data[i].resolved == 0){
-                                resolve = "Cerrado";
-                            }else if(this.data[i].resolved == 1){
-                                resolve = "Abierto";
-                            }else{
-                                resolve = "Reabierto";
-                            }
-                            excel.push({'#' : this.data[i].id, 'Título': this.data[i].title, 'Observación':this.data[i].observation, 'Fecha':this.data[i].create_date, 'Status':resolve})
-                            body.push([this.data[i].id, this.data[i].title, this.data[i].observation, this.data[i].create_date, resolve])
-                        }
-                        this.contpdf = body;
-                        this.info = excel;
-                        //chart
-                        var hola = [];
-                        var nombres = [];
-                        var valores = [];
-                        nombres = this.nameInciden();
-                        valores = this.countInciden(this.data);
-                        this.dataSource.chart.yAxisMaxValue = Math.max(...valores) + 2;
-                        for(var i=0; i<this.incidencias.total; i++){
-                            if(nombres[i] != "General"){
-                                hola.push({"label":nombres[i], "value":valores[i]})
-                            }
-                        }
-                        this.datos = hola;
-                        this.dataSource.data = this.datos;
-                    }, error => {
-                        if (error.status === 422) {
-                            // on some data incorrect
-                        } else {
-                            // on general error
-                        }
-                    }
-                );
-
-                for(var i = 0; i < this.data.length; i++){
-                    if(this.data[i].resolved == 0){
-                        this.change[i] = 0;
-                    }else{
-                        this.change[i] = 1;
-                    }
-                }
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
     }
 
     getToday(){
@@ -318,21 +255,18 @@ export class FiltreportComponent implements OnInit {
         }
 
         this.date = year+"-"+this.month2+"-"+this.day2;
-        this.desde2 =this.date;
+        this.desde2 = this.date;
 
-        this.bitacoraService.getByDate(year, this.month2, this.day2, year, this.month2, this.day2).then(
-            success => {
-                this.reportes = success;
-                this.data = this.reportes.data;
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
+        this.getSearch();
+    }
 
+    showLoading() {
+        this.isLoading = true;
+        this.data = [];
+    }
+
+    dismissLoading() {
+        this.isLoading = false;
     }
 
     countInciden(data){
@@ -543,8 +477,9 @@ export class FiltreportComponent implements OnInit {
         }
     }
 
-    viewDetail(id) {
-        this.bitacoraService.getId(id).then(
+    viewDetail(selectReport) {
+        this.selectReport = selectReport;
+        this.bitacoraService.getId(selectReport.id).then(
             success => {
                 this.report = success;
                 this.report.latitude = this.lat = Number(this.report.latitude);
@@ -561,7 +496,7 @@ export class FiltreportComponent implements OnInit {
             }
         );
 
-        this.getComments(id);
+        this.getComments(selectReport.id);
     }
 
     getComments(id) {
@@ -603,6 +538,7 @@ export class FiltreportComponent implements OnInit {
             this.bitacoraService.setReopen(report.id).then(
                 (success: ApiResponse) => {
                     report.resolved = success.result.resolved;
+                    this.selectReport.resolved = success.result.resolved;
                 }, error => {
                     if (error.status === 422) {
                         // on some data incorrect
@@ -615,6 +551,7 @@ export class FiltreportComponent implements OnInit {
             this.bitacoraService.setClose(report.id).then(
                 (success: ApiResponse) => {
                     report.resolved = success.result.resolved;
+                    this.selectReport.resolved = success.result.resolved;
                 }, error => {
                     if (error.status === 422) {
                         // on some data incorrect
@@ -666,23 +603,27 @@ export class FiltreportComponent implements OnInit {
         );
     }
 
-    selectFilert(filter) {
+    selectFilter(filter) {
         if (this.filtroSelect === 1) {
             this.guardiaSelect = 0;
             this.incidenSelect = 0;
-            // this.desde2 = '';
-            // this.hasta2 = '';
+            this.dismissLoading();
         } else if (this.filtroSelect === 2) {
             this.incidenSelect = 0;
             this.guardiaSelect = 0;
-            // this.desde2 = '';
-            // this.hasta2 = '';
+            this.dismissLoading();
         } else {
             this.incidenSelect = 0;
             this.guardiaSelect = 0;
-            // this.desde2 = '';
-            // this.hasta2 = '';
+            this.dismissLoading();
         }
+        console.log(this.filtroSelect);
+        this.getSearch();
+    }
+
+    selectStatus() {
+        console.log(this.status);
+        this.dismissLoading();
         this.getSearch();
     }
 
@@ -707,87 +648,37 @@ export class FiltreportComponent implements OnInit {
             if (this.desde2 == '') {
                 this.data = [];
             } else {
-                if(this.rangeday2){
+                if (this.rangeday2) {
                     if (this.status == 0) {
-                        this.bitacoraService.getByDate(year1, month1, day1, year1, month1, day1).then(
-                            success => {
-                                this.reportes = success;
-                                this.data = this.reportes.data;
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
-                    } else if(this.status == 1){
-                        this.bitacoraService.getOpenDate(year1, month1, day1, year1, month1, day1).then(
-                            success => {
-                                this.reportes = success;
-                                this.data = this.reportes.data;
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
-                    } else if(this.status == 2){
-                        this.bitacoraService.getCloseDate(year1, month1, day1, year1, month1, day1).then(
-                            success => {
-                                this.reportes = success;
-                                this.data = this.reportes.data;
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
+                        this.showLoading();
+                        this.bitacoraService.getByDate(year1, month1, day1, year1, month1, day1)
+                            .then(this.onListReportsSuccess.bind(this), this.onListReportsFailure.bind(this));
+                    } else if (this.status == 1) {
+                        this.showLoading();
+                        this.bitacoraService.getOpenDate(year1, month1, day1, year1, month1, day1)
+                            .then(this.onListReportsSuccess.bind(this), this.onListReportsFailure.bind(this));
+                    } else if (this.status == 2) {
+                        this.showLoading();
+                        this.bitacoraService.getCloseDate(year1, month1, day1, year1, month1, day1)
+                            .then(this.onListReportsSuccess.bind(this), this.onListReportsFailure.bind(this));
                     }
                 } else {
-                    if(this.status == 0) {
-                        this.bitacoraService.getByDate(year1, month1, day1, year2, month2, day2).then(
-                            success => {
-                                this.reportes = success;
-                                this.data = this.reportes.data;
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
-                    } else if(this.status == 1){
-                        this.bitacoraService.getOpenDate(year1, month1, day1, year2, month2, day2).then(
-                            success => {
-                                this.reportes = success;
-                                this.data = this.reportes.data;
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
-                    } else if(this.status == 2){
-                        this.bitacoraService.getCloseDate(year1, month1, day1, year2, month2, day2).then(
-                            success => {
-                                this.reportes = success;
-                                this.data = this.reportes.data;
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
+                    if (this.hasta2 === '') {
+                        this.data = [];
+                    } else {
+                        if (this.status == 0) {
+                            this.showLoading();
+                            this.bitacoraService.getByDate(year1, month1, day1, year2, month2, day2)
+                                .then(this.onListReportsSuccess.bind(this), this.onListReportsFailure.bind(this));
+                        } else if (this.status == 1) {
+                            this.showLoading();
+                            this.bitacoraService.getOpenDate(year1, month1, day1, year2, month2, day2)
+                                .then(this.onListReportsSuccess.bind(this), this.onListReportsFailure.bind(this));
+                        } else if (this.status == 2) {
+                            this.showLoading();
+                            this.bitacoraService.getCloseDate(year1, month1, day1, year2, month2, day2)
+                                .then(this.onListReportsSuccess.bind(this), this.onListReportsFailure.bind(this));
+                        }
                     }
                 }
             }
@@ -798,151 +689,81 @@ export class FiltreportComponent implements OnInit {
             if (this.desde2 == '') {
                 this.data = [];
             } else {
-                if(this.rangeday2){
-                    if(this.status == 0){
-                        if(incidencia.length == 0) {
-                            this.data = [];
-                        } else{
-                            var result = [];
-                            for(var i=0;i<incidencia.length;i++){
-                                this.bitacoraService.getByIncidenciaDate(incidencia[i].item_id, year1, month1, day1, year1, month1, day1).then(
-                                    success => {
-                                        this.reportes = success;
-                                        result = result.concat(this.reportes.data);
-                                        this.data = result;
-                                        for(var i=0; i<this.data.length; i++){
-                                            this.data[i].id = Number(this.data[i].id);
-                                        };
-                                    }, error => {
-                                        if (error.status === 422) {
-                                            // on some data incorrect
-                                        } else {
-                                            // on general error
-                                        }
-                                    }
-                                );
-                            }
-                        }
-                    }else if(this.status == 1){
-                        if(incidencia.length == 0){
-                            this.data = [];
-                        }else{
-                            var result = [];
-                            for(var i=0;i<incidencia.length;i++){
-                                this.bitacoraService.getByIncidenciaOpenDate(incidencia[i].item_id, year1, month1, day1, year1, month1, day1).then(
-                                    success => {
-                                        this.reportes = success;
-                                        result = result.concat(this.reportes.data);
-                                        this.data = result;
-                                        for(var i=0; i<this.data.length; i++){
-                                            this.data[i].id = Number(this.data[i].id);
-                                        };
-                                    }, error => {
-                                        if (error.status === 422) {
-                                            // on some data incorrect
-                                        } else {
-                                            // on general error
-                                        }
-                                    }
-                                );
-                            }
-                        }
-                    }else if(this.status == 2){
-                        if(incidencia.length == 0){
+                if (this.rangeday2) {
+                    if (this.status == 0) {
+                        if (incidencia.length == 0) {
                             this.data = [];
                         } else {
-                            var result = [];
-                            for(var i=0;i<incidencia.length;i++){
-                                this.bitacoraService.getByIncidenciaCloseDate(incidencia[i].item_id, year1, month1, day1, year1, month1, day1).then(
-                                    success => {
-                                        this.reportes = success;
-                                        result = result.concat(this.reportes.data);
-                                        this.data = result;
-                                        for(var i=0; i<this.data.length; i++){
-                                            this.data[i].id = Number(this.data[i].id);
-                                        };
-                                    }, error => {
-                                        if (error.status === 422) {
-                                            // on some data incorrect
-                                        } else {
-                                            // on general error
-                                        }
-                                    }
-                                );
+                            this.resultListSelected = [];
+                            this.showLoading();
+                            for (var i = 0; i < incidencia.length; i++) {
+                                this.bitacoraService
+                                    .getByIncidenciaDate(incidencia[i].item_id, year1, month1, day1, year1, month1, day1)
+                                    .then(this.onListReportsBySelectedListSuccess.bind(this), this.onListReportsFailure.bind(this));
+                            }
+                        }
+                    } else if (this.status == 1) {
+                        if (incidencia.length == 0) {
+                            this.data = [];
+                        } else {
+                            this.resultListSelected = [];
+                            this.showLoading();
+                            for (var i = 0; i < incidencia.length; i++) {
+                                this.bitacoraService
+                                    .getByIncidenciaOpenDate(incidencia[i].item_id, year1, month1, day1, year1, month1, day1)
+                                    .then(this.onListReportsBySelectedListSuccess.bind(this), this.onListReportsFailure.bind(this));
+                            }
+                        }
+                    } else if (this.status == 2) {
+                        if (incidencia.length === 0) {
+                            this.data = [];
+                        } else {
+                            this.resultListSelected = [];
+                            this.showLoading();
+                            for (var i = 0; i < incidencia.length; i++) {
+                                this.bitacoraService
+                                    .getByIncidenciaCloseDate(incidencia[i].item_id, year1, month1, day1, year1, month1, day1)
+                                    .then(this.onListReportsBySelectedListSuccess.bind(this), this.onListReportsFailure.bind(this));
                             }
                         }
                     }
                 } else {
-                    if(this.status == 0){
-                        if(incidencia.length == 0){
+                    if (this.hasta2 === '') {
+                        this.data = [];
+                    } else if (this.status == 0) {
+                        if (incidencia.length == 0) {
                             this.data = [];
-                        }else{
-                            var result = [];
-                            for(var i=0;i<incidencia.length;i++){
-                                this.bitacoraService.getByIncidenciaDate(incidencia[i].item_id, year1, month1, day1, year2, month2, day2).then(
-                                    success => {
-                                        this.reportes = success;
-                                        result = result.concat(this.reportes.data);
-                                        this.data = result;
-                                        for(var i=0; i<this.data.length; i++){
-                                            this.data[i].id = Number(this.data[i].id);
-                                        };
-                                    }, error => {
-                                        if (error.status === 422) {
-                                            // on some data incorrect
-                                        } else {
-                                            // on general error
-                                        }
-                                    }
-                                );
+                        } else {
+                            this.resultListSelected = [];
+                            this.showLoading();
+                            for(var i = 0; i < incidencia.length; i++) {
+                                this.bitacoraService
+                                    .getByIncidenciaDate(incidencia[i].item_id, year1, month1, day1, year2, month2, day2)
+                                    .then(this.onListReportsBySelectedListSuccess.bind(this), this.onListReportsFailure.bind(this));
                             }
                         }
-                    }else if(this.status == 1){
-                        if(incidencia.length == 0){
+                    } else if (this.status == 1) {
+                        if (incidencia.length == 0) {
                             this.data = [];
-                        }else{
-                            var result = [];
-                            for(var i=0;i<incidencia.length;i++){
-                                this.bitacoraService.getByIncidenciaOpenDate(incidencia[i].item_id, year1, month1, day1, year2, month2, day2).then(
-                                    success => {
-                                        this.reportes = success;
-                                        result = result.concat(this.reportes.data);
-                                        this.data = result;
-                                        for(var i=0; i<this.data.length; i++){
-                                            this.data[i].id = Number(this.data[i].id);
-                                        };
-                                    }, error => {
-                                        if (error.status === 422) {
-                                            // on some data incorrect
-                                        } else {
-                                            // on general error
-                                        }
-                                    }
-                                );
+                        } else {
+                            this.resultListSelected = [];
+                            this.showLoading();
+                            for (var i = 0; i < incidencia.length; i++) {
+                                this.bitacoraService
+                                    .getByIncidenciaOpenDate(incidencia[i].item_id, year1, month1, day1, year2, month2, day2)
+                                    .then(this.onListReportsBySelectedListSuccess.bind(this), this.onListReportsFailure.bind(this));
                             }
                         }
-                    }else if(this.status == 2){
-                        if(incidencia.length == 0){
+                    } else if (this.status == 2) {
+                        if (incidencia.length == 0) {
                             this.data = [];
-                        }else{
-                            var result = [];
-                            for(var i=0;i<incidencia.length;i++){
-                                this.bitacoraService.getByIncidenciaCloseDate(incidencia[i].item_id, year1, month1, day1, year2, month2, day2).then(
-                                    success => {
-                                        this.reportes = success;
-                                        result = result.concat(this.reportes.data);
-                                        this.data = result;
-                                        for(var i=0; i<this.data.length; i++){
-                                            this.data[i].id = Number(this.data[i].id);
-                                        };
-                                    }, error => {
-                                        if (error.status === 422) {
-                                            // on some data incorrect
-                                        } else {
-                                            // on general error
-                                        }
-                                    }
-                                );
+                        } else {
+                            this.resultListSelected = [];
+                            this.showLoading();
+                            for(var i = 0; i < incidencia.length; i++) {
+                                this.bitacoraService
+                                    .getByIncidenciaCloseDate(incidencia[i].item_id, year1, month1, day1, year2, month2, day2)
+                                    .then(this.onListReportsBySelectedListSuccess.bind(this), this.onListReportsFailure.bind(this));
                             }
                         }
                     }
@@ -951,155 +772,79 @@ export class FiltreportComponent implements OnInit {
         }
 
         // guardias
-        if(this.filtroSelect == 2){
-            if(this.desde2 == ""){
+        if (this.filtroSelect == 2) {
+            if (this.desde2 == '') {
                 this.data = [];
-            }else{
-                if(this.rangeday2){
-                    if(this.status == 0){
-                        if(guardia.length == 0){
+            } else {
+                if (this.rangeday2) {
+                    if (this.status == 0){
+                        if (guardia.length == 0) {
                             this.data = [];
-                        }else{
-                            var result = [];
-                            for(var i=0;i<guardia.length;i++){
-                                this.bitacoraService.getByGuardiaDate(guardia[i].item_id, year1, month1, day1, year1, month1, day1).then(
-                                    success => {
-                                        this.reportes = success;
-                                        result = result.concat(this.reportes.data);
-                                        this.data = result;
-                                        for(var i=0; i<this.data.length; i++){
-                                            this.data[i].id = Number(this.data[i].id);
-                                        };
-                                    }, error => {
-                                        if (error.status === 422) {
-                                            // on some data incorrect
-                                        } else {
-                                            // on general error
-                                        }
-                                    }
-                                );
+                        } else {
+                            this.resultListSelected = [];
+                            this.showLoading();
+                            for (var i = 0; i < guardia.length; i++) {
+                                this.bitacoraService.getByGuardiaDate(guardia[i].item_id, year1, month1, day1, year1, month1, day1)
+                                    .then(this.onListReportsBySelectedListSuccess.bind(this), this.onListReportsFailure.bind(this));
                             }
                         }
-                    }else if(this.status == 1){
-                        if(guardia.length == 0){
+                    } else if (this.status == 1) {
+                        if (guardia.length == 0) {
                             this.data = [];
-                        }else{
-                            var result = [];
-                            for(var i=0;i<guardia.length;i++){
-                                this.bitacoraService.getByGuardiaOpenDate(guardia[i].item_id, year1, month1, day1, year1, month1, day1).then(
-                                    success => {
-                                        this.reportes = success;
-                                        result = result.concat(this.reportes.data);
-                                        this.data = result;
-                                        for(var i=0; i<this.data.length; i++){
-                                            this.data[i].id = Number(this.data[i].id);
-                                        };
-                                    }, error => {
-                                        if (error.status === 422) {
-                                            // on some data incorrect
-                                        } else {
-                                            // on general error
-                                        }
-                                    }
-                                );
+                        } else {
+                            this.resultListSelected = [];
+                            this.showLoading();
+                            for (var i = 0; i < guardia.length; i++) {
+                                this.bitacoraService.getByGuardiaOpenDate(guardia[i].item_id, year1, month1, day1, year1, month1, day1)
+                                    .then(this.onListReportsBySelectedListSuccess.bind(this), this.onListReportsFailure.bind(this));
                             }
                         }
-                    }else if(this.status == 2){
-                        if(guardia.length == 0){
+                    } else if (this.status == 2) {
+                        if (guardia.length == 0) {
                             this.data = [];
-                        }else{
-                            var result = [];
-                            for(var i=0;i<guardia.length;i++){
-                                this.bitacoraService.getByGuardiaCloseDate(guardia[i].item_id, year1, month1, day1, year1, month1, day1).then(
-                                    success => {
-                                        this.reportes = success;
-                                        result = result.concat(this.reportes.data);
-                                        this.data = result;
-                                        for(var i=0; i<this.data.length; i++){
-                                            this.data[i].id = Number(this.data[i].id);
-                                        };
-                                    }, error => {
-                                        if (error.status === 422) {
-                                            // on some data incorrect
-                                        } else {
-                                            // on general error
-                                        }
-                                    }
-                                );
+                        } else {
+                            this.resultListSelected = [];
+                            this.showLoading();
+                            for (var  i = 0; i < guardia.length; i++) {
+                                this.bitacoraService.getByGuardiaCloseDate(guardia[i].item_id, year1, month1, day1, year1, month1, day1)
+                                    .then(this.onListReportsBySelectedListSuccess.bind(this), this.onListReportsFailure.bind(this));
                             }
                         }
                     }
-                }else{
-                    if(this.status == 0){
-                        if(guardia.length == 0){
+                } else {
+                    if (this.hasta2 === '') {
+                        this.data = [];
+                    } else if (this.status == 0) {
+                        if (guardia.length == 0) {
                             this.data = [];
-                        }else{
-                            var result = [];
-                            for(var i=0;i<guardia.length;i++){
-                                this.bitacoraService.getByGuardiaDate(this.guardiaSelect, year1, month1, day1, year2, month2, day2).then(
-                                    success => {
-                                        this.reportes = success;
-                                        result = result.concat(this.reportes.data);
-                                        this.data = result;
-                                        for(var i=0; i<this.data.length; i++){
-                                            this.data[i].id = Number(this.data[i].id);
-                                        };
-                                    }, error => {
-                                        if (error.status === 422) {
-                                            // on some data incorrect
-                                        } else {
-                                            // on general error
-                                        }
-                                    }
-                                );
+                        } else {
+                            this.resultListSelected = [];
+                            this.showLoading();
+                            for(var i = 0; i < guardia.length; i++) {
+                                this.bitacoraService.getByGuardiaDate(guardia[i].item_id, year1, month1, day1, year2, month2, day2)
+                                    .then(this.onListReportsBySelectedListSuccess.bind(this), this.onListReportsFailure.bind(this));
                             }
                         }
-                    }else if(this.status == 1){
-                        if(guardia.length == 0){
+                    } else if (this.status == 1) {
+                        if (guardia.length == 0) {
                             this.data = [];
-                        }else{
-                            var result = [];
-                            for(var i=0;i<guardia.length;i++){
-                                this.bitacoraService.getByGuardiaOpenDate(guardia[i].item_id, year1, month1, day1, year2, month2, day2).then(
-                                    success => {
-                                        this.reportes = success;
-                                        result = result.concat(this.reportes.data);
-                                        this.data = result;
-                                        for(var i=0; i<this.data.length; i++){
-                                            this.data[i].id = Number(this.data[i].id);
-                                        };
-                                    }, error => {
-                                        if (error.status === 422) {
-                                            // on some data incorrect
-                                        } else {
-                                            // on general error
-                                        }
-                                    }
-                                );
+                        } else {
+                            this.resultListSelected = [];
+                            this.showLoading();
+                            for(var i = 0; i < guardia.length; i++) {
+                                this.bitacoraService.getByGuardiaOpenDate(guardia[i].item_id, year1, month1, day1, year2, month2, day2)
+                                    .then(this.onListReportsBySelectedListSuccess.bind(this), this.onListReportsFailure.bind(this));
                             }
                         }
-                    }else if(this.status == 2){
-                        if(guardia.length == 0){
+                    } else if (this.status == 2) {
+                        if (guardia.length == 0) {
                             this.data = [];
-                        }else{
-                            var result = [];
-                            for(var i=0;i<guardia.length;i++){
-                                this.bitacoraService.getByGuardiaCloseDate(guardia[i].item_id, year1, month1, day1, year2, month2, day2).then(
-                                    success => {
-                                        this.reportes = success;
-                                        result = result.concat(this.reportes.data);
-                                        this.data = result;
-                                        for(var i=0; i<this.data.length; i++){
-                                            this.data[i].id = Number(this.data[i].id);
-                                        };
-                                    }, error => {
-                                        if (error.status === 422) {
-                                            // on some data incorrect
-                                        } else {
-                                            // on general error
-                                        }
-                                    }
-                                );
+                        } else {
+                            this.resultListSelected = [];
+                            this.showLoading();
+                            for(var i = 0; i < guardia.length; i++) {
+                                this.bitacoraService.getByGuardiaCloseDate(guardia[i].item_id, year1, month1, day1, year2, month2, day2)
+                                    .then(this.onListReportsBySelectedListSuccess.bind(this), this.onListReportsFailure.bind(this));
                             }
                         }
                     }
@@ -1107,6 +852,35 @@ export class FiltreportComponent implements OnInit {
             }
         }
 
+    }
+
+    onListReportsBySelectedListSuccess(success) {
+        this.reportes = success;
+        this.resultListSelected = this.resultListSelected.concat(this.reportes.data);
+        this.data = this.resultListSelected;
+        for (var i = 0; i < this.data.length; i++) {
+            this.data[i].id = Number(this.data[i].id);
+        }
+        this.dismissLoading();
+    }
+
+    onListReportsSuccess(success) {
+        if (this.isLoading) {
+            this.reportes = success;
+            this.data = this.reportes.data;
+            this.dismissLoading();
+        }
+    }
+
+    onListReportsFailure(error) {
+        if (this.isLoading) {
+            if (error.status === 422) {
+                // on some data incorrect
+            } else {
+                // on general error
+            }
+            this.dismissLoading();
+        }
     }
 
     agregarComentario() {

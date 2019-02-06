@@ -20,7 +20,7 @@ export class TabletService {
             {
                 headers: this.authService.getHeader()
             })
-            .pipe(repeatWhen(() => interval(environment.MONITORING_REFRESH_INTERVAL)));
+            .pipe(/*repeatWhen(() => interval(environment.MONITORING_REFRESH_INTERVAL))*/);
     }
 
     getAll() {

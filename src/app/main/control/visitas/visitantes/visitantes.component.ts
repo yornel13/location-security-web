@@ -23,7 +23,7 @@ export class VisitantesComponent {
   detalle:boolean;
   crear:boolean;
   editar:boolean;
-  //editar
+  //edit
   nombre:string;
   apellido:string;
   compania:string;

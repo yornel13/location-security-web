@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {Admin} from '../../../model/admin/admin';
 import {MessagingService} from '../../shared/messaging.service';
 import {ToastrService} from 'ngx-toastr';
+import {BusinessService} from '../../../model/business/business.service';
 
 @Component({
     selector: 'app-header',
@@ -16,11 +17,14 @@ export class HeaderComponent implements OnInit {
     photo: string;
     unreadMessages: number;
     unreadReplies: number;
+    businesses: any[] = [];
+    selectedBusiness = 0;
 
     constructor(
         private authService: AuthenticationService,
         private router: Router,
         private messagingService: MessagingService,
+        private businessService: BusinessService,
         private toastr: ToastrService) { }
 
     ngOnInit() {
@@ -32,11 +36,45 @@ export class HeaderComponent implements OnInit {
             } else {
                 this.photo = './assets/img/user_empty.jpg';
             }
+            this.businesses = [
+                { id: 0, name: 'Todos' }
+            ];
+            this.getCompanies();
             this.checkSession();
         } else {
             console.log('no user logger');
             this.router.navigate(['/login']).then();
         }
+    }
+
+    getCompanies() {
+        this.businessService.getAll().then((success: any) => {
+                console.log('businessService success');
+                this.businesses = [
+                    { id: 0, name: 'Todos' }
+                ];
+                success.data.forEach(business => {
+                    this.businesses.push(business);
+                });
+                let containsBus = false;
+
+                const selectedCompany = this.authService.getSelectedCompany();
+                this.businesses.forEach(business => {
+                    if (business.id === selectedCompany) {
+                        containsBus = true;
+                    }
+                });
+
+                if (containsBus) {
+                    this.selectedBusiness = selectedCompany;
+                } else {
+                    this.authService.setSelectedCompany(0);
+                    location.reload(true);
+                }
+            },
+            error => {
+                console.log('businessService failed');
+            });
     }
 
     subscribeToUnreadMessages() {
@@ -61,6 +99,11 @@ export class HeaderComponent implements OnInit {
                     this.authService.cleanStore();
                     this.router.navigate(['/login']).then();
                 });
+    }
+
+    changeBusiness() {
+        this.authService.setSelectedCompany(this.selectedBusiness);
+        location.reload(true);
     }
 
     exit() {

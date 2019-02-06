@@ -46,7 +46,6 @@
             <th (click)="sort('unread')"><i class="fas fa-comment"></i>
                 <span class="fas" *ngIf="key =='unread'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
             </th>
-            <th>Modificar</th>
             <th>Detalle</th>
             </thead>
             <tbody>
@@ -54,24 +53,24 @@
                 <td>{{d.watch.stand_name}}</td>
                 <td>{{d.title}}</td>
                 <td>{{d.observation}}</td>
-                <td>{{d.create_date}}</td>
+                <td>{{d.create_date | date : 'medium'}}</td>
                 <td>
                     <span *ngIf="d.unread > 0" style="background: limegreen; padding: 2px 6px; border-radius: 50%; color: white; font-size: .8rem; text-align: right;">{{d.unread}}</span>
-                </td>
-                <td>
-                    <button class="btn btn-success" *ngIf="d.resolved == 0" (click)="changeResolve(d.id, d.resolved)">Reabrir</button>
-                    <button class="btn btn-danger" *ngIf="d.resolved != 0" (click)="changeResolve(d.id, d.resolved)">Cerrar</button>
                 </td>
                 <td>
                     <a class="btn btn-primary btn-xs" (click)="viewDetail(d)"  title="Detalle"><span class="far fa-eye"></span></a>
                 </td>
             </tr>
             <tr *ngIf="!hay">
-                <th colspan="8"><h3>No hay nuevos comentarios</h3></th>
+                <th colspan="8" class="text-center">
+                    <div style="font-size: 1.3rem; color: gray">
+                        No hay nuevos comentarios. &nbsp;
+                    </div>
+                </th>
             </tr>
             </tbody>
         </table>
-        <div style="text-align: center; padding-right: 40px;">
+        <div style="text-align: center; padding-right: 40px;" *ngIf="data.length > 10 && hay">
             <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
                                  nextLabel="">
             </pagination-controls>
@@ -115,7 +114,7 @@
                 <div class="form-group row">
                     <label for="name" class="col-sm-2 col-form-label">Fecha</label>
                     <div class="col-sm-10">
-                        <input type="text" readonly class="form-control" value="{{report.create_date}}">
+                        <input type="text" readonly class="form-control" value="{{report.create_date | date : 'medium'}}">
                     </div>
                 </div>
                 <div class="form-group row">
@@ -247,10 +246,13 @@
 
 
                 <hr>
-                <div class="form-group row mt-2">
-                    <label class="col-sm-9 col-form-label"><b>Comentarios</b></label>
-                    <div class="col-sm-3">
-                        <button class="btn btn-success form-control ml-auto" (click)="agregarComentario()">Agregar comentario</button>
+                <div class="form-group row mt-2" style="display: flex; flex-direction: row; flex-wrap: nowrap;">
+                    <label class="col-sm-3 col-form-label"><b>Comentarios</b></label>
+
+                    <div style="display: flex; flex-direction: row; flex-wrap: nowrap; width: 100%; justify-content: flex-end; padding-right: 16px;">
+                        <button style="width: 20vw" class="btn btn-success col-md-2" *ngIf="report.resolved == 0" (click)="changeResolve(report, report.resolved)">Reabrir</button>
+                        <button style="width: 20vw" class="btn btn-danger col-md-2" *ngIf="report.resolved != 0" (click)="changeResolve(report, report.resolved)">Cerrar</button>
+                        <button style="width: 30vw; margin-left: 8px" class="btn btn-success col-md-3" *ngIf="report.resolved != 0" (click)="agregarComentario()">Agregar comentario</button>
                     </div>
                 </div>
                 <div>

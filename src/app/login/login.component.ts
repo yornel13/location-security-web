@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {environment} from '../../environments/environment';
 
 import { AuthenticationService } from '../_services';
 import {ApiResponse} from '../../model/app.response';
@@ -15,6 +16,7 @@ export class LoginComponent implements OnInit {
     submitted = false;
     returnUrl: string;
     error = '';
+    systemVersion = environment.VERSION;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -50,7 +52,13 @@ export class LoginComponent implements OnInit {
                     this.onSuccess(success.result);
                 },
                 error => {
-                    this.error = error;
+                    if (error.status === 404 || error.status === 0) {
+                        this.error = 'Falla de conexión.';
+                    } else if (error.status === 422) {
+                        this.error = error.error.message;
+                    } else {
+                        this.error = error.message;
+                    }
                     this.loading = false;
                 });
     }

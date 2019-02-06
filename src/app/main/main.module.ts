@@ -45,15 +45,12 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import {FilterUsers} from './messaging/filter.users';
 import {RelativeTimePipe} from './messaging/relative.pipe';
 import {CardRecordComponent} from './monitoring/aside/card.record.component';
-import {
-    ToastrModule,
-    ToastNoAnimation,
-    ToastNoAnimationModule
-} from 'ngx-toastr';
+import {ToastrModule} from 'ngx-toastr';
 import {HistoryPrint} from './monitoring/history.print';
 import {InfolinePrint} from './monitoring/infoline.print';
-import {HTTP_INTERCEPTORS} from "../../../node_modules/@angular/common/http";
-import {ErrorInterceptor, JwtInterceptor} from "../_helpers";
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {ErrorInterceptor, JwtInterceptor} from '../_helpers';
+import {ErrorService} from "../../model/error/error.service";
 
 export function controlModuleLoader() {
     return ControlModule;
@@ -106,7 +103,7 @@ export const mainRouting = RouterModule.forChild(mainRoutes);
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-        VehiclesService, WatchesService, MainService, TabletService, HistoryPrint, InfolinePrint ],
+        VehiclesService, WatchesService, MainService, TabletService, HistoryPrint, InfolinePrint, ErrorService ],
     entryComponents: [ PopupVehicleComponent, PopupWatchComponent, PopupAlertComponent, CardVehicleComponent,
         CardTabletComponent, ItemGuardComponent, CardTabletComponent ],
     declarations: [

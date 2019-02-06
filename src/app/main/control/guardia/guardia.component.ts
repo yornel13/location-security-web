@@ -25,7 +25,7 @@ export class GuardiaComponent {
     detalle:boolean;
     crear:boolean;
     editar:boolean;
-    //editar
+    //edit
     nombre:string;
     apellido:string;
     correo:string;

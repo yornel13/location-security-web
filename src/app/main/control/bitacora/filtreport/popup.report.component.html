@@ -3,7 +3,7 @@
   <p class="ps" style="font-size: 1rem; margin-top: 0; padding-top: 0; color: red"  *ngIf="report.level == '2'">{{report.title}}</p>
   <p class="ps" style="font-size: 0.9rem; color: deepskyblue; line-height: 1.1rem">{{report.observation}}</p>
   <br>
-  <p class="ps" style="font-size: 1.2rem">Fecha:  <b>{{report.create_date}}</b></p>
+  <p class="ps" style="font-size: 1.2rem">Fecha:  <b>{{report.create_date | date : 'medium'}}</b></p>
   <br>
   <p class="ps" style="font-size: 0.8rem; color: lightcoral; padding-bottom: 0; margin-bottom: 0">Registrado por:</p>
   <p class="ps" style="font-size: 1rem;"><b>Cedula:</b> {{report.guard_dni}}</p>

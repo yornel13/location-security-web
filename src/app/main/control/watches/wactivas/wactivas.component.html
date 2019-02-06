@@ -62,7 +62,7 @@
                 <td>{{d.tablet_imei}}</td>
                 <td>{{d.guard.name}} {{d.guard.lastname}}</td>
                 <td>{{d.guard.dni}}</td>
-                <td>{{d.create_date}}</td>
+                <td>{{d.create_date | date : "medium"}}</td>
                 <td><span *ngIf="d.status == 1" class="text-danger">Activa</span><span *ngIf="d.status == 0" class="text-success">Finalizada</span></td>
                 <td>
                     <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
@@ -105,7 +105,7 @@
                 <div class="form-group row">
                     <label for="fechacreate" class="col-sm-2 col-form-label">Hora de inicio</label>
                     <div class="col-sm-4">
-                        <input type="text" readonly class="form-control" id="fechacreate" value="{{guardia.create_date}}">
+                        <input type="text" readonly class="form-control" id="fechacreate" value="{{guardia.create_date | date : 'medium'}}">
                     </div>
                 </div>
                 <hr>

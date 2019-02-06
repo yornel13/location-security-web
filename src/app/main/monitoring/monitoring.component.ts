@@ -1,4 +1,3 @@
-///<reference path="../../../model/admin/admin.service.ts"/>
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Vehicle} from '../../../model/vehicle/vehicle';
 import {VehiclesService} from '../../../model/vehicle/vehicle.service';
@@ -9,8 +8,8 @@ import {Tablet} from '../../../model/tablet/tablet';
 import {TabletUtils} from '../../../model/tablet/tablet.utils';
 
 @Component({
-  selector: 'app-monitoring',
-  template: `
+    selector: 'app-monitoring',
+    template: `
       <main class="monitoring-container">
           <app-aside (markerFocused)="markersFocused($event, $event)" (markerChanged)="setMarkerChanged($event)"
                      [vehicles]="vehicles" [tablets]="tablets" [markersData]="markersData" class="app-aside" ></app-aside>
@@ -45,39 +44,49 @@ export class MonitoringComponent implements OnInit {
     }
 
     getVehicles() {
-      this.vehiclesService.getVehicles().subscribe(data => {
-          this.vehicles = new UtilsVehicles().processVehicles(data.data);
-          this.updateVehicle(this.vehicles);
-      }, (error: HttpErrorResponse) => {
-          console.log(error.message);
-          this.error = 'Error connecting with server';
-      });
+        this.vehiclesService.getVehiclesFromClaro().then(
+            success => {
+                console.log(success);
+                this.vehicles = new UtilsVehicles().processVehicles(success[0].data);
+                this.updateVehicle(this.vehicles);
+            }, error => {
+                console.log(error.message);
+                this.error = 'Error connecting with server';
+            }
+        );
+        // this.vehiclesService.getVehicles().subscribe(data => {
+        //     this.vehicles = new UtilsVehicles().processVehicles(data.data);
+        //     this.updateVehicle(this.vehicles);
+        // }, (error: HttpErrorResponse) => {
+        //     console.log(error.message);
+        //     this.error = 'Error connecting with server';
+        // });
     }
 
     getTablets() {
-       this.tabletService.getTablet().subscribe(data => {
-           this.tablets = new TabletUtils().processTablets(data.data);
-           if (this.tablets.length > 0) { this.tablets.reverse(); }
-           this.updateTablet(this.tablets);
-       }, (error: HttpErrorResponse) => {
-           console.log(error.message);
-           this.error = 'Error connecting with server';
-       });
+        this.tabletService.getTablet().subscribe(data => {
+            this.tablets = new TabletUtils().processTablets(data.data);
+            if (this.tablets.length > 0) { this.tablets.reverse(); }
+            this.updateTablet(this.tablets);
+        }, (error: HttpErrorResponse) => {
+            console.log(error.message);
+            this.error = 'Error connecting with server';
+        });
     }
 
     updateTablet(tablets: Tablet[]) {
-      const removeTablets: any[] = [];
-      this.markersData.forEach(data => {
-          if (data.group_name === 'Tablet Guardia') {
-              removeTablets.push(data);
-          }
-      });
-      removeTablets.forEach( tablet => {
-          this.markersData.splice(this.markersData.indexOf(tablet), 1);
-      });
-      tablets.forEach( tablet => {
-          this.markersData.unshift(tablet);
-      });
+        const removeTablets: any[] = [];
+        this.markersData.forEach(data => {
+            if (data.group_name === 'Tablet Guardia') {
+                removeTablets.push(data);
+            }
+        });
+        removeTablets.forEach( tablet => {
+            this.markersData.splice(this.markersData.indexOf(tablet), 1);
+        });
+        tablets.forEach( tablet => {
+            this.markersData.unshift(tablet);
+        });
     }
 
     updateVehicle(vehicles: Vehicle[]) {
@@ -123,8 +132,8 @@ export class MonitoringComponent implements OnInit {
     }
 
     markersFocused(lat, lng) {
-      this.lat = lat.lat;
-      this.lng = lng.lng;
+        this.lat = lat.lat;
+        this.lng = lng.lng;
     }
 
 }

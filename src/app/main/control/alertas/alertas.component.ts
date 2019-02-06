@@ -26,7 +26,7 @@ export class AlertasComponent implements OnInit {
     readonly alertCollection: AngularFirestoreCollection<Alerta>;
 
     alertas:any = undefined;
-    data:any = undefined;
+    data: any = [];
     guardias:any = undefined;
     guard:any = undefined;
     numElement:number = 10;
@@ -67,10 +67,13 @@ export class AlertasComponent implements OnInit {
     month2:any;
     day2:any;
 
-    //dropdow
+    // dropdown
     dropdownList = [];
     selectedGuardias = [];
     dropdownSettings = {};
+
+    isLoading = false;
+    resultListSelected = [];
 
     zoom;
     center = L.latLng(([ this.lat, this.lng ]));
@@ -257,6 +260,15 @@ export class AlertasComponent implements OnInit {
         );
     }
 
+    showLoading() {
+        this.isLoading = true;
+        this.data = [];
+    }
+
+    dismissLoading() {
+        this.isLoading = false;
+    }
+
     putTodayFecha() {
         var d = new Date();
         var day = d.getDate();
@@ -279,7 +291,7 @@ export class AlertasComponent implements OnInit {
         this.desde =this.date;
     }
 
-    getToday(){
+    getToday() {
         var d = new Date();
         var day = d.getDate();
         var month = d.getMonth()+1;
@@ -368,7 +380,7 @@ export class AlertasComponent implements OnInit {
                 this.guard = this.guardias.data;
                 const datag = [];
                 this.guard.forEach(guard => {
-                    datag.push({ item_id: guard.id, item_text: guard.name+' '+guard.lastname });
+                    datag.push({ item_id: guard.id, item_text: guard.name + ' ' + guard.lastname });
                 });
                 this.dropdownList = datag;
             }, error => {
@@ -381,11 +393,11 @@ export class AlertasComponent implements OnInit {
         );
     }
 
-    onItemSelect (item:any) {
+    onItemSelect (item: any) {
         this.getAlerts();
     }
 
-    onItemDeSelect(item:any) {
+    onItemDeSelect(item: any) {
         this.getAlerts();
     }
 
@@ -423,37 +435,37 @@ export class AlertasComponent implements OnInit {
         );
     }
 
-    selectRange(id){
-        if(id == 1){
+    selectRange(id) {
+        if (id == 1) {
             this.rangeday = true;
-            this.desde = "";
-            this.hasta = "";
+            this.desde = '';
+            this.hasta = '';
             this.getAlerts();
-        }else{
+        } else {
             this.rangeday = false;
-            this.desde = "";
-            this.hasta = "";
+            this.desde = '';
+            this.hasta = '';
             this.getAlerts();
         }
     }
 
     getAlerts() {
-        //formateo de causas
-        var cause = "all";
-        if (this.causaSelect == 0){
-            cause = "all";
-        } else if(this.causaSelect == 1){
-            cause = "SOS1";
-        } else if(this.causaSelect == 2){
-            cause = "DROP";
-        } else if(this.causaSelect == 3){
-            cause = "OUT_BOUNDS";
-        } else if(this.causaSelect == 4){
-            cause = "GENERAL";
-        } else if(this.causaSelect == 5){
-            cause = "INCIDENCE";
+        // format of causes
+        var cause = 'all';
+        if (this.causaSelect == 0) {
+            cause = 'all';
+        } else if (this.causaSelect == 1) {
+            cause = 'SOS1';
+        } else if (this.causaSelect == 2) {
+            cause = 'DROP';
+        } else if (this.causaSelect == 3) {
+            cause = 'OUT_BOUNDS';
+        } else if (this.causaSelect == 4) {
+            cause = 'GENERAL';
+        } else if (this.causaSelect == 5) {
+            cause = 'INCIDENCE';
         }
-        //formateo de fecha
+        // format of dates
         var fecha1 = String(this.desde);
         var valuesdate1 = fecha1.split('-');
         var year1 = valuesdate1[0];
@@ -465,232 +477,103 @@ export class AlertasComponent implements OnInit {
         var year2 = valuesdate2[0];
         var month2 = valuesdate2[1];
         var day2 = valuesdate2[2];
-        //formateo de guardias
+        // format of guards
         var guardia = this.selectedGuardias;
         console.log(guardia);
-        //Iniciar búsqueda
-        if(this.desde == ""){
-            if(cause == "all"){
-                if(guardia.length == 0){
-                    // this.getAll();
-                }else{
-                    var result = [];
-                    for(var i=0; i<guardia.length; i++){
-                        this.alertaService.getByGuard(guardia[i].item_id).then(
-                            success => {
-                                this.alertas = success;
-                                result = result.concat(this.alertas.data);
-                                this.data = result;
-                                for(var i=0; i<this.data.length; i++){
-                                    this.data[i].id = Number(this.data[i].id);
-                                }
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
-                    }
-                }
-            }else{
-                if(guardia.length == 0){
-                    this.alertaService.getByCause(cause).then(
-                        success => {
-                            this.alertas = success;
-                            this.data = this.alertas.data;
-                            for(var i=0; i<this.data.length; i++){
-                                this.data[i].id = Number(this.data[i].id);
-                            }
-                        }, error => {
-                            if (error.status === 422) {
-                                // on some data incorrect
-                            } else {
-                                // on general error
-                            }
-                        }
-                    );
-                }else{
-                    var result = [];
-                    for(var i=0;i<guardia.length;i++){
-                        this.alertaService.getByGuardCause(guardia[i].item_id, cause).then(
-                            success => {
-                                this.alertas = success;
-                                result = result.concat(this.alertas.data);
-                                this.data = result;
-                                for(var i=0; i<this.data.length; i++){
-                                    this.data[i].id = Number(this.data[i].id);
-                                }
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
-                    }
-                }
-            }
-        }else{
-            if(this.rangeday){
-                if(cause == "all"){
-                    if(guardia.length == 0){
-                        this.alertaService.getByCauseDate(cause, year1, month1, day1, year1, month1, day1).then(
-                            success => {
-                                this.alertas = success;
-                                this.data = this.alertas.data;
-                                for(var i=0; i<this.data.length; i++){
-                                    this.data[i].id = Number(this.data[i].id);
-                                }
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
-                    }else{
-                        var result = [];
-                        for(var i=0;i<guardia.length;i++){
-                            this.alertaService.getByGuardDate(guardia[i].item_id, year1, month1, day1, year1, month1, day1).then(
-                                success => {
-                                    this.alertas = success;
-                                    result = result.concat(this.alertas.data);
-                                    this.data = result;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    }
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
+        // Init search
+        if (this.desde == '') {
+            this.data = [];
+        } else {
+            if (this.rangeday) {
+                if (cause == 'all') {
+                    if (guardia.length == 0) {
+                        this.showLoading();
+                        this.alertaService.getByCauseDate(cause, year1, month1, day1, year1, month1, day1)
+                                .then(this.onListAlertsSuccess.bind(this), this.onListAlertsFailure.bind(this));
+                    } else {
+                        this.resultListSelected = [];
+                        this.showLoading();
+                        for (var i = 0; i < guardia.length; i++) {
+                            this.alertaService.getByGuardDate(guardia[i].item_id, year1, month1, day1, year1, month1, day1)
+                                .then(this.onListAlertsBySelectedListSuccess.bind(this), this.onListAlertsFailure.bind(this));
                         }
                     }
-                }else{
-                    if(guardia.length == 0){
-                        this.alertaService.getByCauseDate(cause, year1, month1, day1, year1, month1, day1).then(
-                            success => {
-                                this.alertas = success;
-                                this.data = this.alertas.data;
-                                for(var i=0; i<this.data.length; i++){
-                                    this.data[i].id = Number(this.data[i].id);
-                                }
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
-                    }else{
-                        var result = [];
-                        for(var i=0;i<guardia.length;i++){
-                            this.alertaService.getByGuardCaseDate(guardia[i].item_id, cause, year1, month1, day1, year1, month1, day1).then(
-                                success => {
-                                    this.alertas = success;
-                                    result = result.concat(this.alertas.data);
-                                    this.data = result;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    }
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
+                } else {
+                    if (guardia.length == 0) {
+                        this.showLoading();
+                        this.alertaService.getByCauseDate(cause, year1, month1, day1, year1, month1, day1)
+                            .then(this.onListAlertsSuccess.bind(this), this.onListAlertsFailure.bind(this));
+                    } else {
+                        this.resultListSelected = [];
+                        this.showLoading();
+                        for (var i = 0; i < guardia.length; i++) {
+                            this.alertaService.getByGuardCaseDate(guardia[i].item_id, cause, year1, month1, day1, year1, month1, day1)
+                                .then(this.onListAlertsBySelectedListSuccess.bind(this), this.onListAlertsFailure.bind(this));
                         }
                     }
                 }
-            }else{
-                if(cause == "all"){
-                    if(guardia.length == 0){
-                        this.alertaService.getByCauseDate(cause, year1, month1, day1, year2, month2, day2).then(
-                            success => {
-                                this.alertas = success;
-                                this.data = this.alertas.data;
-                                for(var i=0; i<this.data.length; i++){
-                                    this.data[i].id = Number(this.data[i].id);
-                                }
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
+            } else {
+                if (this.hasta === '') {
+                    this.data = [];
+                } else {
+                    if (cause == 'all') {
+                        if (guardia.length == 0) {
+                            this.showLoading();
+                            this.alertaService.getByCauseDate(cause, year1, month1, day1, year2, month2, day2)
+                                .then(this.onListAlertsSuccess.bind(this), this.onListAlertsFailure.bind(this));
+                        } else {
+                            this.resultListSelected = [];
+                            this.showLoading();
+                            for (var i = 0; i < guardia.length; i++) {
+                                this.alertaService.getByGuardDate(guardia[i].item_id, year1, month1, day1, year2, month2, day2)
+                                    .then(this.onListAlertsBySelectedListSuccess.bind(this), this.onListAlertsFailure.bind(this));
                             }
-                        );
-                    }else{
-                        var result = [];
-                        for(var i=0;i<guardia.length;i++){
-                            this.alertaService.getByGuardDate(guardia[i].item_id, year1, month1, day1, year2, month2, day2).then(
-                                success => {
-                                    this.alertas = success;
-                                    result = result.concat(this.alertas.data);
-                                    this.data = result;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    }
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
                         }
-                    }
-                }else{
-                    if(guardia.length == 0){
-                        this.alertaService.getByCauseDate(cause, year1, month1, day1, year2, month2, day2).then(
-                            success => {
-                                this.alertas = success;
-                                this.data = this.alertas.data;
-                                for(var i=0; i<this.data.length; i++){
-                                    this.data[i].id = Number(this.data[i].id);
-                                }
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
+                    } else {
+                        if (guardia.length == 0) {
+                            this.showLoading();
+                            this.alertaService.getByCauseDate(cause, year1, month1, day1, year2, month2, day2)
+                                .then(this.onListAlertsSuccess.bind(this), this.onListAlertsFailure.bind(this));
+                        } else {
+                            this.resultListSelected = [];
+                            this.showLoading();
+                            for (var i = 0; i < guardia.length; i++) {
+                                this.alertaService.getByGuardCaseDate(guardia[i].item_id, cause, year1, month1, day1, year2, month2, day2)
+                                    .then(this.onListAlertsBySelectedListSuccess.bind(this), this.onListAlertsFailure.bind(this));
                             }
-                        );
-                    }else{
-                        var result = [];
-                        for(var i=0;i<guardia.length;i++){
-                            this.alertaService.getByGuardCaseDate(guardia[i].item_id, cause, year1, month1, day1, year2, month2, day2).then(
-                                success => {
-                                    this.alertas = success;
-                                    result = result.concat(this.alertas.data);
-                                    this.data = result;
-                                    for(var i=0; i<this.data.length; i++){
-                                        this.data[i].id = Number(this.data[i].id);
-                                    }
-                                }, error => {
-                                    if (error.status === 422) {
-                                        // on some data incorrect
-                                    } else {
-                                        // on general error
-                                    }
-                                }
-                            );
                         }
                     }
                 }
             }
+        }
+    }
+
+    onListAlertsBySelectedListSuccess(success) {
+        this.alertas = success;
+        this.resultListSelected = this.resultListSelected.concat(this.alertas.data);
+        this.data = this.resultListSelected;
+        for (var i = 0; i < this.data.length; i++) {
+            this.data[i].id = Number(this.data[i].id);
+        }
+        this.dismissLoading();
+    }
+
+    onListAlertsSuccess(success) {
+        if (this.isLoading) {
+            this.alertas = success;
+            this.data = this.alertas.data;
+            this.dismissLoading();
+        }
+    }
+
+    onListAlertsFailure(error) {
+        if (this.isLoading) {
+            if (error.status === 422) {
+                // on some data incorrect
+            } else {
+                // on general error
+            }
+            this.dismissLoading();
         }
     }
 

@@ -25,7 +25,7 @@
         <div class="ml-auto form-inline">
             <div class="form-group row">
                 <label class="mr-4"><b>Filtrar por:</b></label>
-                <select id="inputState" class="form-control mr-4" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
+                <select id="inputState" class="form-control mr-4" [(ngModel)]="filtroSelect" (change)="selectFilter(filtroSelect)" [ngModelOptions]="{standalone: true}">
                     <option [ngValue]="0">Sin filtrar</option>
                     <option [ngValue]="1">Vehículo</option>
                     <option [ngValue]="2">Guardia</option>
@@ -130,18 +130,29 @@
                 <td>{{d.vehicle.plate}}</td>
                 <td>{{d.visitor.name}} {{d.visitor.lastname}}</td>
                 <td>{{d.visitor.dni}}</td>
-                <td>{{d.create_date}}</td>
+                <td>{{d.create_date | date : 'medium'}}</td>
                 <td>--</td>
                 <td>
                     <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
                 </td>
             </tr>
-            <tr *ngIf="nohay">
-                <th colspan="7"><h3>No hay visitas activas</h3></th>
+            <tr *ngIf="data.length == 0 && !isLoading">
+                <th colspan="8" class="text-center">
+                    <div style="font-size: 1.3rem; color: gray">
+                        Sin visitas activas para esta selección. &nbsp;
+                    </div>
+                </th>
+            </tr>
+            <tr *ngIf="isLoading">
+                <th colspan="8">
+                    <div style="font-size: 1.2rem">
+                        Cargando información, espere... &nbsp; <span class="fa fa-spinner fa-spin fa-fw"></span>
+                    </div>
+                </th>
             </tr>
             </tbody>
         </table>
-        <div style="text-align: center; padding-right: 40px;">
+        <div style="text-align: center; padding-right: 40px;" *ngIf="data.length > 10 && !isLoading">
             <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
                                  nextLabel="">
             </pagination-controls>
@@ -173,7 +184,7 @@
                 <div class="form-group row">
                     <label for="lastname" class="col-sm-2 col-form-label">Entrada</label>
                     <div class="col-sm-4">
-                        <input type="text" readonly class="form-control" id="lastname" value="{{visi.create_date}}">
+                        <input type="text" readonly class="form-control" id="lastname" value="{{visi.create_date | date : 'medium'}}">
                     </div>
                 </div>
                 <div class="form-group row">

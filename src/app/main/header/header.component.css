@@ -40,3 +40,37 @@ img {
   height: 100%;
   width: auto;
 }
+
+.container-de {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+#selectBusiness {
+    background-color: transparent;
+    border: transparent;
+    color: beige;
+    font-size: 0.8rem;
+    line-height: 0.8rem;
+    margin: 0 0 0 5px;
+    padding-top: 0;
+    height: 1.5rem;
+}
+
+#selectBusiness option {
+    color: black;
+}
+
+#selectBusiness:focus {
+    outline:none;
+}
+
+.header-user-name {
+    color: beige;
+    margin: 7px 0 0 15px;
+    padding: 0;
+    font-size: 1rem;
+    line-height: 1rem;
+}

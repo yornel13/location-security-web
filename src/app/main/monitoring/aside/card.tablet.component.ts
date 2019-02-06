@@ -9,7 +9,7 @@ import {MainService} from '../../main.service';
 })
 export class CardTabletComponent implements OnInit {
     @Input()
-    tablet: Tablet;
+    tablet: any;
     @Output() latlng = {lat: null , lng: null};
     @Output() markerFocused = new EventEmitter();
     devices_status = 'ONLINE';

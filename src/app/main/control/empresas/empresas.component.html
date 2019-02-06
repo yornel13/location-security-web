@@ -1,0 +1,167 @@
+
+<div class="info-container panel panel-default" *ngIf="list">
+    <div class="container-fluid row mx-auto mt-2">
+        <div class="mr-auto row ml-1">
+            <a routerLink="/u/control" title="Atrás" style="color: var(--secondary-color)">
+                <i class="fas fa-reply icon-return"></i>
+            </a>
+            <h3 class="list-title">Empresas</h3>
+        </div>
+        <div class="ml-auto form-inline">
+            <div class="btn-group">
+                <a class="btn btn-success" style="color: white;" (click)="createCompany()"><i class="fas fa-plus-circle"></i>
+                    Añadir Empresa
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid row mx-auto mt-2">
+        <div class="mr-auto row ml-2 form-inline">
+            <label class="mr-1"><b>Mostrar:</b></label>
+            <select id="inputState" class="form-control mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
+                <option [ngValue]="10">10</option>
+                <option [ngValue]="25">25</option>
+                <option [ngValue]="50">50</option>
+                <option [ngValue]="100">100</option>
+            </select>
+            <label>Elementos</label>
+        </div>
+        <div class="ml-auto form-inline">
+            <div class="form-group row">
+                <input type="text" class="form-control mr-2" placeholder="Buscar" name="search" [(ngModel)]="filter">
+            </div>
+        </div>
+    </div>
+    <div class="table mt-2 container-fluid">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <th (click)="sort('id')">ID
+                <span class="fas" *ngIf="key =='id'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            </th>
+            <th (click)="sort('name')">Nombre
+                <span class="fas" *ngIf="key =='name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            </th>
+            <th (click)="sort('address')">Dirección
+                <span class="fas" *ngIf="key =='lastname'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            </th>
+            <th (click)="sort('ruc')">RUC
+                <span class="fas" *ngIf="key =='ruc'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            </th>
+            <th (click)="sort('create_at')">Creado
+                <span class="fas" *ngIf="key =='create_at'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            </th>
+            <th (click)="sort('update_at')">Actualizado
+                <span class="fas" *ngIf="key =='update_at'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            </th>
+            <th>Acciones</th>
+            </thead>
+            <tbody>
+            <tr *ngFor="let d of data | filter:filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
+                <td>{{d.id}}</td>
+                <td>{{d.name}}</td>
+                <td>{{d.address}}</td>
+                <td>{{d.ruc}}</td>
+                <td>{{d.create_at | date : 'medium'}}</td>
+                <td>{{d.update_at | date : 'medium'}}</td>
+                <td>
+                    <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editCompany(d.id)" title="Editar"><span class="fas fa-edit"></span></a>
+                    <a class="btn btn-danger btn-xs" data-toggle="modal" href="#modal{{d.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
+                </td>
+                <div class="modal" tabindex="-1" role="dialog" id="modal{{d.id}}">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #c82333; color: white;">
+                                <h5 class="modal-title">Eliminar Funcionario</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>¿Está seguro que desea eliminar al funcionario {{d.name}} {{d.lastname}}?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" (click)="deleteCompany(d.id)" data-dismiss="modal">Eliminar</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+        <div style="text-align: center; padding-right: 40px;">
+            <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
+                                 nextLabel="">
+            </pagination-controls>
+        </div>
+    </div>
+</div>
+
+<div class="info-container panel panel-default" *ngIf="create">
+    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
+        <h3 class="panel-title"><i class="fas fa-plus-circle" style="margin-right: 20px;"></i> Nueva Empresa</h3>
+    </div>
+    <div class="panel-body mt-2">
+        <div class="table-container container" style="padding-top: 24px">
+            <form method="POST"  role="form">
+                <div class="form-group row">
+                    <label for="nameA" class="col-sm-2 col-form-label">Nombre <span class="text-danger">*</span></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="nameA" placeholder="Introduzca el nombre de la empresa" [(ngModel)]="nameA" [ngModelOptions]="{standalone: true}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="addressA" class="col-sm-2 col-form-label">Dirección <span class="text-danger">*</span></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="addressA" placeholder="Introduzca la dirección" [(ngModel)]="addressA" [ngModelOptions]="{standalone: true}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="rucA" class="col-sm-2 col-form-label">Ruc <span class="text-danger">*</span></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="rucA" placeholder="Introduzca la numeración" [(ngModel)]="rucA" [ngModelOptions]="{standalone: true}">
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="return()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
+                    <button type="button" class="btn btn-success btn-block col-md-3 mr-auto" (click)="saveCompany()"  style=" margin: 0px 0px 0px 20px"><i class="fas fa-plus-circle" style="margin-right: 10px;"></i>Agregar Empresa</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="info-container panel panel-default" *ngIf="edit">
+    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
+        <h3 class="panel-title"><i class="fas fa-edit" style="margin-right: 20px;"></i>Editar Empresa</h3>
+    </div>
+    <div class="panel-body mt-2">
+        <div class="table-container container">
+            <form role="form">
+                <div class="form-group row">
+                    <label for="nameE" class="col-sm-2 col-form-label">Nombre </label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="nameE" placeholder="Introduzca el nombre de la empresa" [(ngModel)]="nameE" [ngModelOptions]="{standalone: true}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="addressE" class="col-sm-2 col-form-label">Dirección </label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="addressE" placeholder="Introduzca la dirección" [(ngModel)]="addressE" [ngModelOptions]="{standalone: true}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="rucE" class="col-sm-2 col-form-label">Ruc </label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="rucE" placeholder="Introduzca la numeración" [(ngModel)]="rucE" [ngModelOptions]="{standalone: true}">
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="return()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
+                    <button type="button" class="btn btn-success btn-block col-md-3 mr-auto" (click)="saveEditedCompany()" style=" margin: 0px 0px 0px 20px"><i class="fas fa-edit" style="margin-right: 10px;"></i>Editar Empresa</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

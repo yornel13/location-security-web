@@ -4,8 +4,8 @@
         <span class="card-imei ps"><b>IMEI {{tablet.imei}}</b></span>
     </div>
     <div class="card-body" style="padding: 8px 16px">
-        <p class="ps card-dni">Cedula: {{tablet.guard_dni}}</p>
-        <p class="ps card-name">{{tablet.guard_name}} {{tablet.guard_lastname}}</p>
+        <p class="ps card-dni">Cedula: {{tablet.watch.guard.dni}}</p>
+        <p class="ps card-name">{{tablet.watch.guard.name}} {{tablet.watch.guard.lastname}}</p>
         <div class="container-status">
             <img class="guard-icon" src="{{tablet.iconUrl}}" alt="">
             <span class="ps online" *ngIf="tablet.message != 'FINISHED_WATCH'; else inactive">{{devices_status}}</span>

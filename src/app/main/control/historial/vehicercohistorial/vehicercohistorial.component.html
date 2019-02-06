@@ -70,7 +70,7 @@
 	                <td>{{tab.id}}</td>
 	                <td>{{tab.imei}}</td>
                     <td>{{tab.alias}}</td>
-	                <td>{{tab.create_date}}</td>
+	                <td>{{tab.create_date | date : 'medium'}}</td>
 	                <td>{{tab.latitude}}</td>
 	                <td>{{tab.longitude}}</td>
 	                <td *ngIf="(tab.in | json) != '{}'">{{tab.in.create_date}}</td>

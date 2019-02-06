@@ -382,22 +382,23 @@ export class VisitPrint {
     }
 
     getPrintListBody(visits: any[], type: number) { // 1: pdf, 2: excel
+        console.log(visits);
         const body = [];
         const excel = [];
         visits.forEach((visit: any) => {
             body.push([
                 visit.stand_name,
-                (visit.plate ? visit.plate : '-'),
-                visit.visitor_dni,
-                visit.visitor_name + ' ' + visit.visitor_lastname,
+                (visit.vehicle ? visit.vehicle.plate : '-'),
+                visit.visitor.dni,
+                visit.visitor.name + ' ' + visit.visitor.lastname,
                 visit.create_date,
                 (visit.finish_date === '0000-00-00 00:00:00' || visit.finish_date === null ? '-' : visit.finish_date)
             ]);
             excel.push({
                 'Puesto' : visit.stand_name,
-                'Placa': (visit.plate ? visit.plate : '-'),
-                'Cédula': visit.visitor_dni,
-                'Visitante': visit.visitor_name + ' ' + visit.visitor_lastname,
+                'Placa': (visit.vehicle ? visit.vehicle.plate : '-'),
+                'Cédula': visit.visitor.dni,
+                'Visitante': visit.visitor.name + ' ' + visit.visitor.lastname,
                 'Entrada': visit.create_date,
                 'Salida': (visit.finish_date === '0000-00-00 00:00:00' || visit.finish_date === null ? '-' : visit.finish_date)
             });

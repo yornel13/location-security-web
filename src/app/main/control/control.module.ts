@@ -80,8 +80,10 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { AgoTimePipe } from './ago.pipe';
 import {ReportFilterPipe} from './bitacora/report.pipe';
 import {VisitPrint} from './visitas/visit.print';
-import {HTTP_INTERCEPTORS} from "../../../../node_modules/@angular/common/http";
-import {ErrorInterceptor, JwtInterceptor} from "../../_helpers";
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {ErrorInterceptor, JwtInterceptor} from '../../_helpers';
+import {BusinessService} from '../../../model/business/business.service';
+import {EmpresasComponent} from './empresas/empresas.component';
 
 export const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
@@ -110,6 +112,7 @@ export const controlRoutes: Routes = [
                     { path: 'historial/vehiculos', component: VehistorialComponent },
                     { path: 'historial/tablets', component: TabhistorialComponent },
                     { path: 'historial/vehiculocerco', component: VehicercohistorialComponent },
+                    { path: 'empresas', component: EmpresasComponent },
                     { path: 'configuracion', component: ConfiguracionComponent },
                     { path: 'home', component: HomeComponent },
                     { path: 'visitas', component: MvisitasComponent },
@@ -119,7 +122,7 @@ export const controlRoutes: Routes = [
                     { path: 'historial', component: MhistorialComponent },
                     { path: 'cerco/virtual', component: CercoComponent },
                     { path: 'cerco/grupos', component: CercogrupoComponent },
-                    { path: '', redirectTo: '/u/control/home', pathMatch: 'full' },
+                    { path: '', redirectTo: '/u/control/home', pathMatch: 'full' }
                 ]
             }
         ]
@@ -153,7 +156,7 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         GuardService, AdminService, VisitaVehiculoService, VisitanteService,
         FuncionarioService, ExcelService, PuestoService, VehiclestypesService,
         IncidenciasService, BitacoraService, VisitasService, ConfiguracionService,
-        BannerService, AlertaService, CercoService, GrupoService,
+        BannerService, AlertaService, CercoService, GrupoService, BusinessService,
         VehistorialService, TabhistoryService, SalidascercoService, VisitPrint ],
     entryComponents: [ PopupHistoryComponent, PopupTablethComponent, PopupReportComponent, PopupVisitComponent, PopupWatchtComponent ],
     declarations: [
@@ -175,6 +178,7 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         McercoComponent,
         TabletsComponent,
         PuestosComponent,
+        EmpresasComponent,
         MhistorialComponent,
         VehistorialComponent,
         TabhistorialComponent,

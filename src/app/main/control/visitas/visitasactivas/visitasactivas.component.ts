@@ -66,7 +66,10 @@ export class VisitasactivasComponent {
     lng:number = -79.0000;
     viewmap:boolean = false;
 
-    //dropdow
+    isLoading = false;
+    resultListSelected = [];
+
+    // dropdown
     dropdownList1 = [];
     selectedVehiculos = [];
     dropdownSettings1 = {};
@@ -169,31 +172,9 @@ export class VisitasactivasComponent {
     }
 
     getActives() {
-        this.visitasService.getActive().then(
-            success => {
-                this.visitas = success;
-                this.data = this.visitas.data;
-                var body = [];
-                var excel = [];
-                for(var i=0; i<this.data.length; i++){
-                    this.data[i].id = Number(this.data[i].id);
-                    this.data[i].visitor_dni = Number(this.data[i].visitor_dni);
-                    excel.push({'#' : this.data[i].id, 'Placa del Vehículo': this.data[i].plate, 'Visitante':this.data[i].visitor_name+' '+this.data[i].visitor_lastname, 'Cédula del visitante':this.data[i].visitor_dni, 'Entrada':this.data[i].create_date})
-                    body.push([this.data[i].id, this.data[i].plate, this.data[i].visitor_name+' '+this.data[i].visitor_lastname, this.data[i].visitor_dni, this.data[i].create_date])
-                }
-                this.contpdf = body;
-                this.info = excel;
-                if(this.data.length == 0){
-                    this.nohay = true;
-                }
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
+        this.showLoading();
+        this.visitasService.getActive()
+            .then(this.onListVisitsSuccess.bind(this), this.onListVisitsFailure.bind(this));
     }
 
     viewDetail(id) {
@@ -221,130 +202,110 @@ export class VisitasactivasComponent {
         );
     }
 
+    showLoading() {
+        this.isLoading = true;
+        this.data = [];
+    }
+
+    dismissLoading() {
+        this.isLoading = false;
+    }
+
+    onListVisitsSuccess(success) {
+        if (this.isLoading) {
+            this.visitas = success;
+            this.data = this.visitas.data;
+            this.dismissLoading();
+        }
+    }
+
+    onListVisitsBySelectedListSuccess(success) {
+        this.visitas = success;
+        this.resultListSelected = this.resultListSelected.concat(this.visitas.data);
+        this.data = this.resultListSelected;
+        for (var i = 0; i < this.data.length; i++) {
+            this.data[i].id = Number(this.data[i].id);
+        }
+        this.dismissLoading();
+    }
+
+    onListVisitsFailure(error) {
+        if (this.isLoading) {
+            if (error.status === 422) {
+                // on some data incorrect
+            } else {
+                // on general error
+            }
+            this.dismissLoading();
+        }
+    }
+
     regresar() {
         this.lista = true;
         this.detalle = false;
         this.viewmap = false;
     }
 
-    getByVehiculo(){
-        var vehiculo = this.selectedVehiculos;
-        if(this.dateSelect == ''){
-            if( vehiculo.length == 0){
+    getByVehiculo() {
+        const vehicles = this.selectedVehiculos;
+        if (vehicles.length == 0) {
+            this.data = [];
+        } else {
+            this.resultListSelected = [];
+            this.showLoading();
+            for (var i = 0; i < vehicles.length; i++) {
+                this.visitasService.getByVehiculo(vehicles[i].item_id, '1')
+                    .then(this.onListVisitsBySelectedListSuccess.bind(this), this.onListVisitsFailure.bind(this));
+            }
+        }
+    }
+
+    getByGuardia() {
+        const guards = this.selectedGuardias;
+        if (this.dateSelect == '') {
+            if (guards.length == 0) {
                 this.data = [];
-            }else{
-                var result = [];
-                for(var i=0;i<vehiculo.length;i++){
-                    this.visitasService.getByVehiculo(vehiculo[i].item_id, '1').then(
-                        success => {
-                            this.visitas = success;
-                            result = result.concat(this.visitas.data);
-                            this.data = result;
-                            for(var i=0; i<this.data.length; i++){
-                                this.data[i].id = Number(this.data[i].id);
-                            }
-                        }, error => {
-                            if (error.status === 422) {
-                                // on some data incorrect
-                            } else {
-                                // on general error
-                            }
-                        }
-                    );
+            } else {
+                this.resultListSelected = [];
+                this.showLoading();
+                for (var i = 0; i < guards.length;i++) {
+                    this.visitasService.getByGuard(guards[i].item_id, '1')
+                        .then(this.onListVisitsBySelectedListSuccess.bind(this), this.onListVisitsFailure.bind(this));
                 }
             }
         }
     }
 
-    getByGuardia(){
-        var guardia = this.selectedGuardias;
-        if(this.dateSelect == ''){
-            if(guardia.length == 0){
-                this.data = [];
-            }else{
-                var result = [];
-                for(var i=0;i<guardia.length;i++){
-                    this.visitasService.getByGuard(guardia[i].item_id, '1').then(
-                        success => {
-                            this.visitas = success;
-                            result = result.concat(this.visitas.data);
-                            this.data = result;
-                            for(var i=0; i<this.data.length; i++){
-                                this.data[i].id = Number(this.data[i].id);
-                            }
-                        }, error => {
-                            if (error.status === 422) {
-                                // on some data incorrect
-                            } else {
-                                // on general error
-                            }
-                        }
-                    );
-                }
+    getByVisitante() {
+        const visits = this.selectedVisitantes;
+        if (visits.length == 0) {
+            this.data = [];
+        } else {
+            this.resultListSelected = [];
+            this.showLoading();
+            for (var i = 0; i < visits.length; i++) {
+                this.visitasService.getByVisitante(visits[i].item_id, '1')
+                    .then(this.onListVisitsBySelectedListSuccess.bind(this), this.onListVisitsFailure.bind(this));
             }
         }
     }
 
-    getByVisitante(){
-        var visitante = this.selectedVisitantes;
-        if(this.dateSelect == ''){
-            if(visitante.length == 0){
-                this.data = [];
-            }else{
-                var result = []
-                for(var i=0;i<visitante.length;i++){
-                    this.visitasService.getByVisitante(visitante[i].item_id, '1').then(
-                        success => {
-                            this.visitas = success;
-                            result = result.concat(this.visitas.data);
-                            this.data = result;
-                            for(var i=0; i<this.data.length; i++){
-                                this.data[i].id = Number(this.data[i].id);
-                            }
-                        }, error => {
-                            if (error.status === 422) {
-                                // on some data incorrect
-                            } else {
-                                // on general error
-                            }
-                        }
-                    );
-                }
-            }
-        }
-    }
-
-    getByFuncionario(){
-        var funcionario = this.selectedFuncionarios;
-        if(this.dateSelect == ''){
-            if(funcionario.length == 0){
-                this.data = [];
-            }else{
-                var result = [];
-                for(var i=0;i<funcionario.length;i++){
-                    this.visitasService.getByFuncionario(funcionario[i].item_id, '1').then(
-                        success => {
-                            this.visitas = success;
-                            result = result.concat(this.visitas.data);
-                            this.data = result;
-                            for(var i=0; i<this.data.length; i++){
-                                this.data[i].id = Number(this.data[i].id);
-                            }
-                        }, error => {
-                            if (error.status === 422) {
-                                // on some data incorrect
-                            } else {
-                                // on general error
-                            }
-                        }
-                    );
-                }
+    getByFuncionario() {
+        const clerks = this.selectedFuncionarios;
+        if (clerks.length == 0) {
+            this.data = [];
+        } else {
+            this.resultListSelected = [];
+            this.showLoading();
+            for (var i = 0; i < clerks.length; i++) {
+                this.visitasService.getByFuncionario(clerks[i].item_id, '1')
+                    .then(this.onListVisitsBySelectedListSuccess.bind(this), this.onListVisitsFailure.bind(this));
             }
         }
     }
 
 
-    selectFilert(id){
+    selectFilter(id){
         if(id == 1){
             this.guardiaSelect = 0;
             this.visitanteSelect = 0;

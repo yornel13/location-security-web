@@ -132,7 +132,7 @@
                 </td>
                 <td>{{d.message}}</td>
                 <td>{{d.guard ? d.guard.name : ''}} {{d.guard ? d.guard.lastname : ''}}</td>
-                <td>{{d.create_date}}</td>
+                <td>{{d.create_date | date : "medium"}}</td>
                 <td>
                     <button class="btn btn-success" *ngIf="d.status == 1" (click)="solveAlert(d)"><span class="fas fa-check"></span></button>
                 </td>
@@ -140,9 +140,23 @@
                     <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)"  title="Detalle"><span class="far fa-eye"></span></a>
                 </td>
             </tr>
+            <tr *ngIf="data.length == 0 && !isLoading">
+                <th colspan="8" class="text-center">
+                    <div style="font-size: 1.3rem; color: gray">
+                        Sin alertas para esta selección. &nbsp;
+                    </div>
+                </th>
+            </tr>
+            <tr *ngIf="isLoading">
+                <th colspan="8">
+                    <div style="font-size: 1.2rem">
+                        Cargando información, espere... &nbsp; <span class="fa fa-spinner fa-spin fa-fw"></span>
+                    </div>
+                </th>
+            </tr>
             </tbody>
         </table>
-        <div style="text-align: center; padding-right: 40px;">
+        <div style="text-align: center; padding-right: 40px;" *ngIf="data.length > 10 && !isLoading">
             <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
                                  nextLabel="">
             </pagination-controls>
@@ -196,7 +210,7 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Fecha</label>
                     <div class="col-sm-4">
-                        <input type="text" readonly class="form-control" id="fecha" value="{{detailcause.create_date}}">
+                        <input type="text" readonly class="form-control" id="fecha" value="{{detailcause.create_date | date : 'medium'}}">
                     </div>
                     <label class="col-sm-2 col-form-label">Estado</label>
                     <div class="col-sm-2">

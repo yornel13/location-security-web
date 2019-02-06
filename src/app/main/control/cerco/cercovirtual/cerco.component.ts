@@ -170,7 +170,7 @@ export class CercoComponent implements OnInit {
                         name: this.nameBound,
                         points: coords,
                         color: this.colorSelected,
-                        status:  true
+                        status:  1
                     };
 
                     this.cercoService.add(bound).then(sucess => {

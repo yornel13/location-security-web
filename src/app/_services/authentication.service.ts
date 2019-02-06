@@ -15,6 +15,7 @@ export class AuthenticationService {
     private readonly TOKEN_SESSION = 'TOKEN-SESSION';
     private readonly TOKEN_FIRE = 'TOKEN-FIRE';
     private readonly USER = 'USER-ADMIN';
+    private readonly SELECTED_COMPANY_ID = 'SELECTED-COMPANY-ID';
 
     constructor(
           private http: HttpClient,
@@ -45,6 +46,16 @@ export class AuthenticationService {
     public setUser(user: string): boolean {
         localStorage.setItem(this.USER, user);
         return true;
+    }
+
+    public setSelectedCompany(id: number): boolean {
+        localStorage.setItem(this.SELECTED_COMPANY_ID, id + '');
+        return true;
+    }
+
+    public getSelectedCompany(): number {
+        const id = +localStorage.getItem(this.SELECTED_COMPANY_ID);
+        return id === null ? 0 : +id;
     }
 
     public cleanStore(): boolean {

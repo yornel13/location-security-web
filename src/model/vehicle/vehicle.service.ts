@@ -3,40 +3,46 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 import { VehicleList } from './vehicle.list';
-import {interval, Observable, of} from 'rxjs';
-import {repeatWhen} from 'rxjs/operators';
-import {Vehicle} from './vehicle';
+import {Observable, of} from 'rxjs';
 
 const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' })};
 
 @Injectable()
 export class VehiclesService {
 
-  private VEHICLE_BOUND_URL = environment.BASIC_URL + '/bounds/' + '/vehicle/';
-  private VEHICLE_URL = environment.BASIC_URL + '/vehicle';
+    private VEHICLE_URL = environment.BASIC_URL + '/vehicle';
+    private TOKEN = '01EC469EB5F64D8DA878042400D3CBA2';
 
 
-  constructor (private http: HttpClient) {}
+    constructor (private http: HttpClient) {}
 
-  getVehicles(): Observable<VehicleList> {
-    return this.http.get<VehicleList>(this.VEHICLE_URL).pipe(repeatWhen(() => interval(environment.MONITORING_REFRESH_INTERVAL)));
-  }
+    getVehicles(): Observable<VehicleList> {
+        return this.http.get<VehicleList>(this.VEHICLE_URL)
+            .pipe(/*repeatWhen(() => interval(environment.MONITORING_REFRESH_INTERVAL))*/);
+    }
 
-  getVehiclesList() {
-    return this.http.get<VehicleList>(this.VEHICLE_URL).toPromise()
-        .then( (response) => response);
-  }
+    getVehiclesFromClaro() {
+        const url =
+            'http://dts.location-world.com/api/fleet/onlinedevicesinfo?token='
+            + this.TOKEN
+            + '&time_zone_offset=-5&culture=es';
+        return this.http.get(url).toPromise()
+            .then((response) => response);
+    }
 
+    getVehiclesList() {
+        return this.http.get<VehicleList>(this.VEHICLE_URL).toPromise()
+            .then( (response) => response);
+    }
 
+    private handleError<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+            console.error(error);
+            return of(result as T);
+        };
+    }
 
-  private handleError<T> (operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      return of(result as T);
-    };
-  }
-
-  private log(message: string) {
-    console.log('VehicleService: ' + message);
-  }
+    private log(message: string) {
+        console.log('VehicleService: ' + message);
+    }
 }

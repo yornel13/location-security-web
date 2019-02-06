@@ -17,11 +17,13 @@ export class JwtInterceptor implements HttpInterceptor {
 
         if (!request.url.includes('/auth/admin')) {
             const token = this.authenticationService.getTokenSession();
+            const businessId = this.authenticationService.getSelectedCompany();
             if (token) {
                 request = request.clone({
                     setHeaders: {
                         'APP-TOKEN': token,
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Business': '' + businessId
                     }
                 });
                 return next.handle(request);

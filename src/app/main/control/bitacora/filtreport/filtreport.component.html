@@ -22,7 +22,7 @@
                 </label>
             </div>
             <label for="inputState" class="mr-2">Status</label>
-            <select id="inputState" class="form-control mr-2 filtros" [(ngModel)]="status" (change)="getSearch()" [ngModelOptions]="{standalone: true}">
+            <select id="inputState" class="form-control mr-2 filtros" [(ngModel)]="status" (change)="selectStatus()" [ngModelOptions]="{standalone: true}">
                 <option [value]="0">Todos</option>
                 <option [value]="1">Abiertos</option>
                 <option [value]="2">Cerrados</option>
@@ -82,7 +82,7 @@
         <div class="ml-auto form-inline">
             <div class="form-group row">
                 <label class="mr-2"><b>Filtrar por:</b></label>
-                <select class="form-control-sm mr-2 filtros" [(ngModel)]="filtroSelect" (change)="selectFilert(filtroSelect)" [ngModelOptions]="{standalone: true}">
+                <select class="form-control-sm mr-2 filtros" [(ngModel)]="filtroSelect" (change)="selectFilter(filtroSelect)" [ngModelOptions]="{standalone: true}">
                     <option [ngValue]="0">Sin filtrar</option>
                     <option [ngValue]="1">Incidencia</option>
                     <option [ngValue]="2">Guardia</option>
@@ -115,9 +115,9 @@
                                          (onDeSelect)="onItemDeSelect2($event)"
                                          (onDeSelectAll)="onDeSelectAll2($event)">
                 </ng-multiselect-dropdown>
-                <label for="start" class="mr-2">Fecha</label>
+                <label class="mr-2">Fecha</label>
                 <input class="form-control-sm mr-4" type="date" name="date" [(ngModel)]="desde2" (change)="getSearch()" [ngModelOptions]="{standalone: true}">
-                <label for="start" class="mr-2">-</label>
+                <label class="mr-2">-</label>
                 <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta2" (change)="getSearch()" [ngModelOptions]="{standalone: true}" disabled *ngIf="rangeday2">
                 <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="hasta2" (change)="getSearch()" [ngModelOptions]="{standalone: true}" *ngIf="!rangeday2">
                 <div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">
@@ -146,10 +146,9 @@
             <th (click)="sort('create_date')">Fecha
                 <span class="fas" *ngIf="key =='create_date'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
             </th>
-            <th (click)="sort('resolved')">Status
+            <th (click)="sort('resolved')">Estado
                 <span class="fas" *ngIf="key =='resolved'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
             </th>
-            <th>Modificar</th>
             <th>Detalle</th>
             </thead>
             <tbody>
@@ -157,22 +156,29 @@
                 <td>{{d.watch.stand_name}}</td>
                 <td>{{d.title}}</td>
                 <td>{{d.observation}}</td>
-                <td>{{d.create_date}}</td>
+                <td>{{d.create_date | date : 'medium'}}</td>
                 <td><span *ngIf="d.resolved == 0" class="text-danger">Cerrado</span><span *ngIf="d.resolved == 1" class="text-success">Abierto</span><span *ngIf="d.resolved == 2" class="text-success">Reabierto</span></td>
                 <td>
-                    <button class="btn btn-success" *ngIf="d.resolved == 0" (click)="changeResolve(d, d.resolved)">Reabrir</button>
-                    <button class="btn btn-danger" *ngIf="d.resolved != 0" (click)="changeResolve(d, d.resolved)">Cerrar</button>
-                </td>
-                <td>
-                    <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)"  title="Detalle"><span class="far fa-eye"></span></a>
+                    <a class="btn btn-primary btn-xs" (click)="viewDetail(d)"  title="Detalle"><span class="far fa-eye"></span></a>
                 </td>
             </tr>
-            <tr *ngIf="data.length == 0">
-                <th colspan="8"><h3>Sin reportes para esta selección</h3></th>
+            <tr *ngIf="data.length == 0 && !isLoading">
+                <th colspan="8" class="text-center">
+                    <div style="font-size: 1.3rem; color: gray">
+                        Sin reportes para esta selección. &nbsp;
+                    </div>
+                </th>
+            </tr>
+            <tr *ngIf="isLoading">
+                <th colspan="8">
+                    <div style="font-size: 1.2rem">
+                        Cargando información, espere... &nbsp; <span class="fa fa-spinner fa-spin fa-fw"></span>
+                    </div>
+                </th>
             </tr>
             </tbody>
         </table>
-        <div style="text-align: center; padding-right: 40px;">
+        <div style="text-align: center; padding-right: 40px;" *ngIf="data.length > 10 && !isLoading">
             <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
                                  nextLabel="">
             </pagination-controls>
@@ -216,7 +222,7 @@
                 <div class="form-group row">
                     <label for="name" class="col-sm-2 col-form-label">Fecha</label>
                     <div class="col-sm-10">
-                        <input type="text" readonly class="form-control" value="{{report.create_date}}">
+                        <input type="text" readonly class="form-control" value="{{report.create_date | date : 'medium'}}">
                     </div>
                 </div>
                 <div class="form-group row">
@@ -342,11 +348,14 @@
                     </div>
                 </div>
                 <hr>
-                <div class="form-group row mt-2">
-                    <label class="col-sm-9 col-form-label" *ngIf="haycomentarios"><b>Comentarios</b></label>
-                    <label class="col-sm-9 col-form-label" *ngIf="!haycomentarios"><b>Sin comentarios</b></label>
-                    <div class="col-sm-3">
-                        <button class="btn btn-success form-control ml-auto" *ngIf="report.resolved != 0" (click)="agregarComentario()">Agregar comentario</button>
+                <div class="form-group row mt-2" style="display: flex; flex-direction: row; flex-wrap: nowrap;">
+                    <label class="col-sm-3 col-form-label" *ngIf="haycomentarios"><b>Comentarios</b></label>
+                    <label class="col-sm-3 col-form-label" *ngIf="!haycomentarios"><b>Sin comentarios</b></label>
+
+                    <div style="display: flex; flex-direction: row; flex-wrap: nowrap; width: 100%; justify-content: flex-end; padding-right: 16px;">
+                        <button style="width: 20vw" class="btn btn-success col-md-2" *ngIf="report.resolved == 0" (click)="changeResolve(report, report.resolved)">Reabrir</button>
+                        <button style="width: 20vw" class="btn btn-danger col-md-2" *ngIf="report.resolved != 0" (click)="changeResolve(report, report.resolved)">Cerrar</button>
+                        <button style="width: 30vw; margin-left: 8px" class="btn btn-success col-md-3" *ngIf="report.resolved != 0" (click)="agregarComentario()">Agregar comentario</button>
                     </div>
                 </div>
                 <div>

@@ -15,6 +15,7 @@ import {AuthenticationService} from '../../../../_services';
 import {GlobalOsm} from '../../../../global.osm';
 import {NotificationService} from '../../../../shared/notification.service';
 import {MessagingService} from '../../../../shared/messaging.service';
+import {ApiResponse} from '../../../../../model/app.response';
 
 @Component({
     selector: 'app-reportets',
@@ -98,6 +99,7 @@ export class ReportetsComponent {
     layersControlOptions;
     baseLayers;
     options;
+    private selectReport: any;
 
     constructor(
         public router: Router,
@@ -197,6 +199,7 @@ export class ReportetsComponent {
     }
 
     viewDetail(d) {
+        this.selectReport = d;
         this.bitacoraService.getId(d.id).then(
             success => {
                 this.report = success;
@@ -255,11 +258,12 @@ export class ReportetsComponent {
         this.viewmap = false;
     }
 
-    changeResolve(id, resolved) {
+    changeResolve(report, resolved) {
         if(resolved == 0) {
-            this.bitacoraService.setReopen(id).then(
-                succcess => {
-                    this.getUnread();
+            this.bitacoraService.setReopen(report.id).then(
+                (success: ApiResponse) => {
+                    report.resolved = success.result.resolved;
+                    this.selectReport.resolved = success.result.resolved;
                 }, error => {
                     if (error.status === 422) {
                         // on some data incorrect
@@ -269,9 +273,10 @@ export class ReportetsComponent {
                 }
             );
         } else {
-            this.bitacoraService.setClose(id).then(
-                success => {
-                    this.getUnread();
+            this.bitacoraService.setClose(report.id).then(
+                (success: ApiResponse) => {
+                    report.resolved = success.result.resolved;
+                    this.selectReport.resolved = success.result.resolved;
                 }, error => {
                     if (error.status === 422) {
                         // on some data incorrect

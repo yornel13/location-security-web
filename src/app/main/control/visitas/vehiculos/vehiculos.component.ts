@@ -23,7 +23,7 @@ export class VehiculosComponent {
     detalle:boolean;
     crear:boolean;
     editar:boolean;
-    //editar
+    //edit
     placa:string;
     vehiculo:string;
     modelo:string;

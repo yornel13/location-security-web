@@ -4,11 +4,10 @@
 
 export const environment = {
     production: false,
-    // BASIC_URL: 'https://www.icsseseguridad.com/api/public', // test real url
-    // ALERTS_PATH: 'alert', // test real alerts
-    // BASIC_URL: 'http://bitacoraseguridad.com/api/public', // test url
-    ALERTS_PATH: 'test_alert', // test alerts
-    BASIC_URL: 'http://localhost:8080', // local test url
+    BASIC_URL: 'https://services.bitacoraicsse.com', // amazon url
+    ALERTS_PATH: 'alert', // test real alerts
+    // BASIC_URL: 'http://localhost:8080', // local test url
+    // ALERTS_PATH: 'test_alert3', // test alerts
     firebase: {
       apiKey: 'AIzaSyAzFM4z3GoUE3pFiwpcUBSMm-6PxMNxxaQ',
       authDomain: 'icsseseguridad-6f751.firebaseapp.com',
@@ -17,7 +16,8 @@ export const environment = {
       storageBucket: 'icsseseguridad-6f751.appspot.com',
       messagingSenderId: '962881875237'
     },
-    MONITORING_REFRESH_INTERVAL: 15000
+    MONITORING_REFRESH_INTERVAL: 30000,
+    VERSION: '1.08.test',
 };
 
 /*

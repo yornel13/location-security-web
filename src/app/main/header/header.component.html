@@ -1,18 +1,25 @@
 <!--Main nav-->
 <div style="position: absolute; background-color: transparent; height: 56px; margin-left: 20px; display: flex; justify-content: center">
-  <div class="image-cropper" style="background: #4A4048">
-    <img class="rounded" src="{{photo}}">
-  </div>
-  <p style="color: beige; margin-top: 13px; margin-left: 18px;">{{user}}</p>
+    <div class="image-cropper" style="background: #4A4048">
+        <img class="rounded" src="{{photo}}">
+    </div>
+    <div class="container-de">
+
+        <p class="header-user-name">{{user}}</p>
+        <!--<div style="height: 10px"></div>  &lt;!&ndash;borrar&ndash;&gt;-->
+        <select id="selectBusiness" (change)="changeBusiness()" [(ngModel)]="selectedBusiness" class="form-control-sm mr-1">
+            <option *ngFor="let bus of businesses" [ngValue]="bus.id">{{bus.name}}</option>
+        </select>
+    </div>
 </div>
 <ul class="list-items" id="items">
-  <li routerLink="/u/dashboard" class="list-item" [routerLinkActive]="['active']">Dashboard</li>
-  <li routerLink="/u/monitoring" class="list-item" [routerLinkActive]="['active']">Monitoreo</li>
-  <li routerLink="/u/control" class="list-item" [routerLinkActive]="['active']">Control
-    <span *ngIf="unreadReplies > 0" style="background: white; padding: 0 4px; border-radius: 40%; color: black; font-size: .8rem">{{unreadReplies}}</span>
-  </li>
-  <li routerLink="/u/messaging" class="list-item" [routerLinkActive]="['active']">Mensajería
-    <span *ngIf="unreadMessages > 0" style="background: white; padding: 0 4px; border-radius: 40%; color: black; font-size: .8rem">{{unreadMessages}}</span>
-  </li>
-  <li class="list-item" (click)="exit()">Salir</li>
+    <li routerLink="/u/dashboard" class="list-item" [routerLinkActive]="['active']">Dashboard</li>
+    <li routerLink="/u/monitoring" class="list-item" [routerLinkActive]="['active']">Monitoreo</li>
+    <li routerLink="/u/control" class="list-item" [routerLinkActive]="['active']">Control
+        <span *ngIf="unreadReplies > 0" style="background: white; padding: 0 4px; border-radius: 40%; color: black; font-size: .8rem">{{unreadReplies}}</span>
+    </li>
+    <li routerLink="/u/messaging" class="list-item" [routerLinkActive]="['active']">Mensajería
+        <span *ngIf="unreadMessages > 0" style="background: white; padding: 0 4px; border-radius: 40%; color: black; font-size: .8rem">{{unreadMessages}}</span>
+    </li>
+    <li class="list-item" (click)="exit()">Salir</li>
 </ul>
