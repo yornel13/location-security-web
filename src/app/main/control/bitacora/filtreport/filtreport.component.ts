@@ -1241,8 +1241,12 @@ export class FiltreportComponent implements OnInit {
     ngOnInit() {
         this.route.url.subscribe(value => {
             const reportId = value[value.length - 1].path;
+            console.log(reportId);
             if (Number(reportId)) {
-                this.viewDetail(reportId);
+                const report = {
+                    id: reportId
+                }
+                this.viewDetail(report);
             }
         });
     }

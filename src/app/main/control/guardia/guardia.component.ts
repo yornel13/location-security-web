@@ -18,7 +18,7 @@ import {ToastrService} from "ngx-toastr";
 export class GuardiaComponent {
     //general
     guardias:any = undefined;
-    data:any = undefined;
+    data: any = [];
     guardia:any = [];
     //vistas admin
     lista:boolean;

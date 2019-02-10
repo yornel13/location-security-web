@@ -14,8 +14,8 @@ import {TabletUtils} from '../../../model/tablet/tablet.utils';
           <app-aside (markerFocused)="markersFocused($event, $event)" (markerChanged)="setMarkerChanged($event)"
                      [vehicles]="vehicles" [tablets]="tablets" [markersData]="markersData" class="app-aside" ></app-aside>
           <div class="maps-container">
-              <app-map-osm [markerChanged]="markerChanged" [showMarker]="showMarker" [markersData]="markersData"
-                           [vehicles]="vehicles"  [tablets]="tablets" [lat]="lat" [lng]="lng"
+              <app-map-osm [markerChanged]="markerChanged" [showMarker]="showMarker" [markersData]="markersData" [searching]="updatingMap"
+                           [vehicles]="vehicles"  [tablets]="tablets" [lat]="lat" [lng]="lng" (updateEvent)="updateMap($event)"
                            [zoom]="zoom"></app-map-osm>
           </div>
       </main>    `,
@@ -30,6 +30,7 @@ export class MonitoringComponent implements OnInit {
     markersData: any[] = [];
     error: string;
     @Input() markerChanged: boolean;
+    @Input() updatingMap = false;
     @Input() showMarker = {alerts: true, vehicles: true , tablets: true , bombas: true, noGroup: true, message: ''};
     @Input() latlng = {lat: null , lng: null};
 
@@ -39,28 +40,24 @@ export class MonitoringComponent implements OnInit {
 
 
     ngOnInit() {
+        this.updateMap(this.updatingMap);
+    }
+
+    updateMap(event) {
         this.getVehicles();
         this.getTablets();
     }
 
     getVehicles() {
-        this.vehiclesService.getVehiclesFromClaro().then(
-            success => {
-                console.log(success);
-                this.vehicles = new UtilsVehicles().processVehicles(success[0].data);
-                this.updateVehicle(this.vehicles);
-            }, error => {
-                console.log(error.message);
-                this.error = 'Error connecting with server';
-            }
-        );
-        // this.vehiclesService.getVehicles().subscribe(data => {
-        //     this.vehicles = new UtilsVehicles().processVehicles(data.data);
-        //     this.updateVehicle(this.vehicles);
-        // }, (error: HttpErrorResponse) => {
-        //     console.log(error.message);
-        //     this.error = 'Error connecting with server';
-        // });
+        this.updatingMap = true;
+        this.vehiclesService.getVehiclesByClaro().subscribe(data => {
+            this.vehicles = new UtilsVehicles().processVehicles(data.data);
+            this.updateVehicle(this.vehicles);
+            this.updatingMap = false;
+        }, (error: HttpErrorResponse) => {
+            console.log(error);
+            this.error = 'Error connecting with server';
+        });
     }
 
     getTablets() {

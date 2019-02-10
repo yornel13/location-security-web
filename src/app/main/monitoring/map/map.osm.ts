@@ -3,7 +3,7 @@ import {
     ComponentFactoryResolver,
     Injector,
     Input,
-    OnChanges, OnInit,
+    OnChanges, OnInit, Output, EventEmitter,
     SimpleChanges
 } from '@angular/core';
 import { Vehicle } from '../../../../model/vehicle/vehicle';
@@ -45,6 +45,10 @@ export class MapOsmComponent implements OnChanges, OnInit {
     markersData: any[] = [];
     @Input()
     showMarker;
+    @Output()
+    updateEvent = new EventEmitter<boolean>();
+    @Input()
+    searching: boolean;
     markerClusterGroup: L.MarkerClusterGroup;
     markerClusterData: any[] = [];
     markerClusterOptions: L.MarkerClusterGroupOptions;
@@ -68,6 +72,7 @@ export class MapOsmComponent implements OnChanges, OnInit {
     records: any[] = [];
     recordMarketData: any[] = [];
     recordsLayer = new L.FeatureGroup();
+    showDevices = false;
 
     constructor(private resolver: ComponentFactoryResolver,
                 private mainService: MainService,
@@ -328,7 +333,9 @@ export class MapOsmComponent implements OnChanges, OnInit {
     }
 
     setupMarkers(showMarker) {
+        this.showDevices = false;
         if (showMarker.devices) {
+            this.showDevices = true;
             const data: any[] = [];
             this.markersData.forEach(mData => {
                 if (showMarker.vehicles) {
@@ -404,5 +411,11 @@ export class MapOsmComponent implements OnChanges, OnInit {
 
     setCenter() {
         this.center = L.latLng(([ this.lat, this.lng ]));
+    }
+
+    updateMap() {
+        if (!this.searching) {
+            this.updateEvent.next(this.searching);
+        }
     }
 }

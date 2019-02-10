@@ -14,7 +14,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
-import { fakeBackendProvider } from './_helpers';
 import { AsyncPipe } from '@angular/common';
 // Firebase
 import { AngularFirestoreModule } from 'angularfire2/firestore';
@@ -53,7 +52,6 @@ import {UtilsVehicles} from '../model/vehicle/vehicle.utils';
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         MessagingService,
         NotificationService,
-        fakeBackendProvider,
         AsyncPipe,
         GlobalOsm,
         UtilsVehicles

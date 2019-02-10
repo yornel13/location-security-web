@@ -1,5 +1,5 @@
 
-  <ng-multiselect-dropdown style="z-index: 5000; position: absolute; margin-left: 80px; margin-top: 12px; background-color: white; border-radius: 6px; min-width: 300px"
+  <ng-multiselect-dropdown id="select-bounds"
     [placeholder]="'Selección de zonas'"
     [data]="dropdownList"
     [(ngModel)]="selectedItems"
@@ -9,6 +9,11 @@
     (onDeSelect)="onItemDeSelect($event)"
     (onDeSelectAll)="onDeSelectAll($event)">
   </ng-multiselect-dropdown>
+
+  <div *ngIf="showDevices" class="btn btn-secondary" role="button" title="Actualizar mapa.." id="update-button" (click)="updateMap()">
+      <i class="fas fa-sync-alt fa-lg" *ngIf="!searching" style="color: black; padding-top: 8px;"></i>
+      <i class="fa fa-spinner fa-spin" *ngIf="searching" style="color: darkred; font-size: 1.4rem; margin-top: 4px"></i>
+  </div>
 
   <div class="map"
        leaflet

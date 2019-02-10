@@ -86,7 +86,7 @@ export class DashboardComponent  {
     }
 
     getVehicles() {
-        this.vehicleService.getVehicles().subscribe(success => {
+        this.vehicleService.getVehiclesList().then(success => {
             this.vehicles = success;
             this.vehicle = this.vehicles.data;
             this.numconnect = this.getConnect(this.vehicle);

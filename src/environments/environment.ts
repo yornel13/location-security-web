@@ -17,7 +17,7 @@ export const environment = {
       messagingSenderId: '962881875237'
     },
     MONITORING_REFRESH_INTERVAL: 30000,
-    VERSION: '1.08.test',
+    VERSION: '1.10.test',
 };
 
 /*

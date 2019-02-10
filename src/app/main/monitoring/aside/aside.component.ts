@@ -165,6 +165,7 @@ export class AsideComponent implements OnInit, OnChanges {
     showAlert(alert: Alerta) {
         if (alert.cause === this.mapService.INCIDENCE) {
             const report = JSON.parse(alert.extra);
+            console.log(report);
             this.router.navigate(['/u/control/bitacora/reportfilter/' + report.id]).then();
         } else if (alert.cause === this.mapService.DROP) {
             this.router.navigate(['/u/control/alertas/' + alert.id]).then();

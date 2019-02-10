@@ -17,3 +17,36 @@
   height: 100%;
   width: 100%;
 }
+
+#select-bounds {
+    z-index: 5000;
+    position: absolute;
+    margin-left: 80px;
+    margin-top: 12px;
+    background-color: white;
+    border-radius: 6px;
+    min-width: 300px
+}
+
+#update-button {
+    z-index: 5000;
+    position: absolute;
+    right: 12px;
+    margin-top: 12px;
+    width: 44px;
+    height: 44px;
+    background-color: white;
+    border: gray;
+    border-radius: 22px;
+
+}
+
+#update-button:hover{
+    background-color: whitesmoke;
+    color: #FFF;
+    cursor: pointer;
+}
+
+#update-button:active{
+    background:gray;
+}

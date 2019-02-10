@@ -36,10 +36,10 @@ export class HeaderComponent implements OnInit {
             } else {
                 this.photo = './assets/img/user_empty.jpg';
             }
-            this.businesses = [
-                { id: 0, name: 'Todos' }
-            ];
-            this.getCompanies();
+            // this.businesses = [
+            //     { id: 0, name: 'Todos' }
+            // ];
+            // this.getCompanies();
             this.checkSession();
         } else {
             console.log('no user logger');
