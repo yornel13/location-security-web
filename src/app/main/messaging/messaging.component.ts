@@ -174,6 +174,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
                     if (n1.name.trim().toUpperCase() > n2.name.trim().toUpperCase()) {return 1; }
                     return 0;
                 });
+                this.checkChats();
             }, error => {
                 this.error = error;
                 this.loading = false;
@@ -210,6 +211,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
                     if (n1.name.trim().toUpperCase() > n2.name.trim().toUpperCase()) {return 1; }
                     return 0;
                 });
+                this.checkChats();
             }, error => {
                 this.error = error;
                 this.loading = false;
@@ -384,7 +386,12 @@ export class MessagingComponent implements OnInit, OnDestroy {
         this.chatService.listOldMessage(chat_id).subscribe(
             data => {
                 this.currentChatLines = data.data;
-                this.currentChatLines.reverse();
+                this.currentChatLines.sort((n1, n2) => {
+                    if (n1.create_at < n2.create_at) { return -1; }
+                    if (n1.create_at > n2.create_at) {return 1; }
+                    return 0;
+                });
+                // this.currentChatLines.reverse();
                 this.loading_chat = false;
                 if (this.currentChatLines.length === 0) {
                     this.noMessages = true;
@@ -464,39 +471,41 @@ export class MessagingComponent implements OnInit, OnDestroy {
 
     checkChats() {
         const usersGuardOpenChat = [];
-        this.allChat.forEach(chat => {
-            this.listContactGuard.forEach(guard => {
-                if ((guard.id === chat.user_1_id && 'GUARD' === chat.user_1_type)
-                    || (guard.id === chat.user_2_id && 'GUARD' === chat.user_2_type)) {
-                    guard.update_at = chat.update_at;
-                    guard.chat = chat;
-                    usersGuardOpenChat.push(guard);
-                }
+        if (this.allChat) {
+            this.allChat.forEach(chat => {
+                this.listContactGuard.forEach(guard => {
+                    if ((guard.id === chat.user_1_id && 'GUARD' === chat.user_1_type)
+                        || (guard.id === chat.user_2_id && 'GUARD' === chat.user_2_type)) {
+                        guard.update_at = chat.update_at;
+                        guard.chat = chat;
+                        usersGuardOpenChat.push(guard);
+                    }
+                });
             });
-        });
-        // put all users with open chat to top
-        usersGuardOpenChat.forEach(guard => {
-            this.listContactGuard.splice(this.listContactGuard.indexOf(guard, 0), 1);
-            this.listContactGuard.unshift(guard);
-        });
+            // put all users with open chat to top
+            usersGuardOpenChat.forEach(guard => {
+                this.listContactGuard.splice(this.listContactGuard.indexOf(guard, 0), 1);
+                this.listContactGuard.unshift(guard);
+            });
 
-        const usersAdminOpenChat = [];
-        this.allChat.forEach(chat => {
-            this.listContactAdmin.forEach(admin => {
-                if ((admin.id === chat.user_1_id && 'ADMIN' === chat.user_1_type)
-                    || (admin.id === chat.user_2_id && 'ADMIN' === chat.user_2_type)) {
-                    admin.update_at = chat.update_at;
-                    admin.chat = chat;
-                    usersAdminOpenChat.push(admin);
-                }
+            const usersAdminOpenChat = [];
+            this.allChat.forEach(chat => {
+                this.listContactAdmin.forEach(admin => {
+                    if ((admin.id === chat.user_1_id && 'ADMIN' === chat.user_1_type)
+                        || (admin.id === chat.user_2_id && 'ADMIN' === chat.user_2_type)) {
+                        admin.update_at = chat.update_at;
+                        admin.chat = chat;
+                        usersAdminOpenChat.push(admin);
+                    }
+                });
             });
-        });
-        // put all users with open chat to top
-        usersAdminOpenChat.forEach(admin => {
-            this.listContactAdmin.splice(this.listContactAdmin.indexOf(admin, 0), 1);
-            this.listContactAdmin.unshift(admin);
-        });
-        this.checkUnreadMessagesFromChat();
+            // put all users with open chat to top
+            usersAdminOpenChat.forEach(admin => {
+                this.listContactAdmin.splice(this.listContactAdmin.indexOf(admin, 0), 1);
+                this.listContactAdmin.unshift(admin);
+            });
+            this.checkUnreadMessagesFromChat();
+        }
     }
 
     checkUnreadMessagesFromChat() {

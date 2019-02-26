@@ -178,3 +178,22 @@ input::-webkit-inner-spin-button {
     margin: 0;
     padding: 0;
 }
+
+.update-circle-button {
+    box-shadow: 2px 4px 0 2px rgba(0,0,0,0.1);
+    border: 0;
+    font-size: 1em;
+    line-height: 0.6em;
+    color: #ffffff;
+    background-color: var(--secondary-color);
+    margin: auto auto auto 16px;
+    border-radius: 50%;
+    height: 2.7em;
+    width: 2.7em;
+    position: relative;
+}
+
+.update-circle-button:hover {
+    color: #ffffff;
+    background-color: #444;
+}

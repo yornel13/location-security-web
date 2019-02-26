@@ -6,6 +6,9 @@
                 <i class="fas fa-reply icon-return"></i>
             </a>
             <h3 class="list-title">Todas las Visitas</h3>
+            <button *ngIf="!isLoading" class="btn btn-default update-circle-button" title="Actualizar..." (click)="selectFilter(filtroSelect)">
+                <i class="fas fa-sync-alt fa-lg" style="padding-right: 8px"></i>
+            </button>
         </div>
         <div class="ml-auto row mr-1">
             <div class="btn-group btn-group-toggle ml-2 mr-2" data-toggle="buttons">

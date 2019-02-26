@@ -1,64 +1,64 @@
 
-  <div class="info-container panel panel-default" *ngIf="lista">
+<div class="info-container panel panel-default" *ngIf="lista">
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto row ml-1">
-        <a routerLink="/u/control/visitas" title="Atrás" style="color: var(--secondary-color)">
-            <i class="fas fa-reply icon-return"></i>
-        </a>
-        <h3 class="list-title">Visitantes</h3>
-      </div>
+        <div class="mr-auto row ml-1">
+            <a routerLink="/u/control/visitas" title="Atrás" style="color: var(--secondary-color)">
+                <i class="fas fa-reply icon-return"></i>
+            </a>
+            <h3 class="list-title">Visitantes</h3>
+        </div>
     </div>
     <div class="container-fluid row mx-auto mt-2">
-      <div class="mr-auto row ml-2 form-inline">
-          <label class="mr-1"><b>Mostrar:</b></label>
-          <select id="inputState" class="form-control mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
-            <option [ngValue]="10">10</option>
-            <option [ngValue]="25">25</option>
-            <option [ngValue]="50">50</option>
-            <option [ngValue]="100">100</option>
-          </select>
-          <label>Elementos</label>
-      </div>
-      <div class="ml-auto form-inline">
-        <div class="form-group row">
-          <input type="text" name="searchString" class="form-control mr-2" placeholder="Buscar" name="search" [(ngModel)]="filter">
-          <div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">
-              <label class="btn btn-outline-secondary" (click)="excelDownload()">
-                <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
-              </label>
-              <label class="btn btn-outline-secondary" (click)="pdfDownload()">
-                <input type="radio" name="options" id="option2" autocomplete="off"> PDF
-              </label>
-              <label class="btn btn-outline-secondary" (click)="print()">
-                <input type="radio" name="options" id="option3" autocomplete="off"> Print
-              </label>
+        <div class="mr-auto row ml-2 form-inline">
+            <label class="mr-1"><b>Mostrar:</b></label>
+            <select id="inputState" class="form-control mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
+                <option [ngValue]="10">10</option>
+                <option [ngValue]="25">25</option>
+                <option [ngValue]="50">50</option>
+                <option [ngValue]="100">100</option>
+            </select>
+            <label>Elementos</label>
+        </div>
+        <div class="ml-auto form-inline">
+            <div class="form-group row">
+                <input type="text" name="searchString" class="form-control mr-2" placeholder="Buscar" name="search" [(ngModel)]="filter">
+                <div class="btn-group btn-group-toggle ml-2 mr-3" data-toggle="buttons">
+                    <label class="btn btn-outline-secondary" (click)="excelDownload()">
+                        <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+                    </label>
+                    <label class="btn btn-outline-secondary" (click)="pdfDownload()">
+                        <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+                    </label>
+                    <label class="btn btn-outline-secondary" (click)="print()">
+                        <input type="radio" name="options" id="option3" autocomplete="off"> Print
+                    </label>
+                </div>
             </div>
         </div>
-      </div>
     </div>
     <div class="table mt-2 container-fluid">
-            <table class="table table-bordered">
-             <thead class="thead-light">
-               <th (click)="sort('id')">ID
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <th (click)="sort('id')">ID
                 <span class="fas" *ngIf="key =='id'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th (click)="sort('dni')">Cédula
+            </th>
+            <th (click)="sort('dni')">Cédula
                 <span class="fas" *ngIf="key =='dni'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th (click)="sort('name')">Nombre
+            </th>
+            <th (click)="sort('name')">Nombre
                 <span class="fas" *ngIf="key =='name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th (click)="sort('lastname')">Apellido
+            </th>
+            <th (click)="sort('lastname')">Apellido
                 <span class="fas" *ngIf="key =='lastname'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th (click)="sort('company')">Compañia
+            </th>
+            <th (click)="sort('company')">Compañia
                 <span class="fas" *ngIf="key =='company'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-               </th>
-               <th>Foto</th>
-               <th>Acciones</th>
-             </thead>
-             <tbody>
-              <tr *ngFor="let d of data | filter:filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
+            </th>
+            <th>Foto</th>
+            <th>Acciones</th>
+            </thead>
+            <tbody>
+            <tr *ngFor="let d of data | filter:filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
                 <td>{{d.id}}</td>
                 <td>{{d.dni}}</td>
                 <td>{{d.name}}</td>
@@ -66,174 +66,174 @@
                 <td>{{d.company}}</td>
                 <td><a data-toggle="modal" href="#modal{{d.id}}"><img src="{{d.photo}}" [hidden]="!d.photo" class="image-detail-row"></a></td>
                 <td>
-                  <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
-                  <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editarAdmmin(d.id)" title="Editar"><span class="fas fa-edit"></span></a>
-                  <a class="btn btn-danger btn-xs" data-toggle="modal" href="#eliminar{{d.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
-                 </td>
-                 <div class="modal" tabindex="-1" role="dialog" id="eliminar{{d.id}}">
-                      <div class="modal-dialog" role="document">
+                    <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
+                    <a class="btn btn-warning btn-xs" style="display: inline-block; margin-right: 10px;" (click)="editarAdmmin(d.id)" title="Editar"><span class="fas fa-edit"></span></a>
+                    <a class="btn btn-danger btn-xs" data-toggle="modal" href="#eliminar{{d.id}}" title="Eliminar"><span class="fas fa-trash-alt"></span></a>
+                </td>
+                <div class="modal" tabindex="-1" role="dialog" id="eliminar{{d.id}}">
+                    <div class="modal-dialog" role="document">
                         <div class="modal-content">
-                          <div class="modal-header" style="background-color: #c82333; color: white;">
-                            <h5 class="modal-title">Eliminar Visitante</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <p>¿Está seguro que desea eliminar el visitante {{d.name}} {{d.lastname}}?</p>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" (click)="deleteVisitante(d.id)" data-dismiss="modal">Eliminar</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
-                          </div>
+                            <div class="modal-header" style="background-color: #c82333; color: white;">
+                                <h5 class="modal-title">Eliminar Visitante</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>¿Está seguro que desea eliminar el visitante {{d.name}} {{d.lastname}}?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" (click)="deleteVisitante(d.id)" data-dismiss="modal">Eliminar</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                            </div>
                         </div>
-                      </div>
                     </div>
-                 <!--Modal: modalVM-->
-                  <div class="modal fade" id="modal{{d.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                      <div class="modal-dialog modal-lg" role="document">
-                          <!--Content-->
-                          <div class="modal-content">
-                              <!--Body-->
-                              <div class="modal-body mb-0 p-0">
-                                   <img src="{{d.photo}}" class="image-detail-photo-full">
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-               </tr>
+                </div>
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="modal{{d.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{d.photo}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </tr>
             </tbody>
-          </table>
+        </table>
         <div style="text-align: center; padding-right: 40px;">
             <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
-                  nextLabel="">
+                                 nextLabel="">
             </pagination-controls>
         </div>
     </div>
-  </div>
-  <div class="info-container panel panel-default detalle" *ngIf="detalle">
+</div>
+<div class="info-container panel panel-default detalle" *ngIf="detalle">
     <div class="row panel-heading mb-2" style="background-color: #D9D9D9; padding: 10px">
-      <div class="mr-auto ml-4">
-          <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle Visitante</h3>
-      </div>
-      <div class="ml-auto" style="margin-top: 25px; margin-right: 60px;">
-          <div class="btn-group btn-group-toggle ml-4" data-toggle="buttons">
-            <label class="btn btn-outline-dark" (click)="excelDetalle()">
-              <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
-            </label>
-            <label class="btn btn-outline-dark" (click)="pdfDetalle()">
-              <input type="radio" name="options" id="option2" autocomplete="off"> PDF
-            </label>
-            <label class="btn btn-outline-dark" (click)="printDetalle()">
-              <input type="radio" name="options" id="option3" autocomplete="off"> Print
-            </label>
-          </div>
-      </div>
-  </div>
-    <div class="panel-body mt-2">          
-          <div class="table-container container">
-            <form  role="form">
-              <div class="form-group row">
-                <label for="name" class="col-sm-2 col-form-label">Nombres</label>
-                <div class="col-sm-10">
-                  <input type="text" readonly class="form-control" id="name" value="{{visi.name}}">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="lastname" class="col-sm-2 col-form-label">Apellidos</label>
-                <div class="col-sm-10">
-                  <input type="text" readonly class="form-control" id="lastname" value="{{visi.lastname}}">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
-                <div class="col-sm-10">
-                  <input type="number" readonly class="form-control" id="dni" value="{{visi.dni}}">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="email" class="col-sm-2 col-form-label">Compañía</label>
-                <div class="col-sm-10">
-                  <input type="email" readonly class="form-control" id="email" value="{{visi.company}}">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label [hidden]="!visi.photo" for="email" class="col-sm-2 col-form-label">Foto</label>
-                <div class="col-sm-10">
-                  <a data-toggle="modal" href="#visiphoto"><img src="{{visi.photo}}" class="image-detail-photo"></a>
-                </div>
-              </div>
-              <!--Modal: modalVM-->
-              <div class="modal fade" id="visiphoto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg" role="document">
-                      <!--Content-->
-                      <div class="modal-content">
-                          <!--Body-->
-                          <div class="modal-body mb-0 p-0">
-                               <img src="{{visi.photo}}" class="image-detail-photo-full">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="form-group row">
-                <label for="creation" class="col-sm-2 col-form-label">Fecha de creación</label>
-                <div class="col-sm-10">
-                  <input type="text" readonly class="form-control" id="creation" value="{{visi.create_date | date : 'medium'}}">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="update" class="col-sm-2 col-form-label">Última actualización</label>
-                <div class="col-sm-10">
-                  <input type="text" readonly class="form-control" id="update" value="{{visi.update_date | date : 'medium'}}">
-                </div>
-              </div>
-              <div class="row mt-4">
-                  <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
-              </div>
-            </form>
-          </div>
+        <div class="mr-auto ml-4">
+            <h3 class="panel-title"><i class="fas fa-info-circle" style="margin-right: 20px;"></i>Detalle Visitante</h3>
         </div>
-  </div>
-  <div class="info-container panel panel-default" *ngIf="editar">
-    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
-      <h3 class="panel-title"><i class="fas fa-edit" style="margin-right: 20px;"></i>Editar Visitante</h3>
+        <div class="ml-auto" style="margin-top: 25px; margin-right: 60px;">
+            <div class="btn-group btn-group-toggle ml-4" data-toggle="buttons">
+                <label class="btn btn-outline-dark" (click)="excelDetalle()">
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked> Excel
+                </label>
+                <label class="btn btn-outline-dark" (click)="pdfDetalle()">
+                    <input type="radio" name="options" id="option2" autocomplete="off"> PDF
+                </label>
+                <label class="btn btn-outline-dark" (click)="printDetalle()">
+                    <input type="radio" name="options" id="option3" autocomplete="off"> Print
+                </label>
+            </div>
+        </div>
     </div>
-    <div class="panel-body mt-2">          
-          <div class="table-container container">
-            <form role="form">
-              <div class="form-group row">
-                <label for="nombre" class="col-sm-2 col-form-label">Nombres</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" id="nombre" placeholder="Introduzca Nombres" [(ngModel)]="nombre" [ngModelOptions]="{standalone: true}">
+    <div class="panel-body mt-2">
+        <div class="table-container container">
+            <form  role="form">
+                <div class="form-group row">
+                    <label for="name" class="col-sm-2 col-form-label">Nombres</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control" id="name" value="{{visi.name}}">
+                    </div>
                 </div>
-              </div>
-              <div class="form-group row">
-                <label for="apellido" class="col-sm-2 col-form-label">Apellidos</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" id="apellido" placeholder="Introduzca Apellidos" [(ngModel)]="apellido" [ngModelOptions]="{standalone: true}">
+                <div class="form-group row">
+                    <label for="lastname" class="col-sm-2 col-form-label">Apellidos</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control" id="lastname" value="{{visi.lastname}}">
+                    </div>
                 </div>
-              </div>
-              <div class="form-group row">
-                <label for="identificacion" class="col-sm-2 col-form-label">Cédula</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" id="identificacion" placeholder="Introduzca Nombre" [(ngModel)]="identificacion" [ngModelOptions]="{standalone: true}">
+                <div class="form-group row">
+                    <label for="dni" class="col-sm-2 col-form-label">Cédula</label>
+                    <div class="col-sm-10">
+                        <input type="number" readonly class="form-control" id="dni" value="{{visi.dni}}">
+                    </div>
                 </div>
-              </div>
-              <div class="form-group row">
-                <label for="compania" class="col-sm-2 col-form-label">Compañía</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" id="compania" placeholder="Introduzca Compañía" [(ngModel)]="compania" [ngModelOptions]="{standalone: true}">
+                <div class="form-group row">
+                    <label for="email" class="col-sm-2 col-form-label">Compañía</label>
+                    <div class="col-sm-10">
+                        <input type="email" readonly class="form-control" id="email" value="{{visi.company}}">
+                    </div>
                 </div>
-              </div>
-              <div>
-                <p *ngIf="errorEdit" class="text-danger">Error al guardar, intente nuevamente</p>
-                <p *ngIf="errorEditData" class="text-danger">{{errorEditMsg}}</p>
-              </div>
-              <div class="row mt-4">
-                  <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="regresar()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a> 
-                  <button type="button" class="btn btn-success btn-block col-md-3 mr-auto" (click)="saveEdit()" style=" margin: 0px 0px 0px 20px"><i class="fas fa-edit" style="margin-right: 10px;"></i>Editar Administrador</button>
-              </div>
+                <div class="form-group row">
+                    <label [hidden]="!visi.photo" for="email" class="col-sm-2 col-form-label">Foto</label>
+                    <div class="col-sm-10">
+                        <a data-toggle="modal" href="#visiphoto"><img src="{{visi.photo}}" class="image-detail-photo"></a>
+                    </div>
+                </div>
+                <!--Modal: modalVM-->
+                <div class="modal fade" id="visiphoto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0">
+                                <img src="{{visi.photo}}" class="image-detail-photo-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="creation" class="col-sm-2 col-form-label">Fecha de creación</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control" id="creation" value="{{visi.create_date | date : 'medium'}}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="update" class="col-sm-2 col-form-label">Última actualización</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control" id="update" value="{{visi.update_date | date : 'medium'}}">
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <a class="btn btn-info btn-block col-md-3 mx-auto" (click)="regresar()" style="color: white;"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
+                </div>
             </form>
-          </div>
         </div>
-  </div>
+    </div>
+</div>
+<div class="info-container panel panel-default" *ngIf="editar">
+    <div class="panel-heading" style="background-color: #D9D9D9; padding: 10px">
+        <h3 class="panel-title"><i class="fas fa-edit" style="margin-right: 20px;"></i>Editar Visitante</h3>
+    </div>
+    <div class="panel-body mt-2">
+        <div class="table-container container">
+            <form role="form">
+                <div class="form-group row">
+                    <label for="nombre" class="col-sm-2 col-form-label">Nombres</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="nombre" placeholder="Introduzca Nombres" [(ngModel)]="nombre" [ngModelOptions]="{standalone: true}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="apellido" class="col-sm-2 col-form-label">Apellidos</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="apellido" placeholder="Introduzca Apellidos" [(ngModel)]="apellido" [ngModelOptions]="{standalone: true}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="identificacion" class="col-sm-2 col-form-label">Cédula</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="identificacion" placeholder="Introduzca Nombre" [(ngModel)]="identificacion" [ngModelOptions]="{standalone: true}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="compania" class="col-sm-2 col-form-label">Compañía</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="compania" placeholder="Introduzca Compañía" [(ngModel)]="compania" [ngModelOptions]="{standalone: true}">
+                    </div>
+                </div>
+                <div>
+                    <p *ngIf="errorEdit" class="text-danger">Error al guardar, intente nuevamente</p>
+                    <p *ngIf="errorEditData" class="text-danger">{{errorEditMsg}}</p>
+                </div>
+                <div class="row mt-4">
+                    <a class="btn btn-info btn-block col-md-3 ml-auto" style="color: white;" (click)="regresar()"><i class="fas fa-undo-alt" style="margin-right: 10px;"></i>Regresar</a>
+                    <button type="button" class="btn btn-success btn-block col-md-3 mr-auto" (click)="saveEdit()" style=" margin: 0px 0px 0px 20px"><i class="fas fa-edit" style="margin-right: 10px;"></i>Editar Administrador</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

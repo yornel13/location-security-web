@@ -5,6 +5,9 @@
                 <i class="fas fa-reply icon-return"></i>
             </a>
             <h3 class="list-title">Guardias Activas</h3>
+            <button *ngIf="!isLoading" class="btn btn-default update-circle-button" title="Actualizar..." (click)="getAll()">
+                <i class="fas fa-sync-alt fa-lg" style="padding-right: 8px"></i>
+            </button>
         </div>
     </div>
     <div class="container-fluid row mx-auto mt-2">
@@ -68,12 +71,23 @@
                     <a class="btn btn-primary btn-xs" (click)="viewDetail(d.id)" style="display: inline-block; margin-right: 10px;" title="Detalle"><span class="far fa-eye"></span></a>
                 </td>
             </tr>
-            <tr *ngIf="!hay">
-                <th colspan="7"><h3>No hay guardias activas</h3></th>
+            <tr *ngIf="data.length == 0 && !isLoading">
+                <th colspan="8" class="text-center">
+                    <div style="font-size: 1.3rem; color: gray">
+                        No hay guardias activas. &nbsp;
+                    </div>
+                </th>
+            </tr>
+            <tr *ngIf="isLoading">
+                <th colspan="8">
+                    <div style="font-size: 1.2rem">
+                        Cargando información, espere... &nbsp; <span class="fa fa-spinner fa-spin fa-fw"></span>
+                    </div>
+                </th>
             </tr>
             </tbody>
         </table>
-        <div style="text-align: center; padding-right: 40px;">
+        <div style="text-align: center; padding-right: 40px;" *ngIf="data.length > 10 && !isLoading">
             <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
                                  nextLabel="">
             </pagination-controls>

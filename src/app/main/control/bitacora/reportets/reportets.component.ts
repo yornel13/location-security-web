@@ -62,6 +62,7 @@ export class ReportetsComponent {
     filter: string;
     key: string = 'id'; // set default
     reverse: boolean = true;
+    isLoading = false;
 
     //map
     map: any;
@@ -173,29 +174,43 @@ export class ReportetsComponent {
         }).addTo(this.mapchart);
     }
 
-    sort(key){
+    sort(key) {
         this.key = key;
         this.reverse = !this.reverse;
     }
 
     getUnread() {
-        this.bitacoraService.getAllUnreadReports().then(
-            success => {
-                this.reportes = success;
-                this.data = this.reportes.data;
-                for (let i = 0; i < this.data.length; i++) {
-                    this.data[i].id = Number(this.data[i].id);
-                }
-                this.hay = this.data.length > 0;
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
+        this.showLoading();
+        this.bitacoraService.getAllUnreadReports()
+            .then(this.onListReportsSuccess.bind(this), this.onListReportsFailure.bind(this));
+    }
 
+    showLoading() {
+        this.isLoading = true;
+        this.data = [];
+    }
+
+    dismissLoading() {
+        this.isLoading = false;
+    }
+
+    onListReportsSuccess(success) {
+        if (this.isLoading) {
+            this.reportes = success;
+            this.data = this.reportes.data;
+            this.dismissLoading();
+        }
+    }
+
+    onListReportsFailure(error) {
+        if (this.isLoading) {
+            if (error.status === 422) {
+                // on some data incorrect
+            } else {
+                // on general error
+            }
+            this.dismissLoading();
+        }
     }
 
     viewDetail(d) {

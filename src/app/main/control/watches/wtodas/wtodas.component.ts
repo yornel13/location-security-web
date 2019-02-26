@@ -20,8 +20,9 @@ import {PuestoService} from '../../../../../model/puestos/puestos.service';
 export class WtodasComponent {
     lista: boolean;
     detalle: boolean;
-    watches: any = undefined;
-    data: any = undefined;
+    watches: any = [];
+    data: any = [];
+    resultListSelected = [];
     filter: string;
     // filtro guardia
     guardias: any = [];
@@ -41,6 +42,7 @@ export class WtodasComponent {
     filtroSelect = 0;
     key = 'id'; // set default
     reverse = false;
+    isLoading = false;
 
     //map
     map: any;
@@ -136,6 +138,44 @@ export class WtodasComponent {
         this.markerClusterData = data;
     }
 
+    showLoading() {
+        this.isLoading = true;
+        this.data = [];
+    }
+
+    dismissLoading() {
+        this.isLoading = false;
+    }
+
+    onListWatchesBySelectedListSuccess(success) {
+        this.watches = success;
+        this.resultListSelected = this.resultListSelected.concat(this.watches.data);
+        this.data = this.resultListSelected;
+        for (var i = 0; i < this.data.length; i++) {
+            this.data[i].id = Number(this.data[i].id);
+        }
+        this.dismissLoading();
+    }
+
+    onListWatchesSuccess(success) {
+        if (this.isLoading) {
+            this.watches = success;
+            this.data = this.watches.data;
+            this.dismissLoading();
+        }
+    }
+
+    onListWatchesFailure(error) {
+        if (this.isLoading) {
+            if (error.status === 422) {
+                // on some data incorrect
+            } else {
+                // on general error
+            }
+            this.dismissLoading();
+        }
+    }
+
     sort(key) {
         this.key = key;
         this.reverse = !this.reverse;
@@ -220,20 +260,9 @@ export class WtodasComponent {
         }
 
         this.date = year+"-"+this.month2+"-"+this.day2;
-        this.desde =this.date;
+        this.desde = this.date;
 
-        this.watchesService.getByDate(year, this.month2, this.day2, year, this.month2, this.day2).then(
-            success => {
-                this.watches = success;
-                this.data = this.watches.data;
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
+        this.getSearch();
     }
 
     selectRange(id) {
@@ -371,69 +400,31 @@ export class WtodasComponent {
         } else {
             if (this.filtroSelect === 0) {
                 if (this.rangeday) {
-                    this.watchesService.getByDate(year1, month1, day1, year1, month1, day1).then(
-                        success => {
-                            this.watches = success;
-                            this.data = this.watches.data;
-                        }, error => {
-                            if (error.status === 422) {
-                                // on some data incorrect
-                            } else {
-                                // on general error
-                            }
-                        }
-                    );
+                    this.showLoading();
+                    this.watchesService.getByDate(year1, month1, day1, year1, month1, day1)
+                        .then(this.onListWatchesSuccess.bind(this), this.onListWatchesFailure.bind(this));
                 } else {
-                    this.watchesService.getByDate(year1, month1, day1, year2, month2, day2).then(
-                        success => {
-                            this.watches = success;
-                            this.data = this.watches.data;
-                        }, error => {
-                            if (error.status === 422) {
-                                // on some data incorrect
-                            } else {
-                                // on general error
-                            }
-                        }
-                    );
+                    this.showLoading();
+                    this.watchesService.getByDate(year1, month1, day1, year2, month2, day2)
+                        .then(this.onListWatchesSuccess.bind(this), this.onListWatchesFailure.bind(this));
                 }
             } else if (this.filtroSelect === 1) {
                 if (guardia.length === 0) {
                     this.data = [];
                 }
                 if (this.rangeday) {
-                    var result = [];
+                    this.resultListSelected = [];
+                    this.showLoading();
                     for (var i = 0; i < guardia.length; i++) {
-                        this.watchesService.getByGuardDate(guardia[i].item_id, year1, month1, day1, year1, month1, day1).then(
-                            success => {
-                                this.watches = success;
-                                result = result.concat(this.watches.data);
-                                this.data = result;
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
+                        this.watchesService.getByGuardDate(guardia[i].item_id, year1, month1, day1, year1, month1, day1)
+                            .then(this.onListWatchesBySelectedListSuccess.bind(this), this.onListWatchesFailure.bind(this));
                     }
                 } else {
-                    var result = [];
+                    this.resultListSelected = [];
+                    this.showLoading();
                     for (var i = 0; i < guardia.length; i++) {
-                        this.watchesService.getByGuardDate(guardia[i].item_id, year1, month1, day1, year2, month2, day2).then(
-                            success => {
-                                this.watches = success;
-                                result = result.concat(this.watches.data);
-                                this.data = result;
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
+                        this.watchesService.getByGuardDate(guardia[i].item_id, year1, month1, day1, year2, month2, day2)
+                            .then(this.onListWatchesBySelectedListSuccess.bind(this), this.onListWatchesFailure.bind(this));
                     }
                 }
             } else if (this.filtroSelect === 2) {
@@ -441,38 +432,18 @@ export class WtodasComponent {
                     this.data = [];
                 }
                 if (this.rangeday) {
-                    var result = [];
+                    this.resultListSelected = [];
+                    this.showLoading();
                     for (var i = 0; i < puesto.length; i++) {
-                        this.watchesService.getByStandDate(puesto[i].item_id, year1, month1, day1, year1, month1, day1).then(
-                            success => {
-                                this.watches = success;
-                                result = result.concat(this.watches.data);
-                                this.data = result;
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
+                        this.watchesService.getByStandDate(puesto[i].item_id, year1, month1, day1, year1, month1, day1)
+                            .then(this.onListWatchesBySelectedListSuccess.bind(this), this.onListWatchesFailure.bind(this));
                     }
                 } else {
-                    var result = [];
+                    this.resultListSelected = [];
+                    this.showLoading();
                     for (var i = 0; i < puesto.length; i++) {
-                        this.watchesService.getByStandDate(puesto[i].item_id, year1, month1, day1, year2, month2, day2).then(
-                            success => {
-                                this.watches = success;
-                                result = result.concat(this.watches.data);
-                                this.data = result;
-                            }, error => {
-                                if (error.status === 422) {
-                                    // on some data incorrect
-                                } else {
-                                    // on general error
-                                }
-                            }
-                        );
+                        this.watchesService.getByStandDate(puesto[i].item_id, year1, month1, day1, year2, month2, day2)
+                            .then(this.onListWatchesBySelectedListSuccess.bind(this), this.onListWatchesFailure.bind(this));
                     }
                 }
             }

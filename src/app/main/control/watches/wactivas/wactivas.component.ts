@@ -35,6 +35,7 @@ export class WactivasComponent {
 
     key: string = 'id'; //set default
     reverse: boolean = true;
+    isLoading = false;
 
     //map
     map: any;
@@ -79,52 +80,66 @@ export class WactivasComponent {
     }
 
     getAll() {
-        this.watchesService.getActive().then(
-            success => {
-                this.watches = success;
-                this.data = this.watches.data;
-                var body = [];
-                var excel = [];
-                var status = "";
-                for(var i=0; i<this.data.length; i++){
-                    if(this.data[i].status == 0){
-                        status = "Finalizada";
-                    }else if(this.data[i].status == 1){
-                        status = "Activa";
-                    }
-                    excel.push({
-                        '#' : this.data[i].id,
-                        'Nombre del Guardia': this.data[i].guard.name + ' ' + this.data[i].guard.lastname,
-                        'Cédula del Guardia': this.data[i].guard.dni,
-                        'Hora de inicio': this.data[i].create_date,
-                        'Status': status
-                    })
-                    body.push([
-                        this.data[i].id,
-                        this.data[i].guard.name + ' ' + this.data[i].guard.lastname,
-                        this.data[i].guard.dni,
-                        this.data[i].create_date,
-                        status]);
-                    this.data[i].id = Number(this.data[i].id);
-                    this.data[i].guard.dni = Number(this.data[i].guard.dni);
-                }
-                this.contpdf = body;
-                this.info = excel;
-                if (this.watches.total == 0){
-                    this.hay = false;
-                }else{
-                    this.hay = true;
-                }
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    // on general error
-                }
-            }
-        );
+        this.showLoading();
+        this.watchesService.getActive()
+            .then(this.onListWatchesSuccess.bind(this), this.onListWatchesFailure.bind(this));
     }
 
+    showLoading() {
+        this.isLoading = true;
+        this.data = [];
+    }
+
+    dismissLoading() {
+        this.isLoading = false;
+    }
+
+    onListWatchesSuccess(success) {
+        if (this.isLoading) {
+            this.watches = success;
+            this.data = this.watches.data;
+            this.dismissLoading();
+        }
+
+        var body = [];
+        var excel = [];
+        var status = "";
+        for(var i=0; i<this.data.length; i++){
+            if(this.data[i].status == 0){
+                status = "Finalizada";
+            }else if(this.data[i].status == 1){
+                status = "Activa";
+            }
+            excel.push({
+                '#' : this.data[i].id,
+                'Nombre del Guardia': this.data[i].guard.name + ' ' + this.data[i].guard.lastname,
+                'Cédula del Guardia': this.data[i].guard.dni,
+                'Hora de inicio': this.data[i].create_date,
+                'Status': status
+            })
+            body.push([
+                this.data[i].id,
+                this.data[i].guard.name + ' ' + this.data[i].guard.lastname,
+                this.data[i].guard.dni,
+                this.data[i].create_date,
+                status]);
+            this.data[i].id = Number(this.data[i].id);
+            this.data[i].guard.dni = Number(this.data[i].guard.dni);
+        }
+        this.contpdf = body;
+        this.info = excel;
+    }
+
+    onListWatchesFailure(error) {
+        if (this.isLoading) {
+            if (error.status === 422) {
+                // on some data incorrect
+            } else {
+                // on general error
+            }
+            this.dismissLoading();
+        }
+    }
 
     regresar() {
         this.lista = true;
