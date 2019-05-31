@@ -53,21 +53,27 @@
                 <p class="enlace">Cerco Virtual<br><span class="subtitle">Limitaciones de vehiculos</span></p>
             </div>
         </a>
+        <a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/operatividad" [routerLinkActive]="['active']">
+            <div class="mx-auto content-control pb-2 pt-3">
+                <i class="fas fa-clock icono" style="background-color: dodgerblue; padding: 12px !important"></i>
+                <p class="enlace">Operatividad<br><span class="subtitle">Control de Operatividad de Dispositivos</span></p>
+            </div>
+        </a>
         <a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/historial" [routerLinkActive]="['active']">
             <div class="mx-auto content-control pb-2 pt-3">
                 <i class="fas fa-history icono" style="background-color: #6c757d; padding: 12px !important"></i>
                 <p class="enlace">Historial<br><span class="subtitle">Historial de Vehículos y Tablets</span></p>
             </div>
         </a>
+    </div>
+
+    <div class="row mx-auto">
         <a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/empresas" [routerLinkActive]="['active']">
             <div class="mx-auto content-control pb-2 pt-3">
                 <i class="fas fa-briefcase icono" style="background-color: #d32bdc; padding: 12px !important"></i>
                 <p class="enlace">Empresas<br><span class="subtitle">Gestión de Empresas del Sistema</span></p>
             </div>
         </a>
-    </div>
-
-    <div class="row mx-auto">
         <a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/configuracion" [routerLinkActive]="['active']">
             <div class="mx-auto content-control pb-2 pt-3">
                 <i class="fas fa-cog icono" style="background-color: #dc3545; padding: 12px !important"></i>

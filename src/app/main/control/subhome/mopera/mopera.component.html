@@ -1,0 +1,26 @@
+<div class="home" [ngStyle]="{background: 'url(./assets/img/background-control.jpg)'}">
+    <div class="container-fluid row mx-auto" style="background-color: white">
+        <div class="mr-auto row ml-1 mt-2">
+            <a routerLink="/u/control/home" [routerLinkActive]="['active']" title="Atrás" style="color: var(--secondary-color)">
+                <i class="fas fa-reply icon-return"></i>
+            </a>
+            <h3 class="list-title">Operatividad</h3>
+        </div>
+    </div>
+    <div>
+        <div class="row mx-auto">
+            <a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/operatividad/dispositivos" [routerLinkActive]="['active']">
+                <div class="mx-auto content-control pb-2 pt-3">
+                    <i class="fas fa-list-ol icono" style="background-color: mediumspringgreen; padding: 12px !important"></i>
+                    <p class="enlace">Dispositivos</p>
+                </div>
+            </a>
+            <a class="col-4 cardcontrol mt-5 link" routerLink="/u/control/operatividad/estadisticas" [routerLinkActive]="['active']">
+                <div class="mx-auto content-control pb-2 pt-3">
+                    <i class="fas fa-chart-bar icono" style="background-color: red; padding: 12px !important"></i>
+                    <p class="enlace">Estadísticas</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

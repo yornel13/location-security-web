@@ -1,0 +1,133 @@
+<div class="info-container panel panel-default">
+    <div class="container-fluid row mx-auto mt-2" style="margin-bottom: 30px">
+        <div class="mr-auto row ml-1">
+            <a routerLink="/u/control/operatividad" title="Atrás" style="color: var(--secondary-color)">
+                <i class="fas fa-reply icon-return"></i>
+            </a>
+            <h3 class="list-title">Estadisticas</h3>
+        </div>
+    </div>
+    <div class="container-fluid row mx-auto mt-2">
+        <div class="mr-auto row ml-2 form-inline" style="margin-bottom: 16px">
+            <ng-multiselect-dropdown style="background-color: white; border-radius: 6px; min-width: 300px;"
+                                     [placeholder]="'Selección de Dispositivos'"
+                                     [data]="dropdownList"
+                                     [(ngModel)]="selectedDevices"
+                                     [settings]="dropdownSettings"
+                                     (onSelect)="onItemSelect($event)"
+                                     (onSelectAll)="onSelectAll($event)"
+                                     (onDeSelect)="onItemDeSelect($event)"
+                                     (onDeSelectAll)="onDeSelectAll($event)">
+            </ng-multiselect-dropdown>
+        </div>
+        <div class="ml-auto form-inline">
+            <div class="form-group row">
+                <label class="mr-2">Rango de Fechas a consultar</label>
+                <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="from" [ngModelOptions]="{standalone: true}">
+                <label class="mr-2">-</label>
+                <input class="form-control-sm mr-2" type="date" name="date" [(ngModel)]="to" [ngModelOptions]="{standalone: true}">
+                <button class="btn btn-dark" (click)="search()" style="margin-right: 17px; margin-left: 17px"><span class="fas fa-search"></span></button>
+            </div>
+        </div>
+    </div>
+    <div class="form-group col" style="display: flex; justify-content: center; margin-top: 10px">
+        <button [disabled]="!showChart" (click)="showChart = false" class="btn btn-info"><i class="fas fas fa-table mr-2"></i>Ver Tabla</button>
+        <button [disabled]="showChart || !enableChart" (click)="showChart = true" class="btn btn-success" style="margin-left: 10px"><i class="fas fa-chart-bar mr-2"></i>Ver Grafica</button>
+    </div>
+    <div *ngIf="!showChart" class="container-fluid row mx-auto mt-2">
+        <div class="mr-auto row ml-2 form-inline">
+            <label class="mr-1">
+                <b>Mostrar:</b>
+            </label>
+            <select id="inputState" class="form-control mr-1 filtros" [(ngModel)]="numElement" [ngModelOptions]="{standalone: true}">
+                <option [ngValue]="10">10</option>
+                <option [ngValue]="25">25</option>
+                <option [ngValue]="50">50</option>
+                <option [ngValue]="100">100</option>
+            </select>
+            <label>Elementos</label>
+        </div>
+        <div class="ml-auto form-inline">
+            <div class="form-group row">
+                <input type="text" name="searchString" class="form-control mr-2" placeholder="Buscar" name="search" [(ngModel)]="filter">
+                <div class="btn-group btn-group-toggle ml-2 mr-2" data-toggle="buttons">
+                    <button [disabled]="data.length == 0" class="btn btn-outline-secondary" (click)="excelDownload()">
+                        <input type="radio" name="options" autocomplete="off"> Excel
+                    </button>
+                    <button [disabled]="data.length == 0" class="btn btn-outline-secondary" (click)="pdfDownload()">
+                        <input type="radio" name="options" autocomplete="off"> PDF
+                    </button>
+                    <button [disabled]="data.length == 0" class="btn btn-outline-secondary" (click)="print()">
+                        <input type="radio" name="options" autocomplete="off"> Print
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!showChart" class="table mt-2 container-fluid">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <th (click)="sort('imei')">IMEI
+                <span class="fas" *ngIf="key =='imei'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            </th>
+            <th (click)="sort('name')">Nombre
+                <span class="fas" *ngIf="key =='name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            </th>
+            <th (click)="sort('series')">Serie
+                <span class="fas" *ngIf="key =='series'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            </th>
+            <th (click)="sort('description')">Comentario
+                <span class="fas" *ngIf="key =='description'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            </th>
+            <th (click)="sort('hours_on')">Operativo
+                <span class="fas" *ngIf="key =='hours_on'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            </th>
+            <th (click)="sort('hours_off')">Inoperativo
+                <span class="fas" *ngIf="key =='hours_off'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            </th>
+            </thead>
+            <tbody>
+            <tr *ngFor="let d of data | filter:filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
+                <td>{{d.imei}}</td>
+                <td>{{d.name}}</td>
+                <td>{{d.series}}</td>
+                <td>{{d.description}}</td>
+                <td style="color: green; font-weight: bold">{{d.hours_on}} horas</td>
+                <td style="color: red; font-weight: bold">{{d.hours_off}} horas</td>
+            </tr>
+            <tr *ngIf="data.length == 0 && !isLoading">
+                <th colspan="8" class="text-center">
+                    <div style="font-size: 1.3rem; color: gray">
+                        Seleccione los dispositivos que desea ver. &nbsp;
+                    </div>
+                </th>
+            </tr>
+            <tr *ngIf="isLoading">
+                <th colspan="8">
+                    <div style="font-size: 1.2rem">
+                        Cargando información, espere... &nbsp; <span class="fa fa-spinner fa-spin fa-fw"></span>
+                    </div>
+                </th>
+            </tr>
+            </tbody>
+        </table>
+        <div style="text-align: center; padding-right: 40px;" *ngIf="data.length > 10 && !isLoading">
+            <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=""
+                                 nextLabel="">
+            </pagination-controls>
+        </div>
+    </div>
+
+    <div class="table mt-2 container-fluid">
+        <div id="container-chart" class="container-fluid row mx-auto" style="padding: 0">
+            <div *ngIf="showChart" class="col-sm-10" style="padding: 0">
+                <fusioncharts
+                        width="{{chartWidth}}"
+                        height="{{chartHeight}}"
+                        type="Column2d"
+                        [dataSource]="dataSource">
+                </fusioncharts>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,100 @@
+.info-container {
+    height: 100%;
+    width: 100%;
+    overflow-y:scroll;
+    padding-bottom: 100px;
+}
+
+.btn.btn-secondary {
+    width: 100%;
+    text-align: left;
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: #D9D9D9;
+}
+
+.btn.btn-secondary.collap {
+    background-color: #D9D9D9;
+    width: 100%;
+    text-align: left;
+    color: #000;
+}
+
+.thead-light>th {
+    cursor: pointer;
+}
+
+.btn.btn-secondary.collap:hover{
+    background-color: #444;
+    width: 100%;
+    text-align: left;
+    color: #FFF;
+}
+
+.menu-button {
+    color: black;
+    font-weight: bold;
+    padding: 0
+}
+
+.image-detail-row {
+    background: #D9D9D9;
+    height: 50px;
+    width: 50px;
+    object-fit: scale-down;
+    object-position: center;
+}
+
+.image-detail-photo {
+    background: #D9D9D9;
+    height: 200px;
+    width: 200px;
+    object-fit: scale-down;
+    object-position: center;
+    margin: 0 12px;
+}
+
+.image-detail-photo-full {
+    display: block;
+    margin: auto;
+    max-height: 90%;
+    max-width: 90%;
+    height: auto;
+    min-height: 400px;
+    width: auto;
+    object-position: center;
+}
+
+.container-fluid {
+    padding-top: 4px;
+}
+
+.list-title {
+    color: var(--secondary-color);
+    margin-left: 2vw;
+    margin-top: 4px;
+}
+
+.icon-return {
+    padding: 6px;
+    font-size: 1.8rem
+}
+
+.update-circle-button {
+    box-shadow: 2px 4px 0 2px rgba(0,0,0,0.1);
+    border: 0;
+    font-size: 1em;
+    line-height: 0.6em;
+    color: #ffffff;
+    background-color: var(--secondary-color);
+    margin: auto auto auto 16px;
+    border-radius: 50%;
+    height: 2.7em;
+    width: 2.7em;
+    position: relative;
+}
+
+.update-circle-button:hover {
+    color: #ffffff;
+    background-color: #444;
+}

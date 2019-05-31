@@ -84,6 +84,10 @@ import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {ErrorInterceptor, JwtInterceptor} from '../../_helpers';
 import {BusinessService} from '../../../model/business/business.service';
 import {EmpresasComponent} from './empresas/empresas.component';
+import {MoperaComponent} from './subhome/mopera/mopera.component';
+import {DevicesComponent} from './operability/devices/devices.component';
+import {OperabilityService} from '../../../model/operability/operability.service';
+import {StatisticsComponent} from './operability/statistics/statistics.component';
 
 export const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
@@ -120,6 +124,9 @@ export const controlRoutes: Routes = [
                     { path: 'vigilancia', component: MvigilanciaComponent },
                     { path: 'cerco', component: McercoComponent },
                     { path: 'historial', component: MhistorialComponent },
+                    { path: 'operatividad', component: MoperaComponent },
+                    { path: 'operatividad/dispositivos', component: DevicesComponent },
+                    { path: 'operatividad/estadisticas', component: StatisticsComponent },
                     { path: 'cerco/virtual', component: CercoComponent },
                     { path: 'cerco/grupos', component: CercogrupoComponent },
                     { path: '', redirectTo: '/u/control/home', pathMatch: 'full' }
@@ -157,7 +164,7 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         FuncionarioService, ExcelService, PuestoService, VehiclestypesService,
         IncidenciasService, BitacoraService, VisitasService, ConfiguracionService,
         BannerService, AlertaService, CercoService, GrupoService, BusinessService,
-        VehistorialService, TabhistoryService, SalidascercoService, VisitPrint ],
+        VehistorialService, TabhistoryService, SalidascercoService, VisitPrint, OperabilityService ],
     entryComponents: [ PopupHistoryComponent, PopupTablethComponent, PopupReportComponent, PopupVisitComponent, PopupWatchtComponent ],
     declarations: [
         GuardiaComponent, AdminComponent, ControlComponent, VehiculostiposComponent,
@@ -170,6 +177,9 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         WtodasComponent,
         MvisitasComponent,
         MbitacoraComponent,
+        MoperaComponent,
+        DevicesComponent,
+        StatisticsComponent,
         MvigilanciaComponent,
         CercoComponent,
         VehicercohistorialComponent,
