@@ -4,7 +4,7 @@
             <a routerLink="/u/control/operatividad" title="Atrás" style="color: var(--secondary-color)">
                 <i class="fas fa-reply icon-return"></i>
             </a>
-            <h3 class="list-title">Dispositivos</h3>
+            <h3 class="list-title">Puestos</h3>
             <button *ngIf="!isLoading" class="btn btn-default update-circle-button" title="Actualizar..." (click)="getAll()">
                 <i class="fas fa-sync-alt fa-lg" style="padding-right: 8px"></i>
             </button>
@@ -24,25 +24,46 @@
             <label>Elementos</label>
         </div>
         <div class="ml-auto form-inline">
+            <div class="btn-group" style="margin-right: 20px;">
+                <a class="btn btn-success" style="color: white" data-toggle="modal" href="#modalnew"><i class="fas fa-plus-circle"></i>
+                    Añadir Puesto
+                </a>
+            </div>
             <div class="form-group row">
                 <input type="text" name="searchString" class="form-control mr-2" placeholder="Buscar" name="search" [(ngModel)]="filter">
+            </div>
+            <div class="modal" tabindex="-1" role="dialog" id="modalnew">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color: #28a745; color: white;">
+                            <h5 class="modal-title">Agregar Puesto</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div style="margin-left: 10px" class="form-group mt-4 mb-4">
+                            <label class="ml-1 mr-3"><b>Nombre *</b></label>
+                            <input type="text" name="newname" class="form-control" placeholder="Nombre del puesto" [(ngModel)]="newName" style="width: 80%; float: right;">
+                            <label class="ml-1 mr-2"><b style="margin-top: 15px">Descripción</b></label>
+                            <input type="text" name="newaddress" class="form-control" placeholder="Descripción del puesto (Opcional)" [(ngModel)]="newAddress" style="width: 80%; float: right; margin-top: 20px">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" (click)="saveStand()" data-dismiss="modal">Guardar</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 90px;">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div class="table mt-2 container-fluid">
         <table class="table table-bordered">
             <thead class="thead-light">
-            <th (click)="sort('imei')">IMEI
-                <span class="fas" *ngIf="key =='imei'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-            </th>
             <th (click)="sort('name')">Nombre
                 <span class="fas" *ngIf="key =='name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
             </th>
-            <th (click)="sort('series')">Serie
-                <span class="fas" *ngIf="key =='series'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-            </th>
-            <th (click)="sort('description')">Comentario
-                <span class="fas" *ngIf="key =='description'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            <th (click)="sort('address')">Descripción
+                <span class="fas" *ngIf="key =='address'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
             </th>
             <th (click)="sort('state')">Estado
                 <span class="fas" *ngIf="key =='state'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
@@ -52,23 +73,51 @@
             </thead>
             <tbody>
             <tr *ngFor="let d of devices | filter:filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
-                <td>{{d.imei}}</td>
                 <td>{{d.name}}</td>
-                <td>{{d.series}}</td>
-                <td>{{d.description}}</td>
+                <td>{{d.address}}</td>
                 <td>{{d.state}}</td>
+                <!--<td style="display: flex">-->
                 <td>
                     <button *ngIf="d.operative == false || !d.exists" class="btn btn-success btn-xs" (click)="start(d)" style="display: inline-block; margin-right: 10px;" title="Poner Operativo"><span class="fas fa-play"></span></button>
                     <button *ngIf="d.operative == true" disabled class="btn btn-dark btn-xs" style="display: inline-block; margin-right: 10px;" title="Poner Operativo"><span class="fas fa-play"></span></button>
 
                     <button *ngIf="d.operative == true || !d.exists" class="btn btn-danger btn-xs" style="display: inline-block; margin-right: 10px;" (click)="stop(d)" title="Poner inoperativo"><span class="fas fa-stop"></span></button>
                     <button *ngIf="d.operative == false" disabled class="btn btn-dark btn-xs" style="display: inline-block; margin-right: 10px;" title="Poner inoperativo"><span class="fas fa-stop"></span></button>
+                    <!--<label class="mr-1" style="padding-top: 7px">-->
+                        <!--<b>Parar:</b>-->
+                    <!--</label>-->
+                    <!--<select id="stopAt" class="form-control mr-1 filtros" style="width: 90px" [(ngModel)]="d.nextStop" [ngModelOptions]="{standalone: true}">-->
+                        <!--<option [ngValue]="0">00:00</option>-->
+                        <!--<option [ngValue]="1">01:00</option>-->
+                        <!--<option [ngValue]="2">02:00</option>-->
+                        <!--<option [ngValue]="3">03:00</option>-->
+                        <!--<option [ngValue]="4">04:00</option>-->
+                        <!--<option [ngValue]="5">05:00</option>-->
+                        <!--<option [ngValue]="6">06:00</option>-->
+                        <!--<option [ngValue]="7">07:00</option>-->
+                        <!--<option [ngValue]="8">08:00</option>-->
+                        <!--<option [ngValue]="9">09:00</option>-->
+                        <!--<option [ngValue]="10">10:00</option>-->
+                        <!--<option [ngValue]="11">11:00</option>-->
+                        <!--<option [ngValue]="12">12:00</option>-->
+                        <!--<option [ngValue]="13">13:00</option>-->
+                        <!--<option [ngValue]="14">14:00</option>-->
+                        <!--<option [ngValue]="15">15:00</option>-->
+                        <!--<option [ngValue]="16">16:00</option>-->
+                        <!--<option [ngValue]="17">17:00</option>-->
+                        <!--<option [ngValue]="18">18:00</option>-->
+                        <!--<option [ngValue]="19">19:00</option>-->
+                        <!--<option [ngValue]="20">20:00</option>-->
+                        <!--<option [ngValue]="21">21:00</option>-->
+                        <!--<option [ngValue]="22">22:00</option>-->
+                        <!--<option [ngValue]="23">23:00</option>-->
+                    <!--</select>-->
                 </td>
                 <td>
                     <button class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modalEdit" (click)="openModal(d)" title="Editar"><span class="fas fa-edit"></span></button>
                 </td>
             </tr>
-            <tr *ngIf="devices.length == 0 && !isLoading">
+            <tr *ngIf="stands.length == 0 && !isLoading">
                 <th colspan="8" class="text-center">
                     <div style="font-size: 1.3rem; color: gray">
                         Sin dispositivos para mostrar. &nbsp;
@@ -95,18 +144,20 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #ffc107; color: white;">
-                    <h5 class="modal-title" style="color: black">Editar Dispositivo {{editDeviceName}}</h5>
+                    <h5 class="modal-title" style="color: black">Editar Puesto {{editDeviceName}}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div style="margin-left: 10px" class="form-group form-inline mt-4 mb-4">
-                    <label class="ml-1 mr-2"><b>Serie</b></label>
-                    <input maxlength="45" type="text" class="form-control" placeholder="Inserte serie" [(ngModel)]="editDeviceSeries" style="width: 70%; margin-left: 50px">
-                </div>
-                <div style="margin-left: 10px" class="form-group form-inline mt-4 mb-4">
-                    <label class="ml-1 mr-2"><b>Comentario</b></label>
-                    <input maxlength="100" type="text" class="form-control" placeholder="Inserte comentario" [(ngModel)]="editDeviceDescription" style="width: 70%">
+                <div class="form-group mt-4 mb-4">
+                    <div style="margin-left: 15px" class="form-inline">
+                        <label class="ml-1 mr-3"><b>Nombre *</b></label>
+                        <input type="text" name="newname" class="form-control" placeholder="Insertar nombre" [(ngModel)]="editDeviceName" style="width: 80%;">
+                    </div>
+                    <div style="margin-left: 15px" class="form-inline mt-2">
+                        <label class="ml-1 mr-2"><b>Descripción</b></label>
+                        <input type="text" name="newaddress" class="form-control" placeholder="Insertar Descripción (Opcional)" [(ngModel)]="editDeviceDescription" style="width: 80%;">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-warning" (click)="saveEdit()" data-dismiss="modal">Guardar</button>

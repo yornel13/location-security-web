@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import 'jspdf-autotable';
 import {ToastrService} from 'ngx-toastr';
-import {VehiclesService} from '../../../../../model/vehicle/vehicle.service';
-import {TabletService} from '../../../../../model/tablet/tablet.service';
 import {OperabilityService} from '../../../../../model/operability/operability.service';
+import {PuestoService} from '../../../../../model/puestos/puestos.service';
+import {Puesto} from '../../../../../model/puestos/puesto';
 
 @Component({
     selector: 'app-devices',
@@ -13,8 +13,7 @@ import {OperabilityService} from '../../../../../model/operability/operability.s
 })
 export class DevicesComponent {
     // General
-    vehicles: any[] = [];
-    tablets: any[] = [];
+    stands: any[] = [];
     devices: any[] = [];
     isLoading = false;
 
@@ -22,18 +21,19 @@ export class DevicesComponent {
     numElement = 10;
 
     key = 'name'; // set default
-    reverse = true;
+    reverse = false;
 
     editDevice: any;
     editDeviceName: any;
-    editDeviceSeries: any;
     editDeviceDescription: any;
     p;
 
+    newName: '';
+    newAddress: '';
+
     constructor(public router: Router,
-                private vehicleService: VehiclesService,
-                private tabletService: TabletService,
                 private operabilityService: OperabilityService,
+                private standService: PuestoService,
                 private toastr: ToastrService) {
         this.getAll();
     }
@@ -46,26 +46,9 @@ export class DevicesComponent {
     getAll() {
         this.isLoading = true;
         this.devices = [];
-        this.vehicleService.getVehiclesList().then(
+        this.standService.getAll().then(
             (success: any) => {
-                this.vehicles = success.data;
-                this.getTablets();
-            }, error => {
-                this.isLoading = false;
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    this.toastr.info(error.message, 'Error',
-                        { positionClass: 'toast-bottom-center'});
-                }
-            }
-        );
-    }
-
-    getTablets() {
-        this.tabletService.getAll().then(
-            (success: any) => {
-                this.tablets = success.data;
+                this.stands = success.data;
                 this.getOperability();
             }, error => {
                 this.isLoading = false;
@@ -83,15 +66,10 @@ export class DevicesComponent {
         this.operabilityService.getAll().then(
             (success: any) => {
                 this.devices = [];
-                this.tablets.forEach(tablet => {
-                    tablet.name = tablet.alias;
-                    tablet.state = 'No especificado';
-                    this.devices.push(tablet);
-                });
-                this.vehicles.forEach(vehicle => {
-                    vehicle.name = vehicle.alias;
-                    vehicle.state = 'No especificado';
-                    this.devices.push(vehicle);
+                this.stands.forEach(stand => {
+                    stand.state = 'No especificado';
+                    stand.imei = stand.id;
+                    this.devices.push(stand);
                 });
                 this.devices.forEach(device => {
                     success.data.forEach(operability => {
@@ -118,13 +96,27 @@ export class DevicesComponent {
     }
 
     start(device) {
-        this.operabilityService.start(device.imei).then(
+        this.operabilityService.start(device.imei, device.nextStop).then(
             (success: any) => {
                 device.operative = success.result.operative;
                 device.state = device.operative ? 'Operativo' : 'Inactivo';
                 device.exists = true;
-                    this.toastr.success('Dispositivo ' + success.result.name + ' ahora esta Operativo', '',
-                        { positionClass: 'toast-bottom-center'});
+
+                let time = '6:00 AM';
+                const date = new Date();
+                const hours = date.getHours();
+                const minutes = date.getMinutes();
+                console.log('hours: ' + hours);
+                console.log('minutes: ' + minutes);
+
+                if ((hours === 17 && minutes < 55) ||
+                    (hours === 5 && minutes > 55) ||
+                    (hours > 5 && hours < 17)) {
+                    time = '6:00 PM';
+                }
+
+                this.toastr.success('Puesto ' + success.result.name + ' estara Operativo hasta las ' + time, '',
+                    { positionClass: 'toast-bottom-center'});
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect
@@ -142,7 +134,35 @@ export class DevicesComponent {
                 device.operative = success.result.operative;
                 device.state = device.operative ? 'Operativo' : 'Inactivo';
                 device.exists = true;
-                this.toastr.error('Dispositivo ' + success.result.name + ' ahora esta Inoperativo', '',
+                this.toastr.error('Puesto ' + success.result.name + ' ahora esta Inoperativo', '',
+                    { positionClass: 'toast-bottom-center'});
+            }, error => {
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    this.toastr.info(error.message, 'Error',
+                        { positionClass: 'toast-bottom-center'});
+                }
+            }
+        );
+    }
+
+    saveStand() {
+        const newStand: Puesto = {
+            name: this.newName,
+            address: this.newAddress
+        };
+        this.standService.add(newStand).then(
+            (success: any) => {
+                this.editDeviceName = '';
+                this.editDeviceDescription = '';
+                const stand: any = success.result;
+                console.log(success);
+                stand.state = 'No especificado';
+                stand.imei = stand.id;
+                this.devices.push(stand);
+                this.toastr.success('El puesto ' + stand.name
+                    + ' ha sido creado con exito!.', '',
                     { positionClass: 'toast-bottom-center'});
             }, error => {
                 if (error.status === 422) {
@@ -158,29 +178,22 @@ export class DevicesComponent {
     openModal(device) {
         this.editDevice = device;
         this.editDeviceName = device.name;
-        this.editDeviceSeries = device.series;
-        this.editDeviceDescription = device.description;
+        this.editDeviceDescription = device.address;
     }
 
     saveEdit() {
-        const exists = this.editDevice.exists;
         const updateDevice = {
-            imei: this.editDevice.imei,
-            series: this.editDeviceSeries,
-            description: this.editDeviceDescription,
+            id: this.editDevice.id,
+            name: this.editDeviceName,
+            address: this.editDeviceDescription
         };
-        this.operabilityService.set(updateDevice).then(
+        this.standService.set(updateDevice).then(
             (success: any) => {
-                if (!exists) {
-                    this.toastr.success('Dispositivo ' + success.result.name
-                        + ' ha sido actualizado y ahora esta Operativo', '',
-                        { positionClass: 'toast-bottom-center'});
-                }
-                this.editDevice.series = success.result.series;
-                this.editDevice.description = success.result.description;
-                this.editDevice.operative = success.result.operative;
-                this.editDevice.state = success.result.operative ? 'Operativo' : 'Inactivo';
-                this.editDevice.exists = true;
+                this.toastr.success('Puesto ' + success.result.name
+                    + ' ha sido actualizado.', '',
+                    { positionClass: 'toast-bottom-center'});
+                this.editDevice.name = success.result.name;
+                this.editDevice.address = success.result.address;
             }, error => {
                 if (error.status === 422) {
                     // on some data incorrect

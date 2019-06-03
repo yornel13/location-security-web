@@ -2,10 +2,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import * as jsPDF from 'jspdf';
 import {ToastrService} from 'ngx-toastr';
-import {VehiclesService} from '../../../../../model/vehicle/vehicle.service';
-import {TabletService} from '../../../../../model/tablet/tablet.service';
 import {OperabilityService} from '../../../../../model/operability/operability.service';
 import {ExcelService} from '../../../../../model/excel/excel.services';
+import {PuestoService} from '../../../../../model/puestos/puestos.service';
 
 @Component({
     selector: 'app-devices',
@@ -16,6 +15,7 @@ export class StatisticsComponent {
     // General
     data: any[] = [];
     devices: any[] = [];
+    stands: any[] = [];
     isLoading = false;
 
     filter: string;
@@ -47,12 +47,11 @@ export class StatisticsComponent {
     contentEXCEL: any = [];
 
     constructor(public router: Router,
-                private vehicleService: VehiclesService,
-                private tabletService: TabletService,
                 private operabilityService: OperabilityService,
+                private standService: PuestoService,
                 private excelService: ExcelService,
                 private toastr: ToastrService) {
-        this.getAll();
+        this.getAllStands();
         this.setupDropdown();
 
         this.dataSource = {
@@ -101,11 +100,35 @@ export class StatisticsComponent {
         };
     }
 
-    getAll() {
+    getAllStands() {
         this.devices = [];
+        this.standService.getAll().then(
+            (success: any) => {
+                this.stands = success.data;
+                this.getAllOperability();
+            }, error => {
+                this.isLoading = false;
+                if (error.status === 422) {
+                    // on some data incorrect
+                } else {
+                    this.toastr.info(error.message, 'Error',
+                        { positionClass: 'toast-bottom-center'});
+                }
+            }
+        );
+    }
+
+    getAllOperability() {
         this.operabilityService.getAll().then(
             (success: any) => {
                 this.devices = success.data;
+                this.devices.forEach(device => {
+                    this.stands.forEach(stand => {
+                        if (device.imei == stand.id) {
+                            device.name = stand.name;
+                        }
+                    });
+                });
                 const data = [];
                 this.devices.forEach(device => {
                     data.push({ item_id: device.imei, item_text: device.name });
@@ -123,7 +146,6 @@ export class StatisticsComponent {
             }
         );
     }
-
     showLoading() {
         this.isLoading = true;
         this.data = [];
@@ -187,6 +209,14 @@ export class StatisticsComponent {
                 return 0;
             });
             this.data = success.data;
+            this.data.forEach(value => {
+                this.stands.forEach(stand => {
+                    if (value.imei == stand.id) {
+                        value.name = stand.name;
+                        value.address = stand.address;
+                    }
+                });
+            });
             this.setChart();
             this.dismissLoading();
         }

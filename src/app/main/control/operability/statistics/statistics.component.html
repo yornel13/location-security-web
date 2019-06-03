@@ -67,31 +67,23 @@
     <div *ngIf="!showChart" class="table mt-2 container-fluid">
         <table class="table table-bordered">
             <thead class="thead-light">
-            <th (click)="sort('imei')">IMEI
-                <span class="fas" *ngIf="key =='imei'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-            </th>
             <th (click)="sort('name')">Nombre
                 <span class="fas" *ngIf="key =='name'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
             </th>
-            <th (click)="sort('series')">Serie
-                <span class="fas" *ngIf="key =='series'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
-            </th>
-            <th (click)="sort('description')">Comentario
-                <span class="fas" *ngIf="key =='description'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
+            <th (click)="sort('address')">Descripción
+                <span class="fas" *ngIf="key =='address'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
             </th>
             <th (click)="sort('hours_on')">Operativo
                 <span class="fas" *ngIf="key =='hours_on'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
             </th>
-            <th (click)="sort('hours_off')">Inoperativo
+            <th (click)="sort('hours_off')">No operativo
                 <span class="fas" *ngIf="key =='hours_off'" [ngClass]="{'fa-angle-up':reverse,'fa-angle-down':!reverse}"></span>
             </th>
             </thead>
             <tbody>
             <tr *ngFor="let d of data | filter:filter | orderBy: key : reverse | paginate: { itemsPerPage: numElement, currentPage: p }">
-                <td>{{d.imei}}</td>
                 <td>{{d.name}}</td>
-                <td>{{d.series}}</td>
-                <td>{{d.description}}</td>
+                <td>{{d.address}}</td>
                 <td style="color: green; font-weight: bold">{{d.hours_on}} horas</td>
                 <td style="color: red; font-weight: bold">{{d.hours_off}} horas</td>
             </tr>

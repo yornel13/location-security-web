@@ -125,7 +125,7 @@ export const controlRoutes: Routes = [
                     { path: 'cerco', component: McercoComponent },
                     { path: 'historial', component: MhistorialComponent },
                     { path: 'operatividad', component: MoperaComponent },
-                    { path: 'operatividad/dispositivos', component: DevicesComponent },
+                    { path: 'operatividad/puestos', component: DevicesComponent },
                     { path: 'operatividad/estadisticas', component: StatisticsComponent },
                     { path: 'cerco/virtual', component: CercoComponent },
                     { path: 'cerco/grupos', component: CercogrupoComponent },

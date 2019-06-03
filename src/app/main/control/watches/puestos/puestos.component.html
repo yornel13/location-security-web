@@ -25,10 +25,10 @@
                             </button>
                         </div>
                         <div style="margin-left: 10px" class="form-group mt-4 mb-4">
-                            <label class="ml-1 mr-3"><b>Nombre</b></label>
+                            <label class="ml-1 mr-3"><b>Nombre *</b></label>
                             <input type="text" name="newname" class="form-control" placeholder="Nombre del puesto" [(ngModel)]="newname" style="width: 80%; float: right;">
-                            <label class="ml-1 mr-2"><b style="margin-top: 15px">Dirección</b></label>
-                            <input type="text" name="newaddress" class="form-control" placeholder="Ubicación del puesto" [(ngModel)]="newaddress" style="width: 80%; float: right; margin-top: 20px">
+                            <label class="ml-1 mr-2"><b style="margin-top: 15px">Descripción</b></label>
+                            <input type="text" name="newaddress" class="form-control" placeholder="Descripción del puesto (Opcional)" [(ngModel)]="newaddress" style="width: 80%; float: right; margin-top: 20px">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-success" (click)="guardarPuesto()" data-dismiss="modal">Guardar</button>
@@ -44,7 +44,7 @@
             <thead class="thead-light">
                 <th style="width: 10%">ID</th>
                 <th style="width: 30%">Nombre</th>
-                <th style="width: 30%">Dirección</th>
+                <th style="width: 30%">Descripción</th>
                 <th style="width: 30%">Acción</th>
             </thead>
             <tbody>
@@ -93,8 +93,8 @@
                                     <input type="text" name="newname" class="form-control" placeholder="Inserte nombre" [(ngModel)]="editname" style="width: 80%;">
                                 </div>
                                 <div style="margin-left: 15px" class="form-inline mt-2">
-                                    <label class="ml-1 mr-2"><b>Dirección</b></label>
-                                    <input type="text" name="newaddress" class="form-control" placeholder="Inserte dirección" [(ngModel)]="editaddress" style="width: 80%;">
+                                    <label class="ml-1 mr-2"><b>Descripción</b></label>
+                                    <input type="text" name="newaddress" class="form-control" placeholder="Inserte Descripción" [(ngModel)]="editaddress" style="width: 80%;">
                                 </div>
                             </div>
                             <div class="modal-footer">
