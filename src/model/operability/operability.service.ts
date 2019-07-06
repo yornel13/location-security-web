@@ -25,8 +25,8 @@ export class OperabilityService {
             }).toPromise().then((response) => response);
     }
 
-    stop(imei: string) {
-        return this.http.put(this.OPERABILITY_URL + '/stop/' + imei, {},
+    stop(imei: string, cause: string) {
+        return this.http.put(this.OPERABILITY_URL + '/stop/' + imei, { cause : cause },
             {
                 headers: this.authService.getHeader()
             }).toPromise().then((response) => response);
@@ -41,6 +41,16 @@ export class OperabilityService {
 
     getHours(list, year, month, day, year1, month1, day1) {
         return this.http.post(this.OPERABILITY_URL
+            + '/' + year + '/' + month + '/' + day
+            + '/to/' + year1 + '/' + month1 + '/' + day1, list,
+            {
+                headers: this.authService.getHeader()
+            })
+            .toPromise().then((response) => response);
+    }
+
+    getRecords(list, year, month, day, year1, month1, day1) {
+        return this.http.post(this.OPERABILITY_URL  + '/stop/record/'
             + '/' + year + '/' + month + '/' + day
             + '/to/' + year1 + '/' + month1 + '/' + day1, list,
             {

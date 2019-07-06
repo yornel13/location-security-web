@@ -50,7 +50,7 @@ import {HistoryPrint} from './monitoring/history.print';
 import {InfolinePrint} from './monitoring/infoline.print';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {ErrorInterceptor, JwtInterceptor} from '../_helpers';
-import {ErrorService} from "../../model/error/error.service";
+import {ErrorService} from '../../model/error/error.service';
 
 export function controlModuleLoader() {
     return ControlModule;

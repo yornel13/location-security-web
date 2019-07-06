@@ -28,6 +28,10 @@ export class DevicesComponent {
     editDeviceDescription: any;
     p;
 
+    stopDevice: any;
+    stopDeviceName: any;
+    stopDeviceCause: any;
+
     newName: '';
     newAddress: '';
 
@@ -129,22 +133,32 @@ export class DevicesComponent {
     }
 
     stop(device) {
-        this.operabilityService.stop(device.imei).then(
-            (success: any) => {
-                device.operative = success.result.operative;
-                device.state = device.operative ? 'Operativo' : 'Inactivo';
-                device.exists = true;
-                this.toastr.error('Puesto ' + success.result.name + ' ahora esta Inoperativo', '',
-                    { positionClass: 'toast-bottom-center'});
-            }, error => {
-                if (error.status === 422) {
-                    // on some data incorrect
-                } else {
-                    this.toastr.info(error.message, 'Error',
+        this.stopDevice = device;
+        this.stopDeviceName = device.name;
+    }
+
+    saveStop() {
+        if (this.stopDeviceCause ===  undefined || this.stopDeviceCause === '') {
+            this.toastr.info('Debe insertar un motivo para poder poner en stop el dispositivo.', 'Error',
+                { positionClass: 'toast-bottom-center'});
+        } else {
+            this.operabilityService.stop(this.stopDevice.imei, this.stopDeviceCause).then(
+                (success: any) => {
+                    this.stopDevice.operative = success.result.operative;
+                    this.stopDevice.state = this.stopDevice.operative ? 'Operativo' : 'Inactivo';
+                    this.stopDevice.exists = true;
+                    this.toastr.error('Puesto ' + success.result.name + ' ahora esta Inoperativo', '',
                         { positionClass: 'toast-bottom-center'});
+                }, error => {
+                    if (error.status === 422) {
+                        // on some data incorrect
+                    } else {
+                        this.toastr.info(error.message, 'Error',
+                            { positionClass: 'toast-bottom-center'});
+                    }
                 }
-            }
-        );
+            );
+        }
     }
 
     saveStand() {

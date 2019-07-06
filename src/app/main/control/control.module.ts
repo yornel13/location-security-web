@@ -88,6 +88,7 @@ import {MoperaComponent} from './subhome/mopera/mopera.component';
 import {DevicesComponent} from './operability/devices/devices.component';
 import {OperabilityService} from '../../../model/operability/operability.service';
 import {StatisticsComponent} from './operability/statistics/statistics.component';
+import {RecordsComponent} from './operability/records/records.component';
 
 export const controlRoutes: Routes = [
     { path: '', component: ControlComponent,
@@ -127,6 +128,7 @@ export const controlRoutes: Routes = [
                     { path: 'operatividad', component: MoperaComponent },
                     { path: 'operatividad/puestos', component: DevicesComponent },
                     { path: 'operatividad/estadisticas', component: StatisticsComponent },
+                    { path: 'operatividad/historial', component: RecordsComponent },
                     { path: 'cerco/virtual', component: CercoComponent },
                     { path: 'cerco/grupos', component: CercogrupoComponent },
                     { path: '', redirectTo: '/u/control/home', pathMatch: 'full' }
@@ -185,6 +187,7 @@ export const controlRouting = RouterModule.forChild(controlRoutes);
         VehicercohistorialComponent,
         AlertasComponent,
         CercogrupoComponent,
+        RecordsComponent,
         McercoComponent,
         TabletsComponent,
         PuestosComponent,

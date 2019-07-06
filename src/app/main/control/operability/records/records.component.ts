@@ -8,10 +8,10 @@ import {PuestoService} from '../../../../../model/puestos/puestos.service';
 
 @Component({
     selector: 'app-devices',
-    templateUrl: './statistics.component.html',
-    styleUrls: ['./statistics.component.css']
+    templateUrl: './records.component.html',
+    styleUrls: ['./records.component.css']
 })
-export class StatisticsComponent {
+export class RecordsComponent {
     // General
     data: any[] = [];
     devices: any[] = [];
@@ -21,7 +21,7 @@ export class StatisticsComponent {
     filter: string;
     numElement = 10;
 
-    key = 'id'; // set default
+    key = 'time'; // set default
     reverse = true;
 
     // dropdown
@@ -33,14 +33,7 @@ export class StatisticsComponent {
     to = '';
     fromDate = '';
     toDate = '';
-
-    // chart
-    dataSource: any = {};
-
-    chartWidth = '800px';
-    chartHeight = '400px';
-    showChart = false;
-    enableChart = false;
+    p;
 
     // Exports
     contentPDF: any = [];
@@ -53,30 +46,6 @@ export class StatisticsComponent {
                 private toastr: ToastrService) {
         this.getAllStands();
         this.setupDropdown();
-
-        this.dataSource = {
-            chart: {
-                yAxisName: 'Porcentaje de operatividad (%)',
-                yAxisMaxValue: 100
-            },
-            // Chart Data
-            data: [
-                {
-                    label: 'Dispositivo',
-                    color: '#dc3545',
-                    value: 0
-                }
-            ]
-        };
-
-        const self = this;
-        setTimeout(function () {
-            const width = document.getElementById('container-chart').clientWidth;
-            const height = document.documentElement.clientHeight;
-            self.chartWidth = String(width);
-            self.chartHeight = String(Number(height) * 0.6);
-            self.enableChart = true;
-        }, 3000);
     }
 
     sort(key) {
@@ -126,6 +95,7 @@ export class StatisticsComponent {
                     this.stands.forEach(stand => {
                         if (device.imei == stand.id) {
                             device.name = stand.name;
+                            device.address = stand.address;
                         }
                     });
                 });
@@ -172,7 +142,6 @@ export class StatisticsComponent {
         this.fromDate = day + '/' + month + '/' + year;
         this.toDate = day_t + '/' + month_t + '/' + year_t;
 
-        this.clearData();
         if (this.from == '' || this.to == '') {
             this.toastr.info('Selecciona el rango de fechas', 'Error',
                 { positionClass: 'toast-bottom-center'});
@@ -185,54 +154,47 @@ export class StatisticsComponent {
                 array.push({imei: device.item_id});
             });
             this.showLoading();
-            this.operabilityService.getHours(JSON.stringify(array), year, month, day, year_t, month_t, day_t)
+            this.operabilityService.getRecords(JSON.stringify(array), year, month, day, year_t, month_t, day_t)
                 .then(this.onListSuccess.bind(this), this.onListFailure.bind(this));
         }
     }
 
-    clearData() {
-        this.data = [];
-        this.dataSource.data = [
-            {
-                label: 'Puesto',
-                    color: '#dc3545',
-                value: 0
-            }
-        ];
-    }
-
     onListSuccess(success) {
         if (this.isLoading) {
-            success.data.sort((n1, n2) => {
-                if (n1.hours_on > n2.hours_on) { return -1; }
-                if (n1.hours_on < n2.hours_on) {return 1; }
-                return 0;
-            });
             this.data = success.data;
-            const fromDate = new Date(this.from);
-            const toDate = new Date(this.to);
-            const diff = Math.abs(fromDate.getTime() - toDate.getTime());
-            const diffDays = Math.ceil(diff / (1000 * 3600 * 24)) + 1;
-            const totalHours = diffDays * 24;
-            this.data.forEach(value => {
-                const hoursOn = Math.round(value.minutes_on / 60);
-                const hoursOff = Math.round(totalHours - hoursOn);
-                const percentageOn = Math.round((hoursOn * 100) / totalHours);
-                const percentageOff = Math.round((hoursOff * 100) / (diffDays * 24));
-                value.hours_on = hoursOn;
-                value.hours_off = hoursOff;
-                value.percentage_on = percentageOn;
-                value.percentage_off = percentageOff;
-                this.stands.forEach(stand => {
-                    if (value.imei == stand.id) {
-                        value.name = stand.name;
-                        value.address = stand.address;
+            this.data.forEach(stop => {
+                this.devices.forEach(stand => {
+                    if (stand.imei == stop.imei) {
+                        stop.name = stand.name;
+                        stop.address = stand.address;
                     }
+                    stop.date = stop.time;
+                    stop.hour = stop.time;
+                    if (stop.time_init == null || stop.time_init == undefined) {
+                        stop.time_init = null;
+                    } else {
+                        stop.date_init = stop.time_init;
+                        stop.hour_init = stop.time_init;
+                    }
+                    if (stop.cause == null) {
+                        stop.cause = 'STOP AUTOMATICO';
+                    }
+                    stop.duration = this.diffMinutes(stop.time_init, stop.time);
                 });
             });
-            this.setChart();
             this.dismissLoading();
         }
+    }
+
+    diffMinutes(dt2, dt1) {
+        if (dt2 == null) {
+            return 'Desconocido';
+        }
+        dt2 = new Date(dt2);
+        dt1 = new Date(dt1);
+        let diff = (dt2.getTime() - dt1.getTime()) / 1000;
+        diff /= 60;
+        return Math.abs(Math.round(diff)) + ' min';
     }
 
     onListFailure(error) {
@@ -263,24 +225,6 @@ export class StatisticsComponent {
 
     }
 
-    setChart() {
-        this.dataSource.data = [];
-        if (this.data.length > 0) {
-            this.data.forEach(item => {
-                this.dataSource.data.push({
-                    label: item.name + ' Op',
-                    color: '#28a745',
-                    value: item.percentage_on
-                });
-                this.dataSource.data.push({
-                    label: item.name + ' Nop',
-                    color: '#dc3545',
-                    value: item.percentage_off
-                });
-            });
-        }
-    }
-
     excelDownload() {
         this.setupPdfAndExcelData();
         this.excelService.exportAsExcelFile(this.contentEXCEL, 'operatividad');
@@ -308,20 +252,21 @@ export class StatisticsComponent {
         const d = new Date();
         const date = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear()
             + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-        doc.text('Operatividad de Puestos', 15, 27);
+        doc.text('Historial de Stops Realizados', 15, 27);
         doc.text('Hora de impresión: ' + date, 15, 34);
         doc.text('Rango de fechas seleccionado: ' + this.fromDate + ' al ' + this.toDate, 15, 44);
         doc.autoTable({
-            head: [['Puesto', 'Descripción', 'Horas OP', 'Horas Nop', '% OP', '% Nop']],
+            head: [['Puesto', 'F. Stop', 'H. Stop', 'Motivo Stop', 'F. Inicio', 'H. Inicio', 'Duracion']],
             body: this.contentPDF,
             startY: 48,
             columnStyles: {
                 0: {cellWidth: 'auto'},
-                1: {cellWidth: 'auto'},
-                2: {cellWidth: 'auto'},
+                1: {cellWidth: 20},
+                2: {cellWidth: 20},
                 3: {cellWidth: 'auto'},
-                4: {cellWidth: 'auto'},
-                5: {cellWidth: 'auto'},
+                4: {cellWidth: 20},
+                5: {cellWidth: 20},
+                6: {cellWidth: 20}
             }
         });
         return doc;
@@ -331,21 +276,34 @@ export class StatisticsComponent {
         const body = [];
         const excel = [];
         for (let i = 0; i < this.data.length; i++) {
+            const ds = new Date(this.data[i].time);
+            const dateStop = ds.getDate() + '/' + (ds.getMonth() + 1) + '/' + ds.getFullYear();
+            const hourStop = ds.getHours() + ':' + ds.getMinutes() + ':' + ds.getSeconds();
+            let dateInit = 'No Regis';
+            let hourInit = 'No Regis';
+            if (this.data[i].time_init != null) {
+                const dsInit = new Date(this.data[i].time_init);
+                dateInit = dsInit.getDate() + '/' + (dsInit.getMonth() + 1) + '/' + dsInit.getFullYear();
+                hourInit = dsInit.getHours() + ':' + dsInit.getMinutes() + ':' + dsInit.getSeconds();
+            }
             excel.push({
                 'Puesto': this.data[i].name,
                 'Descripcion': this.data[i].address,
-                'Horas de Operativo': this.data[i].hours_on,
-                'Horas de Inoperativo': this.data[i].hours_off,
-                '% de Operativo': this.data[i].hours_on,
-                '% de Inoperativo': this.data[i].hours_off
+                'Fecha Stop': dateStop,
+                'Hora Stop': hourStop,
+                'Motivo Stop': this.data[i].cause,
+                'Fecha Inicio': dateInit,
+                'Hora Inicio': hourInit,
+                'Duracion': this.data[i].duration
             });
             body.push([
                 this.data[i].name,
-                this.data[i].address,
-                this.data[i].hours_on + ' horas',
-                this.data[i].hours_off + ' horas',
-                this.data[i].percentage_on + '%',
-                this.data[i].percentage_off + '%'
+                dateStop,
+                hourStop,
+                this.data[i].cause,
+                dateInit,
+                hourInit,
+                this.data[i].duration == 'Desconocido' ? '--' : this.data[i].duration
             ]);
         }
         this.contentPDF = body;
