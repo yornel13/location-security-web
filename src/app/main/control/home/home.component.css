@@ -33,3 +33,14 @@
 .link:hover {
 	text-decoration: none;
 }
+
+.home {
+    overflow-y: hidden;
+    padding-bottom: 40px;
+}
+
+@media (max-height: 875px) {
+    .home {
+        overflow-y: scroll;
+    }
+}

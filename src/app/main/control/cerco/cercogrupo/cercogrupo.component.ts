@@ -5,6 +5,7 @@ import {VehiclesService} from '../../../../../model/vehicle/vehicle.service';
 import {CercoService} from '../../../../../model/cerco/cerco.service';
 import {GlobalOsm} from '../../../../global.osm';
 import * as L from 'leaflet';
+import {ToastrService} from 'ngx-toastr';
 
 export class VechicleS {
     id: number;
@@ -53,6 +54,7 @@ export class CercogrupoComponent {
             private grupoService: GrupoService,
             private vehiclesService: VehiclesService,
             private cercoService: CercoService,
+            private toastr: ToastrService,
             private globalOSM: GlobalOsm) {
         this.getAll();
         this.layersControlOptions = this.globalOSM.layersOptions;
@@ -101,7 +103,8 @@ export class CercogrupoComponent {
                 this.getAll();
             }, error => {
                 if (error.status === 422) {
-                    // on some data incorrect
+                    this.toastr.info('Debe primero quitar las zonas asociadas.', 'Error',
+                        { positionClass: 'toast-bottom-center'});
                 } else {
                     // on general error
                 }

@@ -4,9 +4,9 @@
 
 export const environment = {
     production: false,
-    BASIC_URL: 'https://services.bitacoraicsse.com', // amazon url
+    // BASIC_URL: 'https://services.bitacoraicsse.com', // amazon url
     ALERTS_PATH: 'alert', // test real alerts
-    // BASIC_URL: 'http://localhost:8080', // local test url
+    BASIC_URL: 'http://localhost:8080', // local test url
     // ALERTS_PATH: 'test_alert3', // test alerts
     firebase: {
       apiKey: 'AIzaSyAzFM4z3GoUE3pFiwpcUBSMm-6PxMNxxaQ',
@@ -17,7 +17,7 @@ export const environment = {
       messagingSenderId: '962881875237'
     },
     MONITORING_REFRESH_INTERVAL: 30000,
-    VERSION: '1.17.test',
+    VERSION: '1.19.test',
 };
 
 /*

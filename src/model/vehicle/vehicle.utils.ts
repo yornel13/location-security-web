@@ -11,10 +11,10 @@ export class UtilsVehicles {
 
     processVehicle(vehicle: Vehicle): Vehicle {
         if (vehicle.model_name.includes('GV300W')) {
-            if (vehicle.alias.search('MOVIL')) {
-                vehicle.iconUrl = './assets/maps/water.png';
-            } else {
+            if (vehicle.group_name.search('BOMBA')) {
                 vehicle.iconUrl = './assets/maps/truck.png';
+            } else {
+                vehicle.iconUrl = './assets/maps/water.png';
             }
         } else if (vehicle.model_name.includes('GMT100N')) {
             vehicle.iconUrl = './assets/maps/motorcycle.png';

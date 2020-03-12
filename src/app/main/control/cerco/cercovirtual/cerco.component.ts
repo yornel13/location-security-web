@@ -15,6 +15,7 @@ import {Bounds} from '../../../../../model/cerco/bounds';
 import {GlobalOsm} from '../../../../global.osm';
 import * as geolib from 'geolib';
 import {TabletService} from '../../../../../model/tablet/tablet.service';
+import {ToastrService} from 'ngx-toastr';
 
 export class VechicleS {
     imei: string;
@@ -122,6 +123,7 @@ export class CercoComponent implements OnInit {
         private cercoService: CercoService,
         private vehiclesService: VehiclesService,
         private tabletService: TabletService,
+        private toastr: ToastrService,
         private globalOSM: GlobalOsm) {
         /* Map default options */
         this.layersControlOptions = this.globalOSM.layersOptions;
@@ -386,6 +388,8 @@ export class CercoComponent implements OnInit {
                 if (error.status === 422) {
                     // on some data incorrect
                     this.errorDeleteData = true;
+                    this.toastr.info('Debe primero quitar los dispositivos asociados.', 'Error',
+                        { positionClass: 'toast-bottom-center'});
                 } else {
                     // on general error
                     this.errorDelete = true;

@@ -34,7 +34,6 @@ import {UtilsVehicles} from '../model/vehicle/vehicle.utils';
         HttpClientModule,
         MainModule,
         NgbModule,
-        BrowserModule,
         ReactiveFormsModule,
         AngularFireModule.initializeApp(environment.firebase),
         AngularFirestoreModule,

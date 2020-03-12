@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import {HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse} from '@angular/common/http';
+import {EMPTY, Observable, throwError} from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { AuthenticationService } from '../_services';
@@ -16,16 +16,18 @@ export class ErrorInterceptor implements HttpInterceptor {
     called = false;
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        return next.handle(request).pipe(catchError(err => {
-            if (err.status === 401) {
-                this.authenticationService.cleanStore();
-                this.showToastExpire();
-                location.reload(true);
+        return next.handle(request).pipe(catchError((err: any) => {
+            if (err instanceof HttpErrorResponse) {
+                if (err.status === 401) {
+                    this.authenticationService.cleanStore();
+                    this.showToastExpire();
+                    location.reload(true);
+                    return EMPTY;
+                }
+                return throwError(err);
             } else {
-                return next.handle(request);
+                return throwError(err);
             }
-            const error = err.error.message || err.statusText;
-            return throwError(error);
         }));
     }
 
