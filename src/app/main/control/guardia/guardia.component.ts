@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GuardService } from '../../../../model/guard/guard.service';
 import { Guard } from '../../../../model/guard/guard';
-import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from 'angularfire2/storage';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import * as jsPDF from 'jspdf';
@@ -64,7 +63,6 @@ export class GuardiaComponent {
     constructor(
         public router: Router,
         private guardService: GuardService,
-        private storage: AngularFireStorage,
         private excelService: ExcelService,
         private toastr: ToastrService) {
         this.getAll();
@@ -125,33 +123,6 @@ export class GuardiaComponent {
                 }
             }
         );
-    }
-
-    upload(event) {
-        const file = event.target.files[0];
-        const randomId = Math.random().toString(36).substring(2);
-        var url = '/icsse/' + randomId;
-        const ref = this.storage.ref(url);
-        //const task = ref.put(file);
-        const task = this.storage.upload(url, file);
-        this.uploadPercent = task.percentageChanges();
-        task.snapshotChanges().pipe(
-            finalize(() => {this.downloadURL = ref.getDownloadURL();
-                this.downloadURL.subscribe(url => (this.photo = url));}
-            )).subscribe();
-    }
-
-    uploadNew(event) {
-        const file = event.target.files[0];
-        const randomId = Math.random().toString(36).substring(2);
-        var url = '/icsse/' + randomId;
-        const ref = this.storage.ref(url);
-        const task = this.storage.upload(url, file);
-        this.uploadPercent = task.percentageChanges();
-        task.snapshotChanges().pipe(
-            finalize(() => {this.downloadURL = ref.getDownloadURL();
-                this.downloadURL.subscribe(url => (this.photoa = url));}
-            )).subscribe();
     }
 
     editarGuardia(id) {

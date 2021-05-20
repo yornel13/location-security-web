@@ -16,12 +16,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { AsyncPipe } from '@angular/common';
 // Firebase
-import { AngularFirestoreModule } from 'angularfire2/firestore';
-import { MessagingService } from './shared/messaging.service';
-import { AngularFireDatabaseModule } from 'angularfire2/database';
-import { AngularFireAuthModule } from 'angularfire2/auth';
-import { AngularFireModule } from 'angularfire2';
-import { AngularFireStorageModule } from 'angularfire2/storage';
+// import { AngularFirestoreModule } from 'angularfire2/firestore';
+// import { MessagingService } from './shared/messaging.service';
+// import { AngularFireDatabaseModule } from 'angularfire2/database';
+// import { AngularFireAuthModule } from 'angularfire2/auth';
+// import { AngularFireModule } from 'angularfire2';
+// import { AngularFireStorageModule } from 'angularfire2/storage';
 import {NotificationService} from './shared/notification.service';
 import {GlobalOsm} from './global.osm';
 import {UtilsVehicles} from '../model/vehicle/vehicle.utils';
@@ -35,11 +35,11 @@ import {UtilsVehicles} from '../model/vehicle/vehicle.utils';
         MainModule,
         NgbModule,
         ReactiveFormsModule,
-        AngularFireModule.initializeApp(environment.firebase),
-        AngularFirestoreModule,
-        AngularFireDatabaseModule,
-        AngularFireAuthModule,
-        AngularFireStorageModule,
+        // AngularFireModule.initializeApp(environment.firebase),
+        // AngularFirestoreModule,
+        // AngularFireDatabaseModule,
+        // AngularFireAuthModule,
+        // AngularFireStorageModule,
         MatTabsModule
     ],
     declarations: [
@@ -49,13 +49,13 @@ import {UtilsVehicles} from '../model/vehicle/vehicle.utils';
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-        MessagingService,
-        NotificationService,
+        // MessagingService,
+        // NotificationService,
         AsyncPipe,
         GlobalOsm,
         UtilsVehicles
     ],
     bootstrap: [AppComponent],
-    exports: [ AngularFireModule, AngularFireStorageModule ]
+    // exports: [ AngularFireModule, AngularFireStorageModule ]
 })
 export class AppModule { }

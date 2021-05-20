@@ -399,8 +399,18 @@ export class VisitPrint {
                 'Placa': (visit.vehicle ? visit.vehicle.plate : '-'),
                 'Cédula': visit.visitor.dni,
                 'Visitante': visit.visitor.name + ' ' + visit.visitor.lastname,
+                'Funcionario Visitado': visit.visited ? visit.visited.name + ' ' + visit.visited.lastname + ' ' + visit.visited.dni : '',
+                'Guardia Entrada': visit.guard ? visit.guard.name + ' ' + visit.guard.lastname + ' ' + visit.guard.dni : '',
+                'Guardia Salida': visit.guard_out ? visit.guard_out.name + ' ' + visit.guard_out.lastname + ' ' + visit.guard_out.dni : '',
                 'Entrada': visit.create_date,
-                'Salida': (visit.finish_date === '0000-00-00 00:00:00' || visit.finish_date === null ? '-' : visit.finish_date)
+                'Salida': (visit.finish_date === '0000-00-00 00:00:00' || visit.finish_date === null ? '-' : visit.finish_date),
+                'Image Vehiculo': visit.vehicle ? visit.vehicle.photo : '',
+                'Image Visitante': visit.visitor ? visit.visitor.photo : '',
+                'Imagen 1': visit.image_1,
+                'Imagen 2': visit.image_2,
+                'Imagen 3': visit.image_3,
+                'Imagen 4': visit.image_4,
+                'Imagen 5': visit.image_5
             });
         });
         if (type === 1) {

@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
             return;
         }
         this.loading = true;
-        if (this.error != '') {
+        if (this.error !== '') {
           this.error = '';
         }
         this.authService.login(this.f.dni.value, this.f.password.value)

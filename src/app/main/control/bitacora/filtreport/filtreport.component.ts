@@ -15,7 +15,6 @@ import {Admin} from '../../../../../model/admin/admin';
 import {GlobalOsm} from '../../../../global.osm';
 import {UtilsVehicles} from '../../../../../model/vehicle/vehicle.utils';
 import {PopupReportComponent} from './popup.report.component';
-import {MessagingService} from '../../../../shared/messaging.service';
 import {NotificationService} from '../../../../shared/notification.service';
 import {ApiResponse} from '../../../../../model/app.response';
 
@@ -122,7 +121,6 @@ export class FiltreportComponent implements OnInit {
             private incidenciaService: IncidenciasService,
             private excelService: ExcelService,
             private route: ActivatedRoute,
-            private messagingService: MessagingService,
             private notificationService: NotificationService,
             private authService: AuthenticationService) {
         this.layersControlOptions = this.globalOSM.layersOptions;
@@ -520,11 +518,7 @@ export class FiltreportComponent implements OnInit {
     }
 
     putReportRead(id) {
-        if (this.coment.length > 0) {
-            this.bitacoraService.putReportRead(id).then(success => {
-                this.messagingService.loadUnreadReplies();
-            });
-        }
+
     }
 
     regresar() {
@@ -985,7 +979,12 @@ export class FiltreportComponent implements OnInit {
                 'Título': this.data[i].title,
                 'Observación': this.data[i].observation,
                 'Fecha': this.data[i].create_date,
-                'Estado': resolve
+                'Estado': resolve,
+                'Imagen 1': this.data[i].image_1,
+                'Imagen 2': this.data[i].image_2,
+                'Imagen 3': this.data[i].image_3,
+                'Imagen 4': this.data[i].image_4,
+                'Imagen 5': this.data[i].image_5
             });
             body.push([
                 this.data[i].watch.stand_name,

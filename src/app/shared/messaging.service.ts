@@ -1,20 +1,15 @@
 
 import {EventEmitter, Injectable, OnInit} from '@angular/core';
-import { AngularFireDatabase } from 'angularfire2/database';
-import { AngularFireAuth } from 'angularfire2/auth';
-import * as firebase from 'firebase';
 import { take } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import {AuthenticationService, ChatService} from '../_services';
 import {NotificationService} from './notification.service';
-import {ChatLine} from '../../model/chat/chat.line';
 import {BitacoraService} from '../../model/bitacora/bitacora.service';
 
 @Injectable()
 export class MessagingService {
 
     isMessengerOpen = false;
-    messaging = firebase.messaging();
     currentMessage = new BehaviorSubject(null);
 
     private error: any;
@@ -34,8 +29,6 @@ export class MessagingService {
     constructor(
         private notificationService: NotificationService,
         private authService: AuthenticationService,
-        private afDB: AngularFireDatabase,
-        private afAuth: AngularFireAuth,
         private chatService: ChatService,
         private binnacleService: BitacoraService) {
     }
@@ -47,11 +40,11 @@ export class MessagingService {
      * @param token token as a value
      */
     updateToken(userId, token) {
-        this.afAuth.authState.pipe(take(1)).subscribe(() => {
-            const data = new Object;
-            data[userId] = token;
-            this.afDB.object('fcmTokens/').update(data).then();
-        });
+        // this.afAuth.authState.pipe(take(1)).subscribe(() => {
+        //     const data = new Object;
+        //     data[userId] = token;
+        //     this.afDB.object('fcmTokens/').update(data).then();
+        // });
     }
 
     /**
@@ -60,20 +53,20 @@ export class MessagingService {
      * @param userId userId
      */
     requestPermission(userId) {
-        this.messaging.requestPermission()
-            .then(() => {
-                console.log('notification permission granted.');
-                console.log(firebase.messaging().getToken());
-                return firebase.messaging().getToken();
-            })
-            .then(token => {
-                console.log(token);
-                this.authService.setTokenFire(token);
-                this.registerWeb(token);
-            })
-            .catch((err) => {
-                console.log('Unable to get permission to notify.', err);
-            });
+        // this.messaging.requestPermission()
+        //     .then(() => {
+        //         console.log('notification permission granted.');
+        //         console.log(firebase.messaging().getToken());
+        //         return firebase.messaging().getToken();
+        //     })
+        //     .then(token => {
+        //         console.log(token);
+        //         this.authService.setTokenFire(token);
+        //         this.registerWeb(token);
+        //     })
+        //     .catch((err) => {
+        //         console.log('Unable to get permission to notify.', err);
+        //     });
     }
 
     registerWeb(token) {
@@ -91,63 +84,63 @@ export class MessagingService {
      * hook method when new notification received
      */
     receiveMessage() {
-        this.messaging.onMessage((payload) => {
-            // const notificationTitle = payload.notification.title;
-            // const notificationOptions = {
-            //     body: payload.notification.body,
-            //     icon: payload.notification.icon,
-            // };
-            // const notification = new Notification(notificationTitle, notificationOptions);
-            // notification.onclick = function(event) {
-            //   event.preventDefault(); // prevent the browser from focusing the Notification's tab
-            //   window.open(payload.notification.click_action , '_blank');
-            //   notification.close();
-            // };
-            console.log('new message received in service, payload: ', payload);
-            if (payload.data.type === 'ALERT') {
-                const alert = JSON.parse(payload.data.message.toString());
-                this.notificationService.newNotification.emit(alert);
-            }
-            if (payload.data.type === 'MESSAGE') {
-                const message: ChatLine = JSON.parse(payload.data.message.toString());
-                this.notificationService.newMessage.emit(message);
-                if (message.channel_id != null) {
-                    this.channelUnread ++;
-                }
-                this.loadUnreadMessages();
-
-                if (!this.isMessengerOpen) {
-                    const notificationTitle = payload.notification.title;
-                    const notificationOptions = {
-                        body: payload.notification.body,
-                        icon: payload.notification.icon,
-                    };
-                    const notification = new Notification(notificationTitle, notificationOptions);
-                    notification.onclick = function(event) {
-                        event.preventDefault(); // prevent the browser from focusing the Notification's tab
-                        window.open('/u/messaging');
-                        notification.close();
-                    };
-                }
-            }
-            if (payload.data.type === 'REPORT') {
-                const reply: any = JSON.parse(payload.data.message.toString());
-                this.notificationService.newReply.emit(reply);
-                this.loadUnreadReplies();
-                const notificationTitle = payload.notification.title;
-                const notificationOptions = {
-                    body: payload.notification.body,
-                    icon: payload.notification.icon,
-                };
-                const notification = new Notification(notificationTitle, notificationOptions);
-                notification.onclick = function(event) {
-                    event.preventDefault(); // prevent the browser from focusing the Notification's tab
-                    window.open('/u/control/bitacora/reportes');
-                    notification.close();
-                };
-            }
-            // this.currentMessage.next(payload);
-        });
+        // this.messaging.onMessage((payload) => {
+        //     // const notificationTitle = payload.notification.title;
+        //     // const notificationOptions = {
+        //     //     body: payload.notification.body,
+        //     //     icon: payload.notification.icon,
+        //     // };
+        //     // const notification = new Notification(notificationTitle, notificationOptions);
+        //     // notification.onclick = function(event) {
+        //     //   event.preventDefault(); // prevent the browser from focusing the Notification's tab
+        //     //   window.open(payload.notification.click_action , '_blank');
+        //     //   notification.close();
+        //     // };
+        //     console.log('new message received in service, payload: ', payload);
+        //     if (payload.data.type === 'ALERT') {
+        //         const alert = JSON.parse(payload.data.message.toString());
+        //         this.notificationService.newNotification.emit(alert);
+        //     }
+        //     if (payload.data.type === 'MESSAGE') {
+        //         const message: ChatLine = JSON.parse(payload.data.message.toString());
+        //         this.notificationService.newMessage.emit(message);
+        //         if (message.channel_id != null) {
+        //             this.channelUnread ++;
+        //         }
+        //         this.loadUnreadMessages();
+        //
+        //         if (!this.isMessengerOpen) {
+        //             const notificationTitle = payload.notification.title;
+        //             const notificationOptions = {
+        //                 body: payload.notification.body,
+        //                 icon: payload.notification.icon,
+        //             };
+        //             const notification = new Notification(notificationTitle, notificationOptions);
+        //             notification.onclick = function(event) {
+        //                 event.preventDefault(); // prevent the browser from focusing the Notification's tab
+        //                 window.open('/u/messaging');
+        //                 notification.close();
+        //             };
+        //         }
+        //     }
+        //     if (payload.data.type === 'REPORT') {
+        //         const reply: any = JSON.parse(payload.data.message.toString());
+        //         this.notificationService.newReply.emit(reply);
+        //         this.loadUnreadReplies();
+        //         const notificationTitle = payload.notification.title;
+        //         const notificationOptions = {
+        //             body: payload.notification.body,
+        //             icon: payload.notification.icon,
+        //         };
+        //         const notification = new Notification(notificationTitle, notificationOptions);
+        //         notification.onclick = function(event) {
+        //             event.preventDefault(); // prevent the browser from focusing the Notification's tab
+        //             window.open('/u/control/bitacora/reportes');
+        //             notification.close();
+        //         };
+        //     }
+        //     // this.currentMessage.next(payload);
+        // });
     }
 
     loadUnreadMessages() {

@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import { AdminService } from '../../../../../model/admin/admin.service';
-import { AngularFireStorage } from 'angularfire2/storage';
 import { Observable } from 'rxjs';
 
 import * as L from 'leaflet';
@@ -119,7 +118,6 @@ export class CercoComponent implements OnInit {
     constructor (
         public router: Router,
         private adminService: AdminService,
-        private storage: AngularFireStorage,
         private cercoService: CercoService,
         private vehiclesService: VehiclesService,
         private tabletService: TabletService,

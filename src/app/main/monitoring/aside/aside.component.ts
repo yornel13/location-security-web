@@ -4,7 +4,6 @@ import {MainService} from '../../main.service';
 import {AlertaService} from '../../../../model/alerta/alerta.service';
 import {Alerta} from '../../../../model/alerta/alerta';
 import {NotificationService} from '../../../shared/notification.service';
-import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
 import {Router} from '@angular/router';
 import {GlobalOsm} from '../../../global.osm';
 import {VehistorialService} from '../../../../model/historial/vehistorial.service';
@@ -57,7 +56,6 @@ export class AsideComponent implements OnInit, OnChanges {
     search: any;
     searching = false;
     CHECK_ICON_URL = './assets/aside-menu/checked.png';
-    alertCollection: AngularFirestoreCollection<Alerta>;
     selectedItem: any;
     devices: any[] = [];
     date: string;
@@ -73,7 +71,6 @@ export class AsideComponent implements OnInit, OnChanges {
             public alertService: AlertaService,
             private router: Router,
             private notificationService: NotificationService,
-            private db: AngularFirestore,
             private mapService: GlobalOsm,
             private vehistorialService: VehistorialService,
             private utilVehicle: UtilsVehicles,
@@ -82,7 +79,6 @@ export class AsideComponent implements OnInit, OnChanges {
             private historyPrint: HistoryPrint,
             private infolinePrint: InfolinePrint,
             private excelService: ExcelService) {
-        this.alertCollection = db.collection<Alerta>(environment.ALERTS_PATH);
     }
 
     ngOnInit() {
@@ -157,7 +153,6 @@ export class AsideComponent implements OnInit, OnChanges {
     }
 
     solveAlert(alert: Alerta) {
-        this.alertCollection.doc(String(alert.id)).update({'status': 0}).then();
         this.alertService.solveAlert(alert.id).then();
         this.showAlert(alert);
     }

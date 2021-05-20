@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AdminService } from '../../../../model/admin/admin.service';
 import { Admin } from '../../../../model/admin/admin';
-import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from 'angularfire2/storage';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import * as jsPDF from 'jspdf';
@@ -64,12 +63,11 @@ export class AdminComponent {
 
     key: string = 'id'; //set default
     reverse: boolean = true;
-    
+
 
     constructor(
         public router: Router,
         private adminService: AdminService,
-        private storage: AngularFireStorage,
         private excelService: ExcelService,
         private toastr: ToastrService) {
         this.getAll();
@@ -130,30 +128,11 @@ export class AdminComponent {
     }
 
     upload(event) {
-        const file = event.target.files[0];
-        const randomId = Math.random().toString(36).substring(2);
-        var url = '/icsse/' + randomId;
-        const ref = this.storage.ref(url);
-        //const task = ref.put(file);
-        const task = this.storage.upload(url, file);
-        this.uploadPercent = task.percentageChanges();
-        task.snapshotChanges().pipe(
-        finalize(() => {this.downloadURL = ref.getDownloadURL();
-                        this.downloadURL.subscribe(url => (this.photo = url));} 
-        )).subscribe();
+
    }
 
    uploadNew(event) {
-        const file = event.target.files[0];
-        const randomId = Math.random().toString(36).substring(2);
-        var url = '/icsse/' + randomId;
-        const ref = this.storage.ref(url);
-        const task = this.storage.upload(url, file);
-        this.uploadPercent = task.percentageChanges();
-        task.snapshotChanges().pipe(
-        finalize(() => {this.downloadURL = ref.getDownloadURL();
-                        this.downloadURL.subscribe(url => (this.photoa = url));} 
-        )).subscribe();
+
    }
 
     regresar() {
@@ -176,7 +155,7 @@ export class AdminComponent {
                     this.photo = './assets/img/user_empty.jpg';
                 }else{
                     this.photo = this.admin.photo;
-                }              
+                }
                 this.identificacion = this.admin.dni;
                 this.idEdit = this.admin.id;
                 this.lista = false;
@@ -399,7 +378,7 @@ export class AdminComponent {
               3: {cellWidth: 'auto'},
               4: {cellWidth: 'auto'}
             }
-        });   
+        });
         doc.save('adminstradores.pdf');
     }
 
@@ -428,7 +407,7 @@ export class AdminComponent {
               3: {cellWidth: 'auto'},
               4: {cellWidth: 'auto'}
             }
-        });   
+        });
         doc.autoPrint();
         window.open(doc.output('bloburl'), '_blank');
     }

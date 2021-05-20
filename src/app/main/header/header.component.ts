@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {AuthenticationService} from '../../_services';
 import {Router} from '@angular/router';
 import {Admin} from '../../../model/admin/admin';
-import {MessagingService} from '../../shared/messaging.service';
 import {ToastrService} from 'ngx-toastr';
 import {BusinessService} from '../../../model/business/business.service';
 
@@ -23,7 +22,6 @@ export class HeaderComponent implements OnInit {
     constructor(
         private authService: AuthenticationService,
         private router: Router,
-        private messagingService: MessagingService,
         private businessService: BusinessService,
         private toastr: ToastrService) { }
 
@@ -78,14 +76,14 @@ export class HeaderComponent implements OnInit {
     }
 
     subscribeToUnreadMessages() {
-        this.unreadMessages = this.messagingService.getUnread();
-        this.unreadReplies = this.messagingService.repliesUnread;
-        this.messagingService.unreadEmitter.subscribe(count => {
-            this.unreadMessages = count;
-        });
-        this.messagingService.repliesUnreadEmitter.subscribe(count => {
-            this.unreadReplies = count;
-        });
+        // this.unreadMessages = this.messagingService.getUnread();
+        // this.unreadReplies = this.messagingService.repliesUnread;
+        // this.messagingService.unreadEmitter.subscribe(count => {
+        //     this.unreadMessages = count;
+        // });
+        // this.messagingService.repliesUnreadEmitter.subscribe(count => {
+        //     this.unreadReplies = count;
+        // });
     }
 
     checkSession() {

@@ -9,11 +9,9 @@ import { ExcelService } from '../../../../model/excel/excel.services';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import * as geolib from 'geolib';
-import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
 import {PopupAlertComponent} from '../../monitoring/map/popup.alert.component';
 import {GlobalOsm} from '../../../global.osm';
 import {UtilsVehicles} from '../../../../model/vehicle/vehicle.utils';
-import {environment} from '../../../../environments/environment';
 
 
 @Component({
@@ -22,8 +20,6 @@ import {environment} from '../../../../environments/environment';
     styleUrls: ['./alertas.component.css']
 })
 export class AlertasComponent implements OnInit {
-
-    readonly alertCollection: AngularFirestoreCollection<Alerta>;
 
     alertas:any = undefined;
     data: any = [];
@@ -92,7 +88,6 @@ export class AlertasComponent implements OnInit {
         private alertaService: AlertaService,
         private guardiaService: GuardService,
         private excelService: ExcelService,
-        private db: AngularFirestore,
         private route: ActivatedRoute) {
         this.layersControlOptions = this.globalOSM.layersOptions;
         this.baseLayers = this.globalOSM.baseLayers;
@@ -124,7 +119,6 @@ export class AlertasComponent implements OnInit {
                 "value": this.valores[2]
             }]
         };
-        this.alertCollection = db.collection<Alerta>(environment.ALERTS_PATH);
         this.sort('create_date');
     }
 
@@ -420,7 +414,6 @@ export class AlertasComponent implements OnInit {
     solveAlert(alert: Alerta) {
         this.alertaService.solveAlert(alert.id).then(
             (success: any) => {
-                this.alertCollection.doc(String(alert.id)).update({'status': 0}).then();
                 alert.status = success.result.status;
                 if (this.lista) {
                     this.getAlerts();
